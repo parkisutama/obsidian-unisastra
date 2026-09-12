@@ -11,6 +11,7 @@ import keepAboveAndBelow from "./keep-above-and-below";
 import maxChar from "./max-char";
 import outliner from "./outliner";
 import showWhitespace from "./show-whitespace";
+import toolbar from "./toolbar";
 import typewriter from "./typewriter";
 import writingFocus from "./writing-focus";
 import writingModes from "./writing-modes";
@@ -33,5 +34,6 @@ export function getFeatures(
     keepAboveAndBelow: keepAboveAndBelow(tm),
     showWhitespace: showWhitespace(tm),
     maxChar: maxChar(tm),
+    toolbar: toolbar(tm),
   };
 }

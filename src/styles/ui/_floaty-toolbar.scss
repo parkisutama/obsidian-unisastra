@@ -1,0 +1,39 @@
+.ptm-floaty-toolbar {
+  position: fixed;
+  z-index: var(--layer-popover);
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-s);
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.ptm-floaty-toolbar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-s);
+  color: var(--text-normal);
+  cursor: pointer;
+  font-weight: var(--font-bold);
+
+  &:hover {
+    background-color: var(--background-modifier-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 1px;
+  }
+}

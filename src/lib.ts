@@ -20,7 +20,9 @@ import {
 import type { PerWindowProps } from "@/cm6/per-window-props";
 import createTypewriterModeViewPlugin from "@/cm6/plugin";
 import { createShowWhitespaceExtension } from "@/cm6/show-whitespace";
+import { createToolbarSelectionExtension } from "@/cm6/toolbar-selection";
 import { createWarnLongLineExtension } from "@/cm6/warn-long-line";
+import { createFloatyToolbarSurface } from "@/components/floaty-toolbar/toolbar";
 import { OUTLINE_VIEW_TYPE, OutlineView } from "@/components/outline-view";
 import TypewriterModeSettingTab from "@/components/settings-tab";
 import {
@@ -32,6 +34,7 @@ import type { Feature } from "./capabilities/base/feature";
 import { getCommands } from "./capabilities/commands";
 import { getFeatures } from "./capabilities/features";
 import type RestoreCursorPosition from "./capabilities/features/restore-cursor-position/restore-cursor-position";
+import { ToolbarController } from "./capabilities/features/toolbar/controller";
 import {
   applyStartupMigrations,
   DEFAULT_SETTINGS,
@@ -59,6 +62,7 @@ export default class TypewriterModeLib {
 
   readonly features: Record<string, Record<string, Feature>>;
   readonly commands: Record<string, AbstractCommand>;
+  readonly toolbar: ToolbarController;
 
   constructor(
     plugin: Plugin,
@@ -68,12 +72,14 @@ export default class TypewriterModeLib {
     this.plugin = plugin;
     this.loadData = loadData;
     this.saveData = saveData;
+    this.toolbar = new ToolbarController(this);
 
     // Features must be loaded first!
     this.features = getFeatures(this);
     this.commands = getCommands(this);
 
     this.editorExtensions = [
+      createToolbarSelectionExtension(this.toolbar),
       createTypewriterModeViewPlugin(this),
       createShowWhitespaceExtension(),
       createOutlinerExtension(this.settings.outliner, (view, pos) =>
@@ -96,6 +102,8 @@ export default class TypewriterModeLib {
     );
     this.loadPerWindowProps();
     this.loadEditorExtension();
+    this.toolbar.setSurfaceFactory(createFloatyToolbarSurface);
+    this.toolbar.load();
   }
 
   private isGFMAnchorCompatibilityEnabled(): boolean {
@@ -173,6 +181,7 @@ export default class TypewriterModeLib {
   }
 
   unload() {
+    this.toolbar.destroy();
     for (const category of Object.values(this.features)) {
       for (const feature of Object.values(category)) {
         feature.disable();
@@ -200,6 +209,7 @@ export default class TypewriterModeLib {
   async saveSettings() {
     await this.saveData(this.settings);
     this.plugin.app.workspace.updateOptions();
+    this.toolbar.refresh();
   }
 
   setCSSVariable(property: string, value: string) {

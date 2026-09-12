@@ -64,6 +64,20 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
         },
       },
       {
+        id: "toolbar",
+        label: "Toolbar",
+        description:
+          "Floating formatting toolbar shown when you select text. Desktop only.",
+        render: (container) => {
+          this.addTabDescription(
+            container,
+            "Floating formatting toolbar shown when you select text. Desktop only."
+          );
+          const group = new SettingGroup(container);
+          this.registerFeaturesInGroup(group, this.tm.features.toolbar);
+        },
+      },
+      {
         id: "compatibility",
         label: "Compatibility",
         description:

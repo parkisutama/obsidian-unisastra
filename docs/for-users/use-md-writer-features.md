@@ -54,6 +54,19 @@ Gunakan fitur berikut sesuai kebutuhan:
 - writing focus untuk mode menulis fullscreen,
 - Hemingway mode untuk menulis maju tanpa mengedit bagian sebelumnya.
 
+## Pakai floating toolbar
+
+Aktifkan **Enable floating toolbar** di tab **Toolbar** untuk menampilkan
+toolbar formatting kecil saat Anda menyeleksi teks di Source mode.
+
+Catatan:
+
+- toolbar hanya muncul di desktop; tidak dipasang di mobile,
+- toolbar saat ini menyediakan aksi **Bold** yang membungkus/melepas `**`
+  pada seleksi dalam satu langkah undo,
+- toolbar tidak aktif di Reading Mode, saat Hemingway mode menyala, untuk
+  multi-selection, atau saat seleksi berada di luar outline yang sedang fokus.
+
 ## Pakai GitHub-style heading anchors
 
 MD Writer dapat membuka link heading bergaya GitHub seperti:
