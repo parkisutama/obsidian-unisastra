@@ -87,6 +87,14 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   runtime. Feature classes toggle dock/timer tidak punya unit test — repo ini
   tidak punya harness untuk mock `SettingGroup` Obsidian. Hasil QA
   standardization sebelumnya bukan bukti fitur Floaty Toolbar.
+- Bug runtime dilaporkan user setelah QA nyata di T10: HUD status bar tidak
+  ticking (hanya update saat interaksi editor) dan file timer tetap 00:00.
+  Root cause: tidak ada tick clock periodik (hanya reactive ke event lain)
+  dan `fileElapsed` tidak pernah di-init untuk file yang sudah terbuka saat
+  plugin load. Diperbaiki dengan `setInterval` 1 detik per controller
+  (start/stop mengikuti `toolbar.enabled`) dan init `syncFileElapsed()` di
+  `onLayoutReady()`. `pnpm run test`/`pnpm run check:ci` tetap hijau; belum
+  diverifikasi ulang oleh user di Obsidian.
 
 ## Remaining runtime and integration acceptance
 

@@ -304,6 +304,25 @@ dicatat tanpa melabeli passing otomatis sebagai Obsidian acceptance.
   enable/smart-url/dock sebelumnya, tidak ada harness mock `SettingGroup`.
   QA Obsidian (placement dock vs status bar, prefix, klik/keyboard reset,
   idle/reload, popout) BELUM dilakukan — catat blocked.
+- **Bug fix (runtime, dilaporkan user setelah QA nyata di Obsidian)**: HUD
+  status bar hanya berubah saat ada interaksi editor (klik/ketik), dan file
+  timer selalu 00:00. Root cause 1: implementasi awal tidak pernah membuat
+  "satu tick clock per controller" yang disebutkan `plan.md` — HUD hanya
+  refresh saat `schedule()` dipicu event lain (selection/doc/focus/viewport/
+  leaf-change/dock event), bukan per detik. Root cause 2: `fileElapsed` hanya
+  di-init dari event `active-leaf-change`/`file-open`, tidak pernah untuk
+  file yang SUDAH terbuka saat plugin dimuat — jika user tidak pernah
+  berpindah file/pane, timer file tidak pernah start. Fix: tambah
+  `ensureTick()`/`stopTick()`/`tick()` (interval 1 detik via
+  `win.setInterval`, start/stop mengikuti `toolbar.enabled` di
+  `syncSession()`, dibersihkan di `destroy()`) yang hanya memanggil
+  `schedule()` tanpa menyentuh `dockVisible` (beda dari `refresh()` yang
+  memakai event `reveal` — reuse `refresh()` untuk tick akan membuat dock
+  selalu reveal setiap detik dan merusak auto-hide); dan inisialisasi
+  `syncFileElapsed()` untuk active view saat ini di `workspace.onLayoutReady()`
+  callback `load()`, sebelum `refresh()` pertama. `pnpm run test` (55/55) dan
+  `pnpm run check:ci` tetap hijau setelah fix; belum diverifikasi ulang oleh
+  user di Obsidian nyata pasca fix.
 
 ## Slice E: Callout catalog dan insertion tanpa kehilangan data
 
