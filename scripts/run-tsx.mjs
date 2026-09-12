@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
 
 const args = process.argv.slice(2);
 
@@ -7,12 +8,13 @@ if (args.length === 0) {
   process.exit(1);
 }
 
+const temporaryDirectory = process.platform === "win32" ? tmpdir() : "/tmp";
 const result = spawnSync(process.execPath, ["--import", "tsx", ...args], {
   env: {
     ...process.env,
-    TEMP: "/tmp",
-    TMP: "/tmp",
-    TMPDIR: "/tmp",
+    TEMP: temporaryDirectory,
+    TMP: temporaryDirectory,
+    TMPDIR: temporaryDirectory,
   },
   stdio: "inherit",
 });

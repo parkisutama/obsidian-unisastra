@@ -1,11 +1,17 @@
 import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
 
-const result = spawnSync("pnpm", ["exec", "vitest", "run"], {
+const vitestBin = fileURLToPath(
+  new URL("../node_modules/vitest/vitest.mjs", import.meta.url)
+);
+const temporaryDirectory = process.platform === "win32" ? tmpdir() : "/tmp";
+const result = spawnSync(process.execPath, [vitestBin, "run"], {
   env: {
     ...process.env,
-    TEMP: "/tmp",
-    TMP: "/tmp",
-    TMPDIR: "/tmp",
+    TEMP: temporaryDirectory,
+    TMP: temporaryDirectory,
+    TMPDIR: temporaryDirectory,
   },
   stdio: "inherit",
 });
