@@ -17,6 +17,56 @@ const createVault = (cursorPositions?: Record<string, unknown>) =>
   }) as unknown as Vault;
 
 describe("settings defaults and migrations", () => {
+  it("adds opt-in toolbar defaults without sharing mutable values", async () => {
+    const oldSettings = { general: { ...DEFAULT_SETTINGS.general } };
+    const first = await applyStartupMigrations(
+      oldSettings,
+      createVault(),
+      "plugins/md-writer"
+    );
+    const second = await applyStartupMigrations(
+      oldSettings,
+      createVault(),
+      "plugins/md-writer"
+    );
+    expect(first.toolbar.enabled).toBe(false);
+    expect(first.toolbar.timers.sessionPrefix).toBe("Sesi:");
+    first.toolbar.buttonOrder.reverse();
+    first.toolbar.timers.sessionPrefix = "Changed";
+    expect(second.toolbar.buttonOrder[0]).toBe("bold");
+    expect(second.toolbar.timers.sessionPrefix).toBe("Sesi:");
+  });
+
+  it("normalizes malformed nested toolbar settings while preserving old values", async () => {
+    const settings = await applyStartupMigrations(
+      {
+        general: { ...DEFAULT_SETTINGS.general },
+        typewriter: { ...DEFAULT_SETTINGS.typewriter, typewriterOffset: 0.73 },
+        toolbar: {
+          enabled: true,
+          mode: "unknown",
+          buttonOrder: ["link", "link", "unknown"],
+          timers: {
+            sessionPrefix: "  ",
+            filePrefix: "File\nBad",
+            fileVisible: false,
+          },
+        },
+      } as never,
+      createVault(),
+      "plugins/md-writer"
+    );
+    expect(settings.typewriter.typewriterOffset).toBe(0.73);
+    expect(settings.toolbar.mode).toBe("floating");
+    expect(settings.toolbar.buttonOrder[0]).toBe("link");
+    expect(settings.toolbar.buttonOrder).toHaveLength(8);
+    expect(settings.toolbar.timers).toEqual({
+      sessionVisible: true,
+      fileVisible: false,
+      sessionPrefix: "Sesi:",
+      filePrefix: "File:",
+    });
+  });
   it("keeps typed dotted-path access in sync with defaults", () => {
     const settings = structuredClone(DEFAULT_SETTINGS);
 

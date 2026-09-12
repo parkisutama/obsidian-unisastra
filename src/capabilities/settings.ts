@@ -9,6 +9,11 @@ import {
   ENABLED_PLATFORMS,
   type EnabledPlatforms,
 } from "./constants";
+import {
+  DEFAULT_TOOLBAR_SETTINGS,
+  normalizeToolbarSettings,
+  type ToolbarSettings,
+} from "./features/toolbar/settings";
 
 export interface GeneralSettings {
   enabledPlatforms: EnabledPlatforms;
@@ -148,6 +153,7 @@ export interface TypewriterModeSettings {
   outliner: OutlinerSettings;
   restoreCursorPosition: RestoreCursorPositionSettings;
   showWhitespace: ShowWhitespaceSettings;
+  toolbar: ToolbarSettings;
   typewriter: TypewriterSettings;
   writingFocus: WritingFocusSettings;
   writingMode: WritingModeSettings;
@@ -191,6 +197,7 @@ export function setSettingByPath<P extends SettingsPath>(
 }
 
 export const DEFAULT_SETTINGS: TypewriterModeSettings = {
+  toolbar: DEFAULT_TOOLBAR_SETTINGS,
   general: {
     version: null,
     isAnnounceUpdatesEnabled: true,
@@ -514,6 +521,7 @@ function migrateSettings(
   legacy: Partial<LegacyTypewriterModeSettings>
 ): TypewriterModeSettings {
   return {
+    toolbar: normalizeToolbarSettings(undefined),
     general: migrateGeneralSettings(legacy),
     typewriter: migrateTypewriterSettings(legacy),
     keepLinesAboveAndBelow: {
@@ -658,5 +666,6 @@ export async function applyStartupMigrations(
       merged[key] = { ...DEFAULT_SETTINGS[key], ...settings[key] };
     }
   }
+  merged.toolbar = normalizeToolbarSettings(settings.toolbar);
   return merged;
 }
