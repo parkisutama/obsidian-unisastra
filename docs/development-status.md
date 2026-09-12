@@ -33,7 +33,29 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   Perubahan disimpan sebagai atomic Conventional Commits pada branch
   `codex/standardize-ai-development`; belum dipush.
 
-## Remaining acceptance
+## Floaty Toolbar planning
+
+- Branch `codex/adopt-floaty-toolbar`: [spec](./specs/floaty-toolbar/spec.md)
+  accepted oleh maintainer; [plan](./specs/floaty-toolbar/plan.md) dan
+  [ADR-002](./reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md)
+  Accepted. [Task breakdown](./specs/floaty-toolbar/tasks.md): T01-T04 (Slice A
+  — settings contract, bold executor, CM6/controller bridge, dan floating
+  toolbar UI/settings tab) implemented dan wired ke `src/lib.ts`;
+  4/21 task implemented.
+- `pnpm run test` (8 file, 32 test) dan `pnpm run check:ci` lolos untuk state
+  saat ini, termasuk build, verify-artifacts, dan docs build. Perbaikan gate
+  selama slice ini: satu type error (`EditorView.editable` value import) dan
+  tiga Biome lint error (`controller.ts` parameter property,
+  `toolbar-actions.test.ts` numeric separator, `toolbar.ts` formatting).
+- T05 dan seterusnya (formatting parity, link, dock/pin, timer/HUD, callout
+  catalog) belum diimplementasikan. Runtime Obsidian desktop/mobile/popout
+  belum diuji untuk task manapun — environment ini tidak punya host Obsidian,
+  dan Vitest terkonfigurasi `environment: "node"` sehingga UI toolbar baru
+  (`src/components/floaty-toolbar/toolbar.ts`) hanya diverifikasi lewat
+  typecheck/lint/build, bukan DOM test atau QA runtime. Hasil QA
+  standardization sebelumnya bukan bukti fitur Floaty Toolbar.
+
+## Remaining runtime and integration acceptance
 
 - Runtime Obsidian desktop, mobile, dan popout belum diuji pada perubahan ini.
 - Workflow GitHub Actions belum dijalankan dari perubahan lokal ini.
