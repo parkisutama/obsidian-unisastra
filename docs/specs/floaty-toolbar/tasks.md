@@ -6,10 +6,11 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 10/21 tasks implemented (T01-T10; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T10. Runtime Obsidian
+- Progress: 11/21 tasks implemented (T01-T11; T17 dipecah menjadi T17a/T17b);
+  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T11. Runtime Obsidian
   acceptance belum dilakukan untuk task manapun. Slice C (dock/pin/layout) dan
-  Slice D (timer model + HUD) selesai; Slice E (callout catalog) berikutnya.
+  Slice D (timer model + HUD) selesai; Slice E (callout catalog) dimulai
+  dengan T11 (data/settings only, belum ada UI/menu/markdown insertion).
 
 ## Aturan execution
 
@@ -347,16 +348,33 @@ dicatat tanpa melabeli passing otomatis sebagai Obsidian acceptance.
 
 ### T11 — Catalog Obsidian dan settings callout additive
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance blocked (tidak ada host Obsidian di
+  environment ini).
 - Dependency: T10; AC-06, AC-08.
 - Acceptance: builtin/aliases tersedia dengan canonical lowercase ID; manual
   hyphen ID/labels/order/visibility tervalidasi; nested merge mempertahankan
   settings existing dan menolak ID duplikat/malformed tanpa default mutation.
-- Files (5): `src/capabilities/features/callouts/catalog.ts`,
-  `src/capabilities/features/callouts/settings.ts`, `src/capabilities/settings.ts`,
-  `tests/callout-catalog.test.ts`, `docs/specs/floaty-toolbar/plan.md`.
-- Verify: builtin aliases/custom/deep merge tests plus settings tests,
-  `pnpm run test`, `pnpm run check`.
+- Files: `src/capabilities/features/callouts/catalog.ts` (13 builtin type
+  Obsidian + aliases resmi, resolver canonical case-insensitive, mapping
+  GitHub Alert marker NOTE/TIP/IMPORTANT/WARNING/CAUTION ke ID kanonis yang
+  sama dengan alias Obsidian-nya — tidak membuat entry catalog kedua),
+  `src/capabilities/features/callouts/settings.ts` (`CalloutSettings` dengan
+  `outputMode` dan `entries`; normalizer memvalidasi ID custom hyphen
+  `[a-z0-9_-]{1,64}`, label plain text max 80 karakter, dedup case-insensitive
+  terhadap builtin+alias, mengisi builtin yang belum ada di data lama, dan
+  mengurutkan berdasar `order`; field `styling` sudah ada di shape data namun
+  validasi warna/Lucide ikon penuh ditunda ke Slice F — dicatat di plan.md),
+  `src/capabilities/settings.ts` (wiring `callouts` ke `TypewriterModeSettings`,
+  `DEFAULT_SETTINGS`, migration legacy, dan `applyStartupMigrations`, pola
+  sama dengan `toolbar` di T01), `tests/callout-catalog.test.ts` (resolusi
+  alias/GitHub marker, default tanpa shared mutable state, custom ID valid,
+  penolakan ID malformed, dedup case-insensitive, nested merge),
+  `tests/settings.test.ts` (assert startup migration mengisi callouts default),
+  `docs/specs/floaty-toolbar/plan.md` (catatan scope T11 vs target akhir).
+- Verify: `pnpm run test` (66/66) dan `pnpm run check:ci` hijau. Belum ada
+  UI/menu (Slice E lanjut di T12-T13) maupun styling validation (Slice F) —
+  jangan menganggap catalog ini sudah dapat dipakai user end-to-end. QA
+  Obsidian belum dilakukan — catat blocked.
 
 ### T12 — Menu callout dan lossless Obsidian conversion
 

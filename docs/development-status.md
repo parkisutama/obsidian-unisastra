@@ -45,8 +45,10 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   — dock/pin with persistent-always-visible override, status-bar clearance,
   and narrow-window shrink; Slice D — shared session and per-window file
   elapsed model, plus a HUD shown in the dock or the main window's status bar
-  with visibility toggles, prefixes, and an explicit session reset) implemented
-  dan wired ke `src/lib.ts`; 10/21 task implemented.
+  with visibility toggles, prefixes, and an explicit session reset; Slice E
+  start — T11 callout catalog and additive settings, data-layer only, no
+  UI/menu/markdown insertion yet) implemented dan wired ke `src/lib.ts`;
+  11/21 task implemented.
 - `pnpm run test` (8 file, 44 test) dan `pnpm run check:ci` lolos untuk state
   saat ini, termasuk build, verify-artifacts, dan docs build. Perbaikan gate
   selama T01-T04: satu type error (`EditorView.editable` value import) dan
@@ -101,6 +103,13 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   akurasi elapsed (tetap berbasis selisih timestamp). Free numeric input
   dengan clamping dipilih user dibanding dropdown preset. `pnpm run test`
   (56/56) dan `pnpm run check:ci` hijau; belum diverifikasi di Obsidian.
+- T11 (Slice E start): catalog 13 builtin Obsidian callout type + alias resmi
+  dan `CalloutSettings` additive (`outputMode`, `entries` dengan ID/label/
+  order/enabled/source/styling tervalidasi). Styling `override` baru
+  divalidasi tipenya (string/null), belum divalidasi format warna/Lucide
+  icon — ditunda ke Slice F, dicatat di plan.md. Tidak ada UI/menu/markdown
+  insertion di T11; itu T12-T13. `pnpm run test` (66/66) dan
+  `pnpm run check:ci` hijau.
 
 ## Remaining runtime and integration acceptance
 
