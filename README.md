@@ -66,6 +66,15 @@ MD Writer follows a different product direction from the original [Typewriter Mo
 
 ## Acknowledgements
 
+The floating toolbar work adapts [Floaty Toolbar](https://github.com/0png/Floaty-Toolbar)
+by [0png](https://github.com/0png), licensed under the MIT License.
+The adaptation keeps formatting and toolbar ergonomics while excluding Pomodoro
+and adding configurable elapsed timer labels, a desktop persistent dock, and
+callout management. This work is in progress and has not completed Obsidian
+runtime acceptance. The original copyright and full license are preserved in
+[the Floaty Toolbar MIT notice](./licenses/floaty-toolbar-MIT.txt) and attributed
+in adapted source files.
+
 MD Writer descends from the original [Typewriter Mode](https://github.com/davisriedel/obsidian-typewriter-mode) by [Davis Riedel (davisriedel)](https://github.com/davisriedel), licensed under the MIT License. The build infrastructure was originally derived from [bun-obsidian-plugin-build-scripts](https://github.com/davisriedel/bun-obsidian-plugin-build-scripts), also by Davis Riedel and also MIT-licensed, and has since been migrated to a standard pnpm + esbuild toolchain.
 
 **Inherited and adapted features:**

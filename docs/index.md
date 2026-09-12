@@ -46,6 +46,10 @@ Choose the path that matches what you want to do.
 
 ### Reference
 
+- [Floaty Toolbar adoption: accepted spec](./specs/floaty-toolbar/spec.md)
+- [Floaty Toolbar: accepted implementation plan](./specs/floaty-toolbar/plan.md)
+- [Floaty Toolbar: draft task breakdown](./specs/floaty-toolbar/tasks.md)
+- [ADR-002: toolbar and callout management (Accepted)](./reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md)
 - [Branching conventions](./reference/branching-conventions.md)
 - [Release gates](./reference/release-gates.md)
 - [Outliner integration URD, PRD, and implementation plan](./reference/outliner-urd-prd.md)

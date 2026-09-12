@@ -43,6 +43,7 @@ Quickstart contributor tetap ada di
 
 - [Architecture baseline](./reference/code-architecture-baseline.md)
 - [ADR-001: AI context and gates](./reference/decisions/ADR-001-ai-development-context-and-gates.md)
+- [ADR-002: toolbar and callout management (Accepted)](./reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md)
 
 Gunakan bagian ini untuk aturan stabil, checklist, dan spesifikasi panjang:
 
@@ -50,6 +51,12 @@ Gunakan bagian ini untuk aturan stabil, checklist, dan spesifikasi panjang:
 - [Release gates](./reference/release-gates.md)
 - [Outliner integration URD, PRD, and implementation plan](./reference/outliner-urd-prd.md)
 - [Obsidian plugin audit prompts](./reference/obsidian-plugin-audit-prompts.md)
+
+## Active specifications
+
+- [Floaty Toolbar adoption: accepted spec](./specs/floaty-toolbar/spec.md)
+- [Floaty Toolbar: accepted implementation plan](./specs/floaty-toolbar/plan.md)
+- [Floaty Toolbar: draft task breakdown](./specs/floaty-toolbar/tasks.md)
 
 ## Archive
 

@@ -15,6 +15,27 @@ export default defineConfig({
     ],
     sidebar: [
       {
+        text: "Active specifications",
+        items: [
+          {
+            link: "/specs/floaty-toolbar/spec",
+            text: "Floaty Toolbar: accepted spec",
+          },
+          {
+            link: "/specs/floaty-toolbar/plan",
+            text: "Floaty Toolbar: accepted plan",
+          },
+          {
+            link: "/specs/floaty-toolbar/tasks",
+            text: "Floaty Toolbar: draft tasks",
+          },
+          {
+            link: "/reference/decisions/ADR-002-floaty-toolbar-and-callout-management",
+            text: "ADR-002: toolbar and callouts (Accepted)",
+          },
+        ],
+      },
+      {
         text: "AI development context",
         items: [
           {
