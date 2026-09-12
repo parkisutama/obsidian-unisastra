@@ -10,6 +10,11 @@ import {
   type EnabledPlatforms,
 } from "./constants";
 import {
+  type CalloutSettings,
+  DEFAULT_CALLOUT_SETTINGS,
+  normalizeCalloutSettings,
+} from "./features/callouts/settings";
+import {
   DEFAULT_TOOLBAR_SETTINGS,
   normalizeToolbarSettings,
   type ToolbarSettings,
@@ -142,6 +147,7 @@ export interface WritingModeSettings {
 
 export interface TypewriterModeSettings {
   blockId: BlockIdSettings;
+  callouts: CalloutSettings;
   compatibility: CompatibilitySettings;
   currentLine: CurrentLineSettings;
   dimming: DimmingSettings;
@@ -198,6 +204,7 @@ export function setSettingByPath<P extends SettingsPath>(
 
 export const DEFAULT_SETTINGS: TypewriterModeSettings = {
   toolbar: DEFAULT_TOOLBAR_SETTINGS,
+  callouts: DEFAULT_CALLOUT_SETTINGS,
   general: {
     version: null,
     isAnnounceUpdatesEnabled: true,
@@ -522,6 +529,7 @@ function migrateSettings(
 ): TypewriterModeSettings {
   return {
     toolbar: normalizeToolbarSettings(undefined),
+    callouts: normalizeCalloutSettings(undefined),
     general: migrateGeneralSettings(legacy),
     typewriter: migrateTypewriterSettings(legacy),
     keepLinesAboveAndBelow: {
@@ -667,5 +675,6 @@ export async function applyStartupMigrations(
     }
   }
   merged.toolbar = normalizeToolbarSettings(settings.toolbar);
+  merged.callouts = normalizeCalloutSettings(settings.callouts);
   return merged;
 }

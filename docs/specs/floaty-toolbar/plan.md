@@ -100,6 +100,16 @@ Category baru `callouts`:
 - Settings lama tidak diganti nama; tidak membaca data plugin Floaty terpisah
   atau memigrasikannya tanpa request tambahan.
 
+Catatan implementasi T11: kontrak di atas adalah target akhir. T11 hanya
+mengimplementasikan `outputMode`, catalog builtin/alias, dan entry
+custom/order/label/enabled dengan validasi penuh (ID hyphen, label plain
+text, dedup case-insensitive). Field `styling` sudah ada pada shape data
+(`inherit` default atau `override` dengan `color`/`icon` sebagai string atau
+null) agar tidak perlu migrasi bentuk data lagi nanti, tetapi validasi warna
+hex dan whitelist Lucide ID belum diimplementasikan — `override` saat ini
+hanya memvalidasi tipe (string atau null), bukan format/isi. Validasi penuh
+menjadi bagian Slice F (styling custom) sesuai urutan slice di bawah.
+
 ### Commands dan CSS
 
 Gunakan action IDs upstream `floaty-bold`, `floaty-italic`,

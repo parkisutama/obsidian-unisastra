@@ -37,6 +37,17 @@ describe("settings defaults and migrations", () => {
     expect(second.toolbar.timers.sessionPrefix).toBe("Sesi:");
   });
 
+  it("adds opt-in callout defaults through the same startup migration path", async () => {
+    const oldSettings = { general: { ...DEFAULT_SETTINGS.general } };
+    const settings = await applyStartupMigrations(
+      oldSettings,
+      createVault(),
+      "plugins/md-writer"
+    );
+    expect(settings.callouts.outputMode).toBe("obsidian");
+    expect(settings.callouts.entries.length).toBeGreaterThan(0);
+  });
+
   it("normalizes malformed nested toolbar settings while preserving old values", async () => {
     const settings = await applyStartupMigrations(
       {
