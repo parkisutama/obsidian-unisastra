@@ -4,3 +4,8 @@ allowBuilds:
   electron: true
   esbuild: true
   rumdl: true
+
+# CM6 extensions and history annotations must share the host-compatible instances.
+overrides:
+  "@codemirror/state": "6.5.0"
+  "@codemirror/view": "6.38.6"
