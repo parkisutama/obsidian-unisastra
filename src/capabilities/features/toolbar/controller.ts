@@ -60,6 +60,7 @@ export class ToolbarController {
   private readonly fileElapsed = new Map<Document, FileElapsedState>();
   private session: ElapsedState = STOPPED_ELAPSED;
   private statusBarEl: HTMLElement | null = null;
+  private tickHandle: number | null = null;
   private disposed = false;
   private factory: SurfaceFactory | null = null;
   private readonly tm: TypewriterModeLib;
@@ -110,7 +111,13 @@ export class ToolbarController {
       )
     );
     this.syncSession();
-    workspace.onLayoutReady(() => this.refresh());
+    workspace.onLayoutReady(() => {
+      const view = workspace.getActiveViewOfType(MarkdownView);
+      if (view) {
+        this.syncFileElapsed(view, view.containerEl.ownerDocument);
+      }
+      this.refresh();
+    });
   }
   private syncFileElapsed(view: unknown, doc: Document): void {
     const activePath =
@@ -131,6 +138,39 @@ export class ToolbarController {
     } else if (!enabled && this.session.startedAt !== null) {
       this.session = STOPPED_ELAPSED;
       this.fileElapsed.clear();
+    }
+    if (enabled) {
+      this.ensureTick();
+    } else {
+      this.stopTick();
+    }
+  }
+  private ensureTick(): void {
+    if (this.tickHandle !== null || this.disposed) {
+      return;
+    }
+    const win =
+      this.tm.plugin.app.workspace.containerEl.ownerDocument.defaultView;
+    if (!win) {
+      return;
+    }
+    this.tickHandle = win.setInterval(() => this.tick(), 1000);
+  }
+  private stopTick(): void {
+    if (this.tickHandle === null) {
+      return;
+    }
+    const win =
+      this.tm.plugin.app.workspace.containerEl.ownerDocument.defaultView;
+    win?.clearInterval(this.tickHandle);
+    this.tickHandle = null;
+  }
+  private tick(): void {
+    for (const doc of new Set([
+      ...this.active.keys(),
+      ...this.surfaces.keys(),
+    ])) {
+      this.schedule(doc);
     }
   }
   resetSession(): void {
@@ -362,6 +402,7 @@ export class ToolbarController {
     this.editors.clear();
     this.active.clear();
     this.session = STOPPED_ELAPSED;
+    this.stopTick();
     this.statusBarEl?.remove();
     this.statusBarEl = null;
   }
