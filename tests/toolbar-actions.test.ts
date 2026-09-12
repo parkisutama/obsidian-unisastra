@@ -16,6 +16,7 @@ function target(text = "hello", from = 0, to = text.length) {
     enabled: true,
     hemingway: false,
     current: true,
+    smartUrl: false,
     visible: { from: 0, to: 10_000 },
   };
   const port: ToolbarTarget = {
@@ -25,6 +26,7 @@ function target(text = "hello", from = 0, to = text.length) {
     dispatch: (transaction) => {
       state = state.update(transaction).state;
     },
+    readClipboardText: undefined,
     policy: () => policy,
   };
   return {
@@ -133,5 +135,62 @@ describe("toolbar executor", () => {
       await executeToolbarAction(editor.port, { kind: "heading" })
     ).toMatch("not supported");
     expect(editor.text()).toBe("##### too deep");
+  });
+  it("inserts a placeholder link without reading the clipboard when smartUrl is off", async () => {
+    const editor = target("docs", 0, 4);
+    editor.port.readClipboardText = () => {
+      throw new Error("Clipboard must not be read when smartUrl is off.");
+    };
+    expect(
+      await executeToolbarAction(editor.port, { kind: "link" })
+    ).toBeNull();
+    expect(editor.text()).toBe("[docs](https://)");
+  });
+  it("uses a valid clipboard URL when smartUrl is on", async () => {
+    const editor = target("docs", 0, 4);
+    editor.policy.smartUrl = true;
+    editor.port.readClipboardText = () =>
+      Promise.resolve("https://example.com");
+    expect(
+      await executeToolbarAction(editor.port, { kind: "link" })
+    ).toBeNull();
+    expect(editor.text()).toBe("[docs](https://example.com)");
+  });
+  it("falls back to the placeholder for non-URL clipboard content", async () => {
+    const editor = target("docs", 0, 4);
+    editor.policy.smartUrl = true;
+    editor.port.readClipboardText = () => Promise.resolve("not a url");
+    expect(
+      await executeToolbarAction(editor.port, { kind: "link" })
+    ).toBeNull();
+    expect(editor.text()).toBe("[docs](https://)");
+  });
+  it("falls back to the placeholder when clipboard access fails", async () => {
+    const editor = target("docs", 0, 4);
+    editor.policy.smartUrl = true;
+    editor.port.readClipboardText = () => Promise.reject(new Error("denied"));
+    expect(
+      await executeToolbarAction(editor.port, { kind: "link" })
+    ).toBeNull();
+    expect(editor.text()).toBe("[docs](https://)");
+  });
+  it("cancels without writing when the selection changes while awaiting clipboard", async () => {
+    const editor = target("docs", 0, 4);
+    editor.policy.smartUrl = true;
+    editor.port.readClipboardText = () => {
+      editor.setSelection(0, 0);
+      return Promise.resolve("https://example.com");
+    };
+    expect(await executeToolbarAction(editor.port, { kind: "link" })).toMatch(
+      "changed"
+    );
+    expect(editor.text()).toBe("docs");
+  });
+  it("unwraps an existing markdown link back to its link text", async () => {
+    const editor = target("[docs](https://example.com)");
+    expect(
+      await executeToolbarAction(editor.port, { kind: "link" })
+    ).toBeNull();
+    expect(editor.text()).toBe("docs");
   });
 });

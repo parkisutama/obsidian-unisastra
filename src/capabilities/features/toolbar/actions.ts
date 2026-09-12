@@ -6,7 +6,8 @@
 // wrap/unwrap pattern as boldEdit, not lifted from a specific upstream line.
 export type ToolbarAction =
   | { kind: "bold" | "italic" | "strikethrough" | "code" | "highlight" }
-  | { kind: "heading" };
+  | { kind: "heading" }
+  | { kind: "link" };
 export interface TextEdit {
   from: number;
   insert: string;
@@ -86,4 +87,39 @@ export function headingEdit(
   const nextLevel = nextHeadingLevel(currentLevel);
   const insert = nextLevel === 0 ? rest : `${"#".repeat(nextLevel)} ${rest}`;
   return { from: lineFrom, to: lineTo, insert };
+}
+export const LINK_PLACEHOLDER_URL = "https://";
+const LINK_PATTERN = /^\[(.*)\]\([^)]*\)$/;
+export interface LinkInsertion extends TextEdit {
+  urlFrom: number;
+  urlTo: number;
+}
+export function linkUnwrapEdit(
+  text: string,
+  from: number,
+  to: number
+): TextEdit | null {
+  const match = LINK_PATTERN.exec(text);
+  if (!match) {
+    return null;
+  }
+  return { from, to, insert: match[1] };
+}
+export function linkWrapEdit(
+  text: string,
+  from: number,
+  to: number,
+  url: string
+): LinkInsertion {
+  const insert = `[${text}](${url})`;
+  const urlFrom = from + text.length + 3;
+  return { from, to, insert, urlFrom, urlTo: urlFrom + url.length };
+}
+export function isLikelyUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
 }

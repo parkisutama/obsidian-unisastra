@@ -16,6 +16,7 @@ const TOOLBAR_BUTTONS: ReadonlyArray<{
   { action: { kind: "code" }, label: "</>", title: "Code" },
   { action: { kind: "highlight" }, label: "H", title: "Highlight" },
   { action: { kind: "heading" }, label: "#", title: "Cycle heading level" },
+  { action: { kind: "link" }, label: "Link", title: "Insert or remove link" },
 ];
 
 const MARGIN_PX = 8;

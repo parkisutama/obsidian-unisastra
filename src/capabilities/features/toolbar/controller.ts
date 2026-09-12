@@ -117,6 +117,13 @@ export class ToolbarController {
         return view.state;
       },
       dispatch: (spec) => view.dispatch(spec),
+      readClipboardText: () => {
+        const clipboard = doc.defaultView?.navigator.clipboard;
+        if (!clipboard?.readText) {
+          return Promise.reject(new Error("Clipboard access unavailable."));
+        }
+        return clipboard.readText();
+      },
       policy: () => {
         const sourceNow = this.markdownView(view);
         const general = this.tm.settings.general;
@@ -140,6 +147,7 @@ export class ToolbarController {
             sourceNow.getMode() === "source" &&
             sourceNow.file?.path === path,
           hemingway: this.tm.settings.hemingwayMode.isHemingwayModeEnabled,
+          smartUrl: this.tm.settings.toolbar.smartUrl,
           visible: getVisibleRange(view.state),
         };
       },
@@ -150,13 +158,18 @@ export class ToolbarController {
     if (!view) {
       return;
     }
-    const issue = executeToolbarAction(this.target(view), action);
-    if (issue) {
-      new Notice(issue);
-    } else {
-      view.focus();
-    }
-    this.schedule(doc);
+    Promise.resolve(executeToolbarAction(this.target(view), action))
+      .then((issue) => {
+        if (issue) {
+          new Notice(issue);
+        } else {
+          view.focus();
+        }
+        this.schedule(doc);
+      })
+      .catch((error: unknown) => {
+        console.error("MD Writer: toolbar action failed.", error);
+      });
   }
   refresh(): void {
     for (const doc of new Set([

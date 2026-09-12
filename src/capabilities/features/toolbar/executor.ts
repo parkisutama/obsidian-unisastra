@@ -9,13 +9,17 @@ import {
   codeEdit,
   headingEdit,
   highlightEdit,
+  isLikelyUrl,
   italicEdit,
+  LINK_PLACEHOLDER_URL,
+  linkUnwrapEdit,
+  linkWrapEdit,
   strikethroughEdit,
   type TextEdit,
   type ToolbarAction,
 } from "./actions";
 
-type InlineActionKind = Exclude<ToolbarAction["kind"], "heading">;
+type InlineActionKind = Exclude<ToolbarAction["kind"], "heading" | "link">;
 const INLINE_EDITORS: Record<
   InlineActionKind,
   (text: string, from: number, to: number) => TextEdit
@@ -33,8 +37,10 @@ export interface ToolbarTarget {
     enabled: boolean;
     current: boolean;
     hemingway: boolean;
+    smartUrl: boolean;
     visible: { from: number; to: number } | null;
   };
+  readClipboardText?: () => Promise<string>;
   readonly state: EditorState;
 }
 export function targetIssue(target: ToolbarTarget): string | null {
@@ -106,15 +112,69 @@ function executeInlineAction(
   );
   return null;
 }
+async function executeLinkAction(
+  target: ToolbarTarget
+): Promise<string | null> {
+  const range = target.state.selection.main;
+  if (range.empty) {
+    return "Select text to format.";
+  }
+  const visible = target.policy().visible;
+  if (visible && (range.from < visible.from || range.to > visible.to)) {
+    return "Selection is outside the focused outline.";
+  }
+  const selectedText = target.state.sliceDoc(range.from, range.to);
+  const unwrapped = linkUnwrapEdit(selectedText, range.from, range.to);
+  if (unwrapped) {
+    dispatchToolbarEdit(target, unwrapped, {
+      anchor: unwrapped.from,
+      head: unwrapped.from + unwrapped.insert.length,
+    });
+    return null;
+  }
+
+  let url = LINK_PLACEHOLDER_URL;
+  if (target.policy().smartUrl) {
+    try {
+      const clipboardText = (await target.readClipboardText?.())?.trim() ?? "";
+      if (isLikelyUrl(clipboardText)) {
+        url = clipboardText;
+      }
+    } catch {
+      // Clipboard unavailable or denied; keep the placeholder URL.
+    }
+    const current = target.state.selection.main;
+    const revalidated = target.policy();
+    const stillSameSelection =
+      target.state.selection.ranges.length === 1 &&
+      current.from === range.from &&
+      current.to === range.to;
+    if (
+      !(revalidated.enabled && revalidated.current) ||
+      revalidated.hemingway ||
+      !stillSameSelection
+    ) {
+      return "The target changed while reading the clipboard. Link was not inserted.";
+    }
+  }
+
+  const edit = linkWrapEdit(selectedText, range.from, range.to, url);
+  dispatchToolbarEdit(target, edit, { anchor: edit.urlFrom, head: edit.urlTo });
+  return null;
+}
 export function executeToolbarAction(
   target: ToolbarTarget,
   action: ToolbarAction
-): string | null {
+): string | null | Promise<string | null> {
   const issue = targetIssue(target);
   if (issue) {
     return issue;
   }
-  return action.kind === "heading"
-    ? executeHeadingAction(target)
-    : executeInlineAction(target, action.kind);
+  if (action.kind === "heading") {
+    return executeHeadingAction(target);
+  }
+  if (action.kind === "link") {
+    return executeLinkAction(target);
+  }
+  return executeInlineAction(target, action.kind);
 }
