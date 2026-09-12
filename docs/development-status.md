@@ -95,6 +95,12 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   (start/stop mengikuti `toolbar.enabled`) dan init `syncFileElapsed()` di
   `onLayoutReady()`. `pnpm run test`/`pnpm run check:ci` tetap hijau; belum
   diverifikasi ulang oleh user di Obsidian.
+- Scope addition: timer update interval dapat dikonfigurasi 1-300 detik
+  (`toolbar.timers.updateIntervalSeconds`, default 1) supaya tick per detik
+  bisa dikurangi agar tidak distraksi saat fokus menulis, tanpa mengubah
+  akurasi elapsed (tetap berbasis selisih timestamp). Free numeric input
+  dengan clamping dipilih user dibanding dropdown preset. `pnpm run test`
+  (56/56) dan `pnpm run check:ci` hijau; belum diverifikasi di Obsidian.
 
 ## Remaining runtime and integration acceptance
 

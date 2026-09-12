@@ -323,6 +323,25 @@ dicatat tanpa melabeli passing otomatis sebagai Obsidian acceptance.
   callback `load()`, sebelum `refresh()` pertama. `pnpm run test` (55/55) dan
   `pnpm run check:ci` tetap hijau setelah fix; belum diverifikasi ulang oleh
   user di Obsidian nyata pasca fix.
+- **Scope addition (diminta user setelah verifikasi semantik session/file)**:
+  update interval HUD dapat dikonfigurasi (`toolbar.timers.updateIntervalSeconds`,
+  default 1, dibatasi 1-300 detik lewat `timerUpdateIntervalSeconds()` di
+  `settings.ts`) supaya user dapat mengurangi distraksi tick per detik saat
+  fokus menulis tanpa mengubah akurasi waktu yang dihitung (`elapsedMs` tetap
+  berbasis selisih timestamp, hanya frekuensi refresh tampilan yang berubah).
+  Ini di luar spec/plan yang accepted (yang hanya menyebut "elapsed seperti
+  upstream"), dipilih user sebagai pendekatan free numeric input dengan
+  clamping (bukan dropdown preset) — dikonfirmasi via pertanyaan langsung.
+  Files: `settings.ts` (field + konstanta batas + normalizer),
+  `edit-timer-update-interval.ts` (Feature baru, pola sama dengan
+  `max-chars-per-line.ts`), `index.ts`, toolbar `controller.ts`
+  (`ensureTick()` membaca interval dari settings dan me-restart timer saat
+  nilai berubah, dideteksi lewat `tickIntervalSeconds` tersimpan — jangan
+  restart tanpa syarat karena `syncSession()`/`refresh()` dipanggil sangat
+  sering), `tests/settings.test.ts` (clamp bawah/atas, fallback nilai
+  non-numerik), `docs/for-users/use-md-writer-features.md`.
+- Verify: `pnpm run test` (56/56) dan `pnpm run check:ci` hijau. Belum
+  diverifikasi di Obsidian nyata — catat blocked seperti bagian T10 lainnya.
 
 ## Slice E: Callout catalog dan insertion tanpa kehilangan data
 
