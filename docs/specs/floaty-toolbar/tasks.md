@@ -6,11 +6,11 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 11/21 tasks implemented (T01-T11; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T11. Runtime Obsidian
-  acceptance belum dilakukan untuk task manapun. Slice C (dock/pin/layout) dan
-  Slice D (timer model + HUD) selesai; Slice E (callout catalog) dimulai
-  dengan T11 (data/settings only, belum ada UI/menu/markdown insertion).
+- Progress: 12/21 tasks implemented (T01-T12; T17 dipecah menjadi T17a/T17b);
+  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T12. Runtime Obsidian
+  acceptance belum dilakukan untuk task manapun. Slice C dan D selesai; Slice E
+  T11-T12 selesai (catalog + menu dropdown + lossless Obsidian conversion),
+  T13 (Callout manager settings-tab UI) berikutnya.
 
 ## Aturan execution
 
@@ -378,16 +378,43 @@ dicatat tanpa melabeli passing otomatis sebagai Obsidian acceptance.
 
 ### T12 — Menu callout dan lossless Obsidian conversion
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance blocked (tidak ada host Obsidian di
+  environment ini).
 - Dependency: T11; AC-03, AC-06, AC-07, AC-11.
 - Acceptance: pilihan menu mengikuti catalog; single/multiline body dibungkus
   benar; existing header type diubah sambil menjaga title/folding/quote depth;
   custom hyphen didukung, ambiguous partial selection ditolak dengan penjelasan.
-- Files (5): `src/capabilities/features/callouts/markdown.ts`, UI `toolbar.ts`,
-  toolbar `executor.ts`, `tests/callout-markdown.test.ts`,
-  `docs/for-users/use-md-writer-features.md`.
-- Verify: multiline/nested/title/fold/partial-header/undo guards tests,
-  `pnpm run test`, `pnpm run check`; runtime rendered callout.
+- Files: `src/capabilities/features/callouts/markdown.ts` (`wrapAsCallout`
+  membungkus tiap baris seleksi termasuk baris kosong menjadi `>`;
+  `changeCalloutType` mengganti hanya token `[!id]` pada baris pertama,
+  mempertahankan prefix quote `>`/`>>` apa adanya (jadi quote depth
+  otomatis terjaga tanpa parsing nested terpisah), fold marker, dan title;
+  `hasAmbiguousCalloutHeader` mendeteksi header callout yang muncul BUKAN di
+  baris pertama seleksi lalu menolak alih-alih menebak), toolbar
+  `actions.ts` (`ToolbarAction` kind `"callout"` dengan field `id`), toolbar
+  `executor.ts` (`executeCalloutAction` — guard sama dengan inline action
+  lain, delegasi ke `calloutEdit`; import lintas folder
+  `capabilities/features/callouts` dari `capabilities/features/toolbar`
+  dianggap wajar karena satu layer capabilities, bukan pelanggaran arah
+  dependency components->capabilities), toolbar `controller.ts`
+  (`ToolbarCalloutOption`, `render()` menghitung opsi dari
+  `settings.callouts.entries` yang `enabled` lalu meneruskan ke
+  `surface.update()` sebagai parameter kelima), UI `toolbar.ts`
+  (`<select>` native untuk memilih callout — dipilih dibanding overlay menu
+  custom karena keyboard-accessible bawaan dan belum ada infrastruktur menu
+  di toolbar; opsi di-diff via signature string agar tidak merender ulang
+  saat dropdown terbuka ketika tick HUD berjalan setiap detik),
+  `_floaty-toolbar.scss` (style select), `tests/callout-markdown.test.ts`
+  (wrap single/multiline/custom-id, change-type title/fold/nested-depth/
+  custom-id, deteksi ambiguous, `calloutEdit` end-to-end),
+  `tests/toolbar-actions.test.ts` (executor: wrap via action, refusal empty
+  selection dan ambiguous header), `docs/for-users/use-md-writer-features.md`.
+- Verify: `pnpm run test` (81/81) dan `pnpm run check:ci` hijau. GitHub output
+  mode (marker uppercase, larangan title/folding/nesting) TIDAK
+  diimplementasikan di T12 — itu task terpisah nanti sesuai urutan slice di
+  plan.md ("Output GitHub Alerts"); `calloutEdit` saat ini hanya sintaks
+  Obsidian. Runtime rendered callout di Obsidian nyata BELUM diverifikasi —
+  catat blocked.
 
 Checkpoint E1 setelah T10-T12: `pnpm run check:ci`; review hasil Markdown aktual
 dan invariants data sebelum membuka catalog editing UI.

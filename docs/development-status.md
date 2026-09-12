@@ -46,9 +46,9 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   and narrow-window shrink; Slice D — shared session and per-window file
   elapsed model, plus a HUD shown in the dock or the main window's status bar
   with visibility toggles, prefixes, and an explicit session reset; Slice E
-  start — T11 callout catalog and additive settings, data-layer only, no
-  UI/menu/markdown insertion yet) implemented dan wired ke `src/lib.ts`;
-  11/21 task implemented.
+  — T11 callout catalog and additive settings, plus T12 callout dropdown menu
+  wired into the toolbar with lossless Obsidian conversion) implemented dan
+  wired ke `src/lib.ts`; 12/21 task implemented.
 - `pnpm run test` (8 file, 44 test) dan `pnpm run check:ci` lolos untuk state
   saat ini, termasuk build, verify-artifacts, dan docs build. Perbaikan gate
   selama T01-T04: satu type error (`EditorView.editable` value import) dan
@@ -109,6 +109,13 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   divalidasi tipenya (string/null), belum divalidasi format warna/Lucide
   icon — ditunda ke Slice F, dicatat di plan.md. Tidak ada UI/menu/markdown
   insertion di T11; itu T12-T13. `pnpm run test` (66/66) dan
+  `pnpm run check:ci` hijau.
+- T12: callout dropdown (`<select>` native) di toolbar, `changeCalloutType`
+  hanya mengganti token `[!id]` pada baris pertama seleksi sehingga quote
+  depth/fold/title existing terjaga tanpa parsing nested terpisah, dan
+  seleksi yang memotong header callout di tengah ditolak
+  (`hasAmbiguousCalloutHeader`). GitHub Alerts output mode belum
+  diimplementasikan (task terpisah). `pnpm run test` (81/81) dan
   `pnpm run check:ci` hijau.
 
 ## Remaining runtime and integration acceptance
