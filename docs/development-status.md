@@ -38,13 +38,13 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
 - Branch `codex/adopt-floaty-toolbar`: [spec](./specs/floaty-toolbar/spec.md)
   accepted oleh maintainer; [plan](./specs/floaty-toolbar/plan.md) dan
   [ADR-002](./reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md)
-  Accepted. [Task breakdown](./specs/floaty-toolbar/tasks.md): T01-T08 (Slice A
+  Accepted. [Task breakdown](./specs/floaty-toolbar/tasks.md): T01-T09 (Slice A
   — settings contract, bold executor, CM6/controller bridge, floating toolbar
   UI/settings tab; Slice B — italic/strikethrough/code/highlight, cycling
   heading, and link insert/unwrap with clipboard capture/revalidation; Slice C
   — dock/pin with persistent-always-visible override, status-bar clearance,
-  and narrow-window shrink) implemented dan wired ke `src/lib.ts`;
-  8/21 task implemented.
+  and narrow-window shrink; Slice D start — shared session and per-window file
+  elapsed model) implemented dan wired ke `src/lib.ts`; 9/21 task implemented.
 - `pnpm run test` (8 file, 44 test) dan `pnpm run check:ci` lolos untuk state
   saat ini, termasuk build, verify-artifacts, dan docs build. Perbaikan gate
   selama T01-T04: satu type error (`EditorView.editable` value import) dan
@@ -56,18 +56,21 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   T07: ESLint Obsidian `sentence-case` pada teks Notice, dan Stylelint
   `selector-class-pattern` menolak BEM `--modifier` (diganti kebab-case
   `ptm-floaty-toolbar-dock`). Selama T08: satu Biome format fix (line-length
-  pada `statusBarHeight`).
-- T09 dan seterusnya (timer/HUD, callout catalog) belum diimplementasikan.
-  Runtime Obsidian desktop/mobile/popout belum diuji untuk task manapun —
-  environment ini tidak punya host Obsidian, dan Vitest terkonfigurasi
-  `environment: "node"` sehingga UI toolbar
+  pada `statusBarHeight`). Selama T09: Biome `useNumericSeparators` pada
+  literal test di bawah 5 digit, diperbaiki oleh `pnpm run fix`.
+- T10 dan seterusnya (HUD session/file, callout catalog) belum
+  diimplementasikan. Runtime Obsidian desktop/mobile/popout belum diuji untuk
+  task manapun — environment ini tidak punya host Obsidian, dan Vitest
+  terkonfigurasi `environment: "node"` sehingga UI toolbar
   (`src/components/floaty-toolbar/toolbar.ts`), clipboard controller wiring,
-  dock mouseenter/mouseleave/Escape wiring, dan status-bar clearance hanya
-  diverifikasi lewat typecheck/lint/build plus satu pure helper
-  (`dockBottomOffsetPx`) yang diuji unit test, bukan DOM/QA runtime. Feature
-  classes toggle dock tidak punya unit test — repo ini tidak punya harness
-  untuk mock `SettingGroup` Obsidian. Hasil QA standardization sebelumnya
-  bukan bukti fitur Floaty Toolbar.
+  dock mouseenter/mouseleave/Escape wiring, status-bar clearance, dan
+  `active-leaf-change`/`file-open` elapsed wiring hanya diverifikasi lewat
+  typecheck/lint/build plus pure model/helper functions
+  (`dockBottomOffsetPx`, `elapsed.ts`) yang diuji unit test, bukan DOM/mock
+  `Workspace` penuh atau QA runtime. Feature classes toggle dock tidak punya
+  unit test — repo ini tidak punya harness untuk mock `SettingGroup`
+  Obsidian. Hasil QA standardization sebelumnya bukan bukti fitur Floaty
+  Toolbar.
 
 ## Remaining runtime and integration acceptance
 

@@ -6,10 +6,10 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 8/21 tasks implemented (T01-T08; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T08. Runtime Obsidian
+- Progress: 9/21 tasks implemented (T01-T09; T17 dipecah menjadi T17a/T17b);
+  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T09. Runtime Obsidian
   acceptance belum dilakukan untuk task manapun. Slice C (dock/pin/layout)
-  selesai; Slice D (timer/HUD) berikutnya.
+  selesai; Slice D (timer/HUD) sedang berjalan, T10 (HUD) berikutnya.
 
 ## Aturan execution
 
@@ -236,15 +236,32 @@ ditandai pending; stop/fix bila gate otomatis gagal.
 
 ### T09 — Model elapsed dan state file per window
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance blocked (tidak ada host Obsidian di
+  environment ini).
 - Dependency: T08; AC-05, AC-09, AC-11.
 - Acceptance: session shared/reset; file per window initialize active path,
   A/B/A reset, same path tidak reset, null/delete clear/rename reset; idle ikut
   dihitung, tidak membaca ctime/mtime atau persist timestamp; disable cleanup.
-- Files (4): toolbar `elapsed.ts`, toolbar `controller.ts`,
-  `tests/toolbar-elapsed.test.ts`, `docs/specs/floaty-toolbar/plan.md`.
-- Verify: injected clock/fake host tests, no tick-count accumulation,
-  `pnpm run test`, `pnpm run check`.
+- Files: toolbar `elapsed.ts` (pure `ElapsedState`/`FileElapsedState`,
+  `elapsedMs` dihitung dari selisih timestamp — bukan akumulasi tick, jadi idle
+  ikut dihitung otomatis; `nextFileElapsedState` menangani init/A-B-A/same-path/
+  null/rename dalam satu reducer), toolbar `controller.ts` (`session` shared
+  single field, `fileElapsed` per-`Document` map, `syncSession()` start/stop
+  mengikuti `toolbar.enabled` dipanggil dari `load()` dan `refresh()` —
+  refresh() sudah terpanggil setiap `saveSettings()` sehingga toggle enable
+  langsung ter-sinkron; `syncFileElapsed()` dipanggil dari `active-leaf-change`
+  DAN `file-open` karena Obsidian membedakan ganti pane vs ganti file di leaf
+  yang sama; `resetSession()`/`getSessionElapsedMs()`/`getFileElapsedMs()`
+  disiapkan untuk HUD T10; cleanup `fileElapsed` di `closeWindow()` dan saat
+  disable via `syncSession()`), `tests/toolbar-elapsed.test.ts` (idle counting,
+  clock-mundur clamp ke 0, init/A-B-A/same-path/null/rename). `plan.md` tidak
+  diubah — deskripsi model timer di sana sudah akurat terhadap implementasi ini.
+- Verify: `pnpm run test` (52/52) dan `pnpm run check:ci` hijau. Tidak ada
+  tick-count accumulation karena `elapsedMs` selalu `now - startedAt` langsung.
+  `file-open`/`active-leaf-change` wiring di controller tidak diuji unit test
+  (perlu mock `Workspace` Obsidian penuh, di luar scope harness saat ini) —
+  hanya model pure yang diuji. QA Obsidian (A/B/A nyata, popout file berbeda,
+  rename/delete file aktif) BELUM dilakukan — catat blocked.
 
 Checkpoint C/D1 setelah T07-T09: `pnpm run check:ci`; review persistent behavior,
 mobile absence, per-window timer semantics dan cleanup. Runtime matrix pending
