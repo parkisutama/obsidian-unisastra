@@ -22,6 +22,10 @@ const MARGIN_PX = 8;
 
 const DOCK_CLASS = "ptm-floaty-toolbar-dock";
 
+export function dockBottomOffsetPx(statusBarHeight: number): number {
+  return statusBarHeight > 0 ? statusBarHeight + MARGIN_PX : MARGIN_PX;
+}
+
 export const createFloatyToolbarSurface: SurfaceFactory = (
   doc,
   execute,
@@ -65,6 +69,9 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
         el.classList.add(DOCK_CLASS);
         el.style.removeProperty("top");
         el.style.removeProperty("left");
+        const statusBarHeight =
+          doc.querySelector(".status-bar")?.getBoundingClientRect().height ?? 0;
+        el.style.bottom = `${dockBottomOffsetPx(statusBarHeight)}px`;
         el.hidden = !(view && dockVisible);
         return;
       }

@@ -2,6 +2,7 @@
   position: fixed;
   z-index: var(--layer-popover);
   display: flex;
+  flex-wrap: wrap;
   gap: 2px;
   padding: 4px;
   background-color: var(--background-secondary);
@@ -16,9 +17,14 @@
   &.ptm-floaty-toolbar-dock {
     top: auto;
     left: 50%;
-    bottom: var(--size-4-4);
+    max-width: min(480px, calc(100vw - #{2 * 8px}));
     transform: translateX(-50%);
+    justify-content: center;
     transition: opacity 100ms ease-in-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
   }
 }
 

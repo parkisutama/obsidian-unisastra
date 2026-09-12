@@ -42,6 +42,24 @@ Cek:
 - duplicate heading memakai suffix seperti `-1` sesuai gaya GitHub,
 - link tidak berada di format yang diproses plugin lain sebelum MD Writer.
 
+## Floating toolbar tidak muncul atau dock menutupi status bar
+
+Cek:
+
+- **Enable floating toolbar** aktif di tab Toolbar, dan platform saat ini
+  bukan mobile,
+- file aktif dalam Source mode (bukan Reading Mode/Live Preview rendered),
+  bukan popout tanpa editor aktif, dan bukan file dengan frontmatter
+  `md-writer: false`,
+- Hemingway mode nonaktif — toolbar disembunyikan selama Hemingway aktif,
+- untuk mode dock: dock auto-hide saat Anda mengetik dan muncul kembali saat
+  pointer masuk ke area dock (peek); aktifkan **Always show dock** bila Anda
+  ingin dock selalu terlihat,
+- di window sempit, dock menyusut (wrap) alih-alih meluber ke luar viewport;
+  jika theme/snippet memindahkan status bar, dock tetap mengukur tinggi
+  `.status-bar` saat ini untuk menghindari tumpang tindih — laporkan bug bila
+  masih tertutupi pada theme tertentu.
+
 ## Laporkan bug
 
 Saat melaporkan bug, sertakan:
