@@ -3,6 +3,15 @@ import { MarkdownView, Notice, Platform } from "obsidian";
 import { getVisibleRange } from "@/cm6/outliner/utils";
 import type TypewriterModeLib from "@/lib";
 import type { ToolbarAction } from "./actions";
+import {
+  type ElapsedState,
+  EMPTY_FILE_ELAPSED,
+  elapsedMs,
+  type FileElapsedState,
+  nextFileElapsedState,
+  STOPPED_ELAPSED,
+  startElapsed,
+} from "./elapsed";
 import { executeToolbarAction, type ToolbarTarget } from "./executor";
 import type { ToolbarSettings } from "./settings";
 
@@ -41,6 +50,8 @@ export class ToolbarController {
   private readonly surfaces = new Map<Document, ToolbarSurface>();
   private readonly frames = new Map<Document, number>();
   private readonly dockVisible = new Map<Document, boolean>();
+  private readonly fileElapsed = new Map<Document, FileElapsedState>();
+  private session: ElapsedState = STOPPED_ELAPSED;
   private disposed = false;
   private factory: SurfaceFactory | null = null;
   private readonly tm: TypewriterModeLib;
@@ -70,6 +81,18 @@ export class ToolbarController {
         } else {
           this.active.delete(doc);
         }
+        this.syncFileElapsed(view, doc);
+        this.schedule(doc);
+      })
+    );
+    this.tm.plugin.registerEvent(
+      workspace.on("file-open", () => {
+        const view = workspace.getActiveViewOfType(MarkdownView);
+        if (!view) {
+          return;
+        }
+        const doc = view.containerEl.ownerDocument;
+        this.syncFileElapsed(view, doc);
         this.schedule(doc);
       })
     );
@@ -78,7 +101,41 @@ export class ToolbarController {
         this.closeWindow(win.document)
       )
     );
+    this.syncSession();
     workspace.onLayoutReady(() => this.refresh());
+  }
+  private syncFileElapsed(view: unknown, doc: Document): void {
+    const activePath =
+      view instanceof MarkdownView ? (view.file?.path ?? null) : null;
+    this.fileElapsed.set(
+      doc,
+      nextFileElapsedState(
+        this.fileElapsed.get(doc) ?? EMPTY_FILE_ELAPSED,
+        activePath,
+        Date.now()
+      )
+    );
+  }
+  private syncSession(): void {
+    const enabled = this.tm.settings.toolbar.enabled;
+    if (enabled && this.session.startedAt === null) {
+      this.session = startElapsed(Date.now());
+    } else if (!enabled && this.session.startedAt !== null) {
+      this.session = STOPPED_ELAPSED;
+      this.fileElapsed.clear();
+    }
+  }
+  resetSession(): void {
+    if (this.session.startedAt !== null) {
+      this.session = startElapsed(Date.now());
+    }
+  }
+  getSessionElapsedMs(now = Date.now()): number {
+    return elapsedMs(this.session, now);
+  }
+  getFileElapsedMs(doc: Document, now = Date.now()): number {
+    const state = this.fileElapsed.get(doc);
+    return state ? elapsedMs(state.elapsed, now) : 0;
   }
   attach(view: EditorView): void {
     if (this.disposed || Platform.isMobile) {
@@ -194,6 +251,7 @@ export class ToolbarController {
       });
   }
   refresh(): void {
+    this.syncSession();
     for (const doc of new Set([
       ...this.active.keys(),
       ...this.surfaces.keys(),
@@ -245,6 +303,7 @@ export class ToolbarController {
     this.surfaces.get(doc)?.destroy();
     this.surfaces.delete(doc);
     this.dockVisible.delete(doc);
+    this.fileElapsed.delete(doc);
     this.active.delete(doc);
     for (const view of this.editors) {
       if (view.dom.ownerDocument === doc) {
@@ -262,5 +321,6 @@ export class ToolbarController {
     }
     this.editors.clear();
     this.active.clear();
+    this.session = STOPPED_ELAPSED;
   }
 }
