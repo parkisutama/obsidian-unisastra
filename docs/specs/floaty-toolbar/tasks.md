@@ -6,9 +6,10 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 7/21 tasks implemented (T01-T07; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T07. Runtime Obsidian
-  acceptance belum dilakukan untuk task manapun.
+- Progress: 8/21 tasks implemented (T01-T08; T17 dipecah menjadi T17a/T17b);
+  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T08. Runtime Obsidian
+  acceptance belum dilakukan untuk task manapun. Slice C (dock/pin/layout)
+  selesai; Slice D (timer/HUD) berikutnya.
 
 ## Aturan execution
 
@@ -208,15 +209,28 @@ ditandai pending; stop/fix bila gate otomatis gagal.
 
 ### T08 — Layout dock dan navigasi menu
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance blocked (tidak ada host Obsidian di
+  environment ini).
 - Dependency: T07; AC-02, AC-10.
 - Acceptance: dock bawah menghindari status bar/cursor dan menyusut di window
   sempit; Tab/Shift+Tab/Enter/Space dan Escape konsisten; menu tertutup saat
   target/window tidak valid, persistent dock tetap tersedia saat editor valid.
-- Files (4): UI `toolbar.ts`, `_floaty-toolbar.scss`,
-  `tests/toolbar-controller.test.ts`, `docs/for-users/troubleshooting.md`.
-- Verify: menu/controller behavior tests dan `pnpm run check`; QA Obsidian
-  fullscreen writing focus, zoom, sempit, reduced motion, desktop/popout.
+- Files: UI `toolbar.ts` (`dockBottomOffsetPx` pure helper, dock bottom offset
+  dihitung dari tinggi `.status-bar` yang terukur setiap `update()` agar tidak
+  tumpang tindih), `_floaty-toolbar.scss` (`flex-wrap` + `max-width:
+  min(480px, 100vw - 16px)` agar dock menyusut di window sempit alih-alih
+  meluber; `prefers-reduced-motion` mematikan transition opacity),
+  `tests/toolbar-controller.test.ts` (`dockBottomOffsetPx` dengan/tanpa status
+  bar), `docs/for-users/troubleshooting.md` (bagian toolbar/dock baru).
+  Tab/Shift+Tab/Enter/Space sudah konsisten sejak T04 karena tombol berupa
+  `<button>` native tanpa custom key handling; Escape (leave event) dan
+  menu-tertutup-saat-target-invalid (via `render()` menghancurkan surface
+  ketika target tidak enabled/current, lalu surface baru dibuat begitu editor
+  valid lagi) sudah ada sejak T07, tidak diubah di T08.
+- Verify: `pnpm run test` (46/46) dan `pnpm run check:ci` hijau. QA Obsidian
+  (fullscreen writing focus, zoom, window sempit, reduced motion,
+  desktop/popout, tema dengan status bar custom) BELUM dilakukan — catat
+  blocked, bukan shipped.
 
 ## Slice D: Dua timer dengan definisi yang jelas
 
