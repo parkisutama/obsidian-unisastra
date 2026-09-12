@@ -6,10 +6,10 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 9/21 tasks implemented (T01-T09; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T09. Runtime Obsidian
-  acceptance belum dilakukan untuk task manapun. Slice C (dock/pin/layout)
-  selesai; Slice D (timer/HUD) sedang berjalan, T10 (HUD) berikutnya.
+- Progress: 10/21 tasks implemented (T01-T10; T17 dipecah menjadi T17a/T17b);
+  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T10. Runtime Obsidian
+  acceptance belum dilakukan untuk task manapun. Slice C (dock/pin/layout) dan
+  Slice D (timer model + HUD) selesai; Slice E (callout catalog) berikutnya.
 
 ## Aturan execution
 
@@ -269,16 +269,41 @@ dicatat tanpa melabeli passing otomatis sebagai Obsidian acceptance.
 
 ### T10 — HUD session/file dengan toggles dan prefix
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance blocked (tidak ada host Obsidian di
+  environment ini).
 - Dependency: T09; AC-04, AC-05, AC-10.
 - Acceptance: dock dan status bar memakai model sama tanpa duplicate HUD;
   session/file toggle/prefix persisted, tooltip menjelaskan elapsed dan reset;
   hide tidak reset dan popout tanpa slot status bar tidak diberi slot palsu.
-- Files (5): `src/components/floaty-toolbar/hud.ts`, UI `toolbar.ts`,
-  `src/components/settings-tab.ts`, `tests/toolbar-elapsed.test.ts`,
+- Files: `src/capabilities/features/toolbar/hud.ts` (pure `formatElapsed`,
+  `hudSegments` — satu sumber format dipakai baik oleh dock maupun status
+  bar, mencegah duplicate/divergent HUD), `src/components/floaty-toolbar/hud.ts`
+  (DOM: `createHudElement` embed di dalam dock, tombol reset khusus segmen
+  session dengan `aria-label` menjelaskan tooltip + "Activate to reset"),
+  UI `toolbar.ts` (embed HUD saat mode dock, `hud.update([])` saat floating
+  agar tidak duplicate dengan status bar), toolbar `controller.ts`
+  (`statusBarEl` singleton via `plugin.addStatusBarItem()` — pola yang sama
+  dengan `hemingway-mode.ts` — hanya ditampilkan saat mode floating DAN
+  `doc` adalah window utama (`workspace.containerEl.ownerDocument`); popout
+  floating sengaja tidak mendapat HUD karena tidak ada API status bar per
+  popout window, `resetSession()` diteruskan ke factory), settings features
+  baru `toggle-timer-session-visible.ts`, `toggle-timer-file-visible.ts`,
+  `edit-timer-session-prefix.ts`, `edit-timer-file-prefix.ts` (di luar file
+  list awal — empat setting nested `toolbar.timers.*` tidak cocok dengan
+  `SettingsPath` dua-level milik `Feature`, jadi `settingKey` di-cast
+  `as unknown as SettingsPath` dengan string fabrikasi unik per kelas, akses
+  field langsung tanpa `getSettingValue`/`setSettingValue`; keputusan
+  dikonfirmasi user saat exit Auto Mode), `prefix()` di `settings.ts`
+  di-export ulang agar UI memakai normalizer sama dengan startup migration,
+  didaftarkan di `src/capabilities/features/toolbar/index.ts` (otomatis
+  muncul di tab Toolbar tanpa perubahan `settings-tab.ts`),
+  `tests/toolbar-elapsed.test.ts` (format elapsed, HUD segments per toggle),
   `docs/for-users/use-md-writer-features.md`.
-- Verify: model/toggle tests, `pnpm run test`, `pnpm run check`; QA timer/HUD
-  placement, prefix, click/keyboard reset, idle/reload, popout.
+- Verify: `pnpm run test` (55/55) dan `pnpm run check:ci` hijau. Feature
+  classes settings timer tidak diuji unit test — sama seperti toggle
+  enable/smart-url/dock sebelumnya, tidak ada harness mock `SettingGroup`.
+  QA Obsidian (placement dock vs status bar, prefix, klik/keyboard reset,
+  idle/reload, popout) BELUM dilakukan — catat blocked.
 
 ## Slice E: Callout catalog dan insertion tanpa kehilangan data
 
