@@ -19,6 +19,11 @@ Sebelum menulis, tentukan pembaca utamanya:
 - Developer ingin setup repo: `docs/for-developers/setup-local-development.md`.
 - Developer ingin mulai branch: `docs/for-developers/start-a-feature-or-bugfix.md`.
 - Developer ingin QA: `docs/for-developers/run-qa-before-merge-or-release.md`.
+- Developer bekerja dengan AI: `docs/for-developers/ai-assisted-development.md`.
+- Implementasi yang berjalan: `docs/current-state.md`.
+- Status dan bukti validasi: `docs/development-status.md`.
+- Struktur modul: `docs/reference/code-architecture-baseline.md`.
+- Keputusan arsitektur: `docs/reference/decisions/`.
 - Maintainer ingin release: `docs/for-developers/create-a-github-release.md`.
 - Maintainer butuh aturan stabil: `docs/reference/`.
 - Dokumen sudah historis: `docs/archive/`.

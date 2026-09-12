@@ -45,6 +45,10 @@ Husky installs through `pnpm install`. Pre-commit runs `pnpm run check`
 without modifying files; commit-msg enforces Conventional Commits via commitlint.
 Run `pnpm run fix` explicitly and review changes before staging.
 
+For AI development, read [AGENTS.md](./AGENTS.md) and
+[AI Assisted Development](./docs/for-developers/ai-assisted-development.md).
+Claude follows the same instructions through [CLAUDE.md](./CLAUDE.md).
+
 ## Documentation Site
 
 | Command | Description |

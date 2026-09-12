@@ -20,6 +20,10 @@ Dokumen ini untuk developer yang ingin menjalankan MD Writer secara lokal.
 
 ## Development loop
 
+Instalasi mengaktifkan hook Husky. Baca
+[AI Assisted Development](./ai-assisted-development.md) untuk urutan konteks,
+Conventional Commits, dan batas validasi otomatis.
+
 Gunakan perintah ini saat mengembangkan plugin:
 
 ```bash

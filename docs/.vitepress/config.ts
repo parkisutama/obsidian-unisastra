@@ -15,6 +15,25 @@ export default defineConfig({
     ],
     sidebar: [
       {
+        text: "AI development context",
+        items: [
+          {
+            link: "/for-developers/ai-assisted-development",
+            text: "AI Assisted Development",
+          },
+          { link: "/current-state", text: "Current state" },
+          { link: "/development-status", text: "Development status" },
+          {
+            link: "/reference/code-architecture-baseline",
+            text: "Architecture baseline",
+          },
+          {
+            link: "/reference/decisions/ADR-001-ai-development-context-and-gates",
+            text: "ADR-001: context and gates",
+          },
+        ],
+      },
+      {
         items: [
           { link: "/for-users/install-md-writer", text: "Install MD Writer" },
           {

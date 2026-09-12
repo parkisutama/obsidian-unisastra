@@ -21,6 +21,10 @@ Informasi singkat untuk pengguna juga tersedia di
 
 ## Developer dan maintainer
 
+Untuk bekerja dengan AI, mulai dari
+[AI Assisted Development](./for-developers/ai-assisted-development.md),
+[current state](./current-state.md), dan [development status](./development-status.md).
+
 Mulai dari sini jika tujuan Anda adalah mengubah kode, dokumentasi, atau release:
 
 - [Set up local development](./for-developers/setup-local-development.md)
@@ -36,6 +40,9 @@ Quickstart contributor tetap ada di
 [DEVELOPMENT.md](https://github.com/parkisutama/obsidian-md-writer/blob/main/DEVELOPMENT.md).
 
 ## Reference
+
+- [Architecture baseline](./reference/code-architecture-baseline.md)
+- [ADR-001: AI context and gates](./reference/decisions/ADR-001-ai-development-context-and-gates.md)
 
 Gunakan bagian ini untuk aturan stabil, checklist, dan spesifikasi panjang:
 

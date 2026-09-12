@@ -13,6 +13,11 @@ MD Writer adalah plugin editor yang sensitif terhadap regresi UI, perilaku keybo
 
 ## Gambaran alur
 
+Untuk AI Assisted Development, mulai dari instruksi AGENTS.md dan
+[urutan konteks aktif](./ai-assisted-development.md). Kontrak, implementasi,
+dan bukti acceptance diperiksa sebelum mengubah kode; dokumentasi yang terdampak
+diperbarui bersama perubahan.
+
 ```mermaid
 flowchart LR
   A["Branch kerja"] --> B["Implementasi"]

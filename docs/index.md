@@ -36,6 +36,9 @@ Choose the path that matches what you want to do.
 
 ### Developer dan maintainer
 
+- [AI Assisted Development](./for-developers/ai-assisted-development.md)
+- [Current state](./current-state.md)
+- [Development status](./development-status.md)
 - [Set up local development](./for-developers/setup-local-development.md)
 - [Start a feature or bugfix](./for-developers/start-a-feature-or-bugfix.md)
 - [Run QA before merge or release](./for-developers/run-qa-before-merge-or-release.md)
