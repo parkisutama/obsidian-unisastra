@@ -6,8 +6,8 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 5/21 tasks implemented (T01-T05; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T05. Runtime Obsidian
+- Progress: 6/21 tasks implemented (T01-T06; T17 dipecah menjadi T17a/T17b);
+  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T06. Runtime Obsidian
   acceptance belum dilakukan untuk task manapun.
 
 ## Aturan execution
@@ -140,15 +140,31 @@ ditinjau sebelum membuat UI. Catat automated versus runtime evidence.
 
 ### T06 — Link clipboard dengan capture/revalidation
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance blocked (tidak ada host Obsidian di
+  environment ini).
 - Dependency: T05; AC-03, AC-11.
 - Acceptance: smart URL optional dan default off; clipboard hanya saat action,
   failure/non-URL fallback placeholder; setelah await target berubah menyebabkan
   cancellation, tanpa menulis ke file atau range baru; unwrap link parity.
-- Files (4): toolbar `actions.ts`, toolbar `executor.ts`,
-  `tests/toolbar-actions.test.ts`, `docs/for-users/use-md-writer-features.md`.
-- Verify: controlled asynchronous clipboard tests termasuk edit/leaf switch,
-  settings/Hemingway berubah; `pnpm run test`, `pnpm run check`.
+- Files: toolbar `actions.ts` (`linkWrapEdit`/`linkUnwrapEdit`/`isLikelyUrl`,
+  placeholder `https://`), toolbar `executor.ts` (`executeLinkAction` async:
+  unwrap dulu, baca clipboard hanya saat `smartUrl` aktif, revalidasi
+  enabled/current/hemingway/selection setelah await sebelum dispatch),
+  `src/capabilities/features/toolbar/controller.ts` (`readClipboardText` via
+  `doc.defaultView.navigator.clipboard`, `execute()` menangani Promise),
+  `src/capabilities/features/toolbar/toggle-smart-url.ts` +
+  `src/capabilities/features/toolbar/index.ts` (toggle Smart URL di luar
+  scope file awal, ditambah karena setting tanpa UI tidak dapat dipakai
+  pengguna), UI `toolbar.ts` (tombol Link), `tests/toolbar-actions.test.ts`
+  (smartUrl off tidak membaca clipboard, URL valid, fallback non-URL, fallback
+  clipboard gagal, pembatalan saat seleksi berubah selagi await, unwrap link),
+  `docs/for-users/use-md-writer-features.md`.
+- Verify: `pnpm run test` (42/42) dan `pnpm run check:ci` hijau. Clipboard
+  test memakai `readClipboardText` yang di-inject langsung ke `ToolbarTarget`
+  palsu (bukan `navigator.clipboard` asli) karena Vitest `environment: "node"`
+  tidak punya clipboard API; controller wiring hanya diverifikasi lewat
+  typecheck/build, bukan runtime. QA Obsidian (edit/leaf switch,
+  settings/Hemingway berubah selagi await) BELUM dilakukan — catat blocked.
 
 Checkpoint B setelah T04-T06: `pnpm run check:ci`, review selection preservation,
 undo, block IDs, folding, whitespace dan keyboard. Runtime belum diuji tetap
