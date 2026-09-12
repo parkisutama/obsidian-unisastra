@@ -77,6 +77,18 @@ Catatan:
   multi-selection, atau saat seleksi/baris kursor berada di luar outline
   yang sedang fokus.
 
+Toolbar dapat dipin sebagai dock:
+
+- **Pin toolbar as a dock** memindahkan toolbar dari floating (mengikuti
+  seleksi) ke dock tetap di bawah window. Dock biasa auto-hide saat Anda
+  mengetik dan muncul kembali (peek) saat pointer masuk ke area dock; Escape
+  juga menyembunyikannya,
+- **Always show dock** membuat dock selalu terlihat, mengabaikan auto-hide
+  saat mengetik, mouse leave, Escape, atau reload settings. Mengaktifkannya
+  langsung memilih mode dock; menonaktifkan pin dock saat opsi ini masih
+  menyala akan ditolak dengan keterangan — matikan **Always show dock**
+  terlebih dahulu.
+
 ## Pakai GitHub-style heading anchors
 
 MD Writer dapat membuka link heading bergaya GitHub seperti:

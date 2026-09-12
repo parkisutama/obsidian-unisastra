@@ -20,13 +20,19 @@ export function dockVisibility(
   }
   return event === "typing" || event === "leave" ? false : visible;
 }
+export type DockEvent = "typing" | "leave" | "reveal";
 export interface ToolbarSurface {
   destroy: () => void;
-  update: (view: EditorView | null, settings: ToolbarSettings) => void;
+  update: (
+    view: EditorView | null,
+    settings: ToolbarSettings,
+    dockVisible: boolean
+  ) => void;
 }
 export type SurfaceFactory = (
   doc: Document,
-  execute: (action: ToolbarAction) => void
+  execute: (action: ToolbarAction) => void,
+  reportDockEvent: (event: DockEvent) => void
 ) => ToolbarSurface;
 
 export class ToolbarController {
@@ -34,6 +40,7 @@ export class ToolbarController {
   private readonly active = new Map<Document, EditorView>();
   private readonly surfaces = new Map<Document, ToolbarSurface>();
   private readonly frames = new Map<Document, number>();
+  private readonly dockVisible = new Map<Document, boolean>();
   private disposed = false;
   private factory: SurfaceFactory | null = null;
   private readonly tm: TypewriterModeLib;
@@ -85,6 +92,21 @@ export class ToolbarController {
     if (view.hasFocus || !this.active.has(doc)) {
       this.active.set(doc, view);
     }
+    this.schedule(doc);
+  }
+  notifyTyping(view: EditorView): void {
+    this.reportDockEvent(view.dom.ownerDocument, "typing");
+  }
+  reportDockEvent(doc: Document, event: DockEvent): void {
+    if (this.disposed) {
+      return;
+    }
+    const toolbar = this.tm.settings.toolbar;
+    const current = this.dockVisible.get(doc) ?? true;
+    this.dockVisible.set(
+      doc,
+      dockVisibility(toolbar.mode, toolbar.dockAlwaysVisible, current, event)
+    );
     this.schedule(doc);
   }
   detach(view: EditorView): void {
@@ -176,7 +198,7 @@ export class ToolbarController {
       ...this.active.keys(),
       ...this.surfaces.keys(),
     ])) {
-      this.schedule(doc);
+      this.reportDockEvent(doc, "reveal");
     }
   }
   private schedule(doc: Document): void {
@@ -196,14 +218,23 @@ export class ToolbarController {
     if (!(target?.enabled && target.current && this.factory)) {
       this.surfaces.get(doc)?.destroy();
       this.surfaces.delete(doc);
+      this.dockVisible.delete(doc);
       return;
     }
     let surface = this.surfaces.get(doc);
     if (!surface) {
-      surface = this.factory(doc, (action) => this.execute(doc, action));
+      surface = this.factory(
+        doc,
+        (action) => this.execute(doc, action),
+        (event) => this.reportDockEvent(doc, event)
+      );
       this.surfaces.set(doc, surface);
     }
-    surface.update(view ?? null, this.tm.settings.toolbar);
+    surface.update(
+      view ?? null,
+      this.tm.settings.toolbar,
+      this.dockVisible.get(doc) ?? true
+    );
   }
   private closeWindow(doc: Document): void {
     const frame = this.frames.get(doc);
@@ -213,6 +244,7 @@ export class ToolbarController {
     this.frames.delete(doc);
     this.surfaces.get(doc)?.destroy();
     this.surfaces.delete(doc);
+    this.dockVisible.delete(doc);
     this.active.delete(doc);
     for (const view of this.editors) {
       if (view.dom.ownerDocument === doc) {

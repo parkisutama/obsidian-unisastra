@@ -1,4 +1,3 @@
-import type { EditorView } from "@codemirror/view";
 import type { ToolbarAction } from "@/capabilities/features/toolbar/actions";
 import type {
   SurfaceFactory,
@@ -21,15 +20,25 @@ const TOOLBAR_BUTTONS: ReadonlyArray<{
 
 const MARGIN_PX = 8;
 
+const DOCK_CLASS = "ptm-floaty-toolbar-dock";
+
 export const createFloatyToolbarSurface: SurfaceFactory = (
   doc,
-  execute
+  execute,
+  reportDockEvent
 ): ToolbarSurface => {
   const el = doc.createElement("div");
   el.className = "ptm-floaty-toolbar";
   el.setAttribute("role", "toolbar");
   el.setAttribute("aria-label", "Formatting toolbar");
   el.hidden = true;
+  el.addEventListener("mouseenter", () => reportDockEvent("reveal"));
+  el.addEventListener("mouseleave", () => reportDockEvent("leave"));
+  el.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      reportDockEvent("leave");
+    }
+  });
 
   for (const { action, label, title } of TOOLBAR_BUTTONS) {
     const button = doc.createElement("button");
@@ -51,7 +60,15 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     destroy() {
       el.remove();
     },
-    update(view: EditorView | null) {
+    update(view, settings, dockVisible) {
+      if (settings.mode === "dock") {
+        el.classList.add(DOCK_CLASS);
+        el.style.removeProperty("top");
+        el.style.removeProperty("left");
+        el.hidden = !(view && dockVisible);
+        return;
+      }
+      el.classList.remove(DOCK_CLASS);
       const range = view?.state.selection.main;
       const coords =
         range && !range.empty ? view?.coordsAtPos(range.head) : null;

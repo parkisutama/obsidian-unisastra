@@ -12,6 +12,14 @@
   &[hidden] {
     display: none;
   }
+
+  &.ptm-floaty-toolbar-dock {
+    top: auto;
+    left: 50%;
+    bottom: var(--size-4-4);
+    transform: translateX(-50%);
+    transition: opacity 100ms ease-in-out;
+  }
 }
 
 .ptm-floaty-toolbar-button {

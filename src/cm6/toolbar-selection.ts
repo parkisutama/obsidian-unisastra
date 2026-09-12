@@ -6,6 +6,9 @@ export function createToolbarSelectionExtension(controller: ToolbarController) {
     controller.attach(view);
     return {
       update: (update) => {
+        if (update.docChanged) {
+          controller.notifyTyping(view);
+        }
         if (
           update.selectionSet ||
           update.docChanged ||
