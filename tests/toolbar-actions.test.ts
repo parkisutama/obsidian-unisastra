@@ -193,4 +193,26 @@ describe("toolbar executor", () => {
     ).toBeNull();
     expect(editor.text()).toBe("docs");
   });
+  it("wraps a selection as a callout of the chosen type", async () => {
+    const editor = target("hello", 0, 5);
+    expect(
+      await executeToolbarAction(editor.port, { kind: "callout", id: "tip" })
+    ).toBeNull();
+    expect(editor.text()).toBe("> [!tip]\n> hello");
+  });
+  it("refuses an empty selection or a selection that cuts through a callout header", async () => {
+    const empty = target("hello", 0, 0);
+    expect(
+      await executeToolbarAction(empty.port, { kind: "callout", id: "note" })
+    ).toMatch("Select");
+
+    const ambiguous = target("intro\n> [!note]\n> body");
+    expect(
+      await executeToolbarAction(ambiguous.port, {
+        kind: "callout",
+        id: "danger",
+      })
+    ).toMatch("cuts through");
+    expect(ambiguous.text()).toBe("intro\n> [!note]\n> body");
+  });
 });

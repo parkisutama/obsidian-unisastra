@@ -1,6 +1,7 @@
 import type { ToolbarAction } from "@/capabilities/features/toolbar/actions";
 import type {
   SurfaceFactory,
+  ToolbarCalloutOption,
   ToolbarSurface,
 } from "@/capabilities/features/toolbar/controller";
 import { hudSegments } from "@/capabilities/features/toolbar/hud";
@@ -26,6 +27,31 @@ const DOCK_CLASS = "ptm-floaty-toolbar-dock";
 
 export function dockBottomOffsetPx(statusBarHeight: number): number {
   return statusBarHeight > 0 ? statusBarHeight + MARGIN_PX : MARGIN_PX;
+}
+
+function calloutOptionsSignature(
+  options: readonly ToolbarCalloutOption[]
+): string {
+  return options.map((option) => `${option.id}:${option.label}`).join("|");
+}
+function renderCalloutOptions(
+  doc: Document,
+  select: HTMLSelectElement,
+  options: readonly ToolbarCalloutOption[]
+): void {
+  select.replaceChildren();
+  const placeholder = doc.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = "Callout";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+  select.appendChild(placeholder);
+  for (const option of options) {
+    const entry = doc.createElement("option");
+    entry.value = option.id;
+    entry.textContent = option.label;
+    select.appendChild(entry);
+  }
 }
 
 export const createFloatyToolbarSurface: SurfaceFactory = (
@@ -61,6 +87,19 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     el.appendChild(button);
   }
 
+  const calloutSelect = doc.createElement("select");
+  calloutSelect.className = "ptm-floaty-toolbar-callout-select";
+  calloutSelect.setAttribute("aria-label", "Insert callout");
+  calloutSelect.addEventListener("change", () => {
+    const id = calloutSelect.value;
+    calloutSelect.value = "";
+    if (id) {
+      execute({ kind: "callout", id });
+    }
+  });
+  el.appendChild(calloutSelect);
+  let calloutSignature = "";
+
   const hud = createHudElement(doc, resetSession);
   el.appendChild(hud.element);
 
@@ -70,7 +109,12 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     destroy() {
       el.remove();
     },
-    update(view, settings, dockVisible, elapsed) {
+    update(view, settings, dockVisible, elapsed, calloutOptions) {
+      const signature = calloutOptionsSignature(calloutOptions);
+      if (signature !== calloutSignature) {
+        calloutSignature = signature;
+        renderCalloutOptions(doc, calloutSelect, calloutOptions);
+      }
       if (settings.mode === "dock") {
         el.classList.add(DOCK_CLASS);
         el.style.removeProperty("top");

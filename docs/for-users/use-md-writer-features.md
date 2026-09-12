@@ -73,6 +73,16 @@ Catatan:
   clipboard saat diklik dan memakai isinya jika berupa URL http(s) yang valid
   — clipboard tidak pernah dibaca saat Smart URL nonaktif, dan jika seleksi
   berubah selagi menunggu clipboard, aksi dibatalkan tanpa menulis apa pun,
+- dropdown **Callout** membungkus seleksi sebagai callout Obsidian
+  (`> [!id]` diikuti isi berprefix `>` per baris, termasuk baris kosong).
+  Jika seleksi sudah berupa callout (baris pertama adalah header
+  `> [!type]`), memilih tipe baru hanya mengganti tipe tersebut — title,
+  fold marker (`+`/`-`), dan kedalaman quote (`>`/`>>`) tetap dipertahankan.
+  Seleksi yang memotong header callout di tengah (bukan di baris pertama)
+  ditolak dengan penjelasan, bukan diperbaiki diam-diam. Pilihan dropdown
+  mengikuti catalog callout yang enabled di tab Callouts (Slice E berikutnya
+  akan menambah UI manajemennya; saat ini semua tipe bawaan Obsidian aktif
+  secara default),
 - toolbar tidak aktif di Reading Mode, saat Hemingway mode menyala, untuk
   multi-selection, atau saat seleksi/baris kursor berada di luar outline
   yang sedang fokus.

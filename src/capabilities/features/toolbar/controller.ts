@@ -35,13 +35,18 @@ export interface ToolbarElapsedSnapshot {
   readonly fileMs: number;
   readonly sessionMs: number;
 }
+export interface ToolbarCalloutOption {
+  readonly id: string;
+  readonly label: string;
+}
 export interface ToolbarSurface {
   destroy: () => void;
   update: (
     view: EditorView | null,
     settings: ToolbarSettings,
     dockVisible: boolean,
-    elapsed: ToolbarElapsedSnapshot
+    elapsed: ToolbarElapsedSnapshot,
+    calloutOptions: readonly ToolbarCalloutOption[]
   ) => void;
 }
 export type SurfaceFactory = (
@@ -353,10 +358,19 @@ export class ToolbarController {
       this.surfaces.set(doc, surface);
     }
     const toolbar = this.tm.settings.toolbar;
-    surface.update(view ?? null, toolbar, this.dockVisible.get(doc) ?? true, {
-      sessionMs: this.getSessionElapsedMs(),
-      fileMs: this.getFileElapsedMs(doc),
-    });
+    const calloutOptions = this.tm.settings.callouts.entries
+      .filter((entry) => entry.enabled)
+      .map((entry) => ({ id: entry.id, label: entry.label }));
+    surface.update(
+      view ?? null,
+      toolbar,
+      this.dockVisible.get(doc) ?? true,
+      {
+        sessionMs: this.getSessionElapsedMs(),
+        fileMs: this.getFileElapsedMs(doc),
+      },
+      calloutOptions
+    );
     this.updateStatusBarHud(doc, toolbar.mode === "floating");
   }
   private isMainWindowDocument(doc: Document): boolean {

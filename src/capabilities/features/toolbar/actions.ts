@@ -7,7 +7,8 @@
 export type ToolbarAction =
   | { kind: "bold" | "italic" | "strikethrough" | "code" | "highlight" }
   | { kind: "heading" }
-  | { kind: "link" };
+  | { kind: "link" }
+  | { id: string; kind: "callout" };
 export interface TextEdit {
   from: number;
   insert: string;

@@ -4,6 +4,7 @@ import {
   Transaction,
   type TransactionSpec,
 } from "@codemirror/state";
+import { calloutEdit } from "@/capabilities/features/callouts/markdown";
 import {
   boldEdit,
   codeEdit,
@@ -19,7 +20,10 @@ import {
   type ToolbarAction,
 } from "./actions";
 
-type InlineActionKind = Exclude<ToolbarAction["kind"], "heading" | "link">;
+type InlineActionKind = Exclude<
+  ToolbarAction["kind"],
+  "heading" | "link" | "callout"
+>;
 const INLINE_EDITORS: Record<
   InlineActionKind,
   (text: string, from: number, to: number) => TextEdit
@@ -162,6 +166,30 @@ async function executeLinkAction(
   dispatchToolbarEdit(target, edit, { anchor: edit.urlFrom, head: edit.urlTo });
   return null;
 }
+function executeCalloutAction(
+  target: ToolbarTarget,
+  id: string
+): string | null {
+  const range = target.state.selection.main;
+  if (range.empty) {
+    return "Select text to format.";
+  }
+  const visible = target.policy().visible;
+  if (visible && (range.from < visible.from || range.to > visible.to)) {
+    return "Selection is outside the focused outline.";
+  }
+  const result = calloutEdit(target.state.sliceDoc(range.from, range.to), id);
+  if ("refusal" in result) {
+    return result.refusal;
+  }
+  const edit: TextEdit = {
+    from: range.from,
+    to: range.to,
+    insert: result.insert,
+  };
+  dispatchToolbarEdit(target, edit, { anchor: edit.from + edit.insert.length });
+  return null;
+}
 export function executeToolbarAction(
   target: ToolbarTarget,
   action: ToolbarAction
@@ -175,6 +203,9 @@ export function executeToolbarAction(
   }
   if (action.kind === "link") {
     return executeLinkAction(target);
+  }
+  if (action.kind === "callout") {
+    return executeCalloutAction(target, action.id);
   }
   return executeInlineAction(target, action.kind);
 }

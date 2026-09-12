@@ -52,6 +52,27 @@
   }
 }
 
+.ptm-floaty-toolbar-callout-select {
+  height: 28px;
+  padding: 0 4px;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-s);
+  color: var(--text-normal);
+  cursor: pointer;
+  font-size: var(--font-ui-smaller);
+  max-width: 96px;
+
+  &:hover {
+    background-color: var(--background-modifier-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 1px;
+  }
+}
+
 .ptm-floaty-toolbar-hud {
   display: flex;
   align-items: center;
