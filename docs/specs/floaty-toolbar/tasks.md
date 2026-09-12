@@ -6,8 +6,8 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 4/21 tasks implemented (T01-T04; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T04. Runtime Obsidian
+- Progress: 5/21 tasks implemented (T01-T05; T17 dipecah menjadi T17a/T17b);
+  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T05. Runtime Obsidian
   acceptance belum dilakukan untuk task manapun.
 
 ## Aturan execution
@@ -121,15 +121,22 @@ ditinjau sebelum membuat UI. Catat automated versus runtime evidence.
 
 ### T05 — Inline formatting dan heading parity
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance blocked (tidak ada host Obsidian di
+  environment ini).
 - Dependency: T04; AC-03, AC-11.
 - Acceptance: italic/strike/code/highlight wrap/unwrap baseline; heading H1-H4
   dan remove heading pada cursor head line; inline empty selection unavailable
   dengan keterangan, heading tidak mengubah hidden branch/whitespace lain.
-- Files (4): toolbar `actions.ts`, UI `toolbar.ts`,
-  `tests/toolbar-actions.test.ts`, `docs/for-users/use-md-writer-features.md`.
-- Verify: formatting/cursor/heading/outliner boundary tests,
-  `pnpm run test`, `pnpm run check`; runtime Source/Live Preview.
+- Files: toolbar `actions.ts` (italic/strikethrough/code/highlight via
+  `symmetricWrapEdit`, italic guarded against matching a bold prefix,
+  `headingEdit` cycles paragraf→H1..H4→paragraf pada satu baris, menolak H5+),
+  toolbar `executor.ts` (routing per `ToolbarAction.kind`, guard baris kursor
+  di luar outline visible range untuk heading), UI `toolbar.ts` (lima tombol
+  baru), `tests/toolbar-actions.test.ts` (italic-vs-bold ambiguity, wrap/unwrap
+  tiga marker lain, cycle heading multi-baris, penolakan H5+),
+  `docs/for-users/use-md-writer-features.md`.
+- Verify: `pnpm run test` (36/36) dan `pnpm run check:ci` hijau. Runtime
+  Source/Live Preview di Obsidian BELUM dilakukan — catat sebagai blocked.
 
 ### T06 — Link clipboard dengan capture/revalidation
 
