@@ -105,7 +105,12 @@ Timer session dan file tampil sebagai HUD:
   file mereset timer, kembali ke file sebelumnya juga mereset (bukan
   melanjutkan), menutup file mengosongkan timer. Waktu idle ikut terhitung
   karena timer berbasis selisih waktu, bukan hitungan detik aktif,
-- menyembunyikan HUD (toggle off) tidak mereset timer yang sedang berjalan.
+- menyembunyikan HUD (toggle off) tidak mereset timer yang sedang berjalan,
+- **Timer update interval (seconds)** mengatur seberapa sering tampilan HUD
+  diperbarui, default 1 detik (live). Naikkan nilainya (misalnya 60) untuk
+  mengurangi distraksi saat fokus menulis — timer tetap menghitung waktu
+  sebenarnya berbasis selisih waktu, hanya tampilan yang diperbarui lebih
+  jarang. Nilai dibatasi 1-300 detik; input tidak valid kembali ke 1 detik.
 
 ## Pakai GitHub-style heading anchors
 

@@ -61,6 +61,7 @@ export class ToolbarController {
   private session: ElapsedState = STOPPED_ELAPSED;
   private statusBarEl: HTMLElement | null = null;
   private tickHandle: number | null = null;
+  private tickIntervalSeconds: number | null = null;
   private disposed = false;
   private factory: SurfaceFactory | null = null;
   private readonly tm: TypewriterModeLib;
@@ -146,15 +147,27 @@ export class ToolbarController {
     }
   }
   private ensureTick(): void {
-    if (this.tickHandle !== null || this.disposed) {
+    if (this.disposed) {
       return;
+    }
+    const intervalSeconds =
+      this.tm.settings.toolbar.timers.updateIntervalSeconds;
+    if (this.tickHandle !== null) {
+      if (this.tickIntervalSeconds === intervalSeconds) {
+        return;
+      }
+      this.stopTick();
     }
     const win =
       this.tm.plugin.app.workspace.containerEl.ownerDocument.defaultView;
     if (!win) {
       return;
     }
-    this.tickHandle = win.setInterval(() => this.tick(), 1000);
+    this.tickIntervalSeconds = intervalSeconds;
+    this.tickHandle = win.setInterval(
+      () => this.tick(),
+      intervalSeconds * 1000
+    );
   }
   private stopTick(): void {
     if (this.tickHandle === null) {
@@ -164,6 +177,7 @@ export class ToolbarController {
       this.tm.plugin.app.workspace.containerEl.ownerDocument.defaultView;
     win?.clearInterval(this.tickHandle);
     this.tickHandle = null;
+    this.tickIntervalSeconds = null;
   }
   private tick(): void {
     for (const doc of new Set([

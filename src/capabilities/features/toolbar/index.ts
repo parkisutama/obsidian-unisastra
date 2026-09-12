@@ -1,6 +1,7 @@
 import type TypewriterModeLib from "@/lib";
 import EditTimerFilePrefix from "./edit-timer-file-prefix";
 import EditTimerSessionPrefix from "./edit-timer-session-prefix";
+import EditTimerUpdateInterval from "./edit-timer-update-interval";
 import ToggleDockAlwaysVisible from "./toggle-dock-always-visible";
 import ToggleDockMode from "./toggle-dock-mode";
 import ToggleToolbarEnabled from "./toggle-enabled";
@@ -19,6 +20,7 @@ export default function getToolbarFeatures(tm: TypewriterModeLib) {
       new ToggleTimerFileVisible(tm),
       new EditTimerSessionPrefix(tm),
       new EditTimerFilePrefix(tm),
+      new EditTimerUpdateInterval(tm),
     ].map((feature) => [feature.getSettingKey(), feature])
   );
 }

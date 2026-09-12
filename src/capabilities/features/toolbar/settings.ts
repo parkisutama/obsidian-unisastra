@@ -20,8 +20,12 @@ export interface ToolbarSettings {
     fileVisible: boolean;
     sessionPrefix: string;
     filePrefix: string;
+    updateIntervalSeconds: number;
   };
 }
+export const MIN_TIMER_UPDATE_INTERVAL_SECONDS = 1;
+export const MAX_TIMER_UPDATE_INTERVAL_SECONDS = 300;
+export const DEFAULT_TIMER_UPDATE_INTERVAL_SECONDS = 1;
 export const DEFAULT_TOOLBAR_SETTINGS: ToolbarSettings = {
   enabled: false,
   mode: "floating",
@@ -33,6 +37,7 @@ export const DEFAULT_TOOLBAR_SETTINGS: ToolbarSettings = {
     fileVisible: true,
     sessionPrefix: "Sesi:",
     filePrefix: "File:",
+    updateIntervalSeconds: DEFAULT_TIMER_UPDATE_INTERVAL_SECONDS,
   },
 };
 const CONTROL_CHARACTERS = /[\p{Cc}\p{Cf}]/u;
@@ -47,6 +52,16 @@ export function prefix(value: unknown, fallback: string): string {
     return fallback;
   }
   return value.trim().slice(0, 40) || fallback;
+}
+export function timerUpdateIntervalSeconds(value: unknown): number {
+  const parsed = typeof value === "number" ? value : Number(value);
+  if (!Number.isFinite(parsed)) {
+    return DEFAULT_TIMER_UPDATE_INTERVAL_SECONDS;
+  }
+  return Math.min(
+    MAX_TIMER_UPDATE_INTERVAL_SECONDS,
+    Math.max(MIN_TIMER_UPDATE_INTERVAL_SECONDS, Math.round(parsed))
+  );
 }
 export function normalizeToolbarSettings(value: unknown): ToolbarSettings {
   const raw = record(value);
@@ -68,6 +83,9 @@ export function normalizeToolbarSettings(value: unknown): ToolbarSettings {
       fileVisible: timers.fileVisible !== false,
       sessionPrefix: prefix(timers.sessionPrefix, "Sesi:"),
       filePrefix: prefix(timers.filePrefix, "File:"),
+      updateIntervalSeconds: timerUpdateIntervalSeconds(
+        timers.updateIntervalSeconds
+      ),
     },
   };
 }

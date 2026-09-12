@@ -50,6 +50,7 @@ describe("settings defaults and migrations", () => {
             sessionPrefix: "  ",
             filePrefix: "File\nBad",
             fileVisible: false,
+            updateIntervalSeconds: 9001,
           },
         },
       } as never,
@@ -65,7 +66,29 @@ describe("settings defaults and migrations", () => {
       fileVisible: false,
       sessionPrefix: "Sesi:",
       filePrefix: "File:",
+      updateIntervalSeconds: 300,
     });
+  });
+  it("clamps the timer update interval to a valid range", async () => {
+    const tooLow = await applyStartupMigrations(
+      {
+        general: { ...DEFAULT_SETTINGS.general },
+        toolbar: { timers: { updateIntervalSeconds: -5 } },
+      } as never,
+      createVault(),
+      "plugins/md-writer"
+    );
+    expect(tooLow.toolbar.timers.updateIntervalSeconds).toBe(1);
+
+    const malformed = await applyStartupMigrations(
+      {
+        general: { ...DEFAULT_SETTINGS.general },
+        toolbar: { timers: { updateIntervalSeconds: "not a number" } },
+      } as never,
+      createVault(),
+      "plugins/md-writer"
+    );
+    expect(malformed.toolbar.timers.updateIntervalSeconds).toBe(1);
   });
   it("keeps typed dotted-path access in sync with defaults", () => {
     const settings = structuredClone(DEFAULT_SETTINGS);
