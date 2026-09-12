@@ -9,7 +9,14 @@ const TOOLBAR_BUTTONS: ReadonlyArray<{
   action: ToolbarAction;
   label: string;
   title: string;
-}> = [{ action: { kind: "bold" }, label: "B", title: "Bold" }];
+}> = [
+  { action: { kind: "bold" }, label: "B", title: "Bold" },
+  { action: { kind: "italic" }, label: "I", title: "Italic" },
+  { action: { kind: "strikethrough" }, label: "S", title: "Strikethrough" },
+  { action: { kind: "code" }, label: "</>", title: "Code" },
+  { action: { kind: "highlight" }, label: "H", title: "Highlight" },
+  { action: { kind: "heading" }, label: "#", title: "Cycle heading level" },
+];
 
 const MARGIN_PX = 8;
 

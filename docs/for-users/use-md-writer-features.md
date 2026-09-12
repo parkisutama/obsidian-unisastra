@@ -62,10 +62,14 @@ toolbar formatting kecil saat Anda menyeleksi teks di Source mode.
 Catatan:
 
 - toolbar hanya muncul di desktop; tidak dipasang di mobile,
-- toolbar saat ini menyediakan aksi **Bold** yang membungkus/melepas `**`
-  pada seleksi dalam satu langkah undo,
+- aksi **Bold**, **Italic**, **Strikethrough**, **Code**, dan **Highlight**
+  membungkus/melepas seleksi dalam satu langkah undo; masing-masing
+  membutuhkan seleksi non-kosong,
+- aksi **Heading** menyiklus baris tempat kursor berada antara paragraf,
+  H1-H4, lalu kembali ke paragraf; heading H5 ke atas tidak diubah,
 - toolbar tidak aktif di Reading Mode, saat Hemingway mode menyala, untuk
-  multi-selection, atau saat seleksi berada di luar outline yang sedang fokus.
+  multi-selection, atau saat seleksi/baris kursor berada di luar outline
+  yang sedang fokus.
 
 ## Pakai GitHub-style heading anchors
 

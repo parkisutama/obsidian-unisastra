@@ -4,7 +4,28 @@ import {
   Transaction,
   type TransactionSpec,
 } from "@codemirror/state";
-import { boldEdit, type ToolbarAction } from "./actions";
+import {
+  boldEdit,
+  codeEdit,
+  headingEdit,
+  highlightEdit,
+  italicEdit,
+  strikethroughEdit,
+  type TextEdit,
+  type ToolbarAction,
+} from "./actions";
+
+type InlineActionKind = Exclude<ToolbarAction["kind"], "heading">;
+const INLINE_EDITORS: Record<
+  InlineActionKind,
+  (text: string, from: number, to: number) => TextEdit
+> = {
+  bold: boldEdit,
+  italic: italicEdit,
+  strikethrough: strikethroughEdit,
+  code: codeEdit,
+  highlight: highlightEdit,
+};
 
 export interface ToolbarTarget {
   dispatch: (spec: TransactionSpec) => void;
@@ -32,14 +53,37 @@ export function targetIssue(target: ToolbarTarget): string | null {
   }
   return null;
 }
-export function executeToolbarAction(
+function dispatchToolbarEdit(
   target: ToolbarTarget,
-  _action: ToolbarAction
-): string | null {
-  const issue = targetIssue(target);
-  if (issue) {
-    return issue;
+  edit: TextEdit,
+  selection: TransactionSpec["selection"]
+): void {
+  target.dispatch({
+    changes: edit,
+    selection,
+    annotations: [
+      Transaction.userEvent.of("input.toolbar"),
+      isolateHistory.of("full"),
+    ],
+  });
+}
+function executeHeadingAction(target: ToolbarTarget): string | null {
+  const line = target.state.doc.lineAt(target.state.selection.main.head);
+  const visible = target.policy().visible;
+  if (visible && (line.from < visible.from || line.to > visible.to)) {
+    return "Cursor line is outside the focused outline.";
   }
+  const edit = headingEdit(line.text, line.from, line.to);
+  if (!edit) {
+    return "Heading level is not supported by the toolbar.";
+  }
+  dispatchToolbarEdit(target, edit, { anchor: edit.from + edit.insert.length });
+  return null;
+}
+function executeInlineAction(
+  target: ToolbarTarget,
+  kind: InlineActionKind
+): string | null {
   const range = target.state.selection.main;
   if (range.empty) {
     return "Select text to format.";
@@ -48,21 +92,29 @@ export function executeToolbarAction(
   if (visible && (range.from < visible.from || range.to > visible.to)) {
     return "Selection is outside the focused outline.";
   }
-  const edit = boldEdit(
+  const edit = INLINE_EDITORS[kind](
     target.state.sliceDoc(range.from, range.to),
     range.from,
     range.to
   );
-  target.dispatch({
-    changes: edit,
-    selection:
-      range.anchor <= range.head
-        ? { anchor: edit.from, head: edit.from + edit.insert.length }
-        : { anchor: edit.from + edit.insert.length, head: edit.from },
-    annotations: [
-      Transaction.userEvent.of("input.toolbar"),
-      isolateHistory.of("full"),
-    ],
-  });
+  dispatchToolbarEdit(
+    target,
+    edit,
+    range.anchor <= range.head
+      ? { anchor: edit.from, head: edit.from + edit.insert.length }
+      : { anchor: edit.from + edit.insert.length, head: edit.from }
+  );
   return null;
+}
+export function executeToolbarAction(
+  target: ToolbarTarget,
+  action: ToolbarAction
+): string | null {
+  const issue = targetIssue(target);
+  if (issue) {
+    return issue;
+  }
+  return action.kind === "heading"
+    ? executeHeadingAction(target)
+    : executeInlineAction(target, action.kind);
 }
