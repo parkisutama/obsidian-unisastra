@@ -55,7 +55,7 @@ export function releasePlugin() {
   execSync("git add package.json manifest.json versions.json CHANGELOG.md", {
     stdio: "ignore",
   });
-  execSync(`git commit --no-verify -m "Release v${targetVersion}"`, {
+  execSync(`git commit -m "chore(release): ${targetVersion}"`, {
     stdio: "ignore",
   });
 

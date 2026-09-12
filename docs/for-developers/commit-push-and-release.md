@@ -22,7 +22,7 @@ Pisahkan commit berdasarkan tema perubahan:
 - `fix:` untuk perbaikan perilaku plugin.
 - `docs:` untuk dokumentasi.
 - `chore:` untuk tooling, konfigurasi, atau housekeeping.
-- `release:` hanya untuk bump versi, changelog, dan tag release.
+- `chore(release):` untuk bump versi, changelog, dan tag release.
 
 Jangan campur release metadata dengan feature atau bugfix biasa.
 
@@ -42,17 +42,17 @@ Contoh commit per tema:
 git add src/capabilities/commands/writing-focus/writing-focus.ts \
   src/capabilities/features/hemingway-mode/hemingway-mode.ts \
   src/cm6/plugin.ts
-git commit -m "Fix popout document handling"
+git commit -m "fix(editor): correct popout document handling"
 
 git add docs
-git commit -m "Document commit push and release workflow"
+git commit -m "docs: document commit push and release workflow"
 ```
 
 Jika ada perubahan pnpm atau workflow:
 
 ```bash
 git add package.json pnpm-workspace.yaml
-git commit -m "Move pnpm build approvals to workspace config"
+git commit -m "chore(build): move pnpm approvals to workspace config"
 ```
 
 ## 5. Push branch kerja

@@ -18,7 +18,8 @@ Perintah ini mencakup:
 - lint Markdown read-only,
 - test otomatis,
 - build,
-- dan verifikasi artefak `dist`.
+- verifikasi artefak `dist`,
+- dan build dokumentasi VitePress.
 
 Jika perintah ini gagal, jangan lanjut ke merge atau release.
 

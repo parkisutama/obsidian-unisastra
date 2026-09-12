@@ -69,7 +69,7 @@ Lalu lakukan QA manual di Obsidian:
 
 ```bash
 git add .
-git commit -m "Add outliner keyboard shortcuts"
+git commit -m "feat(outliner): add keyboard shortcuts"
 ```
 
 Gunakan pesan commit yang mendeskripsikan perubahan, bukan aktivitas.

@@ -41,7 +41,9 @@ For detailed workflow notes, see [MD Writer docs](./docs/README.md).
 | `pnpm run lint:md` | Markdown linting |
 | `pnpm run fix` | Apply available Biome, Stylelint, and Markdown fixes |
 
-A pre-commit hook via [Lefthook](https://github.com/evilmartians/lefthook) runs `pnpm run fix` and `pnpm run check` automatically.
+Husky installs through `pnpm install`. Pre-commit runs `pnpm run check`
+without modifying files; commit-msg enforces Conventional Commits via commitlint.
+Run `pnpm run fix` explicitly and review changes before staging.
 
 ## Documentation Site
 
