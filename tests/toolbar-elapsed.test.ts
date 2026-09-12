@@ -6,6 +6,10 @@ import {
   STOPPED_ELAPSED,
   startElapsed,
 } from "@/capabilities/features/toolbar/elapsed";
+import {
+  formatElapsed,
+  hudSegments,
+} from "@/capabilities/features/toolbar/hud";
 
 describe("elapsed model", () => {
   it("reports zero while stopped and counts idle time from a timestamp diff", () => {
@@ -50,5 +54,44 @@ describe("per-window file elapsed", () => {
     state = nextFileElapsedState(state, "new.md", 3000);
     expect(state.path).toBe("new.md");
     expect(elapsedMs(state.elapsed, 3000)).toBe(0);
+  });
+});
+
+describe("elapsed formatting", () => {
+  it("formats minutes:seconds under an hour and hours:minutes:seconds over", () => {
+    expect(formatElapsed(0)).toBe("0:00");
+    expect(formatElapsed(65_000)).toBe("1:05");
+    expect(formatElapsed(3_661_000)).toBe("1:01:01");
+  });
+});
+
+describe("HUD segments", () => {
+  const timers = {
+    sessionVisible: true,
+    fileVisible: true,
+    sessionPrefix: "Sesi:",
+    filePrefix: "File:",
+  };
+  it("builds a resettable session segment and a non-resettable file segment", () => {
+    const segments = hudSegments(timers, 65_000, 5000);
+    expect(segments).toEqual([
+      { label: "Sesi: 1:05", tooltip: expect.any(String), resettable: true },
+      { label: "File: 0:05", tooltip: expect.any(String), resettable: false },
+    ]);
+  });
+  it("omits a segment whose visibility toggle is off", () => {
+    expect(
+      hudSegments({ ...timers, sessionVisible: false }, 0, 0)
+    ).toHaveLength(1);
+    expect(hudSegments({ ...timers, fileVisible: false }, 0, 0)).toHaveLength(
+      1
+    );
+    expect(
+      hudSegments(
+        { ...timers, sessionVisible: false, fileVisible: false },
+        0,
+        0
+      )
+    ).toHaveLength(0);
   });
 });

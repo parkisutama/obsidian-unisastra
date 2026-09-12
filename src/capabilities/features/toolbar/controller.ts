@@ -13,6 +13,7 @@ import {
   startElapsed,
 } from "./elapsed";
 import { executeToolbarAction, type ToolbarTarget } from "./executor";
+import { hudSegments } from "./hud";
 import type { ToolbarSettings } from "./settings";
 
 export function dockVisibility(
@@ -30,18 +31,24 @@ export function dockVisibility(
   return event === "typing" || event === "leave" ? false : visible;
 }
 export type DockEvent = "typing" | "leave" | "reveal";
+export interface ToolbarElapsedSnapshot {
+  readonly fileMs: number;
+  readonly sessionMs: number;
+}
 export interface ToolbarSurface {
   destroy: () => void;
   update: (
     view: EditorView | null,
     settings: ToolbarSettings,
-    dockVisible: boolean
+    dockVisible: boolean,
+    elapsed: ToolbarElapsedSnapshot
   ) => void;
 }
 export type SurfaceFactory = (
   doc: Document,
   execute: (action: ToolbarAction) => void,
-  reportDockEvent: (event: DockEvent) => void
+  reportDockEvent: (event: DockEvent) => void,
+  resetSession: () => void
 ) => ToolbarSurface;
 
 export class ToolbarController {
@@ -52,6 +59,7 @@ export class ToolbarController {
   private readonly dockVisible = new Map<Document, boolean>();
   private readonly fileElapsed = new Map<Document, FileElapsedState>();
   private session: ElapsedState = STOPPED_ELAPSED;
+  private statusBarEl: HTMLElement | null = null;
   private disposed = false;
   private factory: SurfaceFactory | null = null;
   private readonly tm: TypewriterModeLib;
@@ -277,6 +285,7 @@ export class ToolbarController {
       this.surfaces.get(doc)?.destroy();
       this.surfaces.delete(doc);
       this.dockVisible.delete(doc);
+      this.updateStatusBarHud(doc, false);
       return;
     }
     let surface = this.surfaces.get(doc);
@@ -284,15 +293,46 @@ export class ToolbarController {
       surface = this.factory(
         doc,
         (action) => this.execute(doc, action),
-        (event) => this.reportDockEvent(doc, event)
+        (event) => this.reportDockEvent(doc, event),
+        () => this.resetSession()
       );
       this.surfaces.set(doc, surface);
     }
-    surface.update(
-      view ?? null,
-      this.tm.settings.toolbar,
-      this.dockVisible.get(doc) ?? true
+    const toolbar = this.tm.settings.toolbar;
+    surface.update(view ?? null, toolbar, this.dockVisible.get(doc) ?? true, {
+      sessionMs: this.getSessionElapsedMs(),
+      fileMs: this.getFileElapsedMs(doc),
+    });
+    this.updateStatusBarHud(doc, toolbar.mode === "floating");
+  }
+  private isMainWindowDocument(doc: Document): boolean {
+    return this.tm.plugin.app.workspace.containerEl.ownerDocument === doc;
+  }
+  private ensureStatusBarEl(): HTMLElement {
+    if (!this.statusBarEl) {
+      this.statusBarEl = this.tm.plugin.addStatusBarItem();
+      this.statusBarEl.addClass("ptm-floaty-toolbar-status-bar-hud");
+    }
+    return this.statusBarEl;
+  }
+  private updateStatusBarHud(doc: Document, shouldShow: boolean): void {
+    if (!(shouldShow && this.isMainWindowDocument(doc))) {
+      this.statusBarEl?.hide();
+      return;
+    }
+    const segments = hudSegments(
+      this.tm.settings.toolbar.timers,
+      this.getSessionElapsedMs(),
+      this.getFileElapsedMs(doc)
     );
+    if (segments.length === 0) {
+      this.statusBarEl?.hide();
+      return;
+    }
+    const el = this.ensureStatusBarEl();
+    el.setText(segments.map((segment) => segment.label).join(" · "));
+    el.title = segments.map((segment) => segment.tooltip).join(" ");
+    el.show();
   }
   private closeWindow(doc: Document): void {
     const frame = this.frames.get(doc);
@@ -322,5 +362,7 @@ export class ToolbarController {
     this.editors.clear();
     this.active.clear();
     this.session = STOPPED_ELAPSED;
+    this.statusBarEl?.remove();
+    this.statusBarEl = null;
   }
 }

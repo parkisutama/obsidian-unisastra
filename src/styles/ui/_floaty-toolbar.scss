@@ -51,3 +51,46 @@
     outline-offset: 1px;
   }
 }
+
+.ptm-floaty-toolbar-hud {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 6px;
+  padding-left: 6px;
+  border-left: 1px solid var(--background-modifier-border);
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  white-space: nowrap;
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.ptm-floaty-toolbar-hud-segment {
+  cursor: default;
+}
+
+.ptm-floaty-toolbar-hud-reset {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+
+  &:hover {
+    color: var(--text-normal);
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 1px;
+  }
+}
+
+.ptm-floaty-toolbar-status-bar-hud {
+  cursor: default;
+}

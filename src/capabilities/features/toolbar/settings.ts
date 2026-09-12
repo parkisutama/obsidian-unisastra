@@ -42,7 +42,7 @@ function record(value: unknown): Record<string, unknown> {
     ? (value as Record<string, unknown>)
     : {};
 }
-function prefix(value: unknown, fallback: string): string {
+export function prefix(value: unknown, fallback: string): string {
   if (typeof value !== "string" || CONTROL_CHARACTERS.test(value)) {
     return fallback;
   }

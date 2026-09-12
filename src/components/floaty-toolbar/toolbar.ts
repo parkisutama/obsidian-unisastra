@@ -3,6 +3,8 @@ import type {
   SurfaceFactory,
   ToolbarSurface,
 } from "@/capabilities/features/toolbar/controller";
+import { hudSegments } from "@/capabilities/features/toolbar/hud";
+import { createHudElement } from "./hud";
 
 const TOOLBAR_BUTTONS: ReadonlyArray<{
   action: ToolbarAction;
@@ -29,7 +31,8 @@ export function dockBottomOffsetPx(statusBarHeight: number): number {
 export const createFloatyToolbarSurface: SurfaceFactory = (
   doc,
   execute,
-  reportDockEvent
+  reportDockEvent,
+  resetSession
 ): ToolbarSurface => {
   const el = doc.createElement("div");
   el.className = "ptm-floaty-toolbar";
@@ -58,13 +61,16 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     el.appendChild(button);
   }
 
+  const hud = createHudElement(doc, resetSession);
+  el.appendChild(hud.element);
+
   doc.body.appendChild(el);
 
   return {
     destroy() {
       el.remove();
     },
-    update(view, settings, dockVisible) {
+    update(view, settings, dockVisible, elapsed) {
       if (settings.mode === "dock") {
         el.classList.add(DOCK_CLASS);
         el.style.removeProperty("top");
@@ -72,10 +78,14 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
         const statusBarHeight =
           doc.querySelector(".status-bar")?.getBoundingClientRect().height ?? 0;
         el.style.bottom = `${dockBottomOffsetPx(statusBarHeight)}px`;
+        hud.update(
+          hudSegments(settings.timers, elapsed.sessionMs, elapsed.fileMs)
+        );
         el.hidden = !(view && dockVisible);
         return;
       }
       el.classList.remove(DOCK_CLASS);
+      hud.update([]);
       const range = view?.state.selection.main;
       const coords =
         range && !range.empty ? view?.coordsAtPos(range.head) : null;
