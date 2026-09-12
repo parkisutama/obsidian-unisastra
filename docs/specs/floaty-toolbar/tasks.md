@@ -6,8 +6,8 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 6/21 tasks implemented (T01-T06; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T06. Runtime Obsidian
+- Progress: 7/21 tasks implemented (T01-T07; T17 dipecah menjadi T17a/T17b);
+  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T07. Runtime Obsidian
   acceptance belum dilakukan untuk task manapun.
 
 ## Aturan execution
@@ -174,16 +174,37 @@ ditandai pending; stop/fix bila gate otomatis gagal.
 
 ### T07 — Dock/pin dan setting persistent
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance blocked (tidak ada host Obsidian di
+  environment ini).
 - Dependency: T06; AC-02, AC-09, AC-10, AC-11.
 - Acceptance: pin/mode memakai state sama; dockAlwaysVisible langsung memilih
   dock, menolak undock pin dengan keterangan; dock biasa auto-hide/peek,
   persistent tidak auto-hide saat typing/mouseleave/Escape atau reload settings.
-- Files (5): UI `toolbar.ts`, toolbar `controller.ts`,
-  `src/components/settings-tab.ts`, `tests/toolbar-controller.test.ts`,
-  `docs/for-users/use-md-writer-features.md`.
-- Verify: visibility state/setting transitions/fake-timer cleanup tests,
-  `pnpm run test`, `pnpm run check`; runtime desktop/popout.
+- Files: toolbar `controller.ts` (`dockVisible` map per document, `DockEvent`
+  type, `reportDockEvent`/`notifyTyping`, `render()` meneruskan dock-visible
+  snapshot ke surface, `refresh()` memakai event `reveal` sehingga persistent
+  tidak pernah stale setelah reload settings, cleanup di `closeWindow`),
+  `src/cm6/toolbar-selection.ts` (`docChanged` memicu `notifyTyping`),
+  UI `toolbar.ts` (posisi dock fixed bawah window saat `settings.mode ===
+  "dock"`, mouseenter/mouseleave -> reveal/leave, Escape -> leave),
+  `src/styles/ui/_floaty-toolbar.scss` (`.ptm-floaty-toolbar-dock`),
+  `src/capabilities/features/toolbar/toggle-dock-mode.ts` (toggle "Pin
+  toolbar as a dock"; menolak undock dengan `Notice` dan mengembalikan
+  toggle visual saat `dockAlwaysVisible` masih aktif) dan
+  `toggle-dock-always-visible.ts` (toggle "Always show dock"; mengaktifkannya
+  langsung set `mode: "dock"`), keduanya didaftarkan di
+  `src/capabilities/features/toolbar/index.ts` — otomatis muncul di tab
+  Toolbar existing tanpa perubahan `settings-tab.ts`,
+  `tests/toolbar-controller.test.ts` (matrix auto-hide/peek/persistent/floating
+  untuk `dockVisibility`), `docs/for-users/use-md-writer-features.md`.
+- Verify: `pnpm run test` (44/44) dan `pnpm run check:ci` hijau. Tidak ada
+  fake-timer test karena dock tidak memakai timer — visibility murni
+  event-driven (typing/leave/reveal) tanpa `setTimeout`. Feature classes
+  toggle dock (`toggle-dock-mode.ts`/`toggle-dock-always-visible.ts`) tidak
+  diuji unit test — repo ini tidak punya harness untuk mock `SettingGroup`
+  Obsidian, konsisten dengan `toggle-enabled.ts`/`toggle-smart-url.ts`
+  sebelumnya yang juga tidak diuji langsung. QA Obsidian desktop/popout
+  (dock, peek, persistent, Escape) BELUM dilakukan — catat blocked.
 
 ### T08 — Layout dock dan navigasi menu
 
