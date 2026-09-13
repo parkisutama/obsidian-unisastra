@@ -62,31 +62,32 @@ toolbar formatting kecil saat Anda menyeleksi teks di Source mode.
 Catatan:
 
 - toolbar hanya muncul di desktop; tidak dipasang di mobile,
-- tombol Bold/Italic/Strikethrough/Code/Highlight/Link memakai ikon (bukan
-  label teks) dengan tooltip nama aksi saat di-hover, mengikuti tampilan
-  minimal Floaty Toolbar asli,
+- tombol Bold/Italic/Strikethrough/Code/Highlight/Link memakai ikon pudar
+  (warna disamarkan dibanding teks normal, menyala saat hover) dengan
+  tooltip nama aksi, mengikuti tampilan minimal Floaty Toolbar asli,
 - Bold/Italic/Strikethrough/Code/Highlight membungkus/melepas seleksi dalam
   satu langkah undo; masing-masing membutuhkan seleksi non-kosong,
-- dropdown **Heading** menampilkan Paragraph/H1-H4 dan otomatis menunjukkan
-  level heading baris tempat kursor berada; memilih level menerapkannya
-  langsung ke baris tersebut. Heading H5 ke atas menonaktifkan dropdown
-  (tidak dikelola toolbar),
+- dropdown **P/H1-H4** (label singkat, tooltip menampilkan nama penuh)
+  otomatis menunjukkan level heading baris tempat kursor berada; memilih
+  level menerapkannya langsung ke baris tersebut. Heading H5 ke atas
+  menonaktifkan dropdown (tidak dikelola toolbar),
 - aksi **Link** membungkus seleksi menjadi `[teks](url)` atau melepas link
   yang sudah menjadi seluruh seleksi. Placeholder URL `https://` dipakai
   secara default; aktifkan **Smart URL** di tab Toolbar agar Link membaca
   clipboard saat diklik dan memakai isinya jika berupa URL http(s) yang valid
   — clipboard tidak pernah dibaca saat Smart URL nonaktif, dan jika seleksi
   berubah selagi menunggu clipboard, aksi dibatalkan tanpa menulis apa pun,
-- dropdown **Callout** membungkus seleksi sebagai callout Obsidian
-  (`> [!id]` diikuti isi berprefix `>` per baris, termasuk baris kosong).
-  Jika seleksi sudah berupa callout (baris pertama adalah header
-  `> [!type]`), memilih tipe baru hanya mengganti tipe tersebut — title,
-  fold marker (`+`/`-`), dan kedalaman quote (`>`/`>>`) tetap dipertahankan.
-  Seleksi yang memotong header callout di tengah (bukan di baris pertama)
-  ditolak dengan penjelasan, bukan diperbaiki diam-diam. Pilihan dropdown
-  mengikuti catalog callout yang enabled dan urutan di tab **Callouts**;
-  opsi terakhir dropdown, **Manage callouts…**, membuka Settings langsung
-  ke tab tersebut,
+- dropdown callout (ikon tanda kutip "❝", tooltip "Insert callout")
+  membungkus seleksi sebagai callout Obsidian (`> [!id]` diikuti isi
+  berprefix `>` per baris, termasuk baris kosong). Jika seleksi sudah
+  berupa callout (baris pertama adalah header `> [!type]`), memilih tipe
+  baru hanya mengganti tipe tersebut — title, fold marker (`+`/`-`), dan
+  kedalaman quote (`>`/`>>`) tetap dipertahankan. Seleksi yang memotong
+  header callout di tengah (bukan di baris pertama) ditolak dengan
+  penjelasan, bukan diperbaiki diam-diam. Pilihan dropdown mengikuti
+  catalog callout yang enabled dan urutan di tab **Callouts**; opsi
+  terakhir dropdown, **Manage callouts…**, membuka Settings langsung ke
+  tab tersebut,
 - toolbar tidak aktif di Reading Mode, saat Hemingway mode menyala, untuk
   multi-selection, atau saat seleksi/baris kursor berada di luar outline
   yang sedang fokus.

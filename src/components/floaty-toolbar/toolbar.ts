@@ -29,12 +29,13 @@ const TOOLBAR_BUTTONS: ReadonlyArray<{
 const HEADING_OPTIONS: ReadonlyArray<{
   label: string;
   level: 0 | 1 | 2 | 3 | 4;
+  title: string;
 }> = [
-  { level: 0, label: "Paragraph" },
-  { level: 1, label: "Heading 1" },
-  { level: 2, label: "Heading 2" },
-  { level: 3, label: "Heading 3" },
-  { level: 4, label: "Heading 4" },
+  { level: 0, label: "P", title: "Paragraph" },
+  { level: 1, label: "H1", title: "Heading 1" },
+  { level: 2, label: "H2", title: "Heading 2" },
+  { level: 3, label: "H3", title: "Heading 3" },
+  { level: 4, label: "H4", title: "Heading 4" },
 ];
 
 const MARGIN_PX = 8;
@@ -60,7 +61,8 @@ function renderCalloutOptions(
   select.replaceChildren();
   const placeholder = doc.createElement("option");
   placeholder.value = "";
-  placeholder.textContent = "Callout";
+  placeholder.textContent = "❝";
+  placeholder.title = "Insert callout";
   placeholder.disabled = true;
   placeholder.selected = true;
   select.appendChild(placeholder);
@@ -118,6 +120,7 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     const entry = doc.createElement("option");
     entry.value = String(option.level);
     entry.textContent = option.label;
+    entry.title = option.title;
     headingSelect.appendChild(entry);
   }
   headingSelect.addEventListener("change", () => {
@@ -129,6 +132,7 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   const calloutSelect = doc.createElement("select");
   calloutSelect.className = "ptm-floaty-toolbar-callout-select";
   calloutSelect.setAttribute("aria-label", "Insert callout");
+  calloutSelect.title = "Insert callout";
   calloutSelect.addEventListener("change", () => {
     const value = calloutSelect.value;
     calloutSelect.value = "";

@@ -46,7 +46,7 @@
   background-color: transparent;
   border: none;
   border-radius: var(--radius-s);
-  color: var(--icon-color);
+  color: var(--text-faint);
   cursor: pointer;
 
   svg {
@@ -56,7 +56,7 @@
 
   &:hover {
     background-color: var(--background-modifier-hover);
-    color: var(--icon-color-hover);
+    color: var(--text-normal);
   }
 
   &:focus-visible {
@@ -75,25 +75,38 @@
   border: none;
   box-shadow: none;
   border-radius: var(--radius-s);
-  color: var(--text-normal);
+  color: var(--text-faint);
   cursor: pointer;
   font-size: var(--font-ui-smaller);
-  max-width: 92px;
+  text-align: center;
+  text-align-last: center;
 
   &:hover {
     background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
   }
 
   &:focus-visible {
     outline: 2px solid var(--interactive-accent);
     outline-offset: 1px;
   }
+
+  // Options render in a native OS popup, unaffected by the muted trigger
+  // color above; keep their text legible there.
+  option {
+    color: var(--text-normal);
+  }
 }
 
 .ptm-floaty-toolbar-heading-select {
+  width: 34px;
   margin-left: 5px;
   padding-left: 6px;
   border-left: 1px solid var(--background-modifier-border);
+}
+
+.ptm-floaty-toolbar-callout-select {
+  width: 26px;
 }
 
 .ptm-floaty-toolbar-hud {
