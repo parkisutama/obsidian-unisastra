@@ -197,15 +197,22 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   let currentMode: "dock" | "floating" = "floating";
 
   for (const { action, icon, title, dividerAfter } of TOOLBAR_BUTTONS) {
-    const button = doc.createElement("button");
-    button.type = "button";
+    const button = doc.createElement("div");
     button.className = "ptm-floaty-toolbar-button";
+    button.setAttribute("role", "button");
+    button.tabIndex = 0;
     setIcon(button, icon);
     button.title = title;
     button.setAttribute("aria-label", title);
     button.addEventListener("click", (event) => {
       event.preventDefault();
       execute(action);
+    });
+    button.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        execute(action);
+      }
     });
     el.appendChild(button);
     if (dividerAfter) {
