@@ -2,6 +2,8 @@ import {
   BUILTIN_CALLOUT_TYPES,
   BUILTIN_LABEL_BY_ID,
   canonicalBuiltinCalloutId,
+  GITHUB_ALERT_MARKERS,
+  githubMarkerCanonicalId,
 } from "./catalog";
 
 export type CalloutOutputMode = "obsidian" | "github";
@@ -26,6 +28,24 @@ export interface CalloutEntrySettings {
 export interface CalloutSettings {
   entries: CalloutEntrySettings[];
   outputMode: CalloutOutputMode;
+}
+
+export function calloutMenuOptions(
+  settings: CalloutSettings
+): { id: string; label: string }[] {
+  if (settings.outputMode === "github") {
+    return GITHUB_ALERT_MARKERS.filter((marker) =>
+      settings.entries.some(
+        (entry) =>
+          entry.enabled &&
+          entry.source === "builtin" &&
+          entry.id === githubMarkerCanonicalId(marker)
+      )
+    ).map((marker) => ({ id: marker, label: marker }));
+  }
+  return settings.entries
+    .filter((entry) => entry.enabled)
+    .map((entry) => ({ id: entry.id, label: entry.label }));
 }
 
 // Custom IDs must stay safe inside `> [!id]` and are kept separate from the

@@ -17,12 +17,43 @@ import {
   isGithubAlertMarker,
 } from "@/capabilities/features/callouts/catalog";
 import {
+  calloutMenuOptions,
   DEFAULT_CALLOUT_SETTINGS,
   normalizeCalloutSettings,
 } from "@/capabilities/features/callouts/settings";
 import { moveEntry } from "@/components/callout-manager";
 
 describe("callout catalog", () => {
+  it("switches to five GitHub presets and respects shared builtin visibility without changing settings", () => {
+    const settings = normalizeCalloutSettings({
+      outputMode: "github",
+      entries: [
+        { id: "custom", label: "Custom", source: "custom", enabled: true },
+      ],
+    });
+    const before = JSON.stringify(settings);
+    expect(calloutMenuOptions(settings).map((item) => item.id)).toEqual([
+      "NOTE",
+      "TIP",
+      "IMPORTANT",
+      "WARNING",
+      "CAUTION",
+    ]);
+    expect(JSON.stringify(settings)).toBe(before);
+    const tip = settings.entries.find((entry) => entry.id === "tip");
+    if (tip) {
+      (tip as { enabled: boolean }).enabled = false;
+    }
+    expect(calloutMenuOptions(settings).map((item) => item.id)).toEqual([
+      "NOTE",
+      "WARNING",
+      "CAUTION",
+    ]);
+    settings.outputMode = "obsidian";
+    expect(
+      calloutMenuOptions(settings).some((item) => item.id === "custom")
+    ).toBe(true);
+  });
   it("resolves builtin types and aliases to a canonical lowercase ID", () => {
     expect(canonicalBuiltinCalloutId("note")).toBe("note");
     expect(canonicalBuiltinCalloutId("NOTE")).toBe("note");

@@ -60,6 +60,30 @@ describe("hasAmbiguousCalloutHeader", () => {
 });
 
 describe("calloutEdit", () => {
+  it("writes each of the five GitHub markers without changing body lines", () => {
+    for (const id of ["NOTE", "TIP", "IMPORTANT", "WARNING", "CAUTION"]) {
+      expect(calloutEdit("first\n\nlast", id, "github")).toEqual({
+        insert: `> [!${id}]\n> first\n>\n> last`,
+      });
+      expect(calloutEdit("> [!note]\n> body", id, "github")).toEqual({
+        insert: `> [!${id}]\n> body`,
+      });
+    }
+  });
+  it("refuses incompatible GitHub selections without providing a replacement", () => {
+    for (const text of [
+      "> [!note]-\n> body",
+      "> [!note] Title\n> body",
+      ">> [!note]\n>> body",
+      "> [!custom]\n> body",
+      "> [!note]\n> > [!tip]\n> > body",
+      "plain\n> [!note]\n> body",
+      "> ordinary quote",
+    ]) {
+      expect(calloutEdit(text, "NOTE", "github")).toHaveProperty("refusal");
+    }
+    expect(calloutEdit("body", "custom", "github")).toHaveProperty("refusal");
+  });
   it("wraps plain text when there is no existing callout", () => {
     expect(calloutEdit("hello", "note")).toEqual({
       insert: "> [!note]\n> hello",
