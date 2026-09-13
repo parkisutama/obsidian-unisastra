@@ -386,7 +386,7 @@ export class ToolbarController {
       },
       calloutOptions
     );
-    this.updateStatusBarHud(doc, toolbar.mode === "floating");
+    this.updateStatusBarHud(doc, true);
   }
   private isMainWindowDocument(doc: Document): boolean {
     return this.tm.plugin.app.workspace.containerEl.ownerDocument === doc;
@@ -413,8 +413,32 @@ export class ToolbarController {
       return;
     }
     const el = this.ensureStatusBarEl();
-    el.setText(segments.map((segment) => segment.label).join(" · "));
-    el.title = segments.map((segment) => segment.tooltip).join(" ");
+    const ownerDoc = el.ownerDocument;
+    el.replaceChildren();
+    for (const [index, segment] of segments.entries()) {
+      if (index > 0) {
+        el.appendChild(ownerDoc.createTextNode(" · "));
+      }
+      const span = ownerDoc.createElement("span");
+      span.textContent = segment.label;
+      span.title = segment.tooltip;
+      if (segment.resettable) {
+        span.classList.add("ptm-floaty-toolbar-status-bar-hud-reset");
+        span.setAttribute("role", "button");
+        span.tabIndex = 0;
+        span.addEventListener("click", (event) => {
+          event.stopPropagation();
+          this.resetSession();
+        });
+        span.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            this.resetSession();
+          }
+        });
+      }
+      el.appendChild(span);
+    }
     el.show();
   }
   private closeWindow(doc: Document): void {

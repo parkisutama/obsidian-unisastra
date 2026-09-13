@@ -106,15 +106,16 @@ Toolbar dapat dipin sebagai dock:
   menyala akan ditolak dengan keterangan — matikan **Always show dock**
   terlebih dahulu.
 
-Timer session dan file tampil sebagai HUD:
+Timer session dan file tampil sebagai HUD di status bar Obsidian window
+utama saja — tidak lagi ikut ditampilkan di dalam dock, jadi tampilannya
+konsisten baik toolbar dalam mode floating maupun dock. Popout window tidak
+mendapat HUD karena Obsidian tidak menyediakan status bar per popout window
+untuk plugin.
 
-- saat toolbar dalam mode dock, HUD tampil di dalam dock itu sendiri; saat
-  floating, HUD tampil di status bar Obsidian window utama saja (tidak
-  duplikat). Popout window dalam mode floating tidak mendapat HUD karena
-  Obsidian tidak menyediakan status bar per popout window untuk plugin,
-- **Show session timer** dan **Show file timer** mengatur visibility
-  masing-masing; **Session timer prefix** dan **File timer prefix**
-  mengatur label yang ditampilkan sebelum waktu,
+- **Show session timer** dan **Show file timer** di tab Toolbar mengatur
+  visibility masing-masing — matikan salah satu atau keduanya bila Anda
+  tidak memerlukan timer ini sama sekali; **Session timer prefix** dan
+  **File timer prefix** mengatur label yang ditampilkan sebelum waktu,
 - timer session dibagikan oleh semua window dan mulai berjalan sejak
   toolbar diaktifkan; klik/aktifkan label session (tombol dengan tooltip)
   untuk mereset session tanpa mereset timer file,

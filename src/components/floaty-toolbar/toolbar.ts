@@ -6,8 +6,6 @@ import type {
   ToolbarCalloutOption,
   ToolbarSurface,
 } from "@/capabilities/features/toolbar/controller";
-import { hudSegments } from "@/capabilities/features/toolbar/hud";
-import { createHudElement } from "./hud";
 
 const TOOLBAR_BUTTONS: ReadonlyArray<{
   action: ToolbarAction;
@@ -177,7 +175,7 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   doc,
   execute,
   reportDockEvent,
-  resetSession,
+  _resetSession,
   openCalloutManager,
   togglePin
 ): ToolbarSurface => {
@@ -292,9 +290,6 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   });
   el.appendChild(pinButton);
 
-  const hud = createHudElement(doc, resetSession);
-  el.appendChild(hud.element);
-
   doc.body.appendChild(el);
 
   return {
@@ -303,7 +298,7 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
       calloutDropdown.close();
       el.remove();
     },
-    update(view, settings, dockVisible, elapsed, calloutOptions) {
+    update(view, settings, dockVisible, _elapsed, calloutOptions) {
       currentMode = settings.mode;
       latestCalloutOptions = calloutOptions;
       pinButton.classList.toggle("is-pinned", settings.mode === "dock");
@@ -324,9 +319,6 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
         const statusBarHeight =
           doc.querySelector(".status-bar")?.getBoundingClientRect().height ?? 0;
         el.style.bottom = `${dockBottomOffsetPx(statusBarHeight)}px`;
-        hud.update(
-          hudSegments(settings.timers, elapsed.sessionMs, elapsed.fileMs)
-        );
         if (!view) {
           headingDropdown.close();
           calloutDropdown.close();
@@ -337,7 +329,6 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
       }
       el.classList.remove(DOCK_CLASS, "ptm-floaty-toolbar-dock-peek");
       el.style.removeProperty("bottom");
-      hud.update([]);
       const range = view?.state.selection.main;
       const coords =
         range && !range.empty ? view?.coordsAtPos(range.head) : null;

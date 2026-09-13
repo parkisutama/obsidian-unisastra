@@ -252,45 +252,27 @@
   }
 }
 
-.ptm-floaty-toolbar-hud {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 6px;
-  padding-left: 6px;
-  border-left: 1px solid var(--background-modifier-border);
-  color: var(--text-faint);
-  font-size: var(--font-ui-smaller);
-  white-space: nowrap;
-
-  &[hidden] {
-    display: none;
-  }
-}
-
-.ptm-floaty-toolbar-hud-segment {
+.ptm-floaty-toolbar-status-bar-hud {
   cursor: default;
 }
 
-.ptm-floaty-toolbar-hud-reset {
-  background-color: transparent;
-  border: none;
-  color: inherit;
+.ptm-floaty-toolbar-status-bar-hud-reset {
   cursor: pointer;
-  font: inherit;
-  padding: 0;
+  outline: none;
+  box-shadow: none;
 
   &:hover {
     color: var(--text-normal);
     text-decoration: underline;
   }
 
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
   &:focus-visible {
     outline: 2px solid var(--interactive-accent);
     outline-offset: 1px;
   }
-}
-
-.ptm-floaty-toolbar-status-bar-hud {
-  cursor: default;
 }
