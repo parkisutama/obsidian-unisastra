@@ -12,6 +12,7 @@ vi.mock("obsidian", () => ({
 import {
   BUILTIN_CALLOUT_TYPES,
   canonicalBuiltinCalloutId,
+  githubAlertMarkersForCanonicalId,
   githubMarkerCanonicalId,
   isBuiltinCalloutId,
   isGithubAlertMarker,
@@ -24,35 +25,46 @@ import {
 import { moveEntry } from "@/components/callout-manager";
 
 describe("callout catalog", () => {
-  it("switches to five GitHub presets and respects shared builtin visibility without changing settings", () => {
+  it("returns every enabled entry regardless of the legacy outputMode value — there is no separate GitHub menu", () => {
     const settings = normalizeCalloutSettings({
       outputMode: "github",
       entries: [
         { id: "custom", label: "Custom", source: "custom", enabled: true },
       ],
     });
-    const before = JSON.stringify(settings);
-    expect(calloutMenuOptions(settings).map((item) => item.id)).toEqual([
-      "NOTE",
-      "TIP",
-      "IMPORTANT",
-      "WARNING",
-      "CAUTION",
-    ]);
-    expect(JSON.stringify(settings)).toBe(before);
+    expect(
+      calloutMenuOptions(settings).some((item) => item.id === "custom")
+    ).toBe(true);
+    expect(calloutMenuOptions(settings).some((item) => item.id === "tip")).toBe(
+      true
+    );
+    settings.outputMode = "obsidian";
+    expect(calloutMenuOptions(settings)).toEqual(
+      calloutMenuOptions({ ...settings, outputMode: "github" })
+    );
+  });
+  it("hides a disabled entry from the menu regardless of outputMode", () => {
+    const settings = normalizeCalloutSettings({ outputMode: "github" });
     const tip = settings.entries.find((entry) => entry.id === "tip");
     if (tip) {
       (tip as { enabled: boolean }).enabled = false;
     }
-    expect(calloutMenuOptions(settings).map((item) => item.id)).toEqual([
-      "NOTE",
+    expect(calloutMenuOptions(settings).some((item) => item.id === "tip")).toBe(
+      false
+    );
+  });
+  it("reports the GitHub Alert markers a builtin ID is also compatible with, informationally", () => {
+    expect(githubAlertMarkersForCanonicalId("tip")).toEqual([
+      "TIP",
+      "IMPORTANT",
+    ]);
+    expect(githubAlertMarkersForCanonicalId("warning")).toEqual([
       "WARNING",
       "CAUTION",
     ]);
-    settings.outputMode = "obsidian";
-    expect(
-      calloutMenuOptions(settings).some((item) => item.id === "custom")
-    ).toBe(true);
+    expect(githubAlertMarkersForCanonicalId("note")).toEqual(["NOTE"]);
+    expect(githubAlertMarkersForCanonicalId("danger")).toEqual([]);
+    expect(githubAlertMarkersForCanonicalId("my-custom-id")).toEqual([]);
   });
   it("resolves builtin types and aliases to a canonical lowercase ID", () => {
     expect(canonicalBuiltinCalloutId("note")).toBe("note");

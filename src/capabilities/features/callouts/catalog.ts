@@ -73,3 +73,29 @@ export function isGithubAlertMarker(value: string): value is GithubAlertMarker {
 export function githubMarkerCanonicalId(marker: GithubAlertMarker): string {
   return GITHUB_MARKER_CANONICAL_ID[marker];
 }
+
+const GITHUB_MARKERS_BY_CANONICAL_ID: ReadonlyMap<
+  string,
+  readonly GithubAlertMarker[]
+> = (() => {
+  const map = new Map<string, GithubAlertMarker[]>();
+  for (const marker of GITHUB_ALERT_MARKERS) {
+    const id = githubMarkerCanonicalId(marker);
+    const markers = map.get(id) ?? [];
+    markers.push(marker);
+    map.set(id, markers);
+  }
+  return map;
+})();
+
+/**
+ * The GitHub Alert markers a builtin ID is also recognized as (e.g. "tip" ->
+ * TIP/IMPORTANT), or an empty array for custom IDs and builtins with no
+ * GitHub-compatible base form. Informational only — settings UI uses this to
+ * describe compatibility, it does not gate what the toolbar can insert.
+ */
+export function githubAlertMarkersForCanonicalId(
+  id: string
+): readonly GithubAlertMarker[] {
+  return GITHUB_MARKERS_BY_CANONICAL_ID.get(id) ?? [];
+}

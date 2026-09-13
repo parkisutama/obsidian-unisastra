@@ -2,6 +2,7 @@ import { type Component, Notice, Setting, SettingGroup } from "obsidian";
 import {
   BUILTIN_LABEL_BY_ID,
   canonicalBuiltinCalloutId,
+  githubAlertMarkersForCanonicalId,
 } from "@/capabilities/features/callouts/catalog";
 import {
   type CalloutEntrySettings,
@@ -11,6 +12,21 @@ import type TypewriterModeLib from "@/lib";
 import { renderCalloutDiscovery } from "./callout-discovery";
 import { bindCalloutExpansion } from "./callout-expansion";
 import { renderCalloutStyleEditor } from "./callout-style-editor";
+
+/**
+ * Describes what a callout entry is compatible with, for the settings UI
+ * only — the toolbar itself has no output-mode choice, it always emits an
+ * uppercase marker (see markdown.ts). Custom IDs are never GitHub-compatible
+ * since GitHub Alerts only recognize five fixed keywords.
+ */
+function compatibilityDescription(entry: CalloutEntrySettings): string {
+  const base = entry.source === "builtin" ? "Built-in" : "Custom";
+  const markers = githubAlertMarkersForCanonicalId(entry.id);
+  if (markers.length === 0) {
+    return `${base} · Obsidian only`;
+  }
+  return `${base} · Also GitHub alerts compatible (${markers.join(" or ")})`;
+}
 
 function saveAndRerender(tm: TypewriterModeLib, rerender: () => void): void {
   tm.saveSettings()
@@ -45,25 +61,8 @@ export function renderCalloutManager(
 ): void {
   const entries = tm.settings.callouts.entries;
   container.createEl("p", {
-    text: "Custom styles require this plugin to remain enabled. They do not automatically travel to GitHub or published sites. Preview uses Obsidian callouts in the current theme.",
+    text: "Custom styles require this plugin to remain enabled. They do not automatically travel to GitHub or published sites. Preview uses Obsidian callouts in the current theme. The toolbar always inserts an uppercase marker, which Obsidian reads case-insensitively and GitHub alerts require; compatibility for each type is noted below.",
   });
-
-  new Setting(container)
-    .setName("Output format")
-    .setDesc(
-      "Applies to future actions only. GitHub alerts use five uppercase markers; custom types, titles, folding, and nesting require Obsidian output."
-    )
-    .addDropdown((dropdown) =>
-      dropdown
-        .addOption("obsidian", "Obsidian")
-        .addOption("github", "GitHub alerts")
-        .setValue(tm.settings.callouts.outputMode)
-        .onChange((value) => {
-          tm.settings.callouts.outputMode =
-            value === "github" ? "github" : "obsidian";
-          saveAndRerender(tm, rerender);
-        })
-    );
 
   renderCalloutDiscovery(container, tm, component, rerender);
 
@@ -80,7 +79,7 @@ export function renderCalloutManager(
     });
     const setting = new Setting(header)
       .setName(`ID: ${entry.id}`)
-      .setDesc(entry.source === "builtin" ? "Built-in" : "Custom");
+      .setDesc(compatibilityDescription(entry));
 
     setting.addExtraButton((button) =>
       button

@@ -308,7 +308,6 @@ export class ToolbarController {
             sourceNow.file?.path === path,
           hemingway: this.tm.settings.hemingwayMode.isHemingwayModeEnabled,
           smartUrl: this.tm.settings.toolbar.smartUrl,
-          calloutOutputMode: this.tm.settings.callouts.outputMode,
           visible: getVisibleRange(view.state),
         };
       },

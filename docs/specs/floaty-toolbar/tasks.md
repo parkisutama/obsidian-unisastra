@@ -867,10 +867,61 @@ body and configuration. This revises T15/T17a; original remaining tasks stay T17
   - Verify: `pnpm run check:ci` green — 18 files / 106 tests, typecheck, lint,
     styles, build, artifacts, docs build. Runtime narrow/mobile/popout layout
     still requires Obsidian acceptance, recorded separately.
-- [ ] C2: Unified catalog, uppercase future edits, compatibility descriptions.
+- [x] C2: Unified catalog, uppercase future edits, compatibility descriptions.
   Area: callout settings/markdown, toolbar executor/controller, model/CM6 tests,
   user/current-state/status/changelog. Acceptance: legacy outputMode retained but
   ignored at runtime, custom remains selectable, five GitHub aliases available,
   order/visibility preserved, title/fold/body/depth unchanged, no automatic note
   migration. Verify tests + check:ci; actual theme normalization remains pending.
   Atomic Conventional Commits on completion.
+  - Maintainer clarification (2026-09-14): toolbar always emits uppercase —
+    there is no separate GitHub-mode menu item or per-entry output toggle; the
+    Obsidian/GitHub compatibility label for each type is shown only in the
+    Callouts settings tab, never on the toolbar.
+  - Files: `src/capabilities/features/callouts/catalog.ts`
+    (`githubAlertMarkersForCanonicalId` — informational reverse lookup from a
+    builtin canonical ID to the GitHub Alert markers it's also recognized as,
+    e.g. tip -> TIP/IMPORTANT; used only by settings UI, never gates toolbar
+    output), `src/capabilities/features/callouts/settings.ts`
+    (`calloutMenuOptions` no longer branches on `outputMode` — always returns
+    every enabled entry, builtin or custom, in catalog order; `outputMode`
+    field/type/normalization untouched so persisted data round-trips, it is
+    simply never read for menu/executor decisions anymore),
+    `src/capabilities/features/callouts/markdown.ts` (`wrapAsCallout`/
+    `changeCalloutType` now emit `id.toUpperCase()` unconditionally; removed
+    `githubCalloutEdit` and its restrictive refusal checks entirely —
+    `calloutEdit(text, id)` dropped its `mode` parameter and always takes the
+    lossless Obsidian branch, since one uppercase marker is simultaneously
+    valid Obsidian syntax, case-insensitively, and valid GitHub Alert syntax
+    for the five compatible base forms), `src/capabilities/features/toolbar/
+    executor.ts` (removed `calloutOutputMode` from `ToolbarTarget["policy"]`
+    and the now-dead `githubSelectionIssue` whole-line/quote-boundary check;
+    `executeCalloutAction` calls `calloutEdit(text, id)` with no mode),
+    `src/capabilities/features/toolbar/controller.ts` (removed
+    `calloutOutputMode: this.tm.settings.callouts.outputMode` from the policy
+    object built per view), `src/components/callout-manager.ts` (removed the
+    global "Output format" Obsidian/GitHub `Setting` dropdown entirely; added
+    `compatibilityDescription(entry)` shown as each entry's header `setDesc`,
+    e.g. "Built-in · Also GitHub alerts compatible (TIP or IMPORTANT)" or
+    "Custom · Obsidian only"; top intro paragraph rewritten to explain the
+    single uppercase marker instead of a mode switch),
+    `tests/callout-catalog.test.ts` (replaced the five-preset-switching test
+    with: menu identical regardless of legacy `outputMode` value, custom
+    entries always included, disabled entries still hidden, and direct
+    coverage of `githubAlertMarkersForCanonicalId` for tip/warning/note/danger/
+    custom), `tests/callout-markdown.test.ts` (wrap/change now assert
+    uppercase output; removed the GitHub-mode preset/refusal describe block;
+    added regression coverage proving folding, title, nesting, and custom IDs
+    — previously refused under GitHub mode — now succeed, since there is no
+    restrictive mode left), `tests/toolbar-actions.test.ts` (removed
+    `calloutOutputMode` from the test policy fixture and the two GitHub-mode
+    executor tests; updated the callout-wrap test to expect an uppercase
+    marker), `docs/for-users/use-md-writer-features.md` (removed the
+    Output-format bullet and rewrote "Output GitHub alerts" into "Output
+    callout dan kompatibilitas GitHub alerts", describing the single catalog,
+    always-uppercase insertion, and where the compatibility label lives).
+  - Verify: `pnpm run check:ci` green — 18 files / 106 tests, typecheck, lint
+    (including `obsidianmd/ui/sentence-case`), styles, `lint:md`, build,
+    artifacts, docs build. Actual Obsidian rendering of uppercase markers in
+    both themes, and GitHub's own rendering of existing/converted notes,
+    remain runtime acceptance — recorded in the ledger below, not claimed here.

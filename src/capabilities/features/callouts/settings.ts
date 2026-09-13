@@ -2,8 +2,6 @@ import {
   BUILTIN_CALLOUT_TYPES,
   BUILTIN_LABEL_BY_ID,
   canonicalBuiltinCalloutId,
-  GITHUB_ALERT_MARKERS,
-  githubMarkerCanonicalId,
 } from "./catalog";
 
 export type CalloutOutputMode = "obsidian" | "github";
@@ -30,19 +28,16 @@ export interface CalloutSettings {
   outputMode: CalloutOutputMode;
 }
 
+// One unified catalog for menu/execution: every enabled entry (builtin or
+// custom) is always selectable, regardless of `outputMode`. `outputMode` is
+// kept only for persisted-data compatibility (see normalizeCalloutSettings)
+// and is never read here — the toolbar always emits an uppercase marker
+// (markdown.ts), which is simultaneously valid Obsidian syntax and, for the
+// entries `catalog.githubAlertMarkersForCanonicalId` recognizes, valid GitHub
+// Alert syntax too. There is no separate "GitHub mode" menu.
 export function calloutMenuOptions(
   settings: CalloutSettings
 ): { id: string; label: string }[] {
-  if (settings.outputMode === "github") {
-    return GITHUB_ALERT_MARKERS.filter((marker) =>
-      settings.entries.some(
-        (entry) =>
-          entry.enabled &&
-          entry.source === "builtin" &&
-          entry.id === githubMarkerCanonicalId(marker)
-      )
-    ).map((marker) => ({ id: marker, label: marker }));
-  }
   return settings.entries
     .filter((entry) => entry.enabled)
     .map((entry) => ({ id: entry.id, label: entry.label }));

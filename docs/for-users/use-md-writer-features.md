@@ -135,7 +135,6 @@ untuk plugin.
 Buka tab **Callouts** di pengaturan MD Writer (atau pilih **Manage callouts…**
 di dropdown Callout pada toolbar) untuk:
 
-- memilih **Output format**: Obsidian (default) atau GitHub alerts,
 - menyembunyikan/menampilkan tipe callout bawaan Obsidian dari dropdown
   toolbar tanpa menghapusnya secara permanen,
 - mereset label tipe bawaan yang sudah Anda ubah kembali ke nama default,
@@ -150,22 +149,26 @@ Tab ini tersedia di desktop maupun mobile (berbeda dari toolbar yang
 desktop-only), menggunakan kontrol standar Obsidian yang dapat dipakai
 keyboard maupun sentuhan.
 
-## Output GitHub alerts
+## Output callout dan kompatibilitas GitHub alerts
 
-Pilih **Output format → GitHub alerts** pada tab Callouts. Menu toolbar memakai
-`NOTE`, `TIP`, `IMPORTANT`, `WARNING`, dan `CAUTION`, sesuai
-[sintaks GitHub alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
-Toggle Note mengatur NOTE; Tip mengatur TIP/IMPORTANT; Warning mengatur
-WARNING/CAUTION. Custom callout tetap tersimpan tetapi tidak tersedia di menu
-mode ini. Beralih output hanya memengaruhi tindakan berikutnya, tanpa mengubah
-note existing otomatis.
+Tidak ada pilihan Output format terpisah lagi. Menu toolbar callout hanya satu
+catalog: setiap tipe yang enabled (bawaan maupun custom) langsung tersedia,
+dan memilihnya selalu menyisipkan marker uppercase, misalnya `[!NOTE]` atau
+`[!TIP]`. Obsidian membaca tipe callout tanpa membedakan huruf besar/kecil,
+jadi uppercase ini tetap tampil sama seperti sebelumnya di Obsidian — sekaligus
+menjadi bentuk yang dikenali
+[sintaks GitHub alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts)
+untuk lima tipe dasarnya (`NOTE`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION`).
+Title, folding, nesting, dan custom ID tetap didukung penuh seperti biasa —
+tidak ada lagi mode restriktif yang menolaknya.
 
-Pilih seluruh baris teks atau seluruh blok callout built-in tanpa title,
-folding, atau nesting. Conversion incompatible ditolak dengan pesan, tanpa
-mengubah isi atau undo history. Selection sebagian baris atau yang menyisakan
-baris quote di luar selection juga ditolak; gunakan output Obsidian untuk
-mempertahankan fitur tersebut. Body dan baris kosong dipertahankan.
-Preview settings tetap memakai renderer Obsidian, bukan simulasi warna GitHub.
+Informasi kompatibilitas GitHub muncul di tab **Callouts**, bukan di toolbar:
+setiap entry menampilkan keterangan seperti "Built-in · Also GitHub alerts
+compatible (TIP or IMPORTANT)" bila tipe dasarnya termasuk salah satu dari
+lima marker GitHub, atau "Obsidian only" bila tidak (termasuk semua custom
+callout, karena GitHub hanya mengenali lima keyword tetap tersebut). Label ini
+murni informatif — tidak membatasi apa yang bisa dipilih di toolbar, dan tidak
+mengubah note lama secara otomatis.
 
 ## Atur tampilan callout
 
@@ -203,8 +206,8 @@ callout Obsidian dan tema document settings saat ini; buka kembali tab Callouts
 untuk merender ulang setelah perubahan tema.
 
 Styling ini membutuhkan MD Writer tetap aktif. Warna/ikon tidak otomatis ikut
-ke GitHub atau Publish. Preview memperlihatkan sintaks Obsidian, termasuk ketika
-pilihan output catalog adalah GitHub alerts.
+ke GitHub atau Publish. Preview selalu memperlihatkan rendering Obsidian,
+terlepas dari kompatibilitas GitHub alerts yang tertulis di badge entry.
 
 ## Pakai GitHub-style heading anchors
 
