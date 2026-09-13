@@ -256,6 +256,27 @@
   cursor: default;
 }
 
+.ptm-callout-manager-entry {
+  margin-block: var(--size-4-4);
+
+  .setting-item-control {
+    flex-wrap: wrap;
+  }
+
+  input {
+    max-width: 100%;
+  }
+}
+
+.ptm-callout-style-status {
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.ptm-callout-style-preview {
+  overflow-wrap: anywhere;
+}
+
 .ptm-floaty-toolbar-status-bar-hud-reset {
   cursor: pointer;
   outline: none;

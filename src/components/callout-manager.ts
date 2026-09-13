@@ -1,4 +1,4 @@
-import { Notice, Setting } from "obsidian";
+import { type Component, Notice, Setting, SettingGroup } from "obsidian";
 import {
   BUILTIN_LABEL_BY_ID,
   canonicalBuiltinCalloutId,
@@ -8,6 +8,7 @@ import {
   CUSTOM_ID_PATTERN,
 } from "@/capabilities/features/callouts/settings";
 import type TypewriterModeLib from "@/lib";
+import { renderCalloutStyleEditor } from "./callout-style-editor";
 
 function saveAndRerender(tm: TypewriterModeLib, rerender: () => void): void {
   tm.saveSettings()
@@ -37,9 +38,13 @@ export function moveEntry(
 export function renderCalloutManager(
   container: HTMLElement,
   tm: TypewriterModeLib,
-  rerender: () => void
+  rerender: () => void,
+  component: Component
 ): void {
   const entries = tm.settings.callouts.entries;
+  container.createEl("p", {
+    text: "Custom styles require this plugin to remain enabled. They do not automatically travel to GitHub or published sites. Preview uses Obsidian callouts in the current theme.",
+  });
 
   new Setting(container)
     .setName("Output format")
@@ -59,7 +64,15 @@ export function renderCalloutManager(
     );
 
   for (const [index, entry] of entries.entries()) {
-    const setting = new Setting(container)
+    const panel = container.createDiv({
+      cls: "ptm-callout-manager-entry",
+    });
+    const group = new SettingGroup(panel);
+    const preview = group.listEl.createDiv({
+      cls: "ptm-callout-style-preview markdown-rendered",
+    });
+    const header = group.listEl;
+    const setting = new Setting(header)
       .setName(entry.label)
       .setDesc(
         `ID: ${entry.id} (${entry.source === "builtin" ? "built-in" : "custom"})`
@@ -98,18 +111,22 @@ export function renderCalloutManager(
           saveAndRerender(tm, rerender);
         })
     );
-    if (entry.source === "builtin") {
-      setting.addExtraButton((button) =>
-        button
-          .setIcon("rotate-ccw")
-          .setTooltip("Reset label to default")
-          .onClick(() => {
+    setting.addExtraButton((button) =>
+      button
+        .setIcon("rotate-ccw")
+        .setTooltip("Reset callout style and built-in label")
+        .onClick(() => {
+          (entry as { styling: CalloutEntrySettings["styling"] }).styling = {
+            mode: "inherit",
+          };
+          if (entry.source === "builtin") {
             (entry as { label: string }).label =
               BUILTIN_LABEL_BY_ID.get(entry.id) ?? entry.label;
-            saveAndRerender(tm, rerender);
-          })
-      );
-    } else {
+          }
+          saveAndRerender(tm, rerender);
+        })
+    );
+    if (entry.source === "custom") {
       setting.addExtraButton((button) =>
         button
           .setIcon("trash")
@@ -123,6 +140,7 @@ export function renderCalloutManager(
           })
       );
     }
+    renderCalloutStyleEditor(group.listEl, entry, tm, component, preview);
   }
 
   let newId = "";

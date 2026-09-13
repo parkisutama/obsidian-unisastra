@@ -1,4 +1,4 @@
-import { type App, PluginSettingTab, SettingGroup } from "obsidian";
+import { type App, Component, PluginSettingTab, SettingGroup } from "obsidian";
 import { renderCalloutManager } from "@/components/callout-manager";
 import type TypewriterModeLib from "@/lib";
 
@@ -14,6 +14,20 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
 
   private readonly tm: TypewriterModeLib;
   private activeTab = "writingModes";
+  private previewComponent: Component | null = null;
+  private visible = false;
+
+  private clearPreviewComponent(): void {
+    if (this.previewComponent) {
+      this.tm.plugin.removeChild(this.previewComponent);
+      this.previewComponent = null;
+    }
+  }
+
+  override hide(): void {
+    this.visible = false;
+    this.clearPreviewComponent();
+  }
 
   constructor(app: App, tm: TypewriterModeLib) {
     super(app, tm.plugin);
@@ -89,12 +103,26 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
           "Manage the callout catalog used by the toolbar's Callout menu: enable/hide, reorder, and add custom entries.",
         render: (container) => {
           const draw = () => {
+            if (
+              !this.visible ||
+              this.activeTab !== "callouts" ||
+              !container.isConnected
+            ) {
+              return;
+            }
+            this.clearPreviewComponent();
+            this.previewComponent = this.tm.plugin.addChild(new Component());
             container.empty();
             this.addTabDescription(
               container,
               "Manage the callout catalog used by the toolbar's Callout menu: enable/hide, reorder, and add custom entries."
             );
-            renderCalloutManager(container, this.tm, draw);
+            renderCalloutManager(
+              container,
+              this.tm,
+              draw,
+              this.previewComponent
+            );
           };
           draw();
         },
@@ -263,6 +291,8 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
   }
 
   override display(): void {
+    this.visible = true;
+    this.clearPreviewComponent();
     this.containerEl.empty();
     this.containerEl.addClass("tm-settings");
 
@@ -274,6 +304,7 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
     });
 
     const renderTab = (tabId: string) => {
+      this.clearPreviewComponent();
       this.activeTab = tabId;
       contentEl.empty();
 

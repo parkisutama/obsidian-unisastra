@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
+vi.mock("@/components/callout-icon-picker", () => ({
+  CalloutIconPicker: class {},
+}));
+
 vi.mock("obsidian", () => ({
   Notice: class {},
   Setting: class {},
