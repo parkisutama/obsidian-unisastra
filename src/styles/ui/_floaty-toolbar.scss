@@ -275,6 +275,54 @@
 
 .ptm-callout-style-preview {
   overflow-wrap: anywhere;
+
+  &:not(.is-expanded) .callout-content {
+    display: none;
+  }
+
+  .callout {
+    margin: 0;
+  }
+
+  .callout-title {
+    cursor: pointer;
+
+    &::after {
+      content: "›";
+      margin-inline-start: auto;
+    }
+  }
+
+  &.is-expanded .callout-title::after {
+    transform: rotate(90deg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 2px;
+  }
+}
+
+.ptm-callout-manager-header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--size-4-3);
+  flex-wrap: wrap;
+
+  .ptm-callout-style-preview {
+    flex: 1 1 220px;
+    min-width: 0;
+  }
+
+  .setting-item {
+    flex: 1 1 260px;
+    border: none;
+    gap: var(--size-4-2);
+  }
+}
+
+.ptm-callout-configuration[hidden] {
+  display: none;
 }
 
 .ptm-floaty-toolbar-status-bar-hud-reset {

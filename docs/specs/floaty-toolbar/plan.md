@@ -352,3 +352,23 @@ guard Hemingway, timer per-window file, styling runtime tanpa export snippet,
 discovery candidates best effort, serta GitHub conversion tanpa kehilangan data.
 [Tasks](./tasks.md) memuat file/acceptance/test/docs/dependencies dan checkpoint;
 validasi TASKS terpisah sebelum implementation.
+
+## Accepted compact catalog revision — 2026-09-13
+
+Use the confirmed preview-header/collapse interaction as a follow-up to T15/T17a.
+Keep one lifecycle-owned style editor per entry. A keyboard-operable preview
+trigger toggles sample body and form visibility without rerendering either;
+catalog controls remain in a separate sibling Setting at the right. Responsive
+layout wraps on narrow windows. Render the actual label as text after Markdown
+rendering, avoiding interpreting configurable labels as Markdown.
+
+Keep outputMode persisted for compatibility while runtime menu/executor use the
+unified catalog. Emit uppercase on explicit edits; preserve stored IDs and
+existing Markdown. Include IMPORTANT/CAUTION aliases next to their canonical
+Tip/Warning entries and respect enabled/order settings. Show compatibility of
+the base form with the restrictions visible in its description. Verify custom
+uppercase styling normalization in Obsidian separately from automated gates.
+
+Execute two atomic slices: compact UI with interaction regression tests, then
+unified runtime catalog/output with regression tests and current-state docs.
+No dependency, command ID, vault deployment or release change is needed.

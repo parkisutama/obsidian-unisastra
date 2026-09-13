@@ -9,6 +9,7 @@ import {
 } from "@/capabilities/features/callouts/settings";
 import type TypewriterModeLib from "@/lib";
 import { renderCalloutDiscovery } from "./callout-discovery";
+import { bindCalloutExpansion } from "./callout-expansion";
 import { renderCalloutStyleEditor } from "./callout-style-editor";
 
 function saveAndRerender(tm: TypewriterModeLib, rerender: () => void): void {
@@ -71,15 +72,15 @@ export function renderCalloutManager(
       cls: "ptm-callout-manager-entry",
     });
     const group = new SettingGroup(panel);
-    const preview = group.listEl.createDiv({
+    const header = group.listEl.createDiv({
+      cls: "ptm-callout-manager-header",
+    });
+    const preview = header.createDiv({
       cls: "ptm-callout-style-preview markdown-rendered",
     });
-    const header = group.listEl;
     const setting = new Setting(header)
-      .setName(entry.label)
-      .setDesc(
-        `ID: ${entry.id} (${entry.source === "builtin" ? "built-in" : "custom"})`
-      );
+      .setName(`ID: ${entry.id}`)
+      .setDesc(entry.source === "builtin" ? "Built-in" : "Custom");
 
     setting.addExtraButton((button) =>
       button
@@ -143,7 +144,11 @@ export function renderCalloutManager(
           })
       );
     }
-    renderCalloutStyleEditor(group.listEl, entry, tm, component, preview);
+    const configuration = group.listEl.createDiv({
+      cls: "ptm-callout-configuration",
+    });
+    bindCalloutExpansion(preview, configuration, entry.label, component);
+    renderCalloutStyleEditor(configuration, entry, tm, component, preview);
   }
 
   let newId = "";

@@ -835,3 +835,42 @@ SPECIFY, PLAN, dan kelanjutan implementation telah diotorisasi maintainer dalam
 sesi. T01-T16 dan T17a diimplementasikan dan diverifikasi otomatis; acceptance runtime
 dicatat terpisah di ledger. Atomic Conventional Commits setelah slice selesai
 dikonfirmasi maintainer pada 2026-09-13. T17b adalah task berikutnya.
+
+## Maintainer-requested follow-up: compact unified catalog — 2026-09-13
+
+Confirmed interaction: preview header always visible; expansion reveals sample
+body and configuration. This revises T15/T17a; original remaining tasks stay T17b-T20.
+
+- [x] C1: Compact preview header and right-side catalog controls. Area: manager,
+  style editor, SCSS and settings interaction tests. Acceptance: label/icon/color
+  visible while closed; keyboard/click expand without recreating draft controls;
+  right-side controls do not toggle expansion. Verify tests + check:ci; runtime
+  narrow/mobile/popout remains separate. Atomic Conventional Commit on completion.
+  - Files: `src/components/callout-expansion.ts` (new — pure toggle binder,
+    click/keydown Enter/Space, `aria-expanded`, cleans up via `component.register`;
+    ignores clicks inside `.callout-content` so links/text inside the rendered
+    preview body don't also toggle collapse), `src/components/callout-manager.ts`
+    (header now holds preview + a right-side `Setting` for ID/source, reorder,
+    enabled toggle, reset; `configuration` div starts `hidden`, bound to the
+    preview via `bindCalloutExpansion`, and is the same node passed into
+    `renderCalloutStyleEditor` so draft state is never recreated on
+    collapse/expand), `src/components/callout-style-editor.ts` (preview markdown
+    drops the generic "Preview" title and sets `.callout-title-inner` text to
+    `entry.label` after render, so the header shows the callout's real
+    icon/color/label instead of a placeholder), `_floaty-toolbar.scss`
+    (`.ptm-callout-manager-header` flex-wraps preview+setting for narrow
+    windows; `.callout-content` hidden unless `.is-expanded`; chevron rotates on
+    expand; `:focus-visible` outline for keyboard use), `tests/callout-manager.test.ts`
+    (asserts configuration starts hidden, keyboard Enter and click both toggle,
+    the draft child node identity is preserved across collapse/expand, and the
+    right-side control panel carries no click listener of its own).
+  - Verify: `pnpm run check:ci` green — 18 files / 106 tests, typecheck, lint,
+    styles, build, artifacts, docs build. Runtime narrow/mobile/popout layout
+    still requires Obsidian acceptance, recorded separately.
+- [ ] C2: Unified catalog, uppercase future edits, compatibility descriptions.
+  Area: callout settings/markdown, toolbar executor/controller, model/CM6 tests,
+  user/current-state/status/changelog. Acceptance: legacy outputMode retained but
+  ignored at runtime, custom remains selectable, five GitHub aliases available,
+  order/visibility preserved, title/fold/body/depth unchanged, no automatic note
+  migration. Verify tests + check:ci; actual theme normalization remains pending.
+  Atomic Conventional Commits on completion.

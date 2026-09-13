@@ -110,12 +110,16 @@ export function renderCalloutStyleEditor(
     try {
       await MarkdownRenderer.render(
         tm.plugin.app,
-        `> [!${entry.id}] Preview\n> Callout appearance in the current theme.`,
+        `> [!${entry.id}]\n> Callout appearance in the current theme.`,
         result,
         "",
         previewComponent
       );
       if (version === renderVersion && details.isConnected) {
+        const title = result.querySelector<HTMLElement>(".callout-title-inner");
+        if (title) {
+          title.setText(entry.label);
+        }
         preview.replaceChildren(result);
         updateDraft();
       }

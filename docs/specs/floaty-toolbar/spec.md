@@ -291,3 +291,31 @@ validasi maintainer sebelum IMPLEMENT.
    lama terjaga; saat enabled pengguna memilih floating atau persistent dock.
 5. Atribusi source, README, dan notice MIT distribusi wajib menjadi bagian PLAN,
    TASKS, implementation, serta review acceptance AC-11.
+
+## Proposed revision: compact settings and compatibility labels — 2026-09-13
+
+Status: Accepted by maintainer on 2026-09-13 ("Ya seperti itu"). This revision
+supersedes the global output-mode requirement and the always-expanded layout.
+
+- One compact callout header shows its actual icon, color, and label instead of
+  the generic Preview title. ID/source, reorder, enabled toggle, and reset sit
+  to its right; narrow/mobile layouts wrap without hiding controls.
+- Collapse behavior: header remains visible; expanding it reveals the
+  sample body and style configuration. Keyboard activation and action buttons
+  must not interfere with each other; draft edits survive collapse/expand.
+- Replace the global Obsidian/GitHub choice with one enriched catalog and
+  compatibility labels. All custom types remain selectable. Future output uses
+  uppercase markers; stored IDs and existing notes are preserved.
+- Obsidian compatibility permits custom types and optional folding. GitHub
+  Alerts compatibility requires NOTE/TIP/IMPORTANT/WARNING/CAUTION, uppercase,
+  without title, folding operators, or nesting. A type badge describes the
+  compatible base form; incompatible actual syntax must not be labeled GitHub
+  compatible. GitHub documentation does not establish support for +/- operators.
+- Compatibility approach: retain legacy outputMode in persisted settings but
+  ignore it for the runtime catalog/executor. Preserve stored lowercase IDs and
+  styles; uppercase is applied only to future Markdown edits. Preserve existing
+  title/fold/body/depth. Actual theme normalization requires runtime acceptance.
+- Regression tests cover collapse/expand without rerendering draft controls,
+  preserved settings/notes, custom availability, aliases and emitted syntax.
+
+Reference: [GitHub alerts syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).

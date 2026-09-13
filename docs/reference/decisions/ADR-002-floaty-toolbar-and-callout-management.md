@@ -88,6 +88,21 @@ tema; desktop/mobile/popout acceptance terpisah. Dependency direction manual.
 ADR Accepted setelah maintainer memvalidasi plan; baseline/current state
 baru diperbarui sebagai implemented setelah source serta validation tersedia.
 
+## Accepted amendment — compact unified callout catalog (2026-09-13)
+
+Maintainer confirms the revised compact settings and unified catalog. This
+supersedes decision 9's global output-mode UX: runtime uses one enriched catalog,
+with compatibility descriptions instead of restricting custom types. Keep the
+legacy outputMode key/value for persisted-data compatibility, but do not use it
+to hide entries or reject otherwise lossless Obsidian edits. Future markers are
+uppercase; stored IDs, styles and existing notes stay intact. Preserve title,
+folding, body and quote depth on explicit edits. GitHub compatibility describes
+only its five uppercase base forms without title/folding/nesting.
+
+Preview header remains visible with label/icon/color and right-side catalog
+controls; toggling it reveals sample body and configuration without recreating
+the form. Separate control actions from collapse and support keyboard/mobile.
+
 ## References
 
 - [Floaty Toolbar source baseline](https://github.com/0png/Floaty-Toolbar/tree/b2113d06e1870851963053cd0bab0a0a971bb920/src)
