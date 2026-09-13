@@ -26,6 +26,10 @@ import { TogglePlugin } from "./toggle-plugin";
 import { ToggleShowWhitespace } from "./toggle-show-whitespace";
 import { ToggleTypewriter } from "./toggle-typewriter";
 import { ToggleTypewriterAndDimming } from "./toggle-typewriter-and-dimming";
+import {
+  ManageCalloutsCommand,
+  toolbarActionCommands,
+} from "./toolbar-actions";
 import { WritingFocusCommand } from "./writing-focus";
 
 export function getCommands(
@@ -60,6 +64,8 @@ export function getCommands(
       new CopyBlockLink(tm),
       new CopyBlockEmbed(tm),
       new GenerateBlockId(tm),
+      new ManageCalloutsCommand(tm),
+      ...toolbarActionCommands(tm),
       ...WRITING_MODES.map(
         ({ mode, label }) => new SetWritingModeCommand(tm, mode, label)
       ),

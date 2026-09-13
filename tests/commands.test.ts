@@ -1,4 +1,10 @@
+import type { TransactionSpec } from "@codemirror/state";
+import { EditorState } from "@codemirror/state";
 import { describe, expect, it, vi } from "vitest";
+import {
+  ManageCalloutsCommand,
+  toolbarActionCommands,
+} from "@/capabilities/commands/toolbar-actions";
 import { DEFAULT_SETTINGS } from "@/capabilities/settings";
 
 vi.mock("obsidian", () => ({
@@ -296,5 +302,164 @@ describe("command registration", () => {
     expect(toggles.showWhitespace).toHaveBeenCalledWith(false);
     expect(toggles.maxChar).toHaveBeenCalledWith(false);
     expect(toggles.writingFocus).toHaveBeenCalledWith(false);
+  });
+});
+
+describe("toolbar action commands", () => {
+  type CheckCallback = (
+    checking: boolean,
+    editor: unknown,
+    ctx: unknown
+  ) => boolean;
+
+  function fakeToolbarTarget(text = "hello", from = 0, to = text.length) {
+    let state = EditorState.create({
+      doc: text,
+      selection: { anchor: from, head: to },
+    });
+    return {
+      get state() {
+        return state;
+      },
+      dispatch: (spec: TransactionSpec) => {
+        state = state.update(spec).state;
+      },
+      policy: () => ({
+        enabled: true,
+        current: true,
+        hemingway: false,
+        smartUrl: false,
+        visible: { from: 0, to: 10_000 },
+      }),
+      text: () => state.doc.toString(),
+    };
+  }
+
+  it("hides toolbar action commands from the palette on mobile", async () => {
+    const { Platform } = await import("obsidian");
+    (Platform as { isMobile: boolean }).isMobile = true;
+    try {
+      let checkCallback: CheckCallback | undefined;
+      const tm = {
+        plugin: {
+          addCommand: ({
+            editorCheckCallback,
+          }: {
+            editorCheckCallback: CheckCallback;
+          }) => {
+            checkCallback = editorCheckCallback;
+          },
+        },
+        toolbar: { target: vi.fn() },
+      };
+      const [command] = toolbarActionCommands(tm as never);
+      command.load();
+      expect(checkCallback?.(true, { cm: {} }, {})).toBe(false);
+    } finally {
+      (Platform as { isMobile: boolean }).isMobile = false;
+    }
+  });
+
+  it("hides the command when the active editor has no live CM6 view to target", () => {
+    let checkCallback: CheckCallback | undefined;
+    const tm = {
+      plugin: {
+        addCommand: ({
+          editorCheckCallback,
+        }: {
+          editorCheckCallback: CheckCallback;
+        }) => {
+          checkCallback = editorCheckCallback;
+        },
+      },
+      toolbar: { target: vi.fn() },
+    };
+    const [command] = toolbarActionCommands(tm as never);
+    command.load();
+    expect(checkCallback?.(true, {}, {})).toBe(false);
+  });
+
+  it("executes the same executor/guards the toolbar uses when invoked from the palette", () => {
+    let checkCallback: CheckCallback | undefined;
+    const fake = fakeToolbarTarget("hello", 0, 5);
+    const tm = {
+      plugin: {
+        addCommand: ({
+          editorCheckCallback,
+        }: {
+          editorCheckCallback: CheckCallback;
+        }) => {
+          checkCallback = editorCheckCallback;
+        },
+      },
+      toolbar: { target: () => fake },
+    };
+    const commands = toolbarActionCommands(tm as never);
+    const bold = commands.find(
+      (command) => command.commandKey === "floaty-bold"
+    );
+    bold?.load();
+    expect(checkCallback?.(false, { cm: {} }, {})).toBe(true);
+    expect(fake.text()).toBe("**hello**");
+  });
+
+  it("registers every upstream-parity command ID uniquely, including all five callout types", () => {
+    const registered: string[] = [];
+    const tm = {
+      plugin: {
+        addCommand: ({ id }: { id: string }) => {
+          registered.push(id);
+        },
+      },
+      toolbar: { target: vi.fn() },
+    };
+    for (const command of toolbarActionCommands(tm as never)) {
+      command.load();
+    }
+    expect(new Set(registered).size).toBe(registered.length);
+    for (const id of [
+      "floaty-bold",
+      "floaty-italic",
+      "floaty-strikethrough",
+      "floaty-inline-code",
+      "floaty-highlight",
+      "floaty-insert-link",
+      "floaty-heading-1",
+      "floaty-heading-2",
+      "floaty-heading-3",
+      "floaty-heading-4",
+      "floaty-heading-plain",
+      "floaty-callout-note",
+      "floaty-callout-tip",
+      "floaty-callout-warning",
+      "floaty-callout-important",
+      "floaty-callout-caution",
+    ]) {
+      expect(registered).toContain(id);
+    }
+  });
+
+  it("opens the callout manager via the manage-callouts command", () => {
+    const openCalloutManager = vi.fn();
+    let callback: (() => void) | undefined;
+    const tm = {
+      plugin: {
+        addCommand: ({
+          callback: cb,
+          id,
+        }: {
+          callback: () => void;
+          id: string;
+        }) => {
+          if (id === "manage-callouts") {
+            callback = cb;
+          }
+        },
+      },
+      openCalloutManager,
+    };
+    new ManageCalloutsCommand(tm as never).load();
+    callback?.();
+    expect(openCalloutManager).toHaveBeenCalled();
   });
 });

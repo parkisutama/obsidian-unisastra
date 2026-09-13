@@ -94,6 +94,19 @@ Catatan:
   multi-selection, atau saat seleksi/baris kursor berada di luar outline
   yang sedang fokus.
 
+Setiap aksi toolbar juga tersedia lewat Command palette (`Ctrl/Cmd+P`), memakai
+executor dan guard yang sama persis dengan tombol toolbar (Reading Mode,
+Hemingway, seleksi kosong/multi-range, dan seterusnya menolak dengan pesan
+yang sama). Command ID mengikuti Floaty Toolbar asli: `floaty-bold`,
+`floaty-italic`, `floaty-strikethrough`, `floaty-inline-code`,
+`floaty-highlight`, `floaty-insert-link`, `floaty-heading-1` s.d.
+`floaty-heading-4`, `floaty-heading-plain`, serta lima command callout
+(`floaty-callout-note`, `-tip`, `-warning`, `-important`, `-caution`) yang
+masing-masing menyisipkan marker uppercase-nya sendiri. Command-command ini
+tidak muncul di command palette pada mobile atau saat editor aktif bukan CM6
+Live Preview/Source. Command **Manage callouts** (baru, bukan dari upstream)
+membuka Settings langsung ke tab Callouts dari mana saja, termasuk mobile.
+
 Toolbar dapat dipin sebagai dock:
 
 - **Pin toolbar as a dock** memindahkan toolbar dari floating (mengikuti

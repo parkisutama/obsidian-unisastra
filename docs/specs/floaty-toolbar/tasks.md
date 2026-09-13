@@ -785,16 +785,45 @@ come back to these rather than context-switching now.
 
 ### T17b — Command parity memakai executor yang sama
 
-- [ ] Implemented dan verified.
+- [x] Implemented dan verified (automated; runtime pending).
 - Dependency: T17a; AC-03, AC-07, AC-08.
 - Acceptance: upstream command IDs dan manage-callouts registered unik tanpa
   mengubah commands lama; commands/menu memakai guards/conversion yang sama;
   manager command membuka tab plugin dan editor action baru unavailable mobile.
-- Files (5): `src/capabilities/commands/toolbar-actions.ts`,
-  `src/capabilities/commands/index.ts`, `src/components/settings-tab.ts`,
-  `tests/commands.test.ts`, `docs/for-users/use-md-writer-features.md`.
-- Verify: registration uniqueness, action executor invocation dan platform
-  guard tests, `pnpm run test`, `pnpm run check`; runtime command palette.
+- Files: `src/capabilities/commands/toolbar-actions.ts` (new —
+  `registerToolbarActionCommand` registers each command with
+  `editorCheckCallback`: returns `false` (hidden from palette) on
+  `Platform.isMobile` or when the active editor has no live CM6 view
+  (`(editor as unknown as {cm?: EditorView}).cm`); on invocation it builds a
+  `ToolbarTarget` via `tm.toolbar.target(cm)` — the same `ToolbarController`
+  method the toolbar UI itself uses — and calls the same
+  `executeToolbarAction`, so refusal messages/guards are identical, not
+  reimplemented; sixteen commands cover bold/italic/strikethrough/code/
+  highlight/link, heading 1-4 and remove-heading, and the five callout types,
+  with IDs copied verbatim from upstream Floaty Toolbar's own command IDs
+  (`floaty-bold`, `floaty-heading-1`, `floaty-callout-important`, etc. —
+  confirmed by fetching `src/main.ts` at the pinned upstream revision) for
+  command-palette parity; `ManageCalloutsCommand` (`manage-callouts`, no
+  upstream equivalent) is a plain non-editor `Command` calling
+  `tm.openCalloutManager()`, available on mobile since the Callouts settings
+  tab itself is), `src/capabilities/commands/index.ts` (wires
+  `toolbarActionCommands(tm)` and `new ManageCalloutsCommand(tm)` into
+  `getCommands()` alongside existing commands, unchanged otherwise),
+  `tests/commands.test.ts` (new "toolbar action commands" describe block:
+  mobile hides the command from the palette, no live CM6 view hides it too,
+  invoking `floaty-bold` through the command wiring dispatches through the
+  real `executeToolbarAction` and mutates a fake `EditorState` exactly like
+  the toolbar-actions executor tests do, all sixteen upstream-parity IDs
+  register uniquely, and `manage-callouts` calls `tm.openCalloutManager()`),
+  `docs/for-users/use-md-writer-features.md` (new paragraph documenting the
+  command palette parity, the ID list, and the mobile/manage-callouts
+  distinction). `src/components/settings-tab.ts` was not changed — command
+  registration needed no settings-tab UI, and callout-manager discoverability
+  was already covered by T13's "Manage callouts…" menu entry.
+- Verify: `pnpm run check:ci` green — 18 files / 111 tests, typecheck, lint,
+  styles, `lint:md`, build, artifacts, docs build. Runtime command palette
+  behavior in actual Obsidian (ID visibility, guard messages, mobile
+  hiding) remains acceptance-pending — recorded in the ledger below.
 
 Checkpoint G setelah T16-T17b: `pnpm run check:ci`; compare action/commands,
 callout catalog/output, dock, timers terhadap upstream parity inventory,
@@ -877,9 +906,10 @@ diotorisasi; jangan menjalankan dev/deploy ke vault operasional implisit.
 ## Status validation fase
 
 SPECIFY, PLAN, dan kelanjutan implementation telah diotorisasi maintainer dalam
-sesi. T01-T16 dan T17a diimplementasikan dan diverifikasi otomatis; acceptance runtime
-dicatat terpisah di ledger. Atomic Conventional Commits setelah slice selesai
-dikonfirmasi maintainer pada 2026-09-13. T17b adalah task berikutnya.
+sesi. T01-T17b (termasuk follow-up compact catalog C1/C2) diimplementasikan dan
+diverifikasi otomatis; acceptance runtime dicatat terpisah di ledger. Atomic
+Conventional Commits setelah slice selesai dikonfirmasi maintainer pada
+2026-09-13. T18 (reorder settings/long-press) adalah task berikutnya.
 
 ## Maintainer-requested follow-up: compact unified catalog — 2026-09-13
 
