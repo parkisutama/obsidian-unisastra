@@ -6,8 +6,8 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 16/21 tasks implemented (T01-T16; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T13. Runtime Obsidian
+- Progress: 17/21 tasks implemented (T01-T16 dan T17a; T17 dipecah menjadi T17a/T17b);
+  `pnpm run check:ci` hijau: 18 files / 106 tests untuk checkpoint T17a. Runtime Obsidian
   acceptance settings/preview terakhir dikonfirmasi maintainer; matrix runtime
   lainnya tetap pending. Slice C dan D selesai; Slice E
   (T11-T13: catalog, menu dropdown + lossless Obsidian conversion, Callout
@@ -724,13 +724,17 @@ serta computed defaults tanpa persist override ditambahkan. `check:ci` lolos
 
 ### T17a — Output mode GitHub
 
-- [ ] Implemented dan verified.
+- [x] Implemented dan verified (automated; runtime pending).
+- Execution split: conversion/menu model and tests; controller/executor/settings
+  integration with selection guards and user guide; checkpoint documentation.
+  Suite: 18 files / 106 tests. Regression tests first reproduced lossy conversion
+  and selection omitting title/nesting outside its boundaries before fixes.
 - Dependency: T16; AC-03, AC-07, AC-08.
 - Acceptance: lima marker uppercase; custom/title/folding/nesting incompatible
   unavailable/refused tanpa data loss; output mode tersimpan dan menu mengikuti
   mode tanpa mengubah note existing otomatis.
-- Files (4): callouts `markdown.ts`, `src/components/callout-manager.ts`,
-  `tests/callout-markdown.test.ts`, `docs/for-users/use-md-writer-features.md`.
+- Files: callouts markdown/settings and model tests; toolbar controller/executor
+  and executor tests; manager description, user guide, and checkpoint docs.
 - Verify: GitHub conversion refusal tests, `pnpm run test`, `pnpm run check`;
   runtime switch output dan rendered markers.
 
@@ -828,6 +832,6 @@ diotorisasi; jangan menjalankan dev/deploy ke vault operasional implisit.
 ## Status validation fase
 
 SPECIFY, PLAN, dan kelanjutan implementation telah diotorisasi maintainer dalam
-sesi. T01-T16 diimplementasikan dan diverifikasi otomatis; acceptance runtime
+sesi. T01-T16 dan T17a diimplementasikan dan diverifikasi otomatis; acceptance runtime
 dicatat terpisah di ledger. Atomic Conventional Commits setelah slice selesai
-dikonfirmasi maintainer pada 2026-09-13. T17a adalah task berikutnya.
+dikonfirmasi maintainer pada 2026-09-13. T17b adalah task berikutnya.

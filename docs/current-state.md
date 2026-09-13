@@ -17,7 +17,7 @@ seluruh fitur sudah lolos acceptance di Obsidian.
 
 ## Floaty toolbar work in progress
 
-Branch `codex/adopt-floaty-toolbar` mengimplementasikan T01-T16: formatting,
+Branch `codex/adopt-floaty-toolbar` mengimplementasikan T01-T16 dan T17a: formatting,
 heading/link/callout actions, floating/dock UI, timer status bar window utama,
 catalog manager, serta lifecycle custom style per document. HUD hanya di status
 bar, termasuk ketika toolbar dock. Runtime style menerima warna hex 3/6 digit
@@ -28,6 +28,13 @@ literal ID/nested rules, melaporkan scan parsial, dan hanya menyimpan kandidat
 melalui Add; refresh/css-change mempertahankan konfigurasi dan draft styling.
 Input manual tetap tersedia. Task lanjutan belum selesai. Test host styling tidak membuktikan tampilan
 Obsidian desktop/mobile/popout.
+
+T17a menghubungkan output mode tersimpan ke menu dan executor. Mode GitHub
+menawarkan lima uppercase markers dengan visibility kanonis bersama untuk
+TIP/IMPORTANT dan WARNING/CAUTION. Conversion custom/title/folding/nesting,
+selection sebagian baris, atau blok quote yang tidak lengkap ditolak tanpa
+dispatch/undo entry. Body kompatibel tetap utuh; output switch tidak mengubah
+note existing otomatis. Command parity T17b belum diimplementasikan.
 
 Setiap callout memakai satu native SettingGroup seperti settings Outliner;
 header, preview, dan form langsung terlihat tanpa accordion/nested cards.

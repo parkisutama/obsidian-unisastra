@@ -253,3 +253,13 @@ Suite otomatis lolos 18 files / 101 tests; `check:ci` mencakup QA, build,
 artifact verification, dan docs build. Model dicommit sebagai `232080e`;
 integrasi disimpan sebagai atomic Conventional Commit terpisah.
 Acceptance theme/snippet actual, mobile, dan popout tetap pending.
+
+## T17a GitHub output checkpoint — 2026-09-13
+
+Output mode tersimpan kini dipakai menu dan shared executor: lima uppercase
+markers, shared canonical visibility, custom unavailable, dan refusal untuk
+title/folding/nesting atau selection yang mengabaikan batas baris/blok quote.
+Refusal tidak dispatch atau menambah undo entry; note existing tidak diubah
+oleh output switch. Suite lolos 18 files / 106 tests. `check:ci` mencakup QA,
+build, artifact verification, dan docs build. Runtime output switch/rendered
+markers belum diuji di Obsidian. T17b command parity belum dimulai.
