@@ -720,6 +720,51 @@ serta computed defaults tanpa persist override ditambahkan. `check:ci` lolos
 - Verify: synthetic CSSOM nested/inaccessible/duplicate/conditional/limit tests,
   `pnpm run test`, `pnpm run check`; runtime tema/snippet actual.
 
+## Known issues / deferred feedback — 2026-09-14
+
+Maintainer reported two items while reviewing C1/C2 in a real vault. Both are
+explicitly deferred: finish the remaining planned tasks (T17b-T20) first, then
+come back to these rather than context-switching now.
+
+1. **Bug: rendered callouts do not dim under Dim Unfocused (paragraphs/
+   sentences mode).** A callout block should visually dim like any other
+   inactive paragraph/sentence when it is not the active one, but it stays at
+   full opacity. Preliminary analysis (source-only, no Obsidian host available
+   to confirm in DevTools): the dim mechanism in
+   `src/styles/editor/dim/_dim-unfocused.scss` works by setting `opacity` on
+   `.cm-line` elements based on `.cm-active`/`.active-sentence` class
+   membership (see `_dimmed.scss`, `apply-dim-sentence`). Obsidian's own
+   callout live-preview rendering wraps the affected `.cm-line`s inside a
+   `.callout` decoration; it is not yet confirmed whether that wrapping (a)
+   strips/does not propagate the per-line active/inactive class Hemingway/
+   Typewriter mode relies on, or (b) the callout's own background/border
+   makes an applied `opacity` change visually imperceptible against
+   `--dimmed-opacity`. This dim-unfocused feature predates the floaty-toolbar
+   work and is not part of ADR-002 — likely a pre-existing gap in callout
+   interaction, only now surfaced because callouts are used more. Needs
+   runtime DevTools inspection (`getComputedStyle`/class list on `.callout`
+   vs `.cm-line` while a callout is present and unfocused) before deciding a
+   fix; not addressed in this task.
+2. **UI request: collapsed catalog entry preview and Save style button.**
+   - Replace the generic sample-body sentence ("Callout appearance in the
+     current theme.") used to render the preview in `callout-style-editor.ts`
+     with the entry's actual compact info: ID, and a shorter compatibility
+     phrase than `compatibilityDescription()` currently produces — e.g.
+     "Obsidian only" / "Obsidian and GitHub" instead of "Built-in · Also
+     GitHub alerts compatible (...)".
+   - Show IMPORTANT and CAUTION as their own example entries sourced from
+     GitHub Alerts, specifically to demonstrate the built-in vs custom
+     distinction. This conflicts with the current dedup rule in
+     `normalizeCalloutSettings`/`canonicalBuiltinCalloutId`, which resolves
+     "important"/"caution" to the tip/warning builtin IDs and refuses a
+     custom entry with either as a duplicate — needs a design decision before
+     implementation (e.g. a distinct display-only example vs. a real
+     catalog-entry exception).
+   - Replace the "Apply style" label and text "Save style" button with an
+     icon-only floppy-disk button placed next to the existing reset-callout
+     button in the entry header, instead of at the bottom of the expanded
+     form.
+
 ## Slice G: GitHub Alerts dan command parity
 
 ### T17a — Output mode GitHub
