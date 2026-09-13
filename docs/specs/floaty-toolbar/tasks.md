@@ -840,6 +840,9 @@ dikonfirmasi maintainer pada 2026-09-13. T17b adalah task berikutnya.
 
 Confirmed interaction: preview header always visible; expansion reveals sample
 body and configuration. This revises T15/T17a; original remaining tasks stay T17b-T20.
+C1 and C2 both implemented and verified (`pnpm run check:ci` green, 18 files /
+106 tests) as of 2026-09-14; runtime acceptance remains pending per the ledger
+below. T17b is next.
 
 - [x] C1: Compact preview header and right-side catalog controls. Area: manager,
   style editor, SCSS and settings interaction tests. Acceptance: label/icon/color
