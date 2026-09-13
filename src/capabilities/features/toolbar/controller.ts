@@ -1,5 +1,6 @@
 import { EditorView } from "@codemirror/view";
 import { MarkdownView, Notice, Platform } from "obsidian";
+import { calloutMenuOptions } from "@/capabilities/features/callouts/settings";
 import { getVisibleRange } from "@/cm6/outliner/utils";
 import type TypewriterModeLib from "@/lib";
 import type { ToolbarAction } from "./actions";
@@ -307,6 +308,7 @@ export class ToolbarController {
             sourceNow.file?.path === path,
           hemingway: this.tm.settings.hemingwayMode.isHemingwayModeEnabled,
           smartUrl: this.tm.settings.toolbar.smartUrl,
+          calloutOutputMode: this.tm.settings.callouts.outputMode,
           visible: getVisibleRange(view.state),
         };
       },
@@ -373,9 +375,7 @@ export class ToolbarController {
       this.surfaces.set(doc, surface);
     }
     const toolbar = this.tm.settings.toolbar;
-    const calloutOptions = this.tm.settings.callouts.entries
-      .filter((entry) => entry.enabled)
-      .map((entry) => ({ id: entry.id, label: entry.label }));
+    const calloutOptions = calloutMenuOptions(this.tm.settings.callouts);
     surface.update(
       view ?? null,
       toolbar,

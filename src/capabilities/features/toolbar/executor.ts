@@ -5,6 +5,7 @@ import {
   type TransactionSpec,
 } from "@codemirror/state";
 import { calloutEdit } from "@/capabilities/features/callouts/markdown";
+import type { CalloutOutputMode } from "@/capabilities/features/callouts/settings";
 import {
   boldEdit,
   codeEdit,
@@ -39,6 +40,7 @@ const INLINE_EDITORS: Record<
 export interface ToolbarTarget {
   dispatch: (spec: TransactionSpec) => void;
   policy: () => {
+    calloutOutputMode?: CalloutOutputMode;
     enabled: boolean;
     current: boolean;
     hemingway: boolean;
@@ -170,6 +172,26 @@ async function executeLinkAction(
   dispatchToolbarEdit(target, edit, { anchor: edit.urlFrom, head: edit.urlTo });
   return null;
 }
+const QUOTED_CONTEXT = /^\s*>/;
+
+function githubSelectionIssue(target: ToolbarTarget): string | null {
+  const { from, to } = target.state.selection.main;
+  const first = target.state.doc.lineAt(from);
+  const last = target.state.doc.lineAt(to);
+  const incompleteLine =
+    from !== first.from || (to !== last.to && to !== last.from);
+  const previousQuote =
+    first.number > 1 &&
+    QUOTED_CONTEXT.test(target.state.doc.line(first.number - 1).text);
+  const nextNumber = to === last.from ? last.number : last.number + 1;
+  const nextQuote =
+    nextNumber <= target.state.doc.lines &&
+    QUOTED_CONTEXT.test(target.state.doc.line(nextNumber).text);
+  return incompleteLine || previousQuote || nextQuote
+    ? "Select whole lines and the whole quoted block for GitHub alerts."
+    : null;
+}
+
 function executeCalloutAction(
   target: ToolbarTarget,
   id: string
@@ -182,7 +204,18 @@ function executeCalloutAction(
   if (visible && (range.from < visible.from || range.to > visible.to)) {
     return "Selection is outside the focused outline.";
   }
-  const result = calloutEdit(target.state.sliceDoc(range.from, range.to), id);
+  const mode = target.policy().calloutOutputMode;
+  if (mode === "github") {
+    const issue = githubSelectionIssue(target);
+    if (issue) {
+      return issue;
+    }
+  }
+  const result = calloutEdit(
+    target.state.sliceDoc(range.from, range.to),
+    id,
+    mode
+  );
   if ("refusal" in result) {
     return result.refusal;
   }

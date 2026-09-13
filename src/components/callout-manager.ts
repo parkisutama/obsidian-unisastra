@@ -50,7 +50,7 @@ export function renderCalloutManager(
   new Setting(container)
     .setName("Output format")
     .setDesc(
-      "Obsidian callouts, or GitHub alerts (five uppercase markers, no title/folding)."
+      "Applies to future actions only. GitHub alerts use five uppercase markers; custom types, titles, folding, and nesting require Obsidian output."
     )
     .addDropdown((dropdown) =>
       dropdown

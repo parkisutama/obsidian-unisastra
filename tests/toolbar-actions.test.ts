@@ -25,6 +25,7 @@ function target(text = "hello", from = 0, to = text.length) {
     selection: { anchor: from, head: to },
   });
   const policy = {
+    calloutOutputMode: "obsidian" as "obsidian" | "github",
     enabled: true,
     hemingway: false,
     current: true,
@@ -51,6 +52,33 @@ function target(text = "hello", from = 0, to = text.length) {
   };
 }
 describe("toolbar executor", () => {
+  it("refuses GitHub selections that omit the rest of a header or quoted block", () => {
+    for (const [text, end] of [
+      ["> [!note] Title\n> body", 9],
+      ["> [!note]\n> body\n> > [!tip]\n> > nested", 16],
+    ] as const) {
+      const editor = target(text, 0, end);
+      editor.policy.calloutOutputMode = "github";
+      expect(
+        executeToolbarAction(editor.port, { kind: "callout", id: "NOTE" })
+      ).toMatch("whole");
+      expect(editor.text()).toBe(text);
+      expect(undoDepth(editor.port.state)).toBe(0);
+    }
+  });
+  it("reads output mode at execution and leaves refused GitHub edits out of history", () => {
+    const editor = target();
+    editor.policy.calloutOutputMode = "github";
+    executeToolbarAction(editor.port, { kind: "callout", id: "NOTE" });
+    expect(editor.text()).toBe("> [!NOTE]\n> hello");
+    const titled = target("> [!note]- Title\n> body");
+    titled.policy.calloutOutputMode = "github";
+    expect(
+      executeToolbarAction(titled.port, { kind: "callout", id: "NOTE" })
+    ).toMatch("GitHub");
+    expect(titled.text()).toBe("> [!note]- Title\n> body");
+    expect(undoDepth(titled.port.state)).toBe(0);
+  });
   it("keeps successive actions as separate undo steps", () => {
     const editor = target();
     executeToolbarAction(editor.port, { kind: "bold" });

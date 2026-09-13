@@ -150,6 +150,23 @@ Tab ini tersedia di desktop maupun mobile (berbeda dari toolbar yang
 desktop-only), menggunakan kontrol standar Obsidian yang dapat dipakai
 keyboard maupun sentuhan.
 
+## Output GitHub alerts
+
+Pilih **Output format → GitHub alerts** pada tab Callouts. Menu toolbar memakai
+`NOTE`, `TIP`, `IMPORTANT`, `WARNING`, dan `CAUTION`, sesuai
+[sintaks GitHub alerts](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts).
+Toggle Note mengatur NOTE; Tip mengatur TIP/IMPORTANT; Warning mengatur
+WARNING/CAUTION. Custom callout tetap tersimpan tetapi tidak tersedia di menu
+mode ini. Beralih output hanya memengaruhi tindakan berikutnya, tanpa mengubah
+note existing otomatis.
+
+Pilih seluruh baris teks atau seluruh blok callout built-in tanpa title,
+folding, atau nesting. Conversion incompatible ditolak dengan pesan, tanpa
+mengubah isi atau undo history. Selection sebagian baris atau yang menyisakan
+baris quote di luar selection juga ditolak; gunakan output Obsidian untuk
+mempertahankan fitur tersebut. Body dan baris kosong dipertahankan.
+Preview settings tetap memakai renderer Obsidian, bukan simulasi warna GitHub.
+
 ## Atur tampilan callout
 
 Di tab **Callouts**, setiap callout memiliki satu grup konfigurasi seperti
