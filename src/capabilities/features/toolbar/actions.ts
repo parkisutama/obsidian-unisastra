@@ -4,9 +4,10 @@
 // Copyright (c) 2026 0png. Full notice: licenses/floaty-toolbar-MIT.txt.
 // Italic/strikethrough/code/highlight/heading below follow the same
 // wrap/unwrap pattern as boldEdit, not lifted from a specific upstream line.
+export type HeadingLevel = 0 | 1 | 2 | 3 | 4;
 export type ToolbarAction =
   | { kind: "bold" | "italic" | "strikethrough" | "code" | "highlight" }
-  | { kind: "heading" }
+  | { kind: "heading"; level: HeadingLevel }
   | { kind: "link" }
   | { id: string; kind: "callout" };
 export interface TextEdit {
@@ -62,31 +63,28 @@ export function highlightEdit(
 ): TextEdit {
   return symmetricWrapEdit(text, from, to, "==");
 }
-const MAX_TOOLBAR_HEADING_LEVEL = 4;
 const UNSUPPORTED_HEADING_PATTERN = /^#{5,}\s/;
 const HEADING_PREFIX_PATTERN = /^(#{1,4})\s+/;
-function nextHeadingLevel(currentLevel: number): number {
-  if (currentLevel === 0) {
-    return 1;
+/** Returns the cursor line's heading level (0 = paragraph), or -1 if it's an H5+ line the toolbar does not manage. */
+export function detectHeadingLevel(lineText: string): number {
+  if (UNSUPPORTED_HEADING_PATTERN.test(lineText)) {
+    return -1;
   }
-  if (currentLevel === MAX_TOOLBAR_HEADING_LEVEL) {
-    return 0;
-  }
-  return currentLevel + 1;
+  const match = HEADING_PREFIX_PATTERN.exec(lineText);
+  return match ? match[1].length : 0;
 }
 export function headingEdit(
   lineText: string,
   lineFrom: number,
-  lineTo: number
+  lineTo: number,
+  level: HeadingLevel
 ): TextEdit | null {
   if (UNSUPPORTED_HEADING_PATTERN.test(lineText)) {
     return null;
   }
   const match = HEADING_PREFIX_PATTERN.exec(lineText);
-  const currentLevel = match ? match[1].length : 0;
   const rest = match ? lineText.slice(match[0].length) : lineText;
-  const nextLevel = nextHeadingLevel(currentLevel);
-  const insert = nextLevel === 0 ? rest : `${"#".repeat(nextLevel)} ${rest}`;
+  const insert = level === 0 ? rest : `${"#".repeat(level)} ${rest}`;
   return { from: lineFrom, to: lineTo, insert };
 }
 export const LINK_PLACEHOLDER_URL = "https://";

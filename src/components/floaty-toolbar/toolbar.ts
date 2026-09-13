@@ -1,4 +1,6 @@
+import { setIcon } from "obsidian";
 import type { ToolbarAction } from "@/capabilities/features/toolbar/actions";
+import { detectHeadingLevel } from "@/capabilities/features/toolbar/actions";
 import type {
   SurfaceFactory,
   ToolbarCalloutOption,
@@ -9,16 +11,30 @@ import { createHudElement } from "./hud";
 
 const TOOLBAR_BUTTONS: ReadonlyArray<{
   action: ToolbarAction;
-  label: string;
+  icon: string;
   title: string;
 }> = [
-  { action: { kind: "bold" }, label: "B", title: "Bold" },
-  { action: { kind: "italic" }, label: "I", title: "Italic" },
-  { action: { kind: "strikethrough" }, label: "S", title: "Strikethrough" },
-  { action: { kind: "code" }, label: "</>", title: "Code" },
-  { action: { kind: "highlight" }, label: "H", title: "Highlight" },
-  { action: { kind: "heading" }, label: "#", title: "Cycle heading level" },
-  { action: { kind: "link" }, label: "Link", title: "Insert or remove link" },
+  { action: { kind: "bold" }, icon: "bold", title: "Bold" },
+  { action: { kind: "italic" }, icon: "italic", title: "Italic" },
+  {
+    action: { kind: "strikethrough" },
+    icon: "strikethrough",
+    title: "Strikethrough",
+  },
+  { action: { kind: "code" }, icon: "code", title: "Code" },
+  { action: { kind: "highlight" }, icon: "highlighter", title: "Highlight" },
+  { action: { kind: "link" }, icon: "link", title: "Insert or remove link" },
+];
+
+const HEADING_OPTIONS: ReadonlyArray<{
+  label: string;
+  level: 0 | 1 | 2 | 3 | 4;
+}> = [
+  { level: 0, label: "Paragraph" },
+  { level: 1, label: "Heading 1" },
+  { level: 2, label: "Heading 2" },
+  { level: 3, label: "Heading 3" },
+  { level: 4, label: "Heading 4" },
 ];
 
 const MARGIN_PX = 8;
@@ -80,11 +96,11 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     }
   });
 
-  for (const { action, label, title } of TOOLBAR_BUTTONS) {
+  for (const { action, icon, title } of TOOLBAR_BUTTONS) {
     const button = doc.createElement("button");
     button.type = "button";
     button.className = "ptm-floaty-toolbar-button";
-    button.textContent = label;
+    setIcon(button, icon);
     button.title = title;
     button.setAttribute("aria-label", title);
     button.addEventListener("click", (event) => {
@@ -93,6 +109,22 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     });
     el.appendChild(button);
   }
+
+  const headingSelect = doc.createElement("select");
+  headingSelect.className = "ptm-floaty-toolbar-heading-select";
+  headingSelect.setAttribute("aria-label", "Heading level");
+  headingSelect.title = "Heading level";
+  for (const option of HEADING_OPTIONS) {
+    const entry = doc.createElement("option");
+    entry.value = String(option.level);
+    entry.textContent = option.label;
+    headingSelect.appendChild(entry);
+  }
+  headingSelect.addEventListener("change", () => {
+    const level = Number(headingSelect.value) as 0 | 1 | 2 | 3 | 4;
+    execute({ kind: "heading", level });
+  });
+  el.appendChild(headingSelect);
 
   const calloutSelect = doc.createElement("select");
   calloutSelect.className = "ptm-floaty-toolbar-callout-select";
@@ -123,6 +155,14 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
       if (signature !== calloutSignature) {
         calloutSignature = signature;
         renderCalloutOptions(doc, calloutSelect, calloutOptions);
+      }
+      if (view) {
+        const line = view.state.doc.lineAt(view.state.selection.main.head);
+        const level = detectHeadingLevel(line.text);
+        headingSelect.disabled = level === -1;
+        if (level !== -1) {
+          headingSelect.value = String(level);
+        }
       }
       if (settings.mode === "dock") {
         el.classList.add(DOCK_CLASS);

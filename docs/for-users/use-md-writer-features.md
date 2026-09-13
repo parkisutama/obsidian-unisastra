@@ -62,11 +62,15 @@ toolbar formatting kecil saat Anda menyeleksi teks di Source mode.
 Catatan:
 
 - toolbar hanya muncul di desktop; tidak dipasang di mobile,
-- aksi **Bold**, **Italic**, **Strikethrough**, **Code**, dan **Highlight**
-  membungkus/melepas seleksi dalam satu langkah undo; masing-masing
-  membutuhkan seleksi non-kosong,
-- aksi **Heading** menyiklus baris tempat kursor berada antara paragraf,
-  H1-H4, lalu kembali ke paragraf; heading H5 ke atas tidak diubah,
+- tombol Bold/Italic/Strikethrough/Code/Highlight/Link memakai ikon (bukan
+  label teks) dengan tooltip nama aksi saat di-hover, mengikuti tampilan
+  minimal Floaty Toolbar asli,
+- Bold/Italic/Strikethrough/Code/Highlight membungkus/melepas seleksi dalam
+  satu langkah undo; masing-masing membutuhkan seleksi non-kosong,
+- dropdown **Heading** menampilkan Paragraph/H1-H4 dan otomatis menunjukkan
+  level heading baris tempat kursor berada; memilih level menerapkannya
+  langsung ke baris tersebut. Heading H5 ke atas menonaktifkan dropdown
+  (tidak dikelola toolbar),
 - aksi **Link** membungkus seleksi menjadi `[teks](url)` atau melepas link
   yang sudah menjadi seluruh seleksi. Placeholder URL `https://` dipakai
   secara default; aktifkan **Smart URL** di tab Toolbar agar Link membaca

@@ -2,12 +2,13 @@
   position: fixed;
   z-index: var(--layer-popover);
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 2px;
+  gap: 1px;
   padding: 4px;
-  background-color: var(--background-secondary);
+  background-color: var(--background-primary);
   border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m);
+  border-radius: var(--radius-l);
   box-shadow: var(--shadow-s);
 
   &[hidden] {
@@ -39,15 +40,45 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 28px;
+  width: 28px;
   height: 28px;
-  padding: 0 6px;
+  padding: 0;
   background-color: transparent;
   border: none;
   border-radius: var(--radius-s);
+  color: var(--icon-color);
+  cursor: pointer;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    background-color: var(--background-modifier-hover);
+    color: var(--icon-color-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: 1px;
+  }
+}
+
+.ptm-floaty-toolbar-heading-select,
+.ptm-floaty-toolbar-callout-select {
+  height: 28px;
+  padding: 0 2px;
+  margin: 0 1px;
+  background-color: transparent;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+  border-radius: var(--radius-s);
   color: var(--text-normal);
   cursor: pointer;
-  font-weight: var(--font-bold);
+  font-size: var(--font-ui-smaller);
+  max-width: 92px;
 
   &:hover {
     background-color: var(--background-modifier-hover);
@@ -59,25 +90,10 @@
   }
 }
 
-.ptm-floaty-toolbar-callout-select {
-  height: 28px;
-  padding: 0 4px;
-  background-color: transparent;
-  border: none;
-  border-radius: var(--radius-s);
-  color: var(--text-normal);
-  cursor: pointer;
-  font-size: var(--font-ui-smaller);
-  max-width: 96px;
-
-  &:hover {
-    background-color: var(--background-modifier-hover);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--interactive-accent);
-    outline-offset: 1px;
-  }
+.ptm-floaty-toolbar-heading-select {
+  margin-left: 5px;
+  padding-left: 6px;
+  border-left: 1px solid var(--background-modifier-border);
 }
 
 .ptm-floaty-toolbar-hud {

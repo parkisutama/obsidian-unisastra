@@ -8,6 +8,7 @@ import { calloutEdit } from "@/capabilities/features/callouts/markdown";
 import {
   boldEdit,
   codeEdit,
+  type HeadingLevel,
   headingEdit,
   highlightEdit,
   isLikelyUrl,
@@ -77,13 +78,16 @@ function dispatchToolbarEdit(
     ],
   });
 }
-function executeHeadingAction(target: ToolbarTarget): string | null {
+function executeHeadingAction(
+  target: ToolbarTarget,
+  level: HeadingLevel
+): string | null {
   const line = target.state.doc.lineAt(target.state.selection.main.head);
   const visible = target.policy().visible;
   if (visible && (line.from < visible.from || line.to > visible.to)) {
     return "Cursor line is outside the focused outline.";
   }
-  const edit = headingEdit(line.text, line.from, line.to);
+  const edit = headingEdit(line.text, line.from, line.to, level);
   if (!edit) {
     return "Heading level is not supported by the toolbar.";
   }
@@ -199,7 +203,7 @@ export function executeToolbarAction(
     return issue;
   }
   if (action.kind === "heading") {
-    return executeHeadingAction(target);
+    return executeHeadingAction(target, action.level);
   }
   if (action.kind === "link") {
     return executeLinkAction(target);

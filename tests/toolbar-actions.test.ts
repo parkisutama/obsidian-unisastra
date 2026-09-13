@@ -1,10 +1,22 @@
 import { history, undo, undoDepth } from "@codemirror/commands";
 import { EditorState } from "@codemirror/state";
 import { describe, expect, it } from "vitest";
+import { detectHeadingLevel } from "@/capabilities/features/toolbar/actions";
 import {
   executeToolbarAction,
   type ToolbarTarget,
 } from "@/capabilities/features/toolbar/executor";
+
+describe("detectHeadingLevel", () => {
+  it("reports 0 for a plain paragraph and the hash count for H1-H4", () => {
+    expect(detectHeadingLevel("plain text")).toBe(0);
+    expect(detectHeadingLevel("# One")).toBe(1);
+    expect(detectHeadingLevel("#### Four")).toBe(4);
+  });
+  it("reports -1 for headings beyond H4, which the toolbar does not manage", () => {
+    expect(detectHeadingLevel("##### Five")).toBe(-1);
+  });
+});
 
 function target(text = "hello", from = 0, to = text.length) {
   let state = EditorState.create({
@@ -115,24 +127,22 @@ describe("toolbar executor", () => {
       expect(editor.text()).toBe("hello");
     }
   });
-  it("cycles heading level on the cursor's line without touching other lines", async () => {
+  it("applies the chosen heading level to the cursor's line without touching other lines", async () => {
     const editor = target("intro\nbody text\noutro");
     editor.setSelection(6, 6);
     expect(
-      await executeToolbarAction(editor.port, { kind: "heading" })
+      await executeToolbarAction(editor.port, { kind: "heading", level: 1 })
     ).toBeNull();
     expect(editor.text()).toBe("intro\n# body text\noutro");
-    await executeToolbarAction(editor.port, { kind: "heading" });
+    await executeToolbarAction(editor.port, { kind: "heading", level: 2 });
     expect(editor.text()).toBe("intro\n## body text\noutro");
-    for (let i = 0; i < 3; i++) {
-      await executeToolbarAction(editor.port, { kind: "heading" });
-    }
+    await executeToolbarAction(editor.port, { kind: "heading", level: 0 });
     expect(editor.text()).toBe("intro\nbody text\noutro");
   });
   it("refuses heading levels beyond H4", async () => {
     const editor = target("##### too deep");
     expect(
-      await executeToolbarAction(editor.port, { kind: "heading" })
+      await executeToolbarAction(editor.port, { kind: "heading", level: 1 })
     ).toMatch("not supported");
     expect(editor.text()).toBe("##### too deep");
   });
