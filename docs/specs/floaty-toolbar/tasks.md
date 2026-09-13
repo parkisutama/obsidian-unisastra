@@ -503,11 +503,29 @@ dan invariants data sebelum membuka catalog editing UI.
   `hidden`; `el.hidden` sekarang murni untuk "tidak ada target/view valid".
   `pnpm run test` (83/83) dan `pnpm run check:ci` tetap hijau setelah fix;
   dideploy ke vault user via `pnpm run deploy`, belum diverifikasi ulang.
-- User juga meminta desain floating toolbar dibuat menyerupai plugin Floaty
-  Toolbar asli (tombol berbasis ikon, bukan label teks singkat seperti
-  sekarang) — permintaan desain terpisah, belum dikerjakan; environment ini
-  tidak punya akses visual ke plugin asli untuk mereplikasi tepat, perlu
-  klarifikasi/referensi dari user sebelum implementasi.
+- **Scope addition (desain, diminta user dengan referensi screenshot plugin
+  asli)**: redesign tombol toolbar dari label teks singkat ("B","I","S",
+  "</>","H","#") menjadi ikon Obsidian native via `setIcon()` (bold, italic,
+  strikethrough, code, highlighter, link) — minimal dan konsisten dengan
+  gaya ikon Obsidian, sesuai referensi user. Heading diubah dari tombol
+  cycle (klik berulang) menjadi dropdown eksplisit Paragraph/H1-H4 yang
+  otomatis menunjukkan level heading baris kursor saat ini (dinonaktifkan
+  untuk H5+) — mengikuti referensi yang menunjukkan dropdown heading dengan
+  opsi aktif ter-highlight. Perubahan API: `ToolbarAction` kind "heading"
+  sekarang wajib membawa `level` eksplisit (bukan cycle implisit);
+  `headingEdit()` menerima level langsung, helper `nextHeadingLevel` diganti
+  `detectHeadingLevel()` (dipakai bersama oleh executor dan UI untuk
+  menghindari duplikasi logic deteksi level). Container di-restyle jadi pill
+  rounded minimal (`--radius-l`, `--background-primary`) dengan divider tipis
+  sebelum dropdown heading, meniru pengelompokan visual pada referensi.
+  Tombol pin dock-toggle langsung di toolbar (terlihat di referensi) TIDAK
+  diimplementasikan — di luar permintaan eksplisit user, dan dock/floating
+  sudah bisa diatur dari tab Toolbar. Files: `actions.ts`, `executor.ts`,
+  `toolbar.ts`, `_floaty-toolbar.scss`, `tests/toolbar-actions.test.ts`
+  (rewrite test heading cycle jadi explicit-level, tambah test
+  `detectHeadingLevel`), `docs/for-users/use-md-writer-features.md`.
+  `pnpm run test` (85/85) dan `pnpm run check:ci` hijau; dideploy ke vault
+  user via `pnpm run deploy`, belum diverifikasi ulang secara visual.
 
 ## Slice F: Styling custom dan discovery tema/snippet
 
