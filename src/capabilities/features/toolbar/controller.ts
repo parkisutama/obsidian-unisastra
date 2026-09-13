@@ -14,7 +14,7 @@ import {
 } from "./elapsed";
 import { executeToolbarAction, type ToolbarTarget } from "./executor";
 import { hudSegments } from "./hud";
-import type { ToolbarSettings } from "./settings";
+import { setDockMode, type ToolbarSettings } from "./settings";
 
 export function dockVisibility(
   mode: ToolbarSettings["mode"],
@@ -54,7 +54,8 @@ export type SurfaceFactory = (
   execute: (action: ToolbarAction) => void,
   reportDockEvent: (event: DockEvent) => void,
   resetSession: () => void,
-  openCalloutManager: () => void
+  openCalloutManager: () => void,
+  togglePin: () => void
 ) => ToolbarSurface;
 
 export class ToolbarController {
@@ -197,6 +198,17 @@ export class ToolbarController {
     if (this.session.startedAt !== null) {
       this.session = startElapsed(Date.now());
     }
+  }
+  togglePin(): void {
+    const toolbar = this.tm.settings.toolbar;
+    const refusal = setDockMode(toolbar, toolbar.mode !== "dock");
+    if (refusal) {
+      new Notice(refusal);
+      return;
+    }
+    this.tm.saveSettings().catch((error: unknown) => {
+      console.error("MD Writer: failed to save settings.", error);
+    });
   }
   getSessionElapsedMs(now = Date.now()): number {
     return elapsedMs(this.session, now);
@@ -355,7 +367,8 @@ export class ToolbarController {
         (action) => this.execute(doc, action),
         (event) => this.reportDockEvent(doc, event),
         () => this.resetSession(),
-        () => this.tm.openCalloutManager()
+        () => this.tm.openCalloutManager(),
+        () => this.togglePin()
       );
       this.surfaces.set(doc, surface);
     }

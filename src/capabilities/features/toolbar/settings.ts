@@ -63,6 +63,17 @@ export function timerUpdateIntervalSeconds(value: unknown): number {
     Math.max(MIN_TIMER_UPDATE_INTERVAL_SECONDS, Math.round(parsed))
   );
 }
+/** Mutates toolbar.mode, refusing to undock while dockAlwaysVisible is on. Returns a refusal message, or null on success. */
+export function setDockMode(
+  toolbar: ToolbarSettings,
+  dock: boolean
+): string | null {
+  if (!dock && toolbar.dockAlwaysVisible) {
+    return 'Turn off "always show dock" before undocking the toolbar.';
+  }
+  toolbar.mode = dock ? "dock" : "floating";
+  return null;
+}
 export function normalizeToolbarSettings(value: unknown): ToolbarSettings {
   const raw = record(value);
   const timers = record(raw.timers);

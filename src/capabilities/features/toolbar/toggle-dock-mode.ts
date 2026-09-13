@@ -1,5 +1,6 @@
 import { Notice, type SettingGroup } from "obsidian";
 import { Feature } from "@/capabilities/base/feature";
+import { setDockMode } from "./settings";
 
 export default class ToggleDockMode extends Feature {
   readonly settingKey = "toolbar.mode" as const;
@@ -15,14 +16,12 @@ export default class ToggleDockMode extends Feature {
         .setClass("md-writer-setting")
         .addToggle((toggle) =>
           toggle.setValue(toolbar.mode === "dock").onChange((value) => {
-            if (!value && toolbar.dockAlwaysVisible) {
+            const refusal = setDockMode(toolbar, value);
+            if (refusal) {
               toggle.setValue(true);
-              new Notice(
-                'Turn off "always show dock" before undocking the toolbar.'
-              );
+              new Notice(refusal);
               return;
             }
-            toolbar.mode = value ? "dock" : "floating";
             this.tm.saveSettings().catch((error) => {
               console.error("Failed to save settings:", error);
             });

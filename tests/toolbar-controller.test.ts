@@ -7,6 +7,10 @@ vi.mock("obsidian", () => ({
 }));
 
 import { dockVisibility } from "@/capabilities/features/toolbar/controller";
+import {
+  DEFAULT_TOOLBAR_SETTINGS,
+  setDockMode,
+} from "@/capabilities/features/toolbar/settings";
 import { dockBottomOffsetPx } from "@/components/floaty-toolbar/toolbar";
 
 describe("desktop toolbar visibility", () => {
@@ -32,5 +36,21 @@ describe("dock bottom offset", () => {
   });
   it("falls back to the base margin when there is no status bar", () => {
     expect(dockBottomOffsetPx(0)).toBe(8);
+  });
+});
+describe("setDockMode", () => {
+  it("switches between floating and dock", () => {
+    const toolbar = structuredClone(DEFAULT_TOOLBAR_SETTINGS);
+    expect(setDockMode(toolbar, true)).toBeNull();
+    expect(toolbar.mode).toBe("dock");
+    expect(setDockMode(toolbar, false)).toBeNull();
+    expect(toolbar.mode).toBe("floating");
+  });
+  it("refuses to undock while dockAlwaysVisible is on, leaving mode unchanged", () => {
+    const toolbar = structuredClone(DEFAULT_TOOLBAR_SETTINGS);
+    toolbar.mode = "dock";
+    toolbar.dockAlwaysVisible = true;
+    expect(setDockMode(toolbar, false)).toMatch("always show dock");
+    expect(toolbar.mode).toBe("dock");
   });
 });

@@ -5,10 +5,10 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 1px;
-  padding: 4px;
+  padding: 4px 6px;
   background-color: var(--background-primary);
   border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-l);
+  border-radius: var(--radius-m);
   box-shadow: var(--shadow-s);
 
   &[hidden] {
@@ -36,77 +36,186 @@
   }
 }
 
+.ptm-floaty-toolbar-divider {
+  width: 1px;
+  height: 18px;
+  background-color: var(--background-modifier-border);
+  margin: 0 4px;
+  flex-shrink: 0;
+  border-radius: 1px;
+}
+
 .ptm-floaty-toolbar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-s);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background-color 100ms ease,
+    color 100ms ease;
+
+  svg {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+  }
+
+  &:hover {
+    background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
+  }
+
+  &:active {
+    background-color: var(--background-modifier-active-hover);
+    color: var(--text-normal);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: -2px;
+  }
+}
+
+.ptm-floaty-toolbar-dropdown-trigger {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 7px;
+  height: 32px;
+  border-radius: var(--radius-s);
+  color: var(--text-muted);
+  font-size: var(--font-ui-smaller);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color 100ms ease,
+    color 100ms ease;
+
+  span {
+    display: inline-flex;
+    pointer-events: none;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+  }
+
+  &:hover,
+  &.is-open {
+    background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
+  }
+
+  &.is-disabled {
+    cursor: default;
+    opacity: 0.4;
+
+    &:hover {
+      background-color: transparent;
+      color: var(--text-muted);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--interactive-accent);
+    outline-offset: -2px;
+  }
+}
+
+.ptm-floaty-toolbar-chevron {
+  width: 10px;
+  height: 10px;
+  opacity: 0.5;
+  transition:
+    transform 150ms ease,
+    opacity 150ms ease;
+
+  svg {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+.ptm-floaty-toolbar-dropdown-trigger.is-open .ptm-floaty-toolbar-chevron {
+  transform: rotate(180deg);
+  opacity: 0.8;
+}
+
+.ptm-floaty-toolbar-dropdown-panel {
+  position: fixed;
+  z-index: var(--layer-popover);
+  min-width: 140px;
+  padding: 4px;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-s);
+}
+
+.ptm-floaty-toolbar-dropdown-item {
+  padding: 6px 10px;
+  border-radius: var(--radius-s);
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color 80ms ease,
+    color 80ms ease;
+
+  &:hover {
+    background-color: var(--background-modifier-hover);
+    color: var(--text-normal);
+  }
+
+  &:active {
+    background-color: var(--background-modifier-active-hover);
+  }
+}
+
+.ptm-floaty-toolbar-pin-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 28px;
   height: 28px;
-  padding: 0;
-  background-color: transparent;
-  border: none;
   border-radius: var(--radius-s);
   color: var(--text-faint);
   cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color 100ms ease,
+    color 100ms ease;
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
   }
 
   &:hover {
     background-color: var(--background-modifier-hover);
-    color: var(--text-normal);
+    color: var(--text-muted);
+  }
+
+  &.is-pinned {
+    color: var(--interactive-accent);
   }
 
   &:focus-visible {
     outline: 2px solid var(--interactive-accent);
-    outline-offset: 1px;
+    outline-offset: -2px;
   }
-}
-
-.ptm-floaty-toolbar-heading-select,
-.ptm-floaty-toolbar-callout-select {
-  height: 28px;
-  padding: 0 2px;
-  margin: 0 1px;
-  background-color: transparent;
-  background-image: none;
-  border: none;
-  box-shadow: none;
-  border-radius: var(--radius-s);
-  color: var(--text-faint);
-  cursor: pointer;
-  font-size: var(--font-ui-smaller);
-  text-align: center;
-  text-align-last: center;
-
-  &:hover {
-    background-color: var(--background-modifier-hover);
-    color: var(--text-normal);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--interactive-accent);
-    outline-offset: 1px;
-  }
-
-  // Options render in a native OS popup, unaffected by the muted trigger
-  // color above; keep their text legible there.
-  option {
-    color: var(--text-normal);
-  }
-}
-
-.ptm-floaty-toolbar-heading-select {
-  width: 34px;
-  margin-left: 5px;
-  padding-left: 6px;
-  border-left: 1px solid var(--background-modifier-border);
-}
-
-.ptm-floaty-toolbar-callout-select {
-  width: 26px;
 }
 
 .ptm-floaty-toolbar-hud {
@@ -116,7 +225,7 @@
   margin-left: 6px;
   padding-left: 6px;
   border-left: 1px solid var(--background-modifier-border);
-  color: var(--text-muted);
+  color: var(--text-faint);
   font-size: var(--font-ui-smaller);
   white-space: nowrap;
 

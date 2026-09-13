@@ -11,31 +11,42 @@ import { createHudElement } from "./hud";
 
 const TOOLBAR_BUTTONS: ReadonlyArray<{
   action: ToolbarAction;
+  dividerAfter?: boolean;
   icon: string;
   title: string;
 }> = [
   { action: { kind: "bold" }, icon: "bold", title: "Bold" },
-  { action: { kind: "italic" }, icon: "italic", title: "Italic" },
+  {
+    action: { kind: "italic" },
+    icon: "italic",
+    title: "Italic",
+    dividerAfter: true,
+  },
   {
     action: { kind: "strikethrough" },
     icon: "strikethrough",
     title: "Strikethrough",
   },
-  { action: { kind: "code" }, icon: "code", title: "Code" },
+  {
+    action: { kind: "code" },
+    icon: "code",
+    title: "Code",
+    dividerAfter: true,
+  },
   { action: { kind: "highlight" }, icon: "highlighter", title: "Highlight" },
   { action: { kind: "link" }, icon: "link", title: "Insert or remove link" },
 ];
 
 const HEADING_OPTIONS: ReadonlyArray<{
-  label: string;
+  full: string;
   level: 0 | 1 | 2 | 3 | 4;
-  title: string;
+  short: string;
 }> = [
-  { level: 0, label: "P", title: "Paragraph" },
-  { level: 1, label: "H1", title: "Heading 1" },
-  { level: 2, label: "H2", title: "Heading 2" },
-  { level: 3, label: "H3", title: "Heading 3" },
-  { level: 4, label: "H4", title: "Heading 4" },
+  { level: 0, short: "P", full: "Paragraph" },
+  { level: 1, short: "H1", full: "Heading 1" },
+  { level: 2, short: "H2", full: "Heading 2" },
+  { level: 3, short: "H3", full: "Heading 3" },
+  { level: 4, short: "H4", full: "Heading 4" },
 ];
 
 const MARGIN_PX = 8;
@@ -46,36 +57,120 @@ export function dockBottomOffsetPx(statusBarHeight: number): number {
   return statusBarHeight > 0 ? statusBarHeight + MARGIN_PX : MARGIN_PX;
 }
 
-function calloutOptionsSignature(
-  options: readonly ToolbarCalloutOption[]
-): string {
-  return options.map((option) => `${option.id}:${option.label}`).join("|");
+function createDivider(doc: Document): HTMLElement {
+  const divider = doc.createElement("div");
+  divider.className = "ptm-floaty-toolbar-divider";
+  return divider;
 }
-const MANAGE_CALLOUTS_VALUE = "__manage-callouts__";
 
-function renderCalloutOptions(
+interface DropdownItem {
+  label: string;
+  onSelect: () => void;
+}
+
+function attachDropdown(
   doc: Document,
-  select: HTMLSelectElement,
-  options: readonly ToolbarCalloutOption[]
-): void {
-  select.replaceChildren();
-  const placeholder = doc.createElement("option");
-  placeholder.value = "";
-  placeholder.textContent = "❝";
-  placeholder.title = "Insert callout";
-  placeholder.disabled = true;
-  placeholder.selected = true;
-  select.appendChild(placeholder);
-  for (const option of options) {
-    const entry = doc.createElement("option");
-    entry.value = option.id;
-    entry.textContent = option.label;
-    select.appendChild(entry);
+  trigger: HTMLElement,
+  getItems: () => DropdownItem[],
+  getMode: () => "dock" | "floating",
+  isDisabled: () => boolean
+): { close: () => void } {
+  let panel: HTMLElement | null = null;
+
+  function close(): void {
+    panel?.remove();
+    panel = null;
+    trigger.classList.remove("is-open");
+    trigger.setAttribute("aria-expanded", "false");
   }
-  const manage = doc.createElement("option");
-  manage.value = MANAGE_CALLOUTS_VALUE;
-  manage.textContent = "Manage callouts…";
-  select.appendChild(manage);
+
+  function open(): void {
+    close();
+    const items = getItems();
+    if (items.length === 0) {
+      return;
+    }
+    const rect = trigger.getBoundingClientRect();
+    panel = doc.createElement("div");
+    panel.className = "ptm-floaty-toolbar-dropdown-panel";
+    panel.setAttribute("role", "listbox");
+    for (const item of items) {
+      const row = doc.createElement("div");
+      row.className = "ptm-floaty-toolbar-dropdown-item";
+      row.setAttribute("role", "option");
+      row.tabIndex = 0;
+      row.textContent = item.label;
+      const activate = () => {
+        item.onSelect();
+        close();
+      };
+      row.addEventListener("click", activate);
+      row.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          activate();
+        }
+      });
+      panel.appendChild(row);
+    }
+    doc.body.appendChild(panel);
+    const win = doc.defaultView;
+    const panelRect = panel.getBoundingClientRect();
+    const maxLeft =
+      (win?.innerWidth ?? panelRect.right) - panelRect.width - MARGIN_PX;
+    const left = Math.max(MARGIN_PX, Math.min(rect.left, maxLeft));
+    panel.style.left = `${left}px`;
+    panel.style.top =
+      getMode() === "dock"
+        ? `${Math.max(MARGIN_PX, rect.top - panelRect.height - 4)}px`
+        : `${rect.bottom + 4}px`;
+    trigger.classList.add("is-open");
+    trigger.setAttribute("aria-expanded", "true");
+    const onOutside = (event: MouseEvent) => {
+      if (
+        panel &&
+        !panel.contains(event.target as Node) &&
+        event.target !== trigger
+      ) {
+        close();
+        doc.removeEventListener("mousedown", onOutside, true);
+      }
+    };
+    doc.addEventListener("mousedown", onOutside, true);
+  }
+
+  trigger.setAttribute("role", "button");
+  trigger.tabIndex = 0;
+  trigger.setAttribute("aria-haspopup", "listbox");
+  trigger.setAttribute("aria-expanded", "false");
+  trigger.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (isDisabled()) {
+      return;
+    }
+    if (panel) {
+      close();
+    } else {
+      open();
+    }
+  });
+  trigger.addEventListener("keydown", (event) => {
+    if (isDisabled()) {
+      return;
+    }
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      if (panel) {
+        close();
+      } else {
+        open();
+      }
+    } else if (event.key === "Escape") {
+      close();
+    }
+  });
+
+  return { close };
 }
 
 export const createFloatyToolbarSurface: SurfaceFactory = (
@@ -83,7 +178,8 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   execute,
   reportDockEvent,
   resetSession,
-  openCalloutManager
+  openCalloutManager,
+  togglePin
 ): ToolbarSurface => {
   const el = doc.createElement("div");
   el.className = "ptm-floaty-toolbar";
@@ -98,7 +194,9 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     }
   });
 
-  for (const { action, icon, title } of TOOLBAR_BUTTONS) {
+  let currentMode: "dock" | "floating" = "floating";
+
+  for (const { action, icon, title, dividerAfter } of TOOLBAR_BUTTONS) {
     const button = doc.createElement("button");
     button.type = "button";
     button.className = "ptm-floaty-toolbar-button";
@@ -110,40 +208,82 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
       execute(action);
     });
     el.appendChild(button);
+    if (dividerAfter) {
+      el.appendChild(createDivider(doc));
+    }
   }
 
-  const headingSelect = doc.createElement("select");
-  headingSelect.className = "ptm-floaty-toolbar-heading-select";
-  headingSelect.setAttribute("aria-label", "Heading level");
-  headingSelect.title = "Heading level";
-  for (const option of HEADING_OPTIONS) {
-    const entry = doc.createElement("option");
-    entry.value = String(option.level);
-    entry.textContent = option.label;
-    entry.title = option.title;
-    headingSelect.appendChild(entry);
-  }
-  headingSelect.addEventListener("change", () => {
-    const level = Number(headingSelect.value) as 0 | 1 | 2 | 3 | 4;
-    execute({ kind: "heading", level });
+  const headingTrigger = doc.createElement("div");
+  headingTrigger.className = "ptm-floaty-toolbar-dropdown-trigger";
+  headingTrigger.setAttribute("aria-label", "Heading level");
+  const headingLabel = doc.createElement("span");
+  headingLabel.textContent = "P";
+  headingTrigger.appendChild(headingLabel);
+  const headingChevron = doc.createElement("span");
+  headingChevron.className = "ptm-floaty-toolbar-chevron";
+  setIcon(headingChevron, "chevron-down");
+  headingTrigger.appendChild(headingChevron);
+  let headingDisabled = false;
+  const headingDropdown = attachDropdown(
+    doc,
+    headingTrigger,
+    () =>
+      HEADING_OPTIONS.map((option) => ({
+        label: option.full,
+        onSelect: () => execute({ kind: "heading", level: option.level }),
+      })),
+    () => currentMode,
+    () => headingDisabled
+  );
+  el.appendChild(headingTrigger);
+
+  const calloutTrigger = doc.createElement("div");
+  calloutTrigger.className =
+    "ptm-floaty-toolbar-dropdown-trigger ptm-floaty-toolbar-callout-trigger";
+  calloutTrigger.setAttribute("aria-label", "Insert callout");
+  calloutTrigger.title = "Insert callout";
+  const calloutIcon = doc.createElement("span");
+  setIcon(calloutIcon, "quote");
+  calloutTrigger.appendChild(calloutIcon);
+  const calloutChevron = doc.createElement("span");
+  calloutChevron.className = "ptm-floaty-toolbar-chevron";
+  setIcon(calloutChevron, "chevron-down");
+  calloutTrigger.appendChild(calloutChevron);
+  let latestCalloutOptions: readonly ToolbarCalloutOption[] = [];
+  const calloutDropdown = attachDropdown(
+    doc,
+    calloutTrigger,
+    () => [
+      ...latestCalloutOptions.map((option) => ({
+        label: option.label,
+        onSelect: () => execute({ kind: "callout", id: option.id }),
+      })),
+      { label: "Manage callouts…", onSelect: () => openCalloutManager() },
+    ],
+    () => currentMode,
+    () => false
+  );
+  el.appendChild(calloutTrigger);
+  el.appendChild(createDivider(doc));
+
+  const pinButton = doc.createElement("div");
+  pinButton.className = "ptm-floaty-toolbar-pin-btn";
+  pinButton.setAttribute("role", "button");
+  pinButton.tabIndex = 0;
+  pinButton.title = "Pin toolbar as a dock";
+  pinButton.setAttribute("aria-label", "Pin toolbar as a dock");
+  setIcon(pinButton, "pin");
+  pinButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    togglePin();
   });
-  el.appendChild(headingSelect);
-
-  const calloutSelect = doc.createElement("select");
-  calloutSelect.className = "ptm-floaty-toolbar-callout-select";
-  calloutSelect.setAttribute("aria-label", "Insert callout");
-  calloutSelect.title = "Insert callout";
-  calloutSelect.addEventListener("change", () => {
-    const value = calloutSelect.value;
-    calloutSelect.value = "";
-    if (value === MANAGE_CALLOUTS_VALUE) {
-      openCalloutManager();
-    } else if (value) {
-      execute({ kind: "callout", id: value });
+  pinButton.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      togglePin();
     }
   });
-  el.appendChild(calloutSelect);
-  let calloutSignature = "";
+  el.appendChild(pinButton);
 
   const hud = createHudElement(doc, resetSession);
   el.appendChild(hud.element);
@@ -152,20 +292,22 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
 
   return {
     destroy() {
+      headingDropdown.close();
+      calloutDropdown.close();
       el.remove();
     },
     update(view, settings, dockVisible, elapsed, calloutOptions) {
-      const signature = calloutOptionsSignature(calloutOptions);
-      if (signature !== calloutSignature) {
-        calloutSignature = signature;
-        renderCalloutOptions(doc, calloutSelect, calloutOptions);
-      }
+      currentMode = settings.mode;
+      latestCalloutOptions = calloutOptions;
+      pinButton.classList.toggle("is-pinned", settings.mode === "dock");
       if (view) {
         const line = view.state.doc.lineAt(view.state.selection.main.head);
         const level = detectHeadingLevel(line.text);
-        headingSelect.disabled = level === -1;
-        if (level !== -1) {
-          headingSelect.value = String(level);
+        headingDisabled = level === -1;
+        headingTrigger.classList.toggle("is-disabled", headingDisabled);
+        if (!headingDisabled) {
+          const option = HEADING_OPTIONS.find((entry) => entry.level === level);
+          headingLabel.textContent = option?.short ?? "P";
         }
       }
       if (settings.mode === "dock") {
@@ -178,6 +320,10 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
         hud.update(
           hudSegments(settings.timers, elapsed.sessionMs, elapsed.fileMs)
         );
+        if (!view) {
+          headingDropdown.close();
+          calloutDropdown.close();
+        }
         el.hidden = !view;
         el.classList.toggle("ptm-floaty-toolbar-dock-peek", !dockVisible);
         return;
@@ -189,6 +335,8 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
       const coords =
         range && !range.empty ? view?.coordsAtPos(range.head) : null;
       if (!coords) {
+        headingDropdown.close();
+        calloutDropdown.close();
         el.hidden = true;
         return;
       }
