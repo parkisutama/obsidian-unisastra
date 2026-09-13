@@ -60,6 +60,19 @@ Cek:
   `.status-bar` saat ini untuk menghindari tumpang tindih — laporkan bug bila
   masih tertutupi pada theme tertentu.
 
+## Callout dari theme atau snippet tidak ditemukan
+
+Di tab Callouts, gunakan **Discover callouts from CSS** untuk melihat kandidat,
+kemudian **Add** untuk menyimpan ID yang dipilih. Refresh dan perubahan CSS hanya
+memperbarui daftar kandidat; konfigurasi yang sudah tersimpan tetap dipertahankan.
+Scan hanya membaca selector literal `data-callout`, termasuk nested rules, dengan
+batas 64 stylesheet, 2000 rules, dan kedalaman 8. Stylesheet yang tidak dapat
+dibaca atau batas traversal menghasilkan status parsial. Selector conditional
+bisa ditemukan walaupun tampilannya tidak aktif pada theme saat ini.
+Nama sumber memakai URL stylesheet bila tersedia; label `CSS source` tidak
+menjamin identitas theme/snippet. Jika ID tidak ditemukan, gunakan **Add custom
+callout** secara manual. Discovery tidak menyalin warna atau ikon dari CSS.
+
 ## Laporkan bug
 
 Saat melaporkan bug, sertakan:

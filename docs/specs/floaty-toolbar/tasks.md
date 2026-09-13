@@ -6,12 +6,13 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 15/21 tasks implemented (T01-T15; T17 dipecah menjadi T17a/T17b);
+- Progress: 16/21 tasks implemented (T01-T16; T17 dipecah menjadi T17a/T17b);
   `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T13. Runtime Obsidian
-  acceptance belum dilakukan untuk task manapun. Slice C dan D selesai; Slice E
+  acceptance settings/preview terakhir dikonfirmasi maintainer; matrix runtime
+  lainnya tetap pending. Slice C dan D selesai; Slice E
   (T11-T13: catalog, menu dropdown + lossless Obsidian conversion, Callout
   manager settings-tab UI) selesai. Slice F dimulai dengan T14 runtime styles;
-  T15 form/preview diimplementasikan; T16 discovery tema/snippet belum dimulai.
+  T15 form/preview dan T16 discovery best effort diimplementasikan.
 
 ## Aturan execution
 
@@ -706,14 +707,16 @@ Preview setIcon, css-change pada perubahan CSS tersimpan, icon-only picker,
 serta computed defaults tanpa persist override ditambahkan. `check:ci` lolos
 15 files / 95 tests; DOM dan runtime Obsidian masih pending.
 
-- [ ] Implemented dan verified.
+- [x] Implemented dan verified (automated; runtime pending).
+- Execution: T16a model + tests committed as `232080e`; T16b settings integration
+  adds explicit candidate save, CSS refresh cleanup, and save-failure rollback.
+  Automated suite: 18 files / 101 tests; runtime theme/snippet remains pending.
 - Dependency: T15; AC-06, AC-09.
 - Acceptance: CSSOM literal IDs/nested rules menjadi candidate list; inaccessible
   sheets/traversal limits memberi status parsial; refresh/css-change memperbarui
   kandidat tanpa auto-save/delete; manual ID tetap tersedia.
-- Files (4): `src/capabilities/features/callouts/discovery.ts`,
-  `src/components/callout-manager.ts`, `tests/callout-discovery.test.ts`,
-  `docs/for-users/troubleshooting.md`.
+- Files: discovery model, manager and lifecycle-owned discovery UI, model/UI
+  tests, troubleshooting, current state, development status, and this ledger.
 - Verify: synthetic CSSOM nested/inaccessible/duplicate/conditional/limit tests,
   `pnpm run test`, `pnpm run check`; runtime tema/snippet actual.
 
@@ -802,7 +805,8 @@ seluruh objective complete jika required acceptance masih pending.
 
 ## Runtime acceptance ledger
 
-Belum ada skenario di bawah yang diuji. Runtime memakai test environment yang
+Matrix penuh di bawah tetap pending; acceptance perbaikan settings/preview
+terakhir dikonfirmasi maintainer dalam sesi 2026-09-13. Runtime memakai test environment yang
 diotorisasi; jangan menjalankan dev/deploy ke vault operasional implisit.
 
 | Scenario | Acceptance mapping | Status/evidence |
@@ -823,8 +827,7 @@ diotorisasi; jangan menjalankan dev/deploy ke vault operasional implisit.
 
 ## Status validation fase
 
-SPECIFY dan PLAN accepted oleh maintainer. TASKS draft ini perlu divalidasi
-sebelum implementation menurut AGENTS.md. Setelah accepted, gunakan skill
-incremental-implementation, test-driven-development, frontend-ui-engineering
-untuk task relevan; baca masing-masing SKILL.md saat mulai digunakan.
-Tidak ada implementation atau runtime validation yang dilakukan pada fase ini.
+SPECIFY, PLAN, dan kelanjutan implementation telah diotorisasi maintainer dalam
+sesi. T01-T16 diimplementasikan dan diverifikasi otomatis; acceptance runtime
+dicatat terpisah di ledger. Atomic Conventional Commits setelah slice selesai
+dikonfirmasi maintainer pada 2026-09-13. T17a adalah task berikutnya.

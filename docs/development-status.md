@@ -242,3 +242,14 @@ diubah otomatis; reset header mengembalikannya ke inherit.
 
 Lihat [AI Assisted Development](./for-developers/ai-assisted-development.md)
 dan [QA guide](./for-developers/run-qa-before-merge-or-release.md).
+
+## T16 discovery checkpoint — 2026-09-13
+
+CSSOM discovery dan settings integration diimplementasikan: nested literal IDs,
+deduplication, bounded traversal, partial scan, explicit Add, manual fallback,
+dan lifecycle cleanup untuk refresh/css-change. Refresh tidak merender ulang
+draft style atau menyimpan kandidat otomatis. Save failure mengembalikan entry.
+Suite otomatis lolos 18 files / 101 tests; `check:ci` mencakup QA, build,
+artifact verification, dan docs build. Model dicommit sebagai `232080e`;
+integrasi disimpan sebagai atomic Conventional Commit terpisah.
+Acceptance theme/snippet actual, mobile, dan popout tetap pending.

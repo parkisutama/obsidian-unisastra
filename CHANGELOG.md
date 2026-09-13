@@ -4,6 +4,7 @@
 
 ### Added
 
+- Add in-development CSS callout discovery with partial scan reporting, explicit candidate addition, and manual ID fallback. Theme/snippet runtime acceptance is pending.
 - Add in-development callout style controls with inherit/override, validated hex colors and Lucide icons, reset, and an Obsidian preview. Runtime acceptance is pending.
 - Add GitHub-style heading anchor compatibility for Reading Mode and Live Preview.
 - Add a Compatibility settings tab with a toggle for GFM anchor handling.
