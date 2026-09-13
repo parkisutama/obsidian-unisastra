@@ -150,6 +150,45 @@ Tab ini tersedia di desktop maupun mobile (berbeda dari toolbar yang
 desktop-only), menggunakan kontrol standar Obsidian yang dapat dipakai
 keyboard maupun sentuhan.
 
+## Atur tampilan callout
+
+Di tab **Callouts**, setiap callout memiliki satu grup konfigurasi seperti
+settings Outliner. Preview berada paling atas, diikuti nama/ID, toggle tampil
+di menu, urutan dan reset, lalu
+konfigurasi. Klik ikon picker (tooltip **Choose icon**) untuk mencari ikon yang tersedia pada versi
+Obsidian saat ini; memilih ikon mengisi ID secara otomatis. Color picker
+berdampingan dengan input hex sehingga warna bisa dipilih atau diketik.
+Semua kontrol berada di grup callout yang sama. Toggle hanya menyembunyikan pilihan
+dari menu toolbar; tampilan callout di note lama tetap berlaku.
+Pilih **Inherit** untuk mengikuti tema/snippet, atau **Override** untuk
+mengganti warna dan/atau ikon. Warna menerima hex 3 atau 6 digit, misalnya
+`#abc` atau `#aabbcc`; ikon memakai ID Lucide yang tersedia di Obsidian,
+misalnya `lucide-pencil`. Field kosong tetap mewarisi tampilan tema.
+Saat inherit, field menampilkan warna dan ID ikon efektif dari callout yang
+dirender bila nilainya dikenali. Nilai tampilan ini tidak otomatis menjadi
+override tersimpan; mode tetap inherit sampai Anda mengeditnya. SVG custom tema
+tidak ditebak menjadi ID Lucide.
+Warna default dibaca dari variabel CSS tema atau warna ikon yang dirender bila
+variabel tidak dikenali, sehingga input hex dan picker mengikuti tampilan aktual.
+Pengisian default otomatis mempertahankan mode inherit dan tidak menandai
+perubahan unsaved. Jika override tidak sengaja sudah tersimpan pada build lama,
+gunakan reset di header untuk kembali ke inherit.
+
+Klik **Save style** untuk menerapkan perubahan. Input tidak valid ditolak dan
+edit warna/ikon otomatis memilih **Override**. Nilai valid tampil di preview
+sebelum save; note tetap memakai style tersimpan. Pilihan **Inherit** mengikuti
+tema setelah save/reset. Pengaturan sebelumnya tetap berlaku pada note sampai
+save berhasil. Tombol reset di header mengembalikan style ke inherit dan label
+built-in ke default; toggle dan urutan tetap dipertahankan. Tidak ada reset
+tambahan di sebelah Save. Reset mengembalikan tampilan
+ke inherit tanpa mengubah note, tema, atau file snippet. Preview memakai renderer
+callout Obsidian dan tema document settings saat ini; buka kembali tab Callouts
+untuk merender ulang setelah perubahan tema.
+
+Styling ini membutuhkan MD Writer tetap aktif. Warna/ikon tidak otomatis ikut
+ke GitHub atau Publish. Preview memperlihatkan sintaks Obsidian, termasuk ketika
+pilihan output catalog adalah GitHub alerts.
+
 ## Pakai GitHub-style heading anchors
 
 MD Writer dapat membuka link heading bergaya GitHub seperti:

@@ -1,6 +1,6 @@
 # Current state
 
-Snapshot source MD Writer pada 2026-09-12. Ini peta implementasi, bukan klaim
+Snapshot source MD Writer pada 2026-09-13. Ini peta implementasi, bukan klaim
 seluruh fitur sudah lolos acceptance di Obsidian.
 
 ## Implemented in source
@@ -14,6 +14,33 @@ seluruh fitur sudah lolos acceptance di Obsidian.
   batas selection, keyboard operations, block IDs, dan fold persistence.
 - `src/components/` berisi settings tab, outline view, dan update modal.
 - `src/gfm-anchor/` menangani navigasi anchor, hover, reading mode, dan Live Preview.
+
+## Floaty toolbar work in progress
+
+Branch `codex/adopt-floaty-toolbar` mengimplementasikan T01-T15: formatting,
+heading/link/callout actions, floating/dock UI, timer status bar window utama,
+catalog manager, serta lifecycle custom style per document. HUD hanya di status
+bar, termasuk ketika toolbar dock. Runtime style menerima warna hex 3/6 digit
+dan ikon Lucide yang tersedia; inherit tidak membuat override. Form styling dan
+preview (T15) tersedia di panel per callout bersama toggle visibility dan
+kontrol catalog, dengan explicit save/reset; discovery serta
+task lanjutan belum selesai. Test host styling tidak membuktikan tampilan
+Obsidian desktop/mobile/popout.
+
+Setiap callout memakai satu native SettingGroup seperti settings Outliner;
+header, preview, dan form langsung terlihat tanpa accordion/nested cards.
+Preview ditempatkan sebelum header identitas/controls. Reset header tunggal
+mengembalikan style/label builtin; color picker native dan searchable icon picker
+mengisi warna/ID. Ikon berasal dari registry host Obsidian, tanpa paket Lucide
+terpisah atau pin versi Lucide plugin.
+CSS memakai ID ikon Lucide, bukan data URL. Preview memperbarui SVG melalui
+setIcon; perubahan CSS tersimpan memicu css-change. Field inherit menampilkan
+nilai computed theme yang dikenali tanpa mempersistnya sebagai override.
+Pembacaan warna mendukung tuple/hex/rgb/rgba dan fallback computed warna ikon.
+Sinkronisasi picker default tidak memicu onChange user, override, atau unsaved.
+Mengedit warna/ikon otomatis memilih override; nilai valid mengubah
+custom properties preview lokal sebelum save. Style note mengikuti settings
+yang berhasil disimpan; inherit diterapkan ke preview setelah save/reset.
 
 ## Compatibility contracts
 

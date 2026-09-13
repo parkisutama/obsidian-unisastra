@@ -1,17 +1,17 @@
 # Tasks: Floaty Toolbar untuk MD Writer
 
-- Status: Draft; menunggu validasi maintainer sebelum IMPLEMENT.
+- Status: Implementation in progress; maintainer mengotorisasi kelanjutan.
 - Date: 2026-09-12.
 - Branch: `codex/adopt-floaty-toolbar`.
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 13/21 tasks implemented (T01-T13; T17 dipecah menjadi T17a/T17b);
+- Progress: 15/21 tasks implemented (T01-T15; T17 dipecah menjadi T17a/T17b);
   `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T13. Runtime Obsidian
   acceptance belum dilakukan untuk task manapun. Slice C dan D selesai; Slice E
   (T11-T13: catalog, menu dropdown + lossless Obsidian conversion, Callout
-  manager settings-tab UI) selesai. Slice F (styling custom/discovery
-  tema/snippet) berikutnya.
+  manager settings-tab UI) selesai. Slice F dimulai dengan T14 runtime styles;
+  T15 form/preview diimplementasikan; T16 discovery tema/snippet belum dimulai.
 
 ## Aturan execution
 
@@ -627,7 +627,7 @@ dan invariants data sebelum membuka catalog editing UI.
 
 ### T14 — Runtime custom style lifecycle
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance pending.
 - Dependency: T13; AC-07, AC-09.
 - Acceptance: inherit tidak menghasilkan override; valid hex/Lucide overrides
   menghasilkan selector tervalidasi per document; save/reset/unload/window close
@@ -636,10 +636,18 @@ dan invariants data sebelum membuka catalog editing UI.
   `tests/callout-styles.test.ts`, `docs/specs/floaty-toolbar/plan.md`.
 - Verify: CSS generation/input validation/lifecycle host tests,
   `pnpm run test`, `pnpm run check`; QA style di desktop/mobile/popout.
+- Evidence 2026-09-13: 90 tests passed (12 files). Hex 3/6 digit diubah ke
+  RGB; ikon `lucide-*` harus tersedia melalui Obsidian `getIcon`, SVG
+  di-encode sebagai data URL. Test host memastikan satu node per document,
+  update/reset/close/unload dan refusal setelah destroy. Wiring Workspace
+  ditinjau melalui source/typecheck; runtime desktop/mobile/popout belum diuji.
+  Form warna/ikon dan preview tetap T15.
+- Gate final: `pnpm run check:ci` lolos (QA, 90 tests, build, artifacts 1.1.0,
+  docs build); runtime acceptance tetap pending.
 
 ### T15 — Form warna/ikon dan preview inherit/override
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance pending.
 - Dependency: T14; AC-06, AC-07, AC-10.
 - Acceptance: manager form warna/ikon tersedia, inherit default dan reset
   override; preview memakai document/theme aktual; UI menjelaskan styling
@@ -648,11 +656,55 @@ dan invariants data sebelum membuka catalog editing UI.
   `tests/callout-styles.test.ts`, `docs/for-users/use-md-writer-features.md`.
 - Verify: style tests, `pnpm run test`, `pnpm run check`; runtime dark/light,
   theme switch, mobile form, custom id, plugin disable.
+- Execution split: T15a shared form validation (`styles.ts` + style tests);
+  T15b UI/preview (`callout-style-editor.ts`, manager, settings-tab lifecycle,
+  SCSS, user guide). Tidak melakukan refactor catalog atau mengubah format note.
+- Evidence: validator test gagal sebelum implementasi, lalu 91 tests passed.
+  Form memiliki explicit save/reset, status validasi/save failure, label input,
+  native details dan kontrol Obsidian. Preview memakai `MarkdownRenderer.render`
+  pada document settings aktual; Component di-unload saat rerender/tab change/
+  hide/plugin unload, hasil async lama ditolak. Preview dirender ulang saat
+  dibuka atau setelah save. Form/DOM/renderer Obsidian belum diuji runtime.
+- Gate: `pnpm run check:ci` lolos (QA, 12 files / 91 tests, build, artifacts,
+  docs build). Runtime desktop/mobile/popout tetap pending.
+- Koreksi acceptance dari screenshot maintainer: catalog controls dan editor
+  style/preview harus berada dalam satu panel per entry. Implementasi awal dua
+  daftar terpisah diperbaiki; regression host test gagal sebelum fix. Test ini
+  memeriksa grouping controls/editor, bukan tampilan DOM Obsidian nyata.
+- Gate setelah koreksi grouping: `pnpm run check:ci` lolos, 13 files / 92 tests,
+  QA/build/artifacts/docs; runtime acceptance tetap pending.
+- Koreksi kedua dari runtime screenshot: satu summary nama/ID/source dengan
+  kontrol membuka body form/preview, tanpa heading duplikat. Edit warna/ikon
+  otomatis memilih override karena implementasi sebelumnya mengabaikan field
+  saat mode inherit. Preview valid memakai custom properties lokal dari
+  generator tervalidasi bersama runtime CSS; note tidak berubah sebelum save.
+  Preview dibersihkan saat unload. Test builtin note memeriksa properti override
+  yang sama untuk preview/runtime; form/DOM tetap membutuhkan QA Obsidian.
+- Gate koreksi kedua: `pnpm run check:ci` lolos, 13 files / 93 tests,
+  QA/build/artifacts/docs; visual dan interaksi Obsidian masih pending.
 
 Checkpoint F1 setelah T13-T15: `pnpm run check:ci`; periksa catalog/config tidak
 mengubah note lama atau CSS snippet existing, custom styling mobile tetap bekerja.
 
+Layout T15 diperbarui sesuai screenshot Outliner: native `SettingGroup` per
+callout, header dan form langsung di satu list, tanpa accordion/nested cards,
+preview langsung dirender. Test host grouping menyesuaikan kontrak grup native.
+Koreksi berikutnya: preview sebelum identitas/controls; reset header tunggal
+untuk style+label builtin; color picker native dan searchable icon picker dari
+registry Obsidian. Picker catalog helper diuji untuk normalisasi, dedup, sort,
+dan refusal ikon yang tidak tersedia. Runtime picker/modal/touch tetap pending.
+
 ### T16 — Discovery callout best effort dengan fallback manual
+
+Maintainer mengonfirmasi acceptance perbaikan settings/preview terakhir selesai
+dan mengotorisasi kelanjutan T16 serta atomic Conventional Commit setelah tiap
+task. QA mobile/popout dan discovery tetap dicatat terpisah.
+
+Checkpoint bug T15: format icon URL diganti ID Lucide sesuai kontrak Obsidian;
+dua regression assertions gagal pada generator lama dan lolos setelah fix.
+Preview setIcon, css-change pada perubahan CSS tersimpan, icon-only picker,
+serta computed defaults tanpa persist override ditambahkan. `check:ci` lolos
+15 files / 95 tests; DOM dan runtime Obsidian masih pending.
 
 - [ ] Implemented dan verified.
 - Dependency: T15; AC-06, AC-09.

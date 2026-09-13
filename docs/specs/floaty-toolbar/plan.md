@@ -183,6 +183,48 @@ dan defaultView, bukan global window/document untuk operasi editor DOM.
 
 ## Callout manager dan styling
 
+Sinkronisasi color picker memakai binding yang membungkam onChange selama
+setValue programatis (default/theme atau input hex). Hanya perubahan pengguna
+memilih override dan menandai draft unsaved. Guard dipulihkan melalui finally,
+sehingga callback picker tidak membuat loop updateDraft saat default diisi.
+
+Pembacaan default warna mendukung tuple RGB, hex 3/6 digit, dan rgb/rgba
+computed CSS. Bila variabel --callout-color tidak terbaca, gunakan warna
+computed elemen ikon yang dirender; tidak mengisi default melalui tebakan angka
+builtin. Nilai tampilan field/picker tidak mempersist override secara otomatis.
+
+Bug ikon dikoreksi berdasarkan kontrak resmi Obsidian: `--callout-icon`
+menggunakan ID `lucide-*` yang tersedia, bukan `url(data:...)`. Preview yang
+sudah dirender memperbarui SVG melalui `setIcon`; perubahan style tersimpan
+memicu `css-change` hanya bila CSS berubah. Field inherit menampilkan nilai
+efektif hasil computed styles (warna RGB ke hex dan ID ikon yang dikenali),
+tanpa mengubah null/inherit settings menjadi override. Ikon SVG tema yang tidak
+berupa Lucide ID tidak ditebak menjadi ID. Picker memakai extra icon button.
+
+Layout final sesuai referensi Outliner dari maintainer: satu `SettingGroup`
+Obsidian per callout. Header nama/ID/source dan controls, preview, mode, warna,
+ikon, save/reset berada langsung dalam `listEl` grup yang sama. Tidak memakai
+accordion atau nested cards; preview diinisialisasi saat settings dirender.
+Keputusan layout ini menggantikan pendekatan panel/summary yang dicatat di bawah.
+Urutan final: preview paling atas, lalu header nama/ID/source dengan toggle,
+sortir dan reset, lalu konfigurasi. Satu reset header mengembalikan styling ke
+inherit dan label builtin ke default, tanpa mengubah ID/order/visibility atau
+note. Tombol reset override dekat Save dihapus. Color picker memakai Obsidian
+ColorComponent; icon picker memakai FuzzySuggestModal dan catalog getIconIds
+yang dinormalisasi ke lucide-* serta diverifikasi getIcon. Tidak menambahkan
+paket Lucide: versi/ketersediaan mengikuti host Obsidian, bukan versi dependency
+yang dipin plugin. Provider catalog dapat diganti bila bundling versi tertentu
+kelak disepakati sebagai perubahan terpisah.
+
+T14 implemented pada 2026-09-13: `CalloutStyles` memiliki node style per
+document, dipasang melalui composition `lib.ts` untuk main window dan existing
+leaves, serta event window-open/window-close. Save memperbarui CSS setelah
+persist berhasil; reset inherit menghapus node kosong; unload membersihkan semua
+node dan menolak update selanjutnya. Generator menerima hex 3/6 digit dan ID
+`lucide-*` yang tersedia dari `getIcon`; nilai lain tidak menghasilkan deklarasi.
+Tidak menulis file vault/tema/snippet. Lifecycle diuji dengan fake Document;
+wiring Workspace dan tampilan callout memerlukan acceptance runtime terpisah.
+
 Catalog awal mengikuti tipe/aliases resmi Obsidian. Discovery berjalan saat
 manager dibuka/refresh dan css-change, menelusuri CSSOM yang dapat diakses untuk
 selector data-callout literal. Traversal nested rules terukur; rulesheets yang
@@ -196,6 +238,17 @@ menyebut sumber tema/snippet bila dapat diidentifikasi, otherwise CSS source.
 
 Form mendukung add/edit/remove custom, visibility/order, inherit/override warna
 dan ikon, reset override built-in, preview hasil Markdown, dan switch output.
+Koreksi layout maintainer 2026-09-13: tiap entry memakai satu panel yang
+menyatukan nama/ID, toggle visibility, urutan, reset/delete, serta konfigurasi
+style dan preview. Detail style boleh dilipat di dalam panel yang sama; tidak
+memakai daftar catalog dan daftar preview terpisah. Toggle visibility menentukan
+pilihan di menu toolbar, bukan mematikan styling pada note yang sudah ada.
+Koreksi kedua: nama/ID/source dan kontrol menjadi satu summary pembuka panel,
+tanpa heading style/preview berulang. Edit warna/ikon otomatis memilih override.
+Nilai valid memperbarui custom properties pada elemen callout preview saja;
+save tetap diperlukan untuk menerapkan style ke note. Generator properti
+tervalidasi dipakai bersama oleh preview dan style tersimpan. Component cleanup
+mengosongkan preview. Pilihan inherit mengikuti theme setelah save/reset.
 Built-in tidak dihapus permanen, hanya hidden/reset; custom delete tidak mengubah
 note lama. Override menghasilkan style node milik plugin per document, juga
 mobile, menggunakan selector ID/values tervalidasi. Tidak menulis snippet/CSS

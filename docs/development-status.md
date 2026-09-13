@@ -145,7 +145,94 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   menempatkannya di awal) — kemungkinan sudah ada sejak awal tapi tidak
   pernah termanifestasi sebagai bug yang terlihat.
 
+## Continuation 2026-09-13
+
+- Working tree awal bersih pada `codex/adopt-floaty-toolbar`. Source/ledger
+  T01-T13 ditinjau; perubahan HUD terbaru hanya memakai status bar utama dalam
+  mode floating maupun dock. Angka dan uraian snapshot sebelumnya di atas
+  merupakan bukti historis, bukan status source terbaru.
+- T14 runtime styling diimplementasikan: hex/Lucide validation, owned style node
+  per document, save/reset/window-open/window-close/unload lifecycle. Test suite
+  lolos 12 files / 90 tests, termasuk tiga test baru generator dan fake Document.
+  Pada checkpoint T14, form/preview T15 belum diimplementasikan. QA Obsidian
+  tetap pending.
+- `pnpm run check:ci` lolos pada Node 24.19.0: typecheck, Biome, Obsidian
+  ESLint, Stylelint, Markdown lint, 90 tests, plugin build, artifacts 1.1.0,
+  dan VitePress build. Satu error Markdown pada catatan status diperbaiki sebelum
+  gate ulang. Tidak ada commit/push/deploy/release dalam kelanjutan ini.
+
 ## Remaining runtime and integration acceptance
+
+Maintainer telah mengonfirmasi alur settings callout dan perbaikan preview
+terakhir selesai melalui QA langsung (2026-09-13). Ini menutup follow-up
+layout/default/picker/preview yang dilaporkan dalam sesi, bukan seluruh matrix
+mobile/popout atau discovery. Implementasi T14-T15 disimpan dalam atomic
+Conventional Commits dengan pre-commit QA dan commitlint aktif.
+
+### T15 continuation
+
+Form inherit/override, warna/ikon, explicit save/reset, dan preview callout
+ditambahkan pada settings desktop/mobile. Renderer memakai Component yang
+dibersihkan saat rerender, tab change, hide, dan unload. Suite model lolos
+91 tests; DOM/settings/MarkdownRenderer dan dark/light/mobile/theme-switch
+acceptance belum diuji di Obsidian. T16 discovery belum dimulai.
+
+`pnpm run check:ci` lolos: QA, 12 files / 91 tests, build plugin, artifacts
+1.1.0, dan docs build. Empat error sentence-case UI pada checkpoint awal
+diperbaiki sebelum gate lengkap. Perubahan belum di-commit atau di-deploy.
+
+Koreksi layout dari screenshot maintainer: kontrol catalog, konfigurasi, dan
+preview sekarang berada dalam satu panel per callout. Test host grouping gagal
+sebelum fix dan lolos setelahnya; `pnpm run check:ci` lolos 13 files / 92 tests,
+seluruh QA/build/artifacts/docs. Test memakai fake Setting/editor untuk memeriksa
+grouping; tampilan hasil koreksi di Obsidian belum diverifikasi runtime.
+
+Koreksi kedua menyatukan nama/ID/source dan controls dalam summary pembuka
+konfigurasi/preview, tanpa heading duplikat. Source menunjukkan input warna/ikon
+sebelumnya diabaikan saat mode inherit; sekarang edit memilih override otomatis.
+Properti preview lokal memakai generator yang sama dengan runtime CSS dan
+note hanya berubah style setelah save. `pnpm run check:ci` lolos 13 files /
+93 tests, QA/build/artifacts/docs. Builtin Note property parity diuji; interaksi
+form dan hasil visual belum diuji ulang di Obsidian. Lint melarang preview style
+element, sehingga implementasi memakai custom properties pada callout preview.
+
+Layout terbaru mengikuti screenshot settings Outliner: satu native SettingGroup
+per callout, header/preview/form langsung dalam list grup, tanpa accordion atau
+kartu bertumpuk. Preview diinisialisasi saat settings tampil. `pnpm run check:ci`
+lolos 13 files / 93 tests, seluruh QA/build/artifacts/docs. Satu format SCSS
+diperbaiki sebelum gate final. Runtime visual tetap belum diverifikasi; tidak
+commit/deploy pada revisi ini.
+
+Revisi urutan/picker: preview paling atas, header identitas/on-off/sort/reset,
+lalu konfigurasi. Reset header mengembalikan style dan label builtin; tombol
+reset override terpisah dihapus. Searchable icon picker memakai registry host
+Obsidian (`getIconIds`/`getIcon`), tanpa dependency Lucide tersendiri; picker
+warna memakai ColorComponent native. `pnpm run check:ci` lolos 14 files /
+94 tests, QA/build/artifacts/docs. Registry helper diuji dengan data host palsu;
+ketersediaan ikon serta interaksi picker pada Obsidian nyata belum diverifikasi.
+
+Bug ikon T15: generator sebelumnya memberi data URL pada --callout-icon,
+sedangkan kontrak Obsidian mengharapkan ID/SVG. Dua test regresi gagal sebelum
+fix; sekarang ID tervalidasi dipakai, preview SVG diperbarui dengan setIcon,
+dan save memicu css-change bila CSS berubah. Picker menjadi icon-only button.
+Field inherit memperlihatkan computed defaults yang dikenali tanpa mengubah
+settings null/inherit. `check:ci` lolos 15 files / 95 tests, seluruh gates.
+Parser default diuji; wiring renderer/CSS event dan tampilan Obsidian belum
+diverifikasi runtime. Tidak deploy/commit pada revisi ini.
+
+Follow-up warna inherit: parser RGB tuple saja gagal membaca hex/rgb tema.
+Regression test gagal sebelum fix; parser kini menerima hex/rgb/rgba dan
+fallback warna computed ikon yang dirender. Field/picker tetap hanya nilai
+tampilan inherit. `check:ci` lolos 15 files / 96 tests, QA/build/artifacts/docs;
+runtime pengisian warna pada tema user belum diverifikasi ulang.
+
+Regresi preview setelah default terisi: setValue programatis pada color picker
+dapat memicu onChange dan memilih override/unsaved tanpa edit user. Binding
+sinkronisasi membungkam callback default/input-hex, tetapi menerima edit picker
+user. Test dengan emitting fake picker gagal sebelum guard dan lolos setelah
+fix. `check:ci` lolos 16 files / 97 tests, QA/build/artifacts/docs; visual tema
+Obsidian belum diverifikasi ulang. Override lama yang sudah tersimpan tidak
+diubah otomatis; reset header mengembalikannya ke inherit.
 
 - Runtime Obsidian desktop, mobile, dan popout belum diuji pada perubahan ini.
 - Workflow GitHub Actions belum dijalankan dari perubahan lokal ini.
