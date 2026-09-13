@@ -210,6 +210,34 @@
   }
 }
 
+// Long-press-to-reorder: dimmed source while its ghost follows the cursor,
+// and a highlighted drop target. `.ptm-floaty-toolbar-drag-ghost` is a
+// document.body-level clone (position: fixed) so it can follow the cursor
+// across the whole window, not just inside the toolbar container.
+.ptm-floaty-toolbar-drag-source {
+  opacity: 0.35;
+}
+
+.ptm-floaty-toolbar-drop-target {
+  outline: 2px solid var(--interactive-accent);
+  outline-offset: 1px;
+  border-radius: var(--radius-s);
+}
+
+.ptm-floaty-toolbar-drag-ghost {
+  position: fixed;
+  z-index: calc(var(--layer-popover) + 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0.9;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-s);
+}
+
 .ptm-floaty-toolbar-pin-btn {
   display: flex;
   align-items: center;

@@ -94,6 +94,25 @@ Catatan:
   multi-selection, atau saat seleksi/baris kursor berada di luar outline
   yang sedang fokus.
 
+Urutan tombol dan dropdown (Bold, Italic, Strikethrough, Code, Highlight,
+Link, Heading, Callout — pin tidak termasuk, selalu di ujung kanan) dapat
+diubah dengan dua cara:
+
+- **long-press** langsung pada item di toolbar (tahan ~0.5 detik) memunculkan
+  salinan mengambang yang mengikuti kursor; lepas di atas item lain untuk
+  menukar posisi, atau tekan **Escape** untuk membatalkan tanpa mengubah apa
+  pun. Menahan cukup lama untuk memulai drag tidak ikut menjalankan aksi
+  formatting item tersebut — klik singkat (sebelum threshold) tetap berjalan
+  normal,
+- tombol panah atas/bawah di tab **Toolbar** pada Settings memindahkan item
+  satu posisi setiap klik. Kedua cara memakai pengaturan yang sama, jadi
+  reorder dari salah satu langsung terlihat di keduanya.
+
+Menutup jendela atau menonaktifkan toolbar saat drag sedang berlangsung
+membatalkan gesture tersebut secara bersih (salinan mengambang dan highlight
+target ikut hilang, tanpa timer yang tertinggal); setiap window popout
+mempunyai state drag sendiri, tidak saling memengaruhi window lain.
+
 Setiap aksi toolbar juga tersedia lewat Command palette (`Ctrl/Cmd+P`), memakai
 executor dan guard yang sama persis dengan tombol toolbar (Reading Mode,
 Hemingway, seleksi kosong/multi-range, dan seterusnya menolak dengan pesan

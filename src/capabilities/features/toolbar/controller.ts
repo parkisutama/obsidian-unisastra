@@ -15,7 +15,11 @@ import {
 } from "./elapsed";
 import { executeToolbarAction, type ToolbarTarget } from "./executor";
 import { hudSegments } from "./hud";
-import { setDockMode, type ToolbarSettings } from "./settings";
+import {
+  setDockMode,
+  type ToolbarItemId,
+  type ToolbarSettings,
+} from "./settings";
 
 export function dockVisibility(
   mode: ToolbarSettings["mode"],
@@ -56,7 +60,8 @@ export type SurfaceFactory = (
   reportDockEvent: (event: DockEvent) => void,
   resetSession: () => void,
   openCalloutManager: () => void,
-  togglePin: () => void
+  togglePin: () => void,
+  reorderButtons: (newOrder: ToolbarItemId[]) => void
 ) => ToolbarSurface;
 
 export class ToolbarController {
@@ -210,6 +215,15 @@ export class ToolbarController {
     this.tm.saveSettings().catch((error: unknown) => {
       console.error("MD Writer: failed to save settings.", error);
     });
+  }
+  reorderButtons(newOrder: ToolbarItemId[]): void {
+    this.tm.settings.toolbar.buttonOrder = newOrder;
+    this.tm.saveSettings().catch((error: unknown) => {
+      console.error("MD Writer: failed to save settings.", error);
+    });
+    for (const doc of this.active.keys()) {
+      this.schedule(doc);
+    }
   }
   getSessionElapsedMs(now = Date.now()): number {
     return elapsedMs(this.session, now);
@@ -369,7 +383,8 @@ export class ToolbarController {
         (event) => this.reportDockEvent(doc, event),
         () => this.resetSession(),
         () => this.tm.openCalloutManager(),
-        () => this.togglePin()
+        () => this.togglePin(),
+        (newOrder) => this.reorderButtons(newOrder)
       );
       this.surfaces.set(doc, surface);
     }

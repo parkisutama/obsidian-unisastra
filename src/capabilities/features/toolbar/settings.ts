@@ -9,6 +9,16 @@ export const TOOLBAR_ITEMS = [
   "callout",
 ] as const;
 export type ToolbarItemId = (typeof TOOLBAR_ITEMS)[number];
+export const TOOLBAR_ITEM_LABELS: Readonly<Record<ToolbarItemId, string>> = {
+  bold: "Bold",
+  italic: "Italic",
+  strikethrough: "Strikethrough",
+  code: "Inline code",
+  highlight: "Highlight",
+  link: "Link",
+  heading: "Heading",
+  callout: "Callout",
+};
 export interface ToolbarSettings {
   buttonOrder: ToolbarItemId[];
   dockAlwaysVisible: boolean;

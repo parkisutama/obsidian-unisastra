@@ -1,5 +1,6 @@
 import { type App, Component, PluginSettingTab, SettingGroup } from "obsidian";
 import { renderCalloutManager } from "@/components/callout-manager";
+import { renderToolbarButtonOrder } from "@/components/toolbar-button-order";
 import type TypewriterModeLib from "@/lib";
 
 interface TabDefinition {
@@ -88,12 +89,24 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
         description:
           "Floating formatting toolbar shown when you select text. Desktop only.",
         render: (container) => {
-          this.addTabDescription(
-            container,
-            "Floating formatting toolbar shown when you select text. Desktop only."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.toolbar);
+          const draw = () => {
+            if (
+              !this.visible ||
+              this.activeTab !== "toolbar" ||
+              !container.isConnected
+            ) {
+              return;
+            }
+            container.empty();
+            this.addTabDescription(
+              container,
+              "Floating formatting toolbar shown when you select text. Desktop only."
+            );
+            const group = new SettingGroup(container);
+            this.registerFeaturesInGroup(group, this.tm.features.toolbar);
+            renderToolbarButtonOrder(container, this.tm, draw);
+          };
+          draw();
         },
       },
       {

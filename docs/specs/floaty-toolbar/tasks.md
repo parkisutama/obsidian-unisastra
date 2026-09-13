@@ -833,16 +833,84 @@ minus Pomodoro.
 
 ### T18 — Reorder settings/long-press dan cancellation
 
-- [ ] Implemented dan verified.
+- [x] Implemented dan verified (automated; runtime pending).
 - Dependency: T17b; AC-09, AC-10, AC-11.
 - Acceptance: reorder dari settings dan long-press tersimpan sesuai ID; drag
   tidak sekaligus mengeksekusi formatting; cancel/Escape/unload/window close
   membersihkan ghost/timers/tooltip, tanpa state global lintas window.
-- Files (5): `src/components/floaty-toolbar/reorder.ts`, UI `toolbar.ts`,
-  `src/components/settings-tab.ts`, `tests/toolbar-reorder.test.ts`,
-  `docs/for-users/use-md-writer-features.md`.
-- Verify: gesture/reorder cleanup tests, `pnpm run test`, `pnpm run check`;
-  runtime click versus hold, keyboard alternative reorder, desktop/popout.
+- Scope: delapan item reorderable — bold, italic, strikethrough, code,
+  highlight, link, heading, callout — sesuai `ToolbarItemId`/upstream
+  `DEFAULT_BUTTON_ORDER` (confirmed by fetching upstream `toolbar-types.ts`
+  at the pinned revision). Pin tidak reorderable (bukan item upstream, tetap
+  di ujung kanan). `settings.toolbar.buttonOrder` sudah punya normalisasi
+  penuh sejak T01 (dedup, drop unknown ID, append builtin yang hilang) tapi
+  belum pernah dipakai oleh rendering — T18 adalah task yang benar-benar
+  mengonsumsinya.
+- Files: `src/components/floaty-toolbar/reorder.ts` (new — adapted from
+  upstream `drag.ts`/`toolbar.ts`'s `attachLongPressDrag`/`LONG_PRESS_MS`
+  (500ms, confirmed from upstream `toolbar-types.ts`). `reorderIds(ids,
+  fromId, toId)` is pure array logic that recomputes the target's index in
+  the POST-removal array (`next.indexOf(toId)`) instead of reusing the
+  pre-removal index like upstream does — upstream's naive
+  `splice(fromIdx,1); splice(toIdx,0,itemId)` drifts one slot when
+  `fromIdx < toIdx`, since removal shifts every later index down by one
+  before the second splice runs. `LongPressReorder<T>` is a pure state
+  machine (`idle -> pending -> dragging -> idle`) taking injected
+  `setTimeout`/`clearTimeout` (fake-timer friendly) and DOM-free callbacks;
+  reaching "dragging" always marks the gesture's trailing click suppressed
+  via `consumeSuppressClick()`, whether or not the drop lands on a valid
+  target — this is the actual fix for "drag tidak sekaligus mengeksekusi
+  formatting": upstream executes the action on `mousedown` before the
+  long-press timer even starts, so holding past the threshold to drag has
+  already fired the button's formatting action in the original plugin.
+  `cancel()` (Escape, or surface destroy for unload/window close) is new —
+  upstream's `drag.ts` has no cancellation path at all, only a completed
+  drop via `mouseup`), `src/components/floaty-toolbar/toolbar.ts` (rewrite:
+  `TOOLBAR_BUTTONS` entries now carry a `ToolbarItemId`; one
+  `LongPressReorder` instance per surface — i.e. per window, so multi-window
+  never shares drag state, unlike upstream's module-level `activeDrag`
+  singleton; `itemEls: Map<ToolbarItemId, HTMLElement>` holds every
+  reorderable element; `applyOrder(order)` re-appends elements in the given
+  sequence — `appendChild` on an already-attached node moves it, so this is
+  the entire re-render, diffed against a joined-ID signature to skip
+  no-op reflows; ghost creation/highlight/cleanup adapted from upstream
+  `drag.ts`'s `startDrag`/`onDragMove`/`onDragEnd`/`findDropTarget`, but
+  scoped to this surface's own `doc`/`itemEls` instead of `document`/a
+  global query selector; `attachDropdown` gained an optional
+  `shouldSuppressClick` parameter so the heading/callout dropdown triggers
+  also skip opening right after a long-press-drag; `destroy()` calls
+  `reorder.cancel()` and removes any leftover ghost/listeners),
+  `src/capabilities/features/toolbar/controller.ts` (`SurfaceFactory` gained
+  a seventh `reorderButtons` parameter; new `reorderButtons(newOrder)`
+  method mutates `settings.toolbar.buttonOrder`, saves, and reschedules
+  every active window so a reorder in one window's toolbar is reflected in
+  others), `src/components/toolbar-button-order.ts` (new — settings-tab
+  counterpart: `moveToolbarItem(order, index, delta)` pure array swap, same
+  pattern as callout-manager's `moveEntry`; `renderToolbarButtonOrder` lists
+  the eight items with up/down `Setting` extra-buttons, saving into the same
+  `buttonOrder` array the long-press gesture mutates — either surface
+  reflects the other's change), `src/components/settings-tab.ts` (Toolbar
+  tab converted to a self-redrawing `draw()` closure, matching the Callouts
+  tab's pattern, since the button-order list needs to re-render after a
+  move), `src/styles/ui/_floaty-toolbar.scss` (`.ptm-floaty-toolbar-drag-
+  source` dims the original while dragging, `.ptm-floaty-toolbar-drag-ghost`
+  is the fixed-position cursor-following copy, `.ptm-floaty-toolbar-drop-
+  target` outlines the hovered item), `tests/toolbar-reorder.test.ts` (new —
+  `reorderIds` pure-logic cases including the off-by-one fix; `LongPressReorder`
+  state machine: pending-only quick release never suppresses the click,
+  drop() on a valid/null target always suppresses it, `cancel()` from both
+  dragging and pending clears timers without reordering, a second
+  `pressStart` mid-gesture is ignored, `LONG_PRESS_MS` is 500; plus
+  `moveToolbarItem` swap/no-op-at-ends cases), `docs/for-users/use-md-writer-
+  features.md` (new paragraph documenting both reorder paths, the Escape/
+  destroy cleanup guarantee, and per-window drag isolation).
+- Verify: `pnpm run check:ci` green — 19 files / 126 tests, typecheck, lint,
+  styles, `lint:md`, build, artifacts, docs build. Not runtime-tested: actual
+  click-vs-hold timing feel, the ghost element's visual tracking, and
+  keyboard-only reorder (there is no keyboard alternative to long-press drag
+  — Settings up/down arrows are the keyboard-accessible path, consistent
+  with callout-manager's existing reorder pattern) in real Obsidian
+  desktop/popout — recorded in the ledger below.
 
 ### T19 — Notice MIT tetap terbawa dalam artifacts
 
@@ -906,10 +974,10 @@ diotorisasi; jangan menjalankan dev/deploy ke vault operasional implisit.
 ## Status validation fase
 
 SPECIFY, PLAN, dan kelanjutan implementation telah diotorisasi maintainer dalam
-sesi. T01-T17b (termasuk follow-up compact catalog C1/C2) diimplementasikan dan
+sesi. T01-T18 (termasuk follow-up compact catalog C1/C2) diimplementasikan dan
 diverifikasi otomatis; acceptance runtime dicatat terpisah di ledger. Atomic
 Conventional Commits setelah slice selesai dikonfirmasi maintainer pada
-2026-09-13. T18 (reorder settings/long-press) adalah task berikutnya.
+2026-09-13. T19 (notice MIT pada artifacts) adalah task berikutnya.
 
 ## Maintainer-requested follow-up: compact unified catalog — 2026-09-13
 

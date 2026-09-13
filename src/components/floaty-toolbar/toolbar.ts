@@ -6,33 +6,36 @@ import type {
   ToolbarCalloutOption,
   ToolbarSurface,
 } from "@/capabilities/features/toolbar/controller";
+import type { ToolbarItemId } from "@/capabilities/features/toolbar/settings";
+import { LongPressReorder } from "./reorder";
 
 const TOOLBAR_BUTTONS: ReadonlyArray<{
   action: ToolbarAction;
-  dividerAfter?: boolean;
   icon: string;
+  id: ToolbarItemId;
   title: string;
 }> = [
-  { action: { kind: "bold" }, icon: "bold", title: "Bold" },
+  { id: "bold", action: { kind: "bold" }, icon: "bold", title: "Bold" },
+  { id: "italic", action: { kind: "italic" }, icon: "italic", title: "Italic" },
   {
-    action: { kind: "italic" },
-    icon: "italic",
-    title: "Italic",
-    dividerAfter: true,
-  },
-  {
+    id: "strikethrough",
     action: { kind: "strikethrough" },
     icon: "strikethrough",
     title: "Strikethrough",
   },
+  { id: "code", action: { kind: "code" }, icon: "code", title: "Code" },
   {
-    action: { kind: "code" },
-    icon: "code",
-    title: "Code",
-    dividerAfter: true,
+    id: "highlight",
+    action: { kind: "highlight" },
+    icon: "highlighter",
+    title: "Highlight",
   },
-  { action: { kind: "highlight" }, icon: "highlighter", title: "Highlight" },
-  { action: { kind: "link" }, icon: "link", title: "Insert or remove link" },
+  {
+    id: "link",
+    action: { kind: "link" },
+    icon: "link",
+    title: "Insert or remove link",
+  },
 ];
 
 const HEADING_OPTIONS: ReadonlyArray<{
@@ -71,7 +74,8 @@ function attachDropdown(
   trigger: HTMLElement,
   getItems: () => DropdownItem[],
   getMode: () => "dock" | "floating",
-  isDisabled: () => boolean
+  isDisabled: () => boolean,
+  shouldSuppressClick: () => boolean = () => false
 ): { close: () => void } {
   let panel: HTMLElement | null = null;
 
@@ -143,7 +147,7 @@ function attachDropdown(
   trigger.setAttribute("aria-expanded", "false");
   trigger.addEventListener("click", (event) => {
     event.preventDefault();
-    if (isDisabled()) {
+    if (shouldSuppressClick() || isDisabled()) {
       return;
     }
     if (panel) {
@@ -177,8 +181,10 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   reportDockEvent,
   _resetSession,
   openCalloutManager,
-  togglePin
+  togglePin,
+  reorderButtons
 ): ToolbarSurface => {
+  const win = doc.defaultView ?? window;
   const el = doc.createElement("div");
   el.className = "ptm-floaty-toolbar";
   el.setAttribute("role", "toolbar");
@@ -186,15 +192,106 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   el.hidden = true;
   el.addEventListener("mouseenter", () => reportDockEvent("reveal"));
   el.addEventListener("mouseleave", () => reportDockEvent("leave"));
+
+  let currentMode: "dock" | "floating" = "floating";
+  const itemEls = new Map<ToolbarItemId, HTMLElement>();
+  let toolbarItemOrder: ToolbarItemId[] = TOOLBAR_BUTTONS.map(
+    (button) => button.id
+  ).concat(["heading", "callout"]);
+
+  // Long-press-to-reorder: one gesture at a time for this window's toolbar.
+  // See reorder.ts for why this is per-surface state rather than a module
+  // singleton, and why entering the dragging phase always suppresses that
+  // gesture's trailing click.
+  let ghostEl: HTMLElement | null = null;
+  let dragSourceEl: HTMLElement | null = null;
+  function findDropTarget(x: number, y: number): ToolbarItemId | null {
+    for (const [id, itemEl] of itemEls) {
+      const r = itemEl.getBoundingClientRect();
+      if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
+        return id;
+      }
+    }
+    return null;
+  }
+  function clearDropHighlight(): void {
+    for (const itemEl of itemEls.values()) {
+      itemEl.classList.remove("ptm-floaty-toolbar-drop-target");
+    }
+  }
+  function onDragMove(event: MouseEvent): void {
+    if (!ghostEl) {
+      return;
+    }
+    ghostEl.style.left = `${event.clientX - ghostEl.offsetWidth / 2}px`;
+    ghostEl.style.top = `${event.clientY - ghostEl.offsetHeight / 2}px`;
+    const target = findDropTarget(event.clientX, event.clientY);
+    clearDropHighlight();
+    if (target) {
+      itemEls.get(target)?.classList.add("ptm-floaty-toolbar-drop-target");
+    }
+  }
+  function onDragMouseUp(event: MouseEvent): void {
+    reorder.drop(findDropTarget(event.clientX, event.clientY));
+  }
+  const reorder = new LongPressReorder<ToolbarItemId>(
+    () => toolbarItemOrder.slice(),
+    {
+      setTimeout: (fn, ms) => win.setTimeout(fn, ms),
+      clearTimeout: (handle) => win.clearTimeout(handle),
+      onDragStart: (itemId) => {
+        const sourceEl = itemEls.get(itemId);
+        if (!sourceEl) {
+          return;
+        }
+        dragSourceEl = sourceEl;
+        sourceEl.classList.add("ptm-floaty-toolbar-drag-source");
+        const rect = sourceEl.getBoundingClientRect();
+        const ghost = doc.createElement("div");
+        ghost.className = "ptm-floaty-toolbar-drag-ghost";
+        ghost.style.width = `${rect.width}px`;
+        ghost.style.height = `${rect.height}px`;
+        ghost.style.left = `${rect.left}px`;
+        ghost.style.top = `${rect.top}px`;
+        for (const child of Array.from(sourceEl.childNodes)) {
+          ghost.appendChild(child.cloneNode(true));
+        }
+        doc.body.appendChild(ghost);
+        ghostEl = ghost;
+        doc.addEventListener("mousemove", onDragMove);
+        doc.addEventListener("mouseup", onDragMouseUp, { once: true });
+      },
+      onDragEnd: () => {
+        doc.removeEventListener("mousemove", onDragMove);
+        doc.removeEventListener("mouseup", onDragMouseUp);
+        dragSourceEl?.classList.remove("ptm-floaty-toolbar-drag-source");
+        dragSourceEl = null;
+        ghostEl?.remove();
+        ghostEl = null;
+        clearDropHighlight();
+      },
+      onReorder: (newOrder) => reorderButtons(newOrder),
+    }
+  );
   el.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
+      reorder.cancel();
       reportDockEvent("leave");
     }
   });
 
-  let currentMode: "dock" | "floating" = "floating";
+  function attachLongPress(itemEl: HTMLElement, itemId: ToolbarItemId): void {
+    itemEl.addEventListener("mousedown", (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+      reorder.pressStart(itemId);
+    });
+    itemEl.addEventListener("mouseup", () => reorder.cancelPending());
+    itemEl.addEventListener("mouseleave", () => reorder.cancelPending());
+  }
 
-  for (const { action, icon, title, dividerAfter } of TOOLBAR_BUTTONS) {
+  for (const { id, action, icon, title } of TOOLBAR_BUTTONS) {
     const button = doc.createElement("div");
     button.className = "ptm-floaty-toolbar-button";
     button.setAttribute("role", "button");
@@ -204,6 +301,9 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     button.setAttribute("aria-label", title);
     button.addEventListener("click", (event) => {
       event.preventDefault();
+      if (reorder.consumeSuppressClick()) {
+        return;
+      }
       execute(action);
     });
     button.addEventListener("keydown", (event) => {
@@ -212,10 +312,8 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
         execute(action);
       }
     });
-    el.appendChild(button);
-    if (dividerAfter) {
-      el.appendChild(createDivider(doc));
-    }
+    attachLongPress(button, id);
+    itemEls.set(id, button);
   }
 
   const headingTrigger = doc.createElement("div");
@@ -238,9 +336,11 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
         onSelect: () => execute({ kind: "heading", level: option.level }),
       })),
     () => currentMode,
-    () => headingDisabled
+    () => headingDisabled,
+    () => reorder.consumeSuppressClick()
   );
-  el.appendChild(headingTrigger);
+  attachLongPress(headingTrigger, "heading");
+  itemEls.set("heading", headingTrigger);
 
   const calloutTrigger = doc.createElement("div");
   calloutTrigger.className =
@@ -266,10 +366,13 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
       { label: "Manage callouts…", onSelect: () => openCalloutManager() },
     ],
     () => currentMode,
-    () => false
+    () => false,
+    () => reorder.consumeSuppressClick()
   );
-  el.appendChild(calloutTrigger);
-  el.appendChild(createDivider(doc));
+  attachLongPress(calloutTrigger, "callout");
+  itemEls.set("callout", calloutTrigger);
+
+  const trailingDivider = createDivider(doc);
 
   const pinButton = doc.createElement("div");
   pinButton.className = "ptm-floaty-toolbar-pin-btn";
@@ -288,12 +391,34 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
       togglePin();
     }
   });
-  el.appendChild(pinButton);
+
+  let lastOrderSignature = "";
+  function applyOrder(order: readonly ToolbarItemId[]): void {
+    const signature = order.join(",");
+    if (signature === lastOrderSignature) {
+      return;
+    }
+    lastOrderSignature = signature;
+    for (const id of order) {
+      const itemEl = itemEls.get(id);
+      if (itemEl) {
+        el.appendChild(itemEl);
+      }
+    }
+    el.appendChild(trailingDivider);
+    el.appendChild(pinButton);
+  }
+  applyOrder(toolbarItemOrder);
 
   doc.body.appendChild(el);
 
   return {
     destroy() {
+      reorder.cancel();
+      doc.removeEventListener("mousemove", onDragMove);
+      doc.removeEventListener("mouseup", onDragMouseUp);
+      ghostEl?.remove();
+      ghostEl = null;
       headingDropdown.close();
       calloutDropdown.close();
       el.remove();
@@ -301,6 +426,8 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     update(view, settings, dockVisible, _elapsed, calloutOptions) {
       currentMode = settings.mode;
       latestCalloutOptions = calloutOptions;
+      toolbarItemOrder = settings.buttonOrder;
+      applyOrder(settings.buttonOrder);
       pinButton.classList.toggle("is-pinned", settings.mode === "dock");
       if (view) {
         const line = view.state.doc.lineAt(view.state.selection.main.head);
