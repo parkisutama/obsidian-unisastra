@@ -601,6 +601,27 @@ dan invariants data sebelum membuka catalog editing UI.
   trigger/pin), sehingga seluruh kontrol toolbar konsisten menghindari
   native button chrome. `pnpm run test` (87/87) dan `pnpm run check:ci`
   hijau; dideploy ulang ke vault user.
+- **Scope addition (diminta user)**: HUD session/file tidak lagi ditampilkan
+  di dalam dock — sekarang SELALU lewat status bar window utama Obsidian
+  saja, terlepas dari mode toolbar floating/dock, sehingga tampilan
+  konsisten dan dock tidak melebar oleh teks timer. `updateStatusBarHud()`
+  di `controller.ts` tidak lagi digate oleh `toolbar.mode === "floating"`
+  (sekarang selalu `true`, masih digate `isMainWindowDocument()` dan
+  `segments.length`). Status bar item dibangun dari `<span>` per segmen
+  (bukan `setText()` satu string) supaya segmen session yang resettable
+  punya `role="button"`+tabindex+click/keydown sendiri untuk reset — sebelumnya
+  fungsi klik-untuk-reset hanya ada di HUD dalam dock yang sekarang dihapus.
+  `src/components/floaty-toolbar/hud.ts` (DOM wrapper dock) dihapus karena
+  tidak lagi dipakai; `src/capabilities/features/toolbar/hud.ts` (pure
+  `formatElapsed`/`hudSegments`) tetap dipakai controller untuk status bar.
+  Toggle **Show session timer**/**Show file timer** yang sudah ada sejak T10
+  sudah menyediakan kontrol enable/disable yang diminta user ("tidak semua
+  orang perlu ini") — tidak menambah setting baru yang redundan. Files:
+  `toolbar.ts` (hapus semua penggunaan HUD), `controller.ts`
+  (`updateStatusBarHud` rewrite per-segmen), `_floaty-toolbar.scss` (hapus
+  rule dock-hud, tambah `.ptm-floaty-toolbar-status-bar-hud-reset`).
+  `pnpm run test` (87/87) dan `pnpm run check:ci` hijau; dideploy ulang ke
+  vault user.
 
 ## Slice F: Styling custom dan discovery tema/snippet
 
