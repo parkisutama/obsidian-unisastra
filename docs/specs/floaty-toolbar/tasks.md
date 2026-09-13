@@ -484,6 +484,30 @@ dan invariants data sebelum membuka catalog editing UI.
   karena tidak ada host Obsidian di environment CLI ini. Perlu verifikasi
   ulang oleh user bahwa floating toolbar sekarang benar-benar muncul di
   posisi yang tepat saat seleksi teks.
+- **Bug fix (dilaporkan user setelah BOM fix, saat QA nyata floating +
+  dock)**: (1) mematikan "Pin toolbar as a dock" setelah sempat aktif
+  membuat toolbar tampil sebagai kotak kosong memanjang. Root cause:
+  cabang floating di `update()` (`toolbar.ts`) tidak pernah membersihkan
+  inline `bottom` yang di-set cabang dock; dengan `position:fixed` dan
+  `top`+`bottom` sama-sama ter-set, browser meregangkan tinggi elemen di
+  antara keduanya. Fix: `el.style.removeProperty("bottom")` di cabang
+  floating. (2) Meng-hover dock yang auto-hide membuatnya hilang, bukan
+  muncul. Root cause: auto-hide sebelumnya memakai `el.hidden` (=
+  `display:none`), dan elemen `display:none` TIDAK BISA menerima event
+  `mouseenter` sama sekali — sehingga peek-on-hover secara struktural tidak
+  mungkin bekerja. `_floaty-toolbar.scss` bahkan sudah punya
+  `transition: opacity 100ms` yang tidak pernah terpakai karena visibility
+  dikontrol lewat `display`, bukan `opacity` (dead code sejak T07/T08).
+  Fix: auto-hide dock sekarang memakai class `.ptm-floaty-toolbar-dock-peek`
+  (`opacity: 0.12`, tetap `display:flex` dan tetap hoverable) alih-alih
+  `hidden`; `el.hidden` sekarang murni untuk "tidak ada target/view valid".
+  `pnpm run test` (83/83) dan `pnpm run check:ci` tetap hijau setelah fix;
+  dideploy ke vault user via `pnpm run deploy`, belum diverifikasi ulang.
+- User juga meminta desain floating toolbar dibuat menyerupai plugin Floaty
+  Toolbar asli (tombol berbasis ikon, bukan label teks singkat seperti
+  sekarang) — permintaan desain terpisah, belum dikerjakan; environment ini
+  tidak punya akses visual ke plugin asli untuk mereplikasi tepat, perlu
+  klarifikasi/referensi dari user sebelum implementasi.
 
 ## Slice F: Styling custom dan discovery tema/snippet
 
