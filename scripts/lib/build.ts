@@ -3,6 +3,8 @@ import builtins from "builtin-modules";
 import esbuild from "esbuild";
 import { compile as sassCompile } from "sass";
 
+const LEADING_BOM = /^﻿/;
+
 export interface BuildOptions {
   entrypoints?: {
     main?: string;
@@ -33,7 +35,12 @@ export async function build({
   const scssResult = sassCompile(`${rootDir}/${srcDir}/${styles}`, {
     style: "compressed",
   });
-  writeFileSync(`${rootDir}/${outDir}/styles.css`, scssResult.css);
+  // Dart Sass prepends a UTF-8 BOM when the compiled output contains
+  // non-ASCII characters. Obsidian injects this file's contents directly as
+  // a <style> element's text, and a leading BOM there corrupts the parse of
+  // the very first CSS rule (it's silently dropped), so strip it here.
+  const css = scssResult.css.replace(LEADING_BOM, "");
+  writeFileSync(`${rootDir}/${outDir}/styles.css`, css);
 
   console.log("Copying manifest");
   copyFileSync(
