@@ -458,6 +458,32 @@ dan invariants data sebelum membuka catalog editing UI.
   lain yang juga tidak diuji unit test langsung. QA Obsidian nyata
   (add/edit/delete/reorder, "Manage callouts…" benar-benar membuka tab yang
   tepat, keyboard/touch di desktop+mobile) BELUM dilakukan — catat blocked.
+- **Bug fix (build tooling, ditemukan lewat QA nyata user di vault)**:
+  floating toolbar tidak pernah muncul saat seleksi teks meskipun HUD status
+  bar bekerja normal. Root cause: Dart Sass menulis UTF-8 BOM (`EF BB BF`) di
+  awal `dist/styles.css` karena source SCSS mengandung karakter non-ASCII di
+  suatu tempat pada graph import; BOM tersebut mendahului persis rule PERTAMA
+  di file terkompilasi, yaitu `.ptm-floaty-toolbar{position:fixed;...}`.
+  Karena Obsidian menyuntikkan isi `styles.css` sebagai text content elemen
+  `<style>` (bukan file `<link>` eksternal dengan deteksi encoding), BOM di
+  tengah teks CSS membuat parser CSS browser gagal parse rule pertama itu
+  secara silent — rule tersebut hilang total dari `document.styleSheets`
+  (dikonfirmasi lewat `el.matches(rule.selectorText)` terhadap semua rule
+  di semua stylesheet: `.ptm-floaty-toolbar` tidak pernah muncul), sehingga
+  computed `position` jatuh ke default `static` dan elemen mengikuti normal
+  document flow alih-alih fixed ke viewport dekat seleksi — bukan hilang,
+  hanya salah posisi jauh di bawah konten. Rule lain seperti
+  `.ptm-floaty-toolbar-button`/`-hud`/`-dock` tidak terdampak karena bukan
+  rule pertama di file. Fix: `scripts/lib/build.ts` men-strip leading BOM
+  (`replace(LEADING_BOM, "")`) dari output Sass sebelum menulis
+  `dist/styles.css`. Diverifikasi dengan `xxd` — BOM hilang setelah rebuild,
+  dan file yang di-deploy ke vault user (`pnpm run deploy`) sudah tanpa BOM.
+  `pnpm run test` (83/83) dan `pnpm run check:ci` tetap hijau. Diagnosis
+  dilakukan bersama user lewat serangkaian query DevTools Console
+  (`document.styleSheets`, `getComputedStyle`, `el.matches(selectorText)`)
+  karena tidak ada host Obsidian di environment CLI ini. Perlu verifikasi
+  ulang oleh user bahwa floating toolbar sekarang benar-benar muncul di
+  posisi yang tepat saat seleksi teks.
 
 ## Slice F: Styling custom dan discovery tema/snippet
 

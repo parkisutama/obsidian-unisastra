@@ -126,6 +126,24 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   komunitas, dengan fallback `Notice`) menghubungkan opsi "Manage callouts…"
   di dropdown toolbar ke tab tersebut. Slice E (T11-T13) selesai. `pnpm run
   test` (83/83) dan `pnpm run check:ci` hijau.
+- **Bug tooling penting**: floating toolbar tidak pernah tampak saat seleksi
+  teks di vault user meskipun HUD status bar bekerja, dan tidak ada error
+  console. Root cause dikonfirmasi lewat DevTools bersama user: Dart Sass
+  menyisipkan UTF-8 BOM di awal `dist/styles.css`, tepat sebelum rule
+  PERTAMA hasil kompilasi (`.ptm-floaty-toolbar{position:fixed;...}`).
+  Karena Obsidian menyuntikkan file ini sebagai text content `<style>`
+  (bukan `<link>` dengan deteksi encoding), BOM tersebut membuat browser
+  gagal parse rule pertama secara silent — rule itu hilang total dari
+  `document.styleSheets`, sehingga elemen jatuh ke `position:static` bawaan
+  dan mengikuti document flow biasa alih-alih fixed dekat seleksi. Rule lain
+  (`-button`/`-hud`/`-dock`, dst.) tidak terdampak karena posisinya bukan di
+  awal file. Fix: `scripts/lib/build.ts` men-strip leading BOM dari output
+  Sass sebelum menulis `styles.css`. Diverifikasi lewat `xxd` (BOM hilang)
+  dan `pnpm run deploy` ke vault user. Ini bug tooling lama yang baru
+  terdeteksi sekarang karena baru di T04 elemen `.ptm-floaty-toolbar` jadi
+  rule PERTAMA di file terkompilasi (urutan `@use` di `_index.scss`
+  menempatkannya di awal) — kemungkinan sudah ada sejak awal tapi tidak
+  pernah termanifestasi sebagai bug yang terlihat.
 
 ## Remaining runtime and integration acceptance
 
