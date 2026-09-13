@@ -540,6 +540,35 @@ dan invariants data sebelum membuka catalog editing UI.
   (`color: var(--text-normal)` khusus untuk `option`) meski trigger yang
   tertutup memakai warna pudar. `pnpm run test` (85/85) dan
   `pnpm run check:ci` hijau; dideploy ulang ke vault user.
+- **Follow-up desain (user membagikan markup+CSS asli plugin Floaty
+  Toolbar)**: rebuild UI toolbar dari native `<select>` menjadi custom
+  dropdown trigger+panel (`attachDropdown()` di `toolbar.ts`) meniru
+  struktur asli (`.floaty-dropdown-trigger` + chevron + `.floaty-dropdown`
+  panel) karena native select tidak bisa menampilkan chevron kustom atau
+  label pendek dengan gaya sendiri. Tambah divider (`.ptm-floaty-toolbar-
+  divider`) mengelompokkan tombol persis seperti referensi: [bold,italic] |
+  [strikethrough,code] | [highlight,link] | [heading,callout] | [pin].
+  Tambah tombol **pin** yang di-toggle langsung dari toolbar (bukan hanya
+  dari Settings) — logic guard dockAlwaysVisible diekstrak jadi
+  `setDockMode()` di `settings.ts` supaya dipakai bersama oleh
+  `toggle-dock-mode.ts` (Settings) dan `controller.togglePin()` (toolbar),
+  menghindari duplikasi. Warna/ukuran disesuaikan persis dengan CSS asli:
+  tombol 32x32 `color: var(--text-muted)` (bukan `--text-faint` seperti
+  follow-up sebelumnya — referensi asli pakai `--text-muted` untuk action
+  item), pin 28x28 `--text-faint` dengan `--interactive-accent` saat
+  `is-pinned`, dropdown trigger `--text-muted` font-weight 600, dropdown
+  item `--text-muted`/`--text-normal` hover. Dropdown panel muncul di atas
+  trigger saat mode dock, di bawah saat floating (heuristik berbasis
+  `settings.mode`, bukan deteksi ruang viewport penuh). Files:
+  `toolbar.ts` (rewrite besar), `_floaty-toolbar.scss` (rewrite),
+  `controller.ts` (`togglePin()`, `SurfaceFactory` param keenam),
+  `settings.ts` (`setDockMode()` diekstrak), `toggle-dock-mode.ts`
+  (reuse `setDockMode()`), `docs/for-users/use-md-writer-features.md`.
+  `pnpm run test` (85/85) dan `pnpm run check:ci` hijau; dideploy ulang ke
+  vault user. Tidak ada test baru untuk dropdown panel (DOM-heavy,
+  konsisten dengan batasan harness `environment: "node"` yang sudah dicatat
+  berulang kali di ledger ini) — hanya `detectHeadingLevel`/`setDockMode`
+  yang murni logic tetap diuji.
 
 ## Slice F: Styling custom dan discovery tema/snippet
 
