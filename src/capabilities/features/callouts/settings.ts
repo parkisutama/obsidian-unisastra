@@ -30,7 +30,7 @@ export interface CalloutSettings {
 
 // Custom IDs must stay safe inside `> [!id]` and are kept separate from the
 // canonical builtin/alias namespace so a custom entry can never shadow one.
-const CUSTOM_ID_PATTERN = /^[a-z0-9_-]{1,64}$/;
+export const CUSTOM_ID_PATTERN = /^[a-z0-9_-]{1,64}$/;
 const CONTROL_CHARACTERS = /[\p{Cc}\p{Cf}]/u;
 
 function record(value: unknown): Record<string, unknown> {

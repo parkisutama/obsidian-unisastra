@@ -1,4 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+
+vi.mock("obsidian", () => ({
+  Notice: class {},
+  Setting: class {},
+}));
+
 import {
   BUILTIN_CALLOUT_TYPES,
   canonicalBuiltinCalloutId,
@@ -10,6 +16,7 @@ import {
   DEFAULT_CALLOUT_SETTINGS,
   normalizeCalloutSettings,
 } from "@/capabilities/features/callouts/settings";
+import { moveEntry } from "@/components/callout-manager";
 
 describe("callout catalog", () => {
   it("resolves builtin types and aliases to a canonical lowercase ID", () => {
@@ -108,5 +115,25 @@ describe("callout settings normalization", () => {
     const note = settings.entries.find((entry) => entry.id === "note");
     expect(note).toMatchObject({ label: "Renamed note", enabled: false });
     expect(settings.entries.length).toBe(BUILTIN_CALLOUT_TYPES.length);
+  });
+});
+
+describe("callout manager reordering", () => {
+  function entries() {
+    return normalizeCalloutSettings(undefined).entries;
+  }
+  it("swaps order with the adjacent entry when moving up or down", () => {
+    const list = entries();
+    const [first, second] = list;
+    moveEntry(list, 1, -1);
+    expect(list[0].id).toBe(second.id);
+    expect(list[1].id).toBe(first.id);
+  });
+  it("does nothing when moving the first entry up or the last entry down", () => {
+    const list = entries();
+    const before = list.map((entry) => entry.id);
+    moveEntry(list, 0, -1);
+    moveEntry(list, list.length - 1, 1);
+    expect(list.map((entry) => entry.id)).toEqual(before);
   });
 });

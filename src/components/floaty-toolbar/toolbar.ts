@@ -34,6 +34,8 @@ function calloutOptionsSignature(
 ): string {
   return options.map((option) => `${option.id}:${option.label}`).join("|");
 }
+const MANAGE_CALLOUTS_VALUE = "__manage-callouts__";
+
 function renderCalloutOptions(
   doc: Document,
   select: HTMLSelectElement,
@@ -52,13 +54,18 @@ function renderCalloutOptions(
     entry.textContent = option.label;
     select.appendChild(entry);
   }
+  const manage = doc.createElement("option");
+  manage.value = MANAGE_CALLOUTS_VALUE;
+  manage.textContent = "Manage callouts…";
+  select.appendChild(manage);
 }
 
 export const createFloatyToolbarSurface: SurfaceFactory = (
   doc,
   execute,
   reportDockEvent,
-  resetSession
+  resetSession,
+  openCalloutManager
 ): ToolbarSurface => {
   const el = doc.createElement("div");
   el.className = "ptm-floaty-toolbar";
@@ -91,10 +98,12 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   calloutSelect.className = "ptm-floaty-toolbar-callout-select";
   calloutSelect.setAttribute("aria-label", "Insert callout");
   calloutSelect.addEventListener("change", () => {
-    const id = calloutSelect.value;
+    const value = calloutSelect.value;
     calloutSelect.value = "";
-    if (id) {
-      execute({ kind: "callout", id });
+    if (value === MANAGE_CALLOUTS_VALUE) {
+      openCalloutManager();
+    } else if (value) {
+      execute({ kind: "callout", id: value });
     }
   });
   el.appendChild(calloutSelect);

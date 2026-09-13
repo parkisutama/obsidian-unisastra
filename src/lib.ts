@@ -63,6 +63,7 @@ export default class TypewriterModeLib {
   readonly features: Record<string, Record<string, Feature>>;
   readonly commands: Record<string, AbstractCommand>;
   readonly toolbar: ToolbarController;
+  private settingTab: TypewriterModeSettingTab | null = null;
 
   constructor(
     plugin: Plugin,
@@ -175,9 +176,28 @@ export default class TypewriterModeLib {
   }
 
   loadSettingsTab() {
-    this.plugin.addSettingTab(
-      new TypewriterModeSettingTab(this.plugin.app, this)
-    );
+    this.settingTab = new TypewriterModeSettingTab(this.plugin.app, this);
+    this.plugin.addSettingTab(this.settingTab);
+  }
+
+  /**
+   * Opens Settings to this plugin's Callouts tab, from the toolbar's
+   * Callout menu. `app.setting` (open/openTabById) is an internal,
+   * undocumented Obsidian API used by convention across community plugins;
+   * it is not in obsidian.d.ts, so it is accessed defensively with a
+   * fallback Notice if it is ever unavailable.
+   */
+  openCalloutManager(): void {
+    this.settingTab?.setActiveTab("callouts");
+    const appWithSettings = this.plugin.app as unknown as {
+      setting?: { open?: () => void; openTabById?: (id: string) => void };
+    };
+    if (appWithSettings.setting?.open && appWithSettings.setting.openTabById) {
+      appWithSettings.setting.open();
+      appWithSettings.setting.openTabById(this.plugin.manifest.id);
+    } else {
+      new Notice("Open plugin settings, then open the callouts tab.");
+    }
   }
 
   unload() {

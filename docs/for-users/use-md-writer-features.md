@@ -80,9 +80,9 @@ Catatan:
   fold marker (`+`/`-`), dan kedalaman quote (`>`/`>>`) tetap dipertahankan.
   Seleksi yang memotong header callout di tengah (bukan di baris pertama)
   ditolak dengan penjelasan, bukan diperbaiki diam-diam. Pilihan dropdown
-  mengikuti catalog callout yang enabled di tab Callouts (Slice E berikutnya
-  akan menambah UI manajemennya; saat ini semua tipe bawaan Obsidian aktif
-  secara default),
+  mengikuti catalog callout yang enabled dan urutan di tab **Callouts**;
+  opsi terakhir dropdown, **Manage callouts…**, membuka Settings langsung
+  ke tab tersebut,
 - toolbar tidak aktif di Reading Mode, saat Hemingway mode menyala, untuk
   multi-selection, atau saat seleksi/baris kursor berada di luar outline
   yang sedang fokus.
@@ -121,6 +121,26 @@ Timer session dan file tampil sebagai HUD:
   mengurangi distraksi saat fokus menulis — timer tetap menghitung waktu
   sebenarnya berbasis selisih waktu, hanya tampilan yang diperbarui lebih
   jarang. Nilai dibatasi 1-300 detik; input tidak valid kembali ke 1 detik.
+
+## Kelola catalog callout
+
+Buka tab **Callouts** di pengaturan MD Writer (atau pilih **Manage callouts…**
+di dropdown Callout pada toolbar) untuk:
+
+- memilih **Output format**: Obsidian (default) atau GitHub alerts,
+- menyembunyikan/menampilkan tipe callout bawaan Obsidian dari dropdown
+  toolbar tanpa menghapusnya secara permanen,
+- mereset label tipe bawaan yang sudah Anda ubah kembali ke nama default,
+- menambah callout custom dengan ID (huruf kecil, angka, underscore, atau
+  hyphen, maksimal 64 karakter) dan label tampilan,
+- menghapus callout custom — ini hanya mengubah pengaturan plugin, callout
+  yang sudah ada di note lama tidak berubah,
+- mengurutkan ulang daftar dengan tombol panah atas/bawah; urutan tersimpan
+  dan menentukan urutan pilihan di dropdown toolbar.
+
+Tab ini tersedia di desktop maupun mobile (berbeda dari toolbar yang
+desktop-only), menggunakan kontrol standar Obsidian yang dapat dipakai
+keyboard maupun sentuhan.
 
 ## Pakai GitHub-style heading anchors
 

@@ -1,4 +1,5 @@
 import { type App, PluginSettingTab, SettingGroup } from "obsidian";
+import { renderCalloutManager } from "@/components/callout-manager";
 import type TypewriterModeLib from "@/lib";
 
 interface TabDefinition {
@@ -17,6 +18,10 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
   constructor(app: App, tm: TypewriterModeLib) {
     super(app, tm.plugin);
     this.tm = tm;
+  }
+
+  setActiveTab(id: string): void {
+    this.activeTab = id;
   }
 
   private registerFeaturesInGroup(
@@ -75,6 +80,23 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
           );
           const group = new SettingGroup(container);
           this.registerFeaturesInGroup(group, this.tm.features.toolbar);
+        },
+      },
+      {
+        id: "callouts",
+        label: "Callouts",
+        description:
+          "Manage the callout catalog used by the toolbar's Callout menu: enable/hide, reorder, and add custom entries.",
+        render: (container) => {
+          const draw = () => {
+            container.empty();
+            this.addTabDescription(
+              container,
+              "Manage the callout catalog used by the toolbar's Callout menu: enable/hide, reorder, and add custom entries."
+            );
+            renderCalloutManager(container, this.tm, draw);
+          };
+          draw();
         },
       },
       {

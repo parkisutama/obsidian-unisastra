@@ -53,7 +53,8 @@ export type SurfaceFactory = (
   doc: Document,
   execute: (action: ToolbarAction) => void,
   reportDockEvent: (event: DockEvent) => void,
-  resetSession: () => void
+  resetSession: () => void,
+  openCalloutManager: () => void
 ) => ToolbarSurface;
 
 export class ToolbarController {
@@ -353,7 +354,8 @@ export class ToolbarController {
         doc,
         (action) => this.execute(doc, action),
         (event) => this.reportDockEvent(doc, event),
-        () => this.resetSession()
+        () => this.resetSession(),
+        () => this.tm.openCalloutManager()
       );
       this.surfaces.set(doc, surface);
     }
