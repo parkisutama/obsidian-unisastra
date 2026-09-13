@@ -8,6 +8,7 @@ import {
   CUSTOM_ID_PATTERN,
 } from "@/capabilities/features/callouts/settings";
 import type TypewriterModeLib from "@/lib";
+import { renderCalloutDiscovery } from "./callout-discovery";
 import { renderCalloutStyleEditor } from "./callout-style-editor";
 
 function saveAndRerender(tm: TypewriterModeLib, rerender: () => void): void {
@@ -62,6 +63,8 @@ export function renderCalloutManager(
           saveAndRerender(tm, rerender);
         })
     );
+
+  renderCalloutDiscovery(container, tm, component, rerender);
 
   for (const [index, entry] of entries.entries()) {
     const panel = container.createDiv({

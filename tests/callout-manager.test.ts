@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 
+vi.mock("@/components/callout-discovery", () => ({
+  renderCalloutDiscovery: vi.fn(),
+}));
+
 class ElementHost {
   readonly children: ElementHost[] = [];
   readonly tag: string;
