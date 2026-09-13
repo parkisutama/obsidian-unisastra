@@ -526,6 +526,20 @@ dan invariants data sebelum membuka catalog editing UI.
   `detectHeadingLevel`), `docs/for-users/use-md-writer-features.md`.
   `pnpm run test` (85/85) dan `pnpm run check:ci` hijau; dideploy ke vault
   user via `pnpm run deploy`, belum diverifikasi ulang secara visual.
+- **Follow-up desain (feedback user setelah screenshot pertama)**: warna
+  ikon tombol diredupkan (`var(--text-faint)`, `--text-normal` saat hover)
+  supaya tidak menyaingi warna teks konten dan terasa distraktif. Label
+  dropdown heading dipendekkan dari "Paragraph"/"Heading 1..4" menjadi
+  "P"/"H1..H4" (nama lengkap tetap ada via `title` per `<option>` untuk
+  tooltip), lebar select diperkecil menyesuaikan. Placeholder dropdown
+  callout diganti dari kata "Callout" menjadi glyph kutip "❝" (native
+  `<select>` tidak mendukung ikon SVG/img di dalam elemen `<option>` di
+  semua platform, jadi glyph teks dipilih sebagai kompromi paling dekat
+  dengan "ikon" tanpa membangun ulang widget dropdown custom). Opsi native
+  `<select>` tetap menampilkan teks penuh berwarna normal di popup OS
+  (`color: var(--text-normal)` khusus untuk `option`) meski trigger yang
+  tertutup memakai warna pudar. `pnpm run test` (85/85) dan
+  `pnpm run check:ci` hijau; dideploy ulang ke vault user.
 
 ## Slice F: Styling custom dan discovery tema/snippet
 
