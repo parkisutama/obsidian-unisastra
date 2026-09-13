@@ -134,10 +134,12 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
         hud.update(
           hudSegments(settings.timers, elapsed.sessionMs, elapsed.fileMs)
         );
-        el.hidden = !(view && dockVisible);
+        el.hidden = !view;
+        el.classList.toggle("ptm-floaty-toolbar-dock-peek", !dockVisible);
         return;
       }
-      el.classList.remove(DOCK_CLASS);
+      el.classList.remove(DOCK_CLASS, "ptm-floaty-toolbar-dock-peek");
+      el.style.removeProperty("bottom");
       hud.update([]);
       const range = view?.state.selection.main;
       const coords =

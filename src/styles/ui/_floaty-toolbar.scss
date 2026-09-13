@@ -20,10 +20,17 @@
     max-width: min(480px, calc(100vw - #{2 * 8px}));
     transform: translateX(-50%);
     justify-content: center;
+    opacity: 1;
     transition: opacity 100ms ease-in-out;
 
     @media (prefers-reduced-motion: reduce) {
       transition: none;
+    }
+
+    // Auto-hidden but still hoverable: `display: none` would make it
+    // impossible to ever mouseenter it again to bring it back.
+    &.ptm-floaty-toolbar-dock-peek {
+      opacity: 0.12;
     }
   }
 }
