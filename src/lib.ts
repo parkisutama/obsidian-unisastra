@@ -33,6 +33,7 @@ import type { AbstractCommand } from "./capabilities/base/abstract-command";
 import type { Feature } from "./capabilities/base/feature";
 import { getCommands } from "./capabilities/commands";
 import { getFeatures } from "./capabilities/features";
+import { CalloutStyles } from "./capabilities/features/callouts/styles";
 import type RestoreCursorPosition from "./capabilities/features/restore-cursor-position/restore-cursor-position";
 import { ToolbarController } from "./capabilities/features/toolbar/controller";
 import {
@@ -63,6 +64,7 @@ export default class TypewriterModeLib {
   readonly features: Record<string, Record<string, Feature>>;
   readonly commands: Record<string, AbstractCommand>;
   readonly toolbar: ToolbarController;
+  private readonly calloutStyles = new CalloutStyles();
   private settingTab: TypewriterModeSettingTab | null = null;
 
   constructor(
@@ -105,6 +107,26 @@ export default class TypewriterModeLib {
     this.loadEditorExtension();
     this.toolbar.setSurfaceFactory(createFloatyToolbarSurface);
     this.toolbar.load();
+    this.loadCalloutStyles();
+  }
+
+  private loadCalloutStyles(): void {
+    const workspace = this.plugin.app.workspace;
+    this.calloutStyles.open(workspace.containerEl.ownerDocument);
+    workspace.iterateAllLeaves((leaf) => {
+      this.calloutStyles.open(leaf.view.containerEl.ownerDocument);
+    });
+    this.plugin.registerEvent(
+      workspace.on("window-open", (_host, win) => {
+        this.calloutStyles.open(win.document);
+      })
+    );
+    this.plugin.registerEvent(
+      workspace.on("window-close", (_host, win) => {
+        this.calloutStyles.close(win.document);
+      })
+    );
+    this.calloutStyles.update(this.settings.callouts.entries);
   }
 
   private isGFMAnchorCompatibilityEnabled(): boolean {
@@ -201,6 +223,7 @@ export default class TypewriterModeLib {
   }
 
   unload() {
+    this.calloutStyles.destroy();
     this.toolbar.destroy();
     for (const category of Object.values(this.features)) {
       for (const feature of Object.values(category)) {
@@ -228,6 +251,9 @@ export default class TypewriterModeLib {
 
   async saveSettings() {
     await this.saveData(this.settings);
+    if (this.calloutStyles.update(this.settings.callouts.entries)) {
+      this.plugin.app.workspace.trigger("css-change");
+    }
     this.plugin.app.workspace.updateOptions();
     this.toolbar.refresh();
   }
