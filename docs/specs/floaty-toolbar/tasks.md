@@ -569,6 +569,17 @@ dan invariants data sebelum membuka catalog editing UI.
   konsisten dengan batasan harness `environment: "node"` yang sudah dicatat
   berulang kali di ledger ini) — hanya `detectHeadingLevel`/`setDockMode`
   yang murni logic tetap diuji.
+- **Bug fix (dilaporkan user setelah dropdown rebuild)**: tombol Bold/Italic
+  yang baru saja diklik menampilkan kotak/shadow yang tidak hilang, berbeda
+  dari tombol lain. Root cause: `<button>` native browser menampilkan
+  outline/shadow fokus bawaan pada state `:focus` (bukan hanya
+  `:focus-visible`) yang belum di-reset; hanya elemen yang pernah diklik
+  (menerima fokus) menunjukkan gejala ini, bukan seluruh tombol. Fix:
+  tambah `outline: none; box-shadow: none;` eksplisit pada `:focus` di
+  `.ptm-floaty-toolbar-button`, `-dropdown-trigger`, `-dropdown-item`, dan
+  `-pin-btn`, mempertahankan indikator `:focus-visible` untuk aksesibilitas
+  keyboard. `pnpm run test` (87/87) dan `pnpm run check:ci` hijau; dideploy
+  ulang ke vault user.
 
 ## Slice F: Styling custom dan discovery tema/snippet
 
