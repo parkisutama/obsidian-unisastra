@@ -580,6 +580,27 @@ dan invariants data sebelum membuka catalog editing UI.
   `-pin-btn`, mempertahankan indikator `:focus-visible` untuk aksesibilitas
   keyboard. `pnpm run test` (87/87) dan `pnpm run check:ci` hijau; dideploy
   ulang ke vault user.
+- **Bug fix (diagnosis lanjutan — `:focus` bukan akar masalah sebenarnya)**:
+  user melaporkan tombol Bold/Italic masih tampak berbeda dari dropdown P/
+  Callout setelah fix di atas. Diagnosis via `getComputedStyle` di Console
+  membandingkan dua tombol AKSI (Bold vs Strikethrough, sama-sama
+  `<button>`) menunjukkan computed style IDENTIK di keduanya — bukti bahwa
+  perbedaan visual sebenarnya bukan Bold vs tombol lain, melainkan SEMUA
+  tombol aksi (`<button>`) vs dropdown trigger (`<div>`). Root cause
+  sebenarnya: elemen `<button>` native mendapat box-shadow inset default
+  dari base CSS Obsidian (`rgb(40,39,38) 0 0 0 1px inset` + tint
+  background `rgba(254,252,240,0.15)`) yang TIDAK ter-override oleh
+  `box-shadow: none` kita (spesifisitas/urutan cascade Obsidian menang),
+  sedangkan dropdown trigger/pin yang sudah berupa `<div role="button">`
+  tidak kena reset tersebut sama sekali — persis kenapa referensi plugin
+  asli memakai `<div class="floaty-action-item" role="button"
+  tabindex="0">` untuk SEMUA item, bukan `<button>`. Fix: ganti elemen
+  tombol aksi (Bold/Italic/Strikethrough/Code/Highlight/Link) dari
+  `<button type="button">` menjadi `<div role="button" tabindex="0">`
+  dengan keydown handler Enter/Space manual (pola sama dengan dropdown
+  trigger/pin), sehingga seluruh kontrol toolbar konsisten menghindari
+  native button chrome. `pnpm run test` (87/87) dan `pnpm run check:ci`
+  hijau; dideploy ulang ke vault user.
 
 ## Slice F: Styling custom dan discovery tema/snippet
 
