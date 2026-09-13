@@ -6,11 +6,12 @@
 - Requirement: [accepted spec](./spec.md).
 - Approach: [accepted plan](./plan.md).
 - Decision: [accepted ADR-002](../../reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md).
-- Progress: 12/21 tasks implemented (T01-T12; T17 dipecah menjadi T17a/T17b);
-  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T12. Runtime Obsidian
+- Progress: 13/21 tasks implemented (T01-T13; T17 dipecah menjadi T17a/T17b);
+  `pnpm run test` dan `pnpm run check:ci` hijau untuk T01-T13. Runtime Obsidian
   acceptance belum dilakukan untuk task manapun. Slice C dan D selesai; Slice E
-  T11-T12 selesai (catalog + menu dropdown + lossless Obsidian conversion),
-  T13 (Callout manager settings-tab UI) berikutnya.
+  (T11-T13: catalog, menu dropdown + lossless Obsidian conversion, Callout
+  manager settings-tab UI) selesai. Slice F (styling custom/discovery
+  tema/snippet) berikutnya.
 
 ## Aturan execution
 
@@ -421,16 +422,42 @@ dan invariants data sebelum membuka catalog editing UI.
 
 ### T13 — Callout manager dapat mengelola catalog dan custom entry
 
-- [ ] Implemented dan verified.
+- [x] Implemented; runtime acceptance blocked (tidak ada host Obsidian di
+  environment ini).
 - Dependency: T12; AC-06, AC-07, AC-10.
 - Acceptance: tab Callouts dan link manager dari menu; add/edit/delete custom,
   hide/reset built-in dan urutan tersimpan; delete config tidak menyentuh note;
   controls/validation dapat dipakai keyboard desktop dan touch mobile.
-- Files (5): `src/components/callout-manager.ts`,
-  `src/components/settings-tab.ts`, UI `toolbar.ts`,
-  `tests/callout-catalog.test.ts`, `docs/for-users/use-md-writer-features.md`.
-- Verify: catalog operations tests, `pnpm run test`, `pnpm run check`;
-  runtime settings save/reload, manager navigation desktop/mobile/popout.
+- Files: `src/components/callout-manager.ts` (`renderCalloutManager` pakai
+  Obsidian `Setting` API murni — toggle output mode, per-entry
+  arrow-up/arrow-down reorder via `moveEntry` yang menukar field `order` lalu
+  sort ulang, toggle enabled/hidden, tombol reset label untuk builtin, tombol
+  hapus untuk custom, form tambah custom dengan validasi `CUSTOM_ID_PATTERN`
+  dan dedup terhadap builtin+alias sebelum push), `src/components/settings-tab.ts`
+  (tab "Callouts" baru dengan closure `draw()` self-refresh setelah tiap
+  mutasi — pola berbeda dari tab lain karena daftar berubah dinamis, bukan
+  toggle tetap; method publik `setActiveTab()` agar bisa dibuka langsung dari
+  toolbar), `src/lib.ts` (`settingTab` disimpan sebagai field agar dapat
+  dipanggil balik; `openCalloutManager()` memakai `app.setting.open()` +
+  `openTabById()` — API internal/tidak terdokumentasi Obsidian yang lazim
+  dipakai plugin komunitas, diakses defensif dengan fallback `Notice` jika
+  tidak tersedia; dicatat eksplisit di komentar kode), toolbar
+  `controller.ts` (`SurfaceFactory` menerima `openCalloutManager` sebagai
+  parameter kelima), UI `toolbar.ts` (opsi "Manage callouts…" di akhir
+  dropdown callout, sentinel value terpisah dari ID callout asli),
+  `tests/callout-catalog.test.ts` (unit test `moveEntry`: swap urutan
+  naik/turun, no-op di ujung list), `docs/for-users/use-md-writer-features.md`
+  (bagian baru "Kelola catalog callout").
+- Verify: `pnpm run test` (83/83) dan `pnpm run check:ci` hijau. Perbaikan
+  ESLint Obsidian `sentence-case` pada beberapa string UI
+  (`callout-manager.ts`, `lib.ts` Notice — dirumuskan ulang jadi
+  "Open plugin settings, then open the callouts tab." agar tidak menabrak
+  aturan sentence-case tanpa melunturkan makna). `renderCalloutManager` tidak
+  diuji langsung (memakai Obsidian `Setting` API asli, di-mock minimal hanya
+  agar modul bisa di-import) — konsisten dengan toggle Feature classes
+  lain yang juga tidak diuji unit test langsung. QA Obsidian nyata
+  (add/edit/delete/reorder, "Manage callouts…" benar-benar membuka tab yang
+  tepat, keyboard/touch di desktop+mobile) BELUM dilakukan — catat blocked.
 
 ## Slice F: Styling custom dan discovery tema/snippet
 

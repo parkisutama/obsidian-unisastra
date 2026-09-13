@@ -46,9 +46,10 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   and narrow-window shrink; Slice D — shared session and per-window file
   elapsed model, plus a HUD shown in the dock or the main window's status bar
   with visibility toggles, prefixes, and an explicit session reset; Slice E
-  — T11 callout catalog and additive settings, plus T12 callout dropdown menu
-  wired into the toolbar with lossless Obsidian conversion) implemented dan
-  wired ke `src/lib.ts`; 12/21 task implemented.
+  — T11 callout catalog and additive settings, T12 callout dropdown menu with
+  lossless Obsidian conversion, and T13 a Callout manager settings tab for
+  add/edit/delete/reorder/hide) implemented dan wired ke `src/lib.ts`;
+  13/21 task implemented.
 - `pnpm run test` (8 file, 44 test) dan `pnpm run check:ci` lolos untuk state
   saat ini, termasuk build, verify-artifacts, dan docs build. Perbaikan gate
   selama T01-T04: satu type error (`EditorView.editable` value import) dan
@@ -117,6 +118,14 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
   (`hasAmbiguousCalloutHeader`). GitHub Alerts output mode belum
   diimplementasikan (task terpisah). `pnpm run test` (81/81) dan
   `pnpm run check:ci` hijau.
+- T13: tab "Callouts" settings dengan Obsidian `Setting` API murni — reorder
+  arrow-up/down, toggle enabled/hidden, reset label builtin, tambah/hapus
+  custom dengan validasi ID. `TypewriterModeSettingTab.setActiveTab()` +
+  `lib.ts` `openCalloutManager()` (memakai `app.setting`/`openTabById`, API
+  internal Obsidian yang tidak terdokumentasi tapi lazim dipakai plugin
+  komunitas, dengan fallback `Notice`) menghubungkan opsi "Manage callouts…"
+  di dropdown toolbar ke tab tersebut. Slice E (T11-T13) selesai. `pnpm run
+  test` (83/83) dan `pnpm run check:ci` hijau.
 
 ## Remaining runtime and integration acceptance
 
