@@ -2,10 +2,31 @@ import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import builtins from "builtin-modules";
 import esbuild from "esbuild";
 import { compile as sassCompile } from "sass";
-import { floatyToolbarLicenseBanner } from "./license-banner";
+import {
+  floatyToolbarLicenseBanner,
+  mononoteLicenseBanner,
+  writingFocusLicenseBanner,
+} from "./license-banner";
 
 const LEADING_BOM = /^﻿/;
-const FLOATY_TOOLBAR_LICENSE_PATH = "licenses/floaty-toolbar-MIT.txt";
+
+const THIRD_PARTY_NOTICES = [
+  {
+    banner: floatyToolbarLicenseBanner,
+    distName: "floaty-toolbar-MIT.txt",
+    sourcePath: "licenses/floaty-toolbar-MIT.txt",
+  },
+  {
+    banner: writingFocusLicenseBanner,
+    distName: "writing-focus-MPL2.0.txt",
+    sourcePath: "licenses/writing-focus-MPL2.0.txt",
+  },
+  {
+    banner: mononoteLicenseBanner,
+    distName: "mononote-MIT.txt",
+    sourcePath: "licenses/mononote-MIT.txt",
+  },
+] as const;
 
 export interface BuildOptions {
   entrypoints?: {
@@ -53,13 +74,12 @@ export async function build({
   console.log("Copying license notices");
   const licensesOutDir = `${rootDir}/${outDir}/licenses`;
   mkdirSync(licensesOutDir, { recursive: true });
-  const floatyToolbarNotice = readFileSync(
-    `${rootDir}/${FLOATY_TOOLBAR_LICENSE_PATH}`,
-    "utf-8"
-  );
-  copyFileSync(
-    `${rootDir}/${FLOATY_TOOLBAR_LICENSE_PATH}`,
-    `${licensesOutDir}/floaty-toolbar-MIT.txt`
+  const noticeBanners = THIRD_PARTY_NOTICES.map(
+    ({ banner, distName, sourcePath }) => {
+      const notice = readFileSync(`${rootDir}/${sourcePath}`, "utf-8");
+      copyFileSync(`${rootDir}/${sourcePath}`, `${licensesOutDir}/${distName}`);
+      return banner(notice);
+    }
   );
 
   // Build js
@@ -76,9 +96,9 @@ export async function build({
     target: "es2022",
     platform: "browser",
     format: esbuildFormat,
-    // Embedded raw (not run through the minifier), so the notice survives a
+    // Embedded raw (not run through the minifier), so the notices survive a
     // minified/stripDebug build the same as an unminified dev build.
-    banner: { js: floatyToolbarLicenseBanner(floatyToolbarNotice) },
+    banner: { js: noticeBanners.join("\n") },
     // `drop: ["console"]` removes every console.* call; `pure` + minifySyntax
     // only eliminates the specific debug/log calls listed here, so
     // console.error/console.warn survive into the production bundle.

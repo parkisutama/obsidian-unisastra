@@ -1,3 +1,10 @@
+// Typewriter scrolling concept inspired by deathau's
+// cm-typewriter-scroll-obsidian
+// (https://github.com/deathau/cm-typewriter-scroll-obsidian). No code
+// ported; this scroll-offset math (caret coordinates, keep-lines bounds)
+// is an original CM6 implementation, not a port of upstream's CM5-era
+// extension.
+
 import type { EditorView, Rect } from "@codemirror/view";
 import type TypewriterModeLib from "@/lib";
 import { getEditorDom, getScrollDom } from "./selectors";

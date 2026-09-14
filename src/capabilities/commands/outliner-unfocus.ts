@@ -1,3 +1,7 @@
+// Zoom-out concept inspired by vslinko's obsidian-zoom
+// (https://github.com/vslinko/obsidian-zoom). No code ported — see
+// outliner-focus.ts.
+
 import type { EditorView } from "@codemirror/view";
 import type { Editor, MarkdownFileInfo, MarkdownView } from "obsidian";
 import { EditorCommand } from "../base/editor-command";

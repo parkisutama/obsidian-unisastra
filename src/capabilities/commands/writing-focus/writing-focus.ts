@@ -1,4 +1,23 @@
-// ADAPTED FROM https://github.com/ryanpcmcquen/obsidian-focus-mode
+// Writing focus, adapted for MD Writer from Obsidian Focus Mode by
+// ryanpcmcquen, licensed under the Mozilla Public License 2.0.
+// https://github.com/ryanpcmcquen/obsidian-focus-mode, main.ts
+// (FocusMode: storeSplitsValues, collapseSplits, restoreSplits,
+// removeExtraneousClasses, enableFocusMode, disableFocusMode,
+// toggleFocusMode).
+// Revision cd68eda3c035e0340ff7da730e1f2a5acd3465e4.
+// Copyright (c) 2024-2026 ryanpcmcquen. Full notice:
+// licenses/writing-focus-MPL2.0.txt.
+//
+// Differences from upstream, deliberate:
+// - Drops "Super Focus Mode" (hide-all-but-active-pane) entirely; only the
+//   single collapse-splits focus mode is kept.
+// - Renamed properties to match this codebase's style (maximisedClass ->
+//   maximizedClass, etc.) and replaced direct `document` access with
+//   `window.activeDocument` for popout-window correctness.
+// - Adds optional native Electron fullscreen (startFullscreen/
+//   exitFullscreen), which upstream does not have.
+// - Uses `this.tm.plugin.app.workspace` (this codebase's DI pattern)
+//   instead of upstream's direct, type-suppressed `this.app` access.
 
 import { ItemView, Platform } from "obsidian";
 import type TypewriterModeLib from "@/lib";

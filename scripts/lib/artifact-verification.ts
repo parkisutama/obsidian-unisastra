@@ -1,8 +1,30 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
-import { floatyToolbarLicenseBanner } from "./license-banner";
+import {
+  floatyToolbarLicenseBanner,
+  mononoteLicenseBanner,
+  writingFocusLicenseBanner,
+} from "./license-banner";
 
-const FLOATY_TOOLBAR_LICENSE_PATH = "licenses/floaty-toolbar-MIT.txt";
-const DIST_FLOATY_TOOLBAR_LICENSE_PATH = "dist/licenses/floaty-toolbar-MIT.txt";
+const THIRD_PARTY_NOTICES = [
+  {
+    banner: floatyToolbarLicenseBanner,
+    distPath: "dist/licenses/floaty-toolbar-MIT.txt",
+    label: "Floaty Toolbar MIT",
+    sourcePath: "licenses/floaty-toolbar-MIT.txt",
+  },
+  {
+    banner: writingFocusLicenseBanner,
+    distPath: "dist/licenses/writing-focus-MPL2.0.txt",
+    label: "Obsidian Focus Mode MPL-2.0",
+    sourcePath: "licenses/writing-focus-MPL2.0.txt",
+  },
+  {
+    banner: mononoteLicenseBanner,
+    distPath: "dist/licenses/mononote-MIT.txt",
+    label: "MonoNote MIT",
+    sourcePath: "licenses/mononote-MIT.txt",
+  },
+] as const;
 
 interface ManifestJson {
   version: string;
@@ -46,32 +68,32 @@ function readRequiredTextFile(path: string): string {
 }
 
 /**
- * Confirms the Floaty Toolbar MIT notice survived into the built artifacts:
- * the full notice embedded as a `dist/main.js` banner (present even in the
+ * Confirms each third-party notice survived into the built artifacts: the
+ * full notice embedded as a `dist/main.js` banner (present even in the
  * minified build, since esbuild's `banner` option is not run through the
- * minifier — see license-banner.ts), and a standalone copy at
- * `dist/licenses/floaty-toolbar-MIT.txt` for the release zip. Fails if
- * either is missing, or if the dist copy has drifted out of sync with the
- * source `licenses/floaty-toolbar-MIT.txt` (e.g. the source notice was
- * edited without rebuilding) — never by deleting or altering either file,
- * only by reading them.
+ * minifier — see license-banner.ts), and a standalone copy under
+ * `dist/licenses/` for the release zip. Fails if either is missing, or if
+ * the dist copy has drifted out of sync with the source `licenses/*.txt`
+ * (e.g. the source notice was edited without rebuilding) — never by
+ * deleting or altering either file, only by reading them.
  */
-function assertFloatyToolbarNoticePreserved(): void {
-  const sourceNotice = readRequiredTextFile(FLOATY_TOOLBAR_LICENSE_PATH);
+function assertThirdPartyNoticesPreserved(): void {
   const mainJs = readRequiredTextFile("dist/main.js");
-  const expectedBanner = floatyToolbarLicenseBanner(sourceNotice);
-  if (!mainJs.includes(expectedBanner)) {
-    throw new Error(
-      "dist/main.js is missing the Floaty Toolbar MIT notice banner, or it does not match licenses/floaty-toolbar-MIT.txt. Rebuild after any change to the source notice."
-    );
-  }
 
-  assertNonEmptyFile(DIST_FLOATY_TOOLBAR_LICENSE_PATH);
-  const distNotice = readRequiredTextFile(DIST_FLOATY_TOOLBAR_LICENSE_PATH);
-  if (distNotice !== sourceNotice) {
-    throw new Error(
-      `${DIST_FLOATY_TOOLBAR_LICENSE_PATH} does not match ${FLOATY_TOOLBAR_LICENSE_PATH}.`
-    );
+  for (const { banner, distPath, label, sourcePath } of THIRD_PARTY_NOTICES) {
+    const sourceNotice = readRequiredTextFile(sourcePath);
+    const expectedBanner = banner(sourceNotice);
+    if (!mainJs.includes(expectedBanner)) {
+      throw new Error(
+        `dist/main.js is missing the ${label} notice banner, or it does not match ${sourcePath}. Rebuild after any change to the source notice.`
+      );
+    }
+
+    assertNonEmptyFile(distPath);
+    const distNotice = readRequiredTextFile(distPath);
+    if (distNotice !== sourceNotice) {
+      throw new Error(`${distPath} does not match ${sourcePath}.`);
+    }
   }
 }
 
@@ -79,7 +101,7 @@ export function verifyArtifacts(): string {
   assertNonEmptyFile("dist/main.js");
   assertNonEmptyFile("dist/styles.css");
   assertNonEmptyFile("dist/manifest.json");
-  assertFloatyToolbarNoticePreserved();
+  assertThirdPartyNoticesPreserved();
 
   const packageJson = readJsonFile<PackageJson>("package.json");
   const manifest = readJsonFile<ManifestJson>("dist/manifest.json");

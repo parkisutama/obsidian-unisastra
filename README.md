@@ -83,7 +83,7 @@ This plugin started as a fork of the incredible [Typewriter Scroll](https://gith
 
 The sentence highlighting was derived from [Focus Active Sentence](https://github.com/artisticat1/focus-active-sentence) by [artisticat1](https://github.com/artisticat1).
 
-The writing focus was derived from [Obsidian Focus Mode](https://github.com/ryanpcmcquen/obsidian-focus-mode) by [ryanpcmcquen](https://github.com/ryanpcmcquen).
+The writing focus was derived from [Obsidian Focus Mode](https://github.com/ryanpcmcquen/obsidian-focus-mode) by [ryanpcmcquen](https://github.com/ryanpcmcquen), licensed under the Mozilla Public License 2.0. The affected files (`src/capabilities/commands/writing-focus/`) remain under that license; see the `EXCEPTION` clause in [LICENSE](./LICENSE) and [licenses/writing-focus-MPL2.0.txt](./licenses/writing-focus-MPL2.0.txt).
 
 The restore cursor position feature was derived from [Remember Cursor Position](https://github.com/dy-sh/obsidian-remember-cursor-position) by [dy-sh](https://github.com/dy-sh).
 
