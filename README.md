@@ -89,6 +89,8 @@ The restore cursor position feature was derived from [Remember Cursor Position](
 
 The hemingway mode feature was derived from [Obsidian Hemingway Mode](https://github.com/jobedom/obsidian-hemingway-mode) by [jobedom](https://github.com/jobedom).
 
+The "Keep one tab per note" general setting was derived from [MonoNote](https://github.com/czottmann/obsidian-mononote) by [Carlo Zottmann (czottmann)](https://github.com/czottmann).
+
 **Additional features in this modification:**
 
 - [Show Whitespace](https://github.com/deathau/cm-show-whitespace-obsidian) by [deathau](https://github.com/deathau)
