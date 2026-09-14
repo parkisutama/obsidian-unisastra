@@ -2,7 +2,7 @@ import { type Component, Notice, Setting, SettingGroup } from "obsidian";
 import {
   BUILTIN_LABEL_BY_ID,
   canonicalBuiltinCalloutId,
-  githubAlertMarkersForCanonicalId,
+  compatibilityLabel,
 } from "@/capabilities/features/callouts/catalog";
 import {
   type CalloutEntrySettings,
@@ -12,21 +12,6 @@ import type TypewriterModeLib from "@/lib";
 import { renderCalloutDiscovery } from "./callout-discovery";
 import { bindCalloutExpansion } from "./callout-expansion";
 import { renderCalloutStyleEditor } from "./callout-style-editor";
-
-/**
- * Describes what a callout entry is compatible with, for the settings UI
- * only — the toolbar itself has no output-mode choice, it always emits an
- * uppercase marker (see markdown.ts). Custom IDs are never GitHub-compatible
- * since GitHub Alerts only recognize five fixed keywords.
- */
-function compatibilityDescription(entry: CalloutEntrySettings): string {
-  const base = entry.source === "builtin" ? "Built-in" : "Custom";
-  const markers = githubAlertMarkersForCanonicalId(entry.id);
-  if (markers.length === 0) {
-    return `${base} · Obsidian only`;
-  }
-  return `${base} · Also GitHub alerts compatible (${markers.join(" or ")})`;
-}
 
 function saveAndRerender(tm: TypewriterModeLib, rerender: () => void): void {
   tm.saveSettings()
@@ -79,7 +64,7 @@ export function renderCalloutManager(
     });
     const setting = new Setting(header)
       .setName(`ID: ${entry.id}`)
-      .setDesc(compatibilityDescription(entry));
+      .setDesc(compatibilityLabel(entry.id));
 
     setting.addExtraButton((button) =>
       button
@@ -129,6 +114,25 @@ export function renderCalloutManager(
           saveAndRerender(tm, rerender);
         })
     );
+    const configuration = group.listEl.createDiv({
+      cls: "ptm-callout-configuration",
+    });
+    bindCalloutExpansion(preview, configuration, entry.label, component);
+    const styleEditor = renderCalloutStyleEditor(
+      configuration,
+      entry,
+      tm,
+      component,
+      preview
+    );
+    setting.addExtraButton((button) =>
+      button
+        .setIcon("save")
+        .setTooltip("Save style")
+        .onClick(() => {
+          styleEditor.save();
+        })
+    );
     if (entry.source === "custom") {
       setting.addExtraButton((button) =>
         button
@@ -143,11 +147,6 @@ export function renderCalloutManager(
           })
       );
     }
-    const configuration = group.listEl.createDiv({
-      cls: "ptm-callout-configuration",
-    });
-    bindCalloutExpansion(preview, configuration, entry.label, component);
-    renderCalloutStyleEditor(configuration, entry, tm, component, preview);
   }
 
   let newId = "";

@@ -194,13 +194,18 @@ untuk lima tipe dasarnya (`NOTE`, `TIP`, `IMPORTANT`, `WARNING`, `CAUTION`).
 Title, folding, nesting, dan custom ID tetap didukung penuh seperti biasa —
 tidak ada lagi mode restriktif yang menolaknya.
 
+**Important** dan **Caution** tersedia sebagai entry catalog sendiri, terpisah
+dari Tip dan Warning — bukan sekadar alias yang disembunyikan. Obsidian
+menampilkan ikon dan warna yang sama dengan Tip/Warning untuk keduanya (ini
+perilaku native Obsidian, bukan styling dari plugin ini), tetapi judul default
+yang dirender tetap mengikuti kata yang sebenarnya dipilih — "Important" tetap
+terbaca "Important", bukan "Tip" — sehingga keduanya bisa dipilih/disisipkan
+secara independen dari toolbar maupun command palette.
+
 Informasi kompatibilitas GitHub muncul di tab **Callouts**, bukan di toolbar:
-setiap entry menampilkan keterangan seperti "Built-in · Also GitHub alerts
-compatible (TIP or IMPORTANT)" bila tipe dasarnya termasuk salah satu dari
-lima marker GitHub, atau "Obsidian only" bila tidak (termasuk semua custom
-callout, karena GitHub hanya mengenali lima keyword tetap tersebut). Label ini
-murni informatif — tidak membatasi apa yang bisa dipilih di toolbar, dan tidak
-mengubah note lama secara otomatis.
+setiap entry menampilkan keterangan compact "Obsidian only" atau "Obsidian and
+GitHub" di bawah ID-nya. Label ini murni informatif — tidak membatasi apa yang
+bisa dipilih di toolbar, dan tidak mengubah note lama secara otomatis.
 
 ## Atur tampilan callout
 
@@ -226,16 +231,19 @@ Pengisian default otomatis mempertahankan mode inherit dan tidak menandai
 perubahan unsaved. Jika override tidak sengaja sudah tersimpan pada build lama,
 gunakan reset di header untuk kembali ke inherit.
 
-Klik **Save style** untuk menerapkan perubahan. Input tidak valid ditolak dan
-edit warna/ikon otomatis memilih **Override**. Nilai valid tampil di preview
-sebelum save; note tetap memakai style tersimpan. Pilihan **Inherit** mengikuti
-tema setelah save/reset. Pengaturan sebelumnya tetap berlaku pada note sampai
-save berhasil. Tombol reset di header mengembalikan style ke inherit dan label
-built-in ke default; toggle dan urutan tetap dipertahankan. Tidak ada reset
-tambahan di sebelah Save. Reset mengembalikan tampilan
-ke inherit tanpa mengubah note, tema, atau file snippet. Preview memakai renderer
-callout Obsidian dan tema document settings saat ini; buka kembali tab Callouts
-untuk merender ulang setelah perubahan tema.
+Klik ikon **save** (disk) di header entry, sejajar dengan tombol reset, untuk
+menerapkan perubahan. Input tidak valid ditolak dan edit warna/ikon otomatis
+memilih **Override**. Nilai valid tampil di preview sebelum save; note tetap
+memakai style tersimpan. Pilihan **Inherit** mengikuti tema setelah save/reset.
+Pengaturan sebelumnya tetap berlaku pada note sampai save berhasil. Tombol
+reset (ikon panah putar) di header mengembalikan style ke inherit dan label
+built-in ke default; toggle dan urutan tetap dipertahankan. Reset mengembalikan
+tampilan ke inherit tanpa mengubah note, tema, atau file snippet. Preview
+memakai renderer callout Obsidian dan tema document settings saat ini; buka
+kembali tab Callouts untuk merender ulang setelah perubahan tema. Saat
+di-expand, badan preview menampilkan keterangan kompatibilitas compact
+("Obsidian only"/"Obsidian and GitHub") alih-alih kalimat contoh generik,
+sehingga langsung terlihat pada ukuran/warna aslinya di tema aktif.
 
 Styling ini membutuhkan MD Writer tetap aktif. Warna/ikon tidak otomatis ikut
 ke GitHub atau Publish. Preview selalu memperlihatkan rendering Obsidian,

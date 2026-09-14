@@ -6,6 +6,7 @@ import {
   setIcon,
 } from "obsidian";
 import { effectiveCalloutValues } from "@/capabilities/features/callouts/appearance";
+import { compatibilityLabel } from "@/capabilities/features/callouts/catalog";
 import type {
   CalloutEntrySettings,
   CalloutStyling,
@@ -18,13 +19,18 @@ import type TypewriterModeLib from "@/lib";
 import { createColorPickerBinding } from "./callout-color-binding";
 import { CalloutIconPicker } from "./callout-icon-picker";
 
+export interface CalloutStyleEditor {
+  /** Validates the current draft and saves it, same as clicking Save style. */
+  save: () => Promise<boolean>;
+}
+
 export function renderCalloutStyleEditor(
   container: HTMLElement,
   entry: CalloutEntrySettings,
   tm: TypewriterModeLib,
   component: Component,
   preview: HTMLElement
-): void {
+): CalloutStyleEditor {
   const details = container;
   const status = details.createDiv({ cls: "ptm-callout-style-status" });
   status.setAttribute("role", "status");
@@ -110,7 +116,7 @@ export function renderCalloutStyleEditor(
     try {
       await MarkdownRenderer.render(
         tm.plugin.app,
-        `> [!${entry.id}]\n> Callout appearance in the current theme.`,
+        `> [!${entry.id}]\n> ${compatibilityLabel(entry.id)}`,
         result,
         "",
         previewComponent
@@ -248,8 +254,12 @@ export function renderCalloutStyleEditor(
           picker.open();
         })
     );
-  new Setting(details).setName("Apply style").addButton((button) =>
-    button.setButtonText("Save style").onClick(() => {
+  renderPreview().catch((error: unknown) => {
+    console.error("Failed to initialize callout preview:", error);
+  });
+
+  return {
+    save: () => {
       const styling =
         mode === "inherit"
           ? ({ mode: "inherit" } as const)
@@ -258,12 +268,9 @@ export function renderCalloutStyleEditor(
         status.setText(
           "Invalid style. Use a 3 or 6 digit hex color and an available lucide icon ID."
         );
-        return;
+        return Promise.resolve(false);
       }
       return save(styling);
-    })
-  );
-  renderPreview().catch((error: unknown) => {
-    console.error("Failed to initialize callout preview:", error);
-  });
+    },
+  };
 }

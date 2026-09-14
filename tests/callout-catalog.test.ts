@@ -53,25 +53,27 @@ describe("callout catalog", () => {
       false
     );
   });
-  it("reports the GitHub Alert markers a builtin ID is also compatible with, informationally", () => {
-    expect(githubAlertMarkersForCanonicalId("tip")).toEqual([
-      "TIP",
+  it("reports the single GitHub Alert marker a builtin ID is compatible with, informationally", () => {
+    expect(githubAlertMarkersForCanonicalId("tip")).toEqual(["TIP"]);
+    expect(githubAlertMarkersForCanonicalId("important")).toEqual([
       "IMPORTANT",
     ]);
-    expect(githubAlertMarkersForCanonicalId("warning")).toEqual([
-      "WARNING",
-      "CAUTION",
-    ]);
+    expect(githubAlertMarkersForCanonicalId("warning")).toEqual(["WARNING"]);
+    expect(githubAlertMarkersForCanonicalId("caution")).toEqual(["CAUTION"]);
     expect(githubAlertMarkersForCanonicalId("note")).toEqual(["NOTE"]);
     expect(githubAlertMarkersForCanonicalId("danger")).toEqual([]);
     expect(githubAlertMarkersForCanonicalId("my-custom-id")).toEqual([]);
   });
-  it("resolves builtin types and aliases to a canonical lowercase ID", () => {
+  it("resolves builtin types to a canonical lowercase ID, including promoted aliases", () => {
     expect(canonicalBuiltinCalloutId("note")).toBe("note");
     expect(canonicalBuiltinCalloutId("NOTE")).toBe("note");
     expect(canonicalBuiltinCalloutId("tldr")).toBe("abstract");
-    expect(canonicalBuiltinCalloutId("Important")).toBe("tip");
-    expect(canonicalBuiltinCalloutId("caution")).toBe("warning");
+    // "important"/"caution" are full catalog entries, not aliases collapsed
+    // into tip/warning: Obsidian renders their literal type token as the
+    // default title even though the icon/color match tip/warning natively.
+    expect(canonicalBuiltinCalloutId("Important")).toBe("important");
+    expect(canonicalBuiltinCalloutId("caution")).toBe("caution");
+    expect(canonicalBuiltinCalloutId("hint")).toBe("tip");
     expect(canonicalBuiltinCalloutId("not-a-callout")).toBeNull();
   });
   it("flags every builtin ID and alias as builtin, and unknown IDs as not", () => {
@@ -83,12 +85,14 @@ describe("callout catalog", () => {
     }
     expect(isBuiltinCalloutId("my-custom-id")).toBe(false);
   });
-  it("maps GitHub Alert markers onto the same canonical ID as their Obsidian alias", () => {
+  it("maps each GitHub Alert marker to its own canonical ID", () => {
     expect(isGithubAlertMarker("IMPORTANT")).toBe(true);
     expect(isGithubAlertMarker("unknown")).toBe(false);
     expect(githubMarkerCanonicalId("NOTE")).toBe("note");
-    expect(githubMarkerCanonicalId("IMPORTANT")).toBe("tip");
-    expect(githubMarkerCanonicalId("CAUTION")).toBe("warning");
+    expect(githubMarkerCanonicalId("TIP")).toBe("tip");
+    expect(githubMarkerCanonicalId("IMPORTANT")).toBe("important");
+    expect(githubMarkerCanonicalId("WARNING")).toBe("warning");
+    expect(githubMarkerCanonicalId("CAUTION")).toBe("caution");
   });
 });
 

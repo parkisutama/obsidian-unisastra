@@ -80,8 +80,10 @@ vi.mock("obsidian", () => ({
   },
 }));
 vi.mock("@/components/callout-style-editor", () => ({
-  renderCalloutStyleEditor: (container: ElementHost) =>
-    container.createEl("div"),
+  renderCalloutStyleEditor: (container: ElementHost) => {
+    container.createEl("div");
+    return { save: vi.fn() };
+  },
 }));
 
 import type { Component } from "obsidian";

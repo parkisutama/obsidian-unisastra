@@ -722,18 +722,16 @@ serta computed defaults tanpa persist override ditambahkan. `check:ci` lolos
 
 ## Known issues / deferred feedback — 2026-09-14
 
-Maintainer reported two items while reviewing C1/C2 in a real vault. Both are
-explicitly deferred: finish the remaining planned tasks (T17b-T20) first, then
-come back to these rather than context-switching now.
+Maintainer reported items while reviewing C1/C2/T17b-T20 in a real vault.
 
-1. **Bug: rendered callouts do not dim under Dim Unfocused (paragraphs/
-   sentences mode).** A callout block should visually dim like any other
-   inactive paragraph/sentence when it is not the active one, but it stays at
-   full opacity. Preliminary analysis (source-only, no Obsidian host available
-   to confirm in DevTools): the dim mechanism in
-   `src/styles/editor/dim/_dim-unfocused.scss` works by setting `opacity` on
-   `.cm-line` elements based on `.cm-active`/`.active-sentence` class
-   membership (see `_dimmed.scss`, `apply-dim-sentence`). Obsidian's own
+1. **Bug (still deferred, not addressed): rendered callouts do not dim under
+   Dim Unfocused (paragraphs/sentences mode).** A callout block should
+   visually dim like any other inactive paragraph/sentence when it is not the
+   active one, but it stays at full opacity. Preliminary analysis
+   (source-only, no Obsidian host available to confirm in DevTools): the dim
+   mechanism in `src/styles/editor/dim/_dim-unfocused.scss` works by setting
+   `opacity` on `.cm-line` elements based on `.cm-active`/`.active-sentence`
+   class membership (see `_dimmed.scss`, `apply-dim-sentence`). Obsidian's own
    callout live-preview rendering wraps the affected `.cm-line`s inside a
    `.callout` decoration; it is not yet confirmed whether that wrapping (a)
    strips/does not propagate the per-line active/inactive class Hemingway/
@@ -744,26 +742,91 @@ come back to these rather than context-switching now.
    interaction, only now surfaced because callouts are used more. Needs
    runtime DevTools inspection (`getComputedStyle`/class list on `.callout`
    vs `.cm-line` while a callout is present and unfocused) before deciding a
-   fix; not addressed in this task.
-2. **UI request: collapsed catalog entry preview and Save style button.**
-   - Replace the generic sample-body sentence ("Callout appearance in the
-     current theme.") used to render the preview in `callout-style-editor.ts`
-     with the entry's actual compact info: ID, and a shorter compatibility
-     phrase than `compatibilityDescription()` currently produces — e.g.
-     "Obsidian only" / "Obsidian and GitHub" instead of "Built-in · Also
-     GitHub alerts compatible (...)".
-   - Show IMPORTANT and CAUTION as their own example entries sourced from
-     GitHub Alerts, specifically to demonstrate the built-in vs custom
-     distinction. This conflicts with the current dedup rule in
-     `normalizeCalloutSettings`/`canonicalBuiltinCalloutId`, which resolves
-     "important"/"caution" to the tip/warning builtin IDs and refuses a
-     custom entry with either as a duplicate — needs a design decision before
-     implementation (e.g. a distinct display-only example vs. a real
-     catalog-entry exception).
-   - Replace the "Apply style" label and text "Save style" button with an
-     icon-only floppy-disk button placed next to the existing reset-callout
-     button in the entry header, instead of at the bottom of the expanded
-     form.
+   fix.
+2. **Bug (new, still deferred, not addressed): conflict with the Advanced
+   Canvas community plugin.** Reported by maintainer: adding a card in
+   Obsidian Canvas and typing anything behaves as if a newline were inserted,
+   even though the user did not press Enter. Not yet analyzed — this repo has
+   no source-level integration point with Canvas or Advanced Canvas at all
+   (grep confirms no `Canvas`/canvas-view references in `src/`), so this is
+   most likely a runtime interaction between MD Writer's global CM6
+   extensions (typewriter/dimming/etc., which register via
+   `registerEditorExtension` and therefore apply to every CM6 editor instance
+   Obsidian creates, including ones Advanced Canvas embeds per card) and
+   Advanced Canvas's own editor handling — not something this branch's
+   floaty-toolbar/callout work touches. Needs reproduction in a real vault
+   with both plugins enabled, then bisection (disable MD Writer features one
+   at a time) to find which extension is responsible, before a fix can be
+   scoped. Out of scope for this branch's task plan.
+3. **UI request (done, see C3 below): collapsed catalog entry preview and
+   Save style button.** Originally recorded here as deferred pending a
+   design decision on IMPORTANT/CAUTION; maintainer clarified the intent
+   (below) and it was implemented as C3.
+
+## Maintainer-requested follow-up: distinct Important/Caution, compact compatibility label, icon Save button — 2026-09-14
+
+Maintainer clarified deferred item 3 above: even though IMPORTANT/CAUTION
+share Tip/Warning's default icon/color (Obsidian renders these aliases with
+the canonical type's appearance), Obsidian still renders the literal typed
+token as the callout's default title text — so `[!IMPORTANT]` reads
+"Important", not "Tip", despite matching color/icon. The maintainer wants
+this real distinction exposed as independently selectable/insertable catalog
+entries, not merged away, while still getting the shared appearance "for
+free" (no plugin styling code needed, since Obsidian's own core CSS already
+maps these known alias tokens to the same icon/color as their canonical
+type).
+
+- [x] C3: Promote "important"/"caution" to full catalog entries; compact
+  compatibility label; icon-only Save button. Confirmed via fetching
+  Obsidian's own callout alias documentation understanding already recorded
+  in catalog.ts (these are real Obsidian aliases, not something we invented).
+  - `src/capabilities/features/callouts/catalog.ts`: `BUILTIN_CALLOUT_TYPES`
+    gains `important` (after `tip`) and `caution` (after `warning`) as their
+    own entries with no aliases of their own; removed from `tip`/`warning`'s
+    alias arrays. `canonicalBuiltinCalloutId("important")` now returns
+    `"important"` (previously `"tip"`) — this is what makes them
+    independently selectable in the menu/catalog rather than collapsed.
+    `GITHUB_MARKER_CANONICAL_ID` updated to a clean 1:1 mapping (`IMPORTANT`
+    -> `"important"`, `CAUTION` -> `"caution"`, previously both pointed at
+    tip/warning), which simplifies `githubAlertMarkersForCanonicalId` to
+    always return zero-or-one marker instead of needing an "or" join. New
+    `compatibilityLabel(id)` returns exactly `"Obsidian only"` or `"Obsidian
+    and GitHub"` — shared by `callout-manager.ts` (header description) and
+    `callout-style-editor.ts` (preview sample body), so both stay in sync
+    without a circular import between those two component files.
+  - `src/components/callout-manager.ts`: header `setDesc` now uses the
+    compact `compatibilityLabel(entry.id)` instead of the old "Built-in ·
+    Also GitHub alerts compatible (TIP or IMPORTANT)" wording. The "Save
+    style" Setting/text-button that used to sit at the bottom of the expanded
+    form is gone; `renderCalloutStyleEditor` now returns `{ save }` and
+    `renderCalloutManager` wires it to a new icon-only `save` extra-button in
+    the header row, positioned right after the existing reset (`rotate-ccw`)
+    button.
+  - `src/components/callout-style-editor.ts`: `renderCalloutStyleEditor`
+    return type changed from `void` to `CalloutStyleEditor { save: () =>
+    Promise<boolean> }` — the validate-then-save logic that used to live
+    inside the removed button's `onClick` is now the body of that returned
+    function, unchanged otherwise. The preview's sample body markdown no
+    longer renders the generic English sentence "Callout appearance in the
+    current theme." — it renders `compatibilityLabel(entry.id)` instead, so
+    expanding any entry's preview shows real, useful info instead of filler,
+    rendered at the actual size/color it will appear at in notes.
+  - `tests/callout-catalog.test.ts`: updated alias-resolution and GitHub
+    marker-mapping assertions for the promoted entries (`canonicalBuiltinCalloutId("Important")`
+    is now `"important"`; `githubMarkerCanonicalId("IMPORTANT")` is now
+    `"important"`; `githubAlertMarkersForCanonicalId` returns a single-marker
+    array per canonical ID now, not "or"-joined pairs).
+  - `tests/callout-manager.test.ts`: `renderCalloutStyleEditor` mock updated
+    to return `{ save: vi.fn() }` (previously returned the created element
+    directly), matching the new return contract.
+  - No default styling override was added for the new entries — deliberately
+    relies on Obsidian's own core CSS already rendering `important`/`caution`
+    like `tip`/`warning`, exactly matching what the maintainer described.
+  - Verify: `pnpm run check:ci` green — 19 files / 130 tests (test count
+    unchanged; existing assertions were updated in place, not added to/from).
+    Runtime confirmation that Obsidian still renders `important`/`caution`
+    with tip/warning's appearance, and that the new header Save icon and
+    compact preview body look right in a real theme, remains pending.
 
 ## Slice G: GitHub Alerts dan command parity
 
