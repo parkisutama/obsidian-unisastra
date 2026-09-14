@@ -9,3 +9,6 @@ allowBuilds:
 overrides:
   "@codemirror/state": "6.5.0"
   "@codemirror/view": "6.38.6"
+  # Security patches for transitive development tooling; Vue plugin supports Vite 6.
+  "js-yaml@^4": "4.3.2"
+  "vitepress>vite": "6.4.3"
