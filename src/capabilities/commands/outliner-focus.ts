@@ -1,3 +1,9 @@
+// Zoom-on-bullet concept inspired by vslinko's obsidian-zoom
+// (https://github.com/vslinko/obsidian-zoom). No code ported; this uses
+// Obsidian's native fold-heading/fold-indent settings and an original CM6
+// range calculator (src/lib.ts outlinerFocusAtCursor), not upstream's data
+// model.
+
 import type { EditorView } from "@codemirror/view";
 import type { Editor, MarkdownFileInfo, MarkdownView } from "obsidian";
 import { EditorCommand } from "../base/editor-command";

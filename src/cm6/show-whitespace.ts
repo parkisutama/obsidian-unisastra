@@ -1,3 +1,9 @@
+// Show-whitespace concept inspired by deathau's cm-show-whitespace-obsidian
+// (https://github.com/deathau/cm-show-whitespace-obsidian). No code ported;
+// this uses CodeMirror 6's own `highlightWhitespace`/
+// `highlightTrailingWhitespace` extensions, not upstream's CM5-era
+// `showInvisibles` option.
+
 import type { Extension } from "@codemirror/state";
 import {
   Decoration,

@@ -1,3 +1,8 @@
+// Forward-only writing concept inspired by jobedom's obsidian-hemingway-mode
+// (https://github.com/jobedom/obsidian-hemingway-mode). No code ported;
+// upstream uses a CodeMirror `StateField`/`ViewPlugin` to toggle a CSS
+// class, while this blocks the relevant keydown events directly.
+
 import { FeatureToggle } from "@/capabilities/base/feature-toggle";
 
 export default class HemingwayMode extends FeatureToggle {

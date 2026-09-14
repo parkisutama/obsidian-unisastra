@@ -1,4 +1,5 @@
-// ADAPTED FROM https://github.com/ryanpcmcquen/obsidian-focus-mode
+// Command wrapper for WritingFocus (./writing-focus.ts), which is adapted
+// from Obsidian Focus Mode (MPL-2.0) — see that file for the full notice.
 
 import { ToggleCommand } from "@/capabilities/base/toggle-command";
 import { WritingFocus } from "./writing-focus";

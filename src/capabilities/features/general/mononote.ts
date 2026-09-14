@@ -1,4 +1,18 @@
-// ADAPTED FROM https://github.com/czottmann/obsidian-mononote/blob/main/src/main.ts
+// Keep-one-tab-per-note, adapted for MD Writer from MonoNote by Carlo
+// Zottmann (MIT).
+// https://github.com/czottmann/obsidian-mononote, src/main.ts
+// (onActiveLeafChange, processActiveLeaf, duplicateLeaves sort/filter,
+// FOCUS_DELAY_MS).
+// Revision 0e3ebc79f7a9c9ba70c07c22444c5bb70a73956e.
+// Copyright (c) 2023-present Carlo Zottmann. Full notice:
+// licenses/mononote-MIT.txt.
+//
+// Differences from upstream, deliberate:
+// - Tracks in-flight leaves with a `Set<string>` instead of upstream's
+//   `Map<string, Promise<void>>`, since only membership is needed here.
+// - Drops upstream's console logging.
+// - Uses this codebase's FeatureToggle lifecycle (enable/disable) instead
+//   of registering directly in a plugin's onload/onunload.
 
 import type { WorkspaceLeaf } from "obsidian";
 import { FeatureToggle } from "@/capabilities/base/feature-toggle";

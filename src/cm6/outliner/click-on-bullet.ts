@@ -1,3 +1,8 @@
+// Zoom-on-bullet-click concept inspired by vslinko's obsidian-zoom
+// (https://github.com/vslinko/obsidian-zoom). No code ported — this uses
+// Obsidian's own `cm-formatting-list-*`/`list-bullet` DOM classes, not
+// upstream's implementation.
+
 import { EditorSelection } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";
 

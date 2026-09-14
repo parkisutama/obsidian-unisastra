@@ -6,11 +6,39 @@ import {
   assertNonEmptyFile,
   verifyArtifacts,
 } from "../scripts/lib/artifact-verification";
-import { floatyToolbarLicenseBanner } from "../scripts/lib/license-banner";
+import {
+  floatyToolbarLicenseBanner,
+  mononoteLicenseBanner,
+  writingFocusLicenseBanner,
+} from "../scripts/lib/license-banner";
 
 const originalCwd = process.cwd();
 
 const FLOATY_TOOLBAR_NOTICE = "MIT License\n\nCopyright (c) 2026 0png\n";
+const WRITING_FOCUS_NOTICE = "Mozilla Public License Version 2.0\n\n...\n";
+const MONONOTE_NOTICE =
+  "MIT License\n\nCopyright (c) 2023-present Carlo Zottmann\n";
+
+const NOTICE_FIXTURES = [
+  {
+    banner: floatyToolbarLicenseBanner,
+    distName: "floaty-toolbar-MIT.txt",
+    label: "Floaty Toolbar MIT",
+    notice: FLOATY_TOOLBAR_NOTICE,
+  },
+  {
+    banner: writingFocusLicenseBanner,
+    distName: "writing-focus-MPL2.0.txt",
+    label: "Obsidian Focus Mode MPL-2.0",
+    notice: WRITING_FOCUS_NOTICE,
+  },
+  {
+    banner: mononoteLicenseBanner,
+    distName: "mononote-MIT.txt",
+    label: "MonoNote MIT",
+    notice: MONONOTE_NOTICE,
+  },
+] as const;
 
 function writeJson(path: string, value: unknown): void {
   writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
@@ -20,39 +48,49 @@ function createArtifactFixture({
   distManifestVersion = "1.2.3",
   packageVersion = "1.2.3",
   versions = { "1.2.3": "1.11.0" },
-  sourceNotice = FLOATY_TOOLBAR_NOTICE,
-  distNotice = FLOATY_TOOLBAR_NOTICE,
-  includeBanner = true,
-  includeDistNotice = true,
+  omitBannerFor = [],
+  omitDistNoticeFor = [],
+  noticeOverrides = {},
+  distNoticeOverrides = {},
 }: {
   distManifestVersion?: string;
   packageVersion?: string;
   versions?: Record<string, string>;
-  sourceNotice?: string;
-  distNotice?: string;
-  includeBanner?: boolean;
-  includeDistNotice?: boolean;
+  omitBannerFor?: string[];
+  omitDistNoticeFor?: string[];
+  noticeOverrides?: Record<string, string>;
+  distNoticeOverrides?: Record<string, string>;
 } = {}): string {
   const dir = mkdtempSync(join(tmpdir(), "md-writer-artifacts-"));
   mkdirSync(join(dir, "dist"));
   mkdirSync(join(dir, "licenses"));
-  writeFileSync(join(dir, "licenses", "floaty-toolbar-MIT.txt"), sourceNotice);
-  const banner = includeBanner ? floatyToolbarLicenseBanner(sourceNotice) : "";
+  mkdirSync(join(dir, "dist", "licenses"));
+
+  let bannerText = "";
+  for (const { banner, distName, notice } of NOTICE_FIXTURES) {
+    const sourceNotice = noticeOverrides[distName] ?? notice;
+    writeFileSync(join(dir, "licenses", distName), sourceNotice);
+
+    if (!omitBannerFor.includes(distName)) {
+      bannerText += `${banner(sourceNotice)}\n`;
+    }
+
+    if (!omitDistNoticeFor.includes(distName)) {
+      writeFileSync(
+        join(dir, "dist", "licenses", distName),
+        distNoticeOverrides[distName] ?? sourceNotice
+      );
+    }
+  }
   writeFileSync(
     join(dir, "dist", "main.js"),
-    `${banner}\nconsole.log('built');\n`
+    `${bannerText}console.log('built');\n`
   );
+
   writeFileSync(join(dir, "dist", "styles.css"), ".md-writer {}\n");
   writeJson(join(dir, "dist", "manifest.json"), {
     version: distManifestVersion,
   });
-  if (includeDistNotice) {
-    mkdirSync(join(dir, "dist", "licenses"));
-    writeFileSync(
-      join(dir, "dist", "licenses", "floaty-toolbar-MIT.txt"),
-      distNotice
-    );
-  }
   writeJson(join(dir, "package.json"), {
     version: packageVersion,
   });
@@ -104,27 +142,50 @@ describe("artifact verification", () => {
   });
 
   it("rejects dist/main.js missing the Floaty Toolbar MIT notice banner", () => {
-    process.chdir(createArtifactFixture({ includeBanner: false }));
+    process.chdir(
+      createArtifactFixture({ omitBannerFor: ["floaty-toolbar-MIT.txt"] })
+    );
 
     expect(() => verifyArtifacts()).toThrow(
       "dist/main.js is missing the Floaty Toolbar MIT notice banner"
     );
   });
 
-  it("rejects a banner that no longer matches the current source notice", () => {
+  it("rejects dist/main.js missing the Obsidian Focus Mode MPL-2.0 notice banner", () => {
     process.chdir(
-      createArtifactFixture({
-        sourceNotice: "MIT License\n\nCopyright (c) 2027 0png\n",
-        distNotice: "MIT License\n\nCopyright (c) 2027 0png\n",
-        includeBanner: false,
-      })
+      createArtifactFixture({ omitBannerFor: ["writing-focus-MPL2.0.txt"] })
     );
+
+    expect(() => verifyArtifacts()).toThrow(
+      "dist/main.js is missing the Obsidian Focus Mode MPL-2.0 notice banner"
+    );
+  });
+
+  it("rejects dist/main.js missing the MonoNote MIT notice banner", () => {
+    process.chdir(
+      createArtifactFixture({ omitBannerFor: ["mononote-MIT.txt"] })
+    );
+
+    expect(() => verifyArtifacts()).toThrow(
+      "dist/main.js is missing the MonoNote MIT notice banner"
+    );
+  });
+
+  it("rejects a banner that no longer matches the current source notice", () => {
+    const dir = createArtifactFixture({
+      noticeOverrides: {
+        "floaty-toolbar-MIT.txt": "MIT License\n\nCopyright (c) 2027 0png\n",
+      },
+      distNoticeOverrides: {
+        "floaty-toolbar-MIT.txt": "MIT License\n\nCopyright (c) 2027 0png\n",
+      },
+      omitBannerFor: ["floaty-toolbar-MIT.txt"],
+    });
     // dist/main.js still carries the OLD banner (as if the source notice
     // changed after the last build, without rebuilding).
-    writeFileSync(
-      "dist/main.js",
-      `${floatyToolbarLicenseBanner(FLOATY_TOOLBAR_NOTICE)}\nconsole.log('built');\n`
-    );
+    process.chdir(dir);
+    const stale = `${floatyToolbarLicenseBanner(FLOATY_TOOLBAR_NOTICE)}\nconsole.log('built');\n`;
+    writeFileSync("dist/main.js", stale);
 
     expect(() => verifyArtifacts()).toThrow(
       "dist/main.js is missing the Floaty Toolbar MIT notice banner"
@@ -132,7 +193,9 @@ describe("artifact verification", () => {
   });
 
   it("rejects a missing dist/licenses/floaty-toolbar-MIT.txt", () => {
-    process.chdir(createArtifactFixture({ includeDistNotice: false }));
+    process.chdir(
+      createArtifactFixture({ omitDistNoticeFor: ["floaty-toolbar-MIT.txt"] })
+    );
 
     expect(() => verifyArtifacts()).toThrow(
       "dist/licenses/floaty-toolbar-MIT.txt is missing"
@@ -142,7 +205,10 @@ describe("artifact verification", () => {
   it("rejects a dist notice copy that no longer matches the source notice", () => {
     process.chdir(
       createArtifactFixture({
-        distNotice: "MIT License\n\nCopyright (c) 2019 someone-else\n",
+        distNoticeOverrides: {
+          "floaty-toolbar-MIT.txt":
+            "MIT License\n\nCopyright (c) 2019 someone-else\n",
+        },
       })
     );
 
