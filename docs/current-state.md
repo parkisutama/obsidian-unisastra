@@ -5,6 +5,28 @@ seluruh fitur sudah lolos acceptance di Obsidian.
 
 ## Implemented in source
 
+Settings compact (2026-09-14) pada `codex/compact-settings-layout`: overview
+menggantikan 14 tab, dengan General/GitHub compatibility inline, selector mode
+aktif, dan baris chevron menuju Toolbar, Callouts, empat preset, serta delapan
+capability. Detail preset hanya merender satu recipe. Typewriter dan Keep Lines
+berada pada halaman yang sama; status disabled switch diperbarui langsung
+melalui toggle fitur existing tanpa menggambar ulang form.
+
+Default recipe Normal menyalakan Outliner; Writing mematikan Hemingway.
+Deep merge mempertahankan recipe yang tersimpan dan mengisi nilai yang belum
+ada. Mode awal tetap None; Keep Lines tidak ditambahkan sebagai field recipe.
+Test navigation/mock DOM mencakup Back focus/scroll, direct Callouts, cleanup,
+dan stale redraw; bukan bukti acceptance host. Lihat
+[tasks dan acceptance ledger](./specs/compact-settings-layout/tasks.md).
+
+Koreksi visual dari screenshot maintainer menyatukan General dan compatibility
+dalam satu SettingGroup, mengelompokkan preset/Capabilities dalam panel dengan
+background theme, serta menambahkan deskripsi Toolbar dan Capabilities.
+Header detail menyandingkan judul yang jelas dengan chevron kiri berlabel
+aksesibel. Toolbar/Callouts juga masuk kartu General. Maintainer mengonfirmasi
+layout final dan mengotorisasi merge lokal ke main pada 2026-09-14; full
+scenario matrix di ledger tetap belum dikonfirmasi satu per satu.
+
 - `src/main.ts` memuat `TypewriterModeLib` di `src/lib.ts` untuk lifecycle plugin.
 - `src/capabilities/features/` memuat typewriter, dimming, current line,
   whitespace, writing modes, writing focus, Hemingway mode, max character,

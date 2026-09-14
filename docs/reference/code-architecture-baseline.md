@@ -26,6 +26,13 @@ ditinjau manual; repo belum memiliki test khusus dependency direction atau cycle
 
 ## Change rules
 
+Compact settings menggunakan `src/components/settings-tab.ts` sebagai overview
+dan detail-page composition, termasuk revision guard untuk callback redraw dan
+cleanup preview Callouts. `src/components/typewriter-settings.ts` menggabungkan
+dua feature group scrolling dan memperbarui disabled state kontrol. Recipe
+per-mode dirender oleh `WritingModePresetConfig.registerMode`; persistence dan
+aktivasi tetap milik feature existing. Tidak ada schema atau dependency baru.
+
 - Keep plugin composition in the existing entry/composition modules.
 - Runtime source must remain compatible with Obsidian desktop and mobile;
   Node filesystem/deploy operations belong in build tooling.

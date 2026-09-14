@@ -20,7 +20,7 @@ const MODE_DESCRIPTIONS: Record<Exclude<WritingMode, "none">, string> = {
   editing:
     "Revise and polish. Current Line + Whitespace + Line Width for precision editing.",
   normal:
-    "Return to a casual Obsidian experience by disabling managed MD Writer feature effects.",
+    "Navigate structure with outliner enabled by default; other managed writing effects are off by default.",
 };
 
 export default class WritingModePresetConfig extends Feature {
@@ -33,36 +33,42 @@ export default class WritingModePresetConfig extends Feature {
 
   registerSetting(settingGroup: SettingGroup): void {
     for (const mode of ["idea", "writing", "editing", "normal"] as const) {
-      const preset = this.tm.settings.writingMode.presets[mode];
-      const description = MODE_DESCRIPTIONS[mode];
+      this.registerMode(settingGroup, mode);
+    }
+  }
 
+  registerMode(
+    settingGroup: SettingGroup,
+    mode: Exclude<WritingMode, "none">
+  ): void {
+    const preset = this.tm.settings.writingMode.presets[mode];
+    const description = MODE_DESCRIPTIONS[mode];
+
+    settingGroup.addSetting((setting) =>
+      setting
+        .setName(`${mode.charAt(0).toUpperCase()}${mode.slice(1)} mode`)
+        .setDesc(
+          `${description} These switches edit the preset recipe; they do not toggle live features until this mode is activated.`
+        )
+        .setHeading()
+    );
+
+    for (const featureKey of Object.keys(FEATURE_LABELS) as Array<
+      keyof WritingModePreset
+    >) {
       settingGroup.addSetting((setting) =>
         setting
-          .setName(`${mode.charAt(0).toUpperCase()}${mode.slice(1)} mode`)
-          .setDesc(
-            `${description} These switches edit the preset recipe; they do not toggle live features until this mode is activated.`
+          .setName(FEATURE_LABELS[featureKey])
+          .setClass("md-writer-setting")
+          .addToggle((toggle) =>
+            toggle.setValue(preset[featureKey]).onChange((newValue) => {
+              this.tm.settings.writingMode.presets[mode][featureKey] = newValue;
+              this.tm.saveSettings().catch((error) => {
+                console.error("Failed to save settings:", error);
+              });
+            })
           )
-          .setHeading()
       );
-
-      for (const featureKey of Object.keys(FEATURE_LABELS) as Array<
-        keyof WritingModePreset
-      >) {
-        settingGroup.addSetting((setting) =>
-          setting
-            .setName(FEATURE_LABELS[featureKey])
-            .setClass("md-writer-setting")
-            .addToggle((toggle) =>
-              toggle.setValue(preset[featureKey]).onChange((newValue) => {
-                this.tm.settings.writingMode.presets[mode][featureKey] =
-                  newValue;
-                this.tm.saveSettings().catch((error) => {
-                  console.error("Failed to save settings:", error);
-                });
-              })
-            )
-        );
-      }
     }
   }
 }

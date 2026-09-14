@@ -1,22 +1,42 @@
-import { type App, Component, PluginSettingTab, SettingGroup } from "obsidian";
+import {
+  type App,
+  Component,
+  PluginSettingTab,
+  Setting,
+  SettingGroup,
+  setIcon,
+} from "obsidian";
+import type WritingModePresetConfig from "@/capabilities/features/writing-modes/preset-config";
 import { renderCalloutManager } from "@/components/callout-manager";
 import { renderToolbarButtonOrder } from "@/components/toolbar-button-order";
+import { renderTypewriterSettings } from "@/components/typewriter-settings";
 import type TypewriterModeLib from "@/lib";
 
-interface TabDefinition {
-  description: string;
-  id: string;
-  label: string;
-  render: (container: HTMLElement) => void;
-}
+const CAPABILITIES = [
+  ["writingFocus", "Writing Focus"],
+  ["outliner", "Outliner"],
+  ["hemingwayMode", "Hemingway"],
+  ["dimming", "Dimming"],
+  ["currentLine", "Current Line"],
+  ["typewriter", "Typewriter"],
+  ["showWhitespace", "Whitespace"],
+  ["maxChar", "Line Width"],
+] as const;
 
 export default class TypewriterModeSettingTab extends PluginSettingTab {
   override icon = "type-outline";
-
-  private readonly tm: TypewriterModeLib;
-  private activeTab = "writingModes";
+  private activeTab = "overview";
   private previewComponent: Component | null = null;
   private visible = false;
+  private revision = 0;
+  private overviewScroll = 0;
+  private returnRow: string | null = null;
+  private readonly tm: TypewriterModeLib;
+
+  constructor(app: App, tm: TypewriterModeLib) {
+    super(app, tm.plugin);
+    this.tm = tm;
+  }
 
   private clearPreviewComponent(): void {
     if (this.previewComponent) {
@@ -27,323 +47,207 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
 
   override hide(): void {
     this.visible = false;
+    this.revision++;
     this.clearPreviewComponent();
-  }
-
-  constructor(app: App, tm: TypewriterModeLib) {
-    super(app, tm.plugin);
-    this.tm = tm;
   }
 
   setActiveTab(id: string): void {
     this.activeTab = id;
   }
 
-  private registerFeaturesInGroup(
-    group: SettingGroup,
-    features: Record<string, { registerSetting: (group: SettingGroup) => void }>
-  ) {
-    for (const feature of Object.values(features)) {
-      feature.registerSetting(group);
+  private registerGroup(
+    container: HTMLElement,
+    ...keys: string[]
+  ): SettingGroup {
+    const group = new SettingGroup(container);
+    for (const key of keys) {
+      for (const feature of Object.values(this.tm.features[key] ?? {})) {
+        feature.registerSetting(group);
+      }
     }
+    return group;
   }
 
-  private addTabDescription(container: HTMLElement, description: string) {
-    const descEl = container.createDiv({ cls: "tm-tab-description" });
-    descEl.setText(description);
+  private navigate(id: string): void {
+    if (this.activeTab === "overview") {
+      this.overviewScroll = this.containerEl.scrollTop;
+      this.returnRow = id;
+    }
+    this.activeTab = id;
+    this.display();
   }
 
-  private getTabs(): TabDefinition[] {
-    return [
-      {
-        id: "writingModes",
-        label: "Writing modes",
-        description:
-          "Preset feature combinations for different writing workflows. Select a mode to activate its preset, or choose None to manage features manually.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Preset feature combinations for different writing workflows. Select a mode to activate its preset, or choose None to manage features manually."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.writingModes);
-        },
-      },
-      {
-        id: "general",
-        label: "General",
-        description:
-          "Plugin activation, platform settings, and cursor persistence. Active in all conditions.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Plugin activation, platform settings, and cursor persistence. Active in all conditions."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.general);
-        },
-      },
-      {
-        id: "toolbar",
-        label: "Toolbar",
-        description:
-          "Floating formatting toolbar shown when you select text. Desktop only.",
-        render: (container) => {
-          const draw = () => {
-            if (
-              !this.visible ||
-              this.activeTab !== "toolbar" ||
-              !container.isConnected
-            ) {
-              return;
-            }
-            container.empty();
-            this.addTabDescription(
-              container,
-              "Floating formatting toolbar shown when you select text. Desktop only."
-            );
-            const group = new SettingGroup(container);
-            this.registerFeaturesInGroup(group, this.tm.features.toolbar);
-            renderToolbarButtonOrder(container, this.tm, draw);
-          };
-          draw();
-        },
-      },
-      {
-        id: "callouts",
-        label: "Callouts",
-        description:
-          "Manage the callout catalog used by the toolbar's Callout menu: enable/hide, reorder, and add custom entries.",
-        render: (container) => {
-          const draw = () => {
-            if (
-              !this.visible ||
-              this.activeTab !== "callouts" ||
-              !container.isConnected
-            ) {
-              return;
-            }
-            this.clearPreviewComponent();
-            this.previewComponent = this.tm.plugin.addChild(new Component());
-            container.empty();
-            this.addTabDescription(
-              container,
-              "Manage the callout catalog used by the toolbar's Callout menu: enable/hide, reorder, and add custom entries."
-            );
-            renderCalloutManager(
-              container,
-              this.tm,
-              draw,
-              this.previewComponent
-            );
-          };
-          draw();
-        },
-      },
-      {
-        id: "compatibility",
-        label: "Compatibility",
-        description:
-          "Markdown compatibility behavior for links and publishing-oriented notes.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Markdown compatibility behavior for links and publishing-oriented notes."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.compatibility);
-        },
-      },
-      {
-        id: "writingFocus",
-        label: "Writing focus",
-        description:
-          "Hide Obsidian panels for a full writing space. Use in Writing or Idea mode.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Hide Obsidian panels for a full writing space. Use in Writing or Idea mode."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.writingFocus);
-        },
-      },
-      {
-        id: "outliner",
-        label: "Outliner",
-        description:
-          "Zoom into bullet nodes and navigate idea hierarchies. Effective for Idea mode. May conflict with Typewriter if both are active.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Zoom into bullet nodes and navigate idea hierarchies. Effective for Idea mode. May conflict with Typewriter if both are active."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.outliner);
-        },
-      },
-      {
-        id: "hemingway",
-        label: "Hemingway",
-        description:
-          "Block editing of previous text. Pair with Outliner in Idea mode or Typewriter in Writing mode. Disable during Editing.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Block editing of previous text. Pair with Outliner in Idea mode or Typewriter in Writing mode. Disable during Editing."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.hemingwayMode);
-        },
-      },
-      {
-        id: "dimming",
-        label: "Dimming",
-        description:
-          "Dim paragraphs or sentences outside focus. Pairs naturally with Typewriter. Disable during Editing so all text is visible.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Dim paragraphs or sentences outside focus. Pairs naturally with Typewriter. Disable during Editing so all text is visible."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.dimming);
-        },
-      },
-      {
-        id: "currentLine",
-        label: "Current line",
-        description:
-          "Visually highlight the active line. Useful in Editing mode. Redundant if Dimming is already active.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Visually highlight the active line. Useful in Editing mode. Redundant if Dimming is already active."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.currentLine);
-        },
-      },
-      {
-        id: "typewriter",
-        label: "Typewriter",
-        description:
-          "Lock the cursor at a fixed vertical position. Core of Writing mode. Disable when Outliner is active as both manage scrolling differently.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Lock the cursor at a fixed vertical position. Core of Writing mode. Disable when Outliner is active as both manage scrolling differently."
-          );
-          const group = new SettingGroup(container);
-          if (
-            this.tm.settings.keepLinesAboveAndBelow
-              .isKeepLinesAboveAndBelowEnabled
-          ) {
-            group.addSetting((setting) =>
-              setting.setName(
-                'Not available if "keep lines above and below" is activated'
-              )
-            );
-          }
-          this.registerFeaturesInGroup(group, this.tm.features.typewriter);
-        },
-      },
-      {
-        id: "keepLines",
-        label: "Keep lines",
-        description:
-          "A lighter alternative to Typewriter — maintain line spacing above and below the cursor. Choose one, not both.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "A lighter alternative to Typewriter — maintain line spacing above and below the cursor. Choose one, not both."
-          );
-          const group = new SettingGroup(container);
-          if (this.tm.settings.typewriter.isTypewriterScrollEnabled) {
-            group.addSetting((setting) =>
-              setting.setName(
-                "Not available if typewriter scrolling is activated"
-              )
-            );
-          }
-          this.registerFeaturesInGroup(
-            group,
-            this.tm.features.keepAboveAndBelow
-          );
-        },
-      },
-      {
-        id: "whitespace",
-        label: "Whitespace",
-        description:
-          "Visualize spaces, tabs, and line breaks. Specifically for Editing and pre-publish review.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Visualize spaces, tabs, and line breaks. Specifically for Editing and pre-publish review."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.showWhitespace);
-        },
-      },
-      {
-        id: "maxChar",
-        label: "Line width",
-        description:
-          "Character limit per line and long line warnings. Useful in Editing for readability and clean Git diffs.",
-        render: (container) => {
-          this.addTabDescription(
-            container,
-            "Character limit per line and long line warnings. Useful in Editing for readability and clean Git diffs."
-          );
-          const group = new SettingGroup(container);
-          this.registerFeaturesInGroup(group, this.tm.features.maxChar);
-        },
-      },
-    ];
+  private row(
+    container: HTMLElement,
+    id: string,
+    label: string,
+    description?: string
+  ): HTMLButtonElement {
+    const button = container.createEl("button", {
+      cls: "tm-settings-row",
+    });
+    button.setAttribute("type", "button");
+    button.setAttribute("aria-label", label);
+    const info = button.createSpan({ cls: "tm-settings-row-info" });
+    info.createSpan({ cls: "tm-settings-row-label", text: label });
+    if (description) {
+      info.createSpan({
+        cls: "tm-settings-row-description",
+        text: description,
+      });
+    }
+    const chevron = button.createSpan({ cls: "tm-settings-chevron" });
+    chevron.setAttribute("aria-hidden", "true");
+    setIcon(chevron, "chevron-right");
+    button.addEventListener("click", () => this.navigate(id));
+    return button;
+  }
+
+  private renderOverview(container: HTMLElement): void {
+    // The maintainer explicitly requested General as the compatibility grouping.
+    // eslint-disable-next-line obsidianmd/settings-tab/no-problematic-settings-headings
+    new Setting(container).setName("General").setHeading();
+    const generalPanel = container.createDiv({
+      cls: "tm-settings-panel tm-settings-general",
+    });
+    const general = this.registerGroup(
+      generalPanel,
+      "general",
+      "compatibility"
+    );
+    const rows = new Map<string, HTMLButtonElement>();
+    const toolbarDescription =
+      "Formatting actions, floating toolbar, dock, timers, and button order. Desktop only.";
+    rows.set(
+      "toolbar",
+      this.row(general.listEl, "toolbar", "Toolbar", toolbarDescription)
+    );
+    rows.set(
+      "callouts",
+      this.row(
+        general.listEl,
+        "callouts",
+        "Callouts",
+        "Manage callout types, visibility, order, and appearance."
+      )
+    );
+    new Setting(container).setName("Writing modes presets").setHeading();
+    const active = this.tm.features.writingModes["writingMode.activeMode"];
+    const presets = container.createDiv({
+      cls: "tm-settings-panel tm-settings-presets",
+    });
+    const presetGroup = new SettingGroup(presets);
+    active?.registerSetting(presetGroup);
+    for (const mode of ["normal", "idea", "writing", "editing"] as const) {
+      const id = `preset:${mode}`;
+      rows.set(
+        id,
+        this.row(
+          presetGroup.listEl,
+          id,
+          mode.charAt(0).toUpperCase() + mode.slice(1)
+        )
+      );
+    }
+    new Setting(container)
+      .setName("Capabilities")
+      .setDesc(
+        "Configure the features used by writing modes. These settings adjust feature behavior; preset recipes choose which features a mode activates."
+      )
+      .setHeading();
+    const capabilities = container.createDiv({
+      cls: "tm-settings-panel tm-settings-capabilities",
+    });
+    for (const [id, label] of CAPABILITIES) {
+      rows.set(id, this.row(capabilities, id, label));
+    }
+    if (this.returnRow) {
+      rows.get(this.returnRow)?.focus({ preventScroll: true });
+    }
+    this.containerEl.scrollTop = this.overviewScroll;
+  }
+
+  private renderDetail(container: HTMLElement): void {
+    const id = this.activeTab;
+    const mode = id.startsWith("preset:") ? id.slice(7) : null;
+    const capability = CAPABILITIES.find(([key]) => key === id);
+    const title = mode
+      ? `${mode.charAt(0).toUpperCase()}${mode.slice(1)} preset`
+      : (capability?.[1] ?? (id === "toolbar" ? "Toolbar" : "Callouts"));
+    const header = container.createDiv({ cls: "tm-settings-detail-header" });
+    const back = header.createEl("button", {
+      cls: "tm-settings-back",
+    });
+    back.setAttribute("type", "button");
+    back.setAttribute("aria-label", "Back to settings");
+    back.setAttribute("title", "Back to settings");
+    setIcon(back, "chevron-left");
+    back.addEventListener("click", () => this.navigate("overview"));
+    const heading = new Setting(header)
+      .setName(title)
+      .setHeading()
+      .setClass("tm-settings-title").nameEl;
+    heading.setAttribute("tabindex", "-1");
+    if (id === "toolbar") {
+      container.createDiv({
+        cls: "tm-settings-detail-description",
+        text: "Configure formatting actions, the floating toolbar and dock, elapsed timers, and button order. Desktop only.",
+      });
+    }
+    const body = container.createDiv({ cls: "tm-settings-detail" });
+    const revision = this.revision;
+    const draw = () => {
+      if (!this.visible || revision !== this.revision || !body.isConnected) {
+        return;
+      }
+      body.empty();
+      if (id === "callouts") {
+        this.clearPreviewComponent();
+        this.previewComponent = this.tm.plugin.addChild(new Component());
+        renderCalloutManager(body, this.tm, draw, this.previewComponent);
+      } else if (id === "toolbar") {
+        this.registerGroup(body, "toolbar");
+        renderToolbarButtonOrder(body, this.tm, draw);
+      } else if (
+        mode &&
+        ["normal", "idea", "writing", "editing"].includes(mode)
+      ) {
+        const feature = this.tm.features.writingModes[
+          "writingMode.presets"
+        ] as WritingModePresetConfig;
+        feature.registerMode(
+          new SettingGroup(body),
+          mode as "normal" | "idea" | "writing" | "editing"
+        );
+      } else if (id === "typewriter") {
+        renderTypewriterSettings(body, this.tm);
+      } else if (capability) {
+        this.registerGroup(body, id);
+      }
+    };
+    draw();
+    this.containerEl.scrollTop = 0;
+    heading.focus({ preventScroll: true });
   }
 
   override display(): void {
     this.visible = true;
+    this.revision++;
     this.clearPreviewComponent();
     this.containerEl.empty();
     this.containerEl.addClass("tm-settings");
-
-    const tabs = this.getTabs();
-
-    const tabBar = this.containerEl.createDiv({ cls: "tm-settings-tab-bar" });
-    const contentEl = this.containerEl.createDiv({
-      cls: "tm-settings-content",
-    });
-
-    const renderTab = (tabId: string) => {
-      this.clearPreviewComponent();
-      this.activeTab = tabId;
-      contentEl.empty();
-
-      Array.from(tabBar.querySelectorAll(".tm-settings-tab")).forEach((btn) => {
-        btn.classList.toggle(
-          "is-active",
-          btn.getAttribute("data-tab-id") === tabId
-        );
-      });
-
-      const tab = tabs.find((t) => t.id === tabId);
-      if (tab) {
-        tab.render(contentEl);
-      }
-    };
-
-    for (const tab of tabs) {
-      const tabBtn = tabBar.createDiv({
-        cls: "tm-settings-tab",
-        text: tab.label,
-      });
-      tabBtn.setAttribute("data-tab-id", tab.id);
-      tabBtn.addEventListener("click", () => renderTab(tab.id));
+    const valid =
+      this.activeTab === "toolbar" ||
+      this.activeTab === "callouts" ||
+      this.activeTab.startsWith("preset:") ||
+      CAPABILITIES.some(([id]) => id === this.activeTab);
+    if (!valid) {
+      this.activeTab = "overview";
     }
-
-    const activeTabExists = tabs.some((t) => t.id === this.activeTab);
-    renderTab(activeTabExists ? this.activeTab : tabs[0].id);
+    if (this.activeTab === "overview") {
+      this.renderOverview(this.containerEl);
+    } else {
+      this.renderDetail(this.containerEl);
+    }
   }
 }

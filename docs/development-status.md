@@ -2,6 +2,35 @@
 
 Snapshot: 2026-09-12. Status ini memisahkan implementasi tooling dari bukti validasi.
 
+## Compact settings checkpoint — 2026-09-14
+
+Pada `codex/compact-settings-layout`, spec, plan, dan tasks sudah disetujui
+maintainer. Overview/detail navigation, grouping General/GitHub dan
+Typewriter/Keep Lines, per-mode recipe editing, serta default matrix telah
+diimplementasikan. Targeted Vitest lolos 5 files / 28 tests; `pnpm run check`
+lolos typecheck, Biome, Obsidian ESLint, Stylelint, dan Markdown lint.
+Review menjaga stored recipes, command IDs, feature side effects, dan
+dependency direction existing. `pnpm run check:ci` lolos QA, 22 files / 140
+tests, build plugin, artifacts 1.1.0, dan build VitePress. Node 24.19.0;
+pnpm memakai versi pinned 11.21.0.
+
+Host desktop/mobile/popout belum diuji untuk layout baru; H01–H06 tetap Pending
+di [ledger](./specs/compact-settings-layout/tasks.md). Tidak ada commit, push,
+release, atau deployment ke vault pada scope ini. Heading General mengikuti
+permintaan eksplisit maintainer dengan pengecualian lint terlokalisasi; aturan
+QA lainnya tetap dijalankan.
+
+Koreksi visual berdasarkan screenshot maintainer: General/GitHub memakai satu
+SettingGroup; preset dan Capabilities memakai panel bersama; Toolbar memiliki
+deskripsi dan header detail sejajar dengan chevron Back yang aksesibel.
+`pnpm run check:ci` setelah koreksi lolos QA, 22 files / 141 tests, build,
+artifacts 1.1.0, dan docs build. Tampilan hasil koreksi di host belum diterima.
+
+Maintainer mengonfirmasi layout final, termasuk Toolbar/Callouts dalam kartu
+General, dan mengotorisasi integrasi lokal ke main pada 2026-09-14. Acceptance
+visual yang dilaporkan diterima; full matrix keyboard/mobile/popout/scrolling
+H01–H06 belum dikonfirmasi satu per satu. Tidak ada push/release/deployment.
+
 ## Development dependency security checkpoint — 2026-09-14
 
 - Branch `bug-fixing`: Electron diperbarui dari 40.10.6 ke 41.10.7 untuk

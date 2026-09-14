@@ -9,7 +9,48 @@ Dokumen ini menjelaskan aksi umum pengguna saat memakai MD Writer di Obsidian.
 3. Cari **MD Writer**.
 4. Buka pengaturan plugin.
 
+Halaman utama menampilkan **General**, selector mode aktif, serta baris
+**Toolbar**, **Callouts**, preset, dan **Capabilities**. Klik baris ber-chevron
+untuk membuka detail; ikon **chevron kiri** di sebelah judul kembali ke halaman utama dan memulihkan
+posisi scroll serta fokus ke baris asal. GitHub heading-anchor compatibility
+berada di **General**. Keyboard Enter/Space dapat membuka baris pengaturan.
+
+General, GitHub, serta baris Toolbar dan Callouts berada dalam satu kartu; selector serta empat preset
+berada dalam satu panel, dan Capabilities memakai panel terpisah. Deskripsi
+Toolbar merangkum formatting, dock, timer, dan urutan tombol. Capabilities
+mengatur perilaku fitur yang digunakan mode; recipe preset memilih fitur aktif.
+
+Preset **Normal**, **Idea**, **Writing**, dan **Editing** dibuka satu per satu.
+Switch di halaman preset mengubah recipe tersimpan; perubahan tersebut baru
+diterapkan ke fitur aktif saat mode dipilih melalui **Active writing mode**.
+Pilih **None** untuk mengelola fitur secara manual tanpa membatalkan state saat ini.
+
+Default recipe untuk konfigurasi baru atau nilai preset yang belum tersimpan:
+
+| Capability | Normal | Idea | Writing | Editing |
+| --- | --- | --- | --- | --- |
+| Writing Focus | Off | On | On | Off |
+| Outliner | On | On | Off | Off |
+| Hemingway | Off | On | Off | Off |
+| Dimming | Off | Off | On | Off |
+| Current Line | Off | Off | Off | On |
+| Typewriter / Keep Lines | Off | Off | Typewriter | Off |
+| Whitespace | Off | Off | Off | On |
+| Line Width | Off | Off | Off | On |
+
+Recipe yang sudah tersimpan tetap dipertahankan, sehingga pengguna lama dapat
+memiliki nilai berbeda dari default di atas. Mode awal konfigurasi baru tetap
+**None**. Keep Lines bukan field recipe; penggabungan halaman scrolling tidak
+mengubah nilai Keep Lines yang sudah tersimpan saat mode diaktifkan.
+
+Layout ini sudah diuji secara otomatis; tampilan, fokus, dan navigasi di
+Obsidian desktop/mobile/popout masih menunggu acceptance host.
+
 ## Pakai typewriter scrolling
+
+Di **Capabilities → Typewriter**, pengaturan Typewriter dan Keep Lines berada
+dalam satu halaman. Matikan opsi scrolling yang aktif sebelum mengaktifkan
+alternatifnya; switch alternatif langsung tersedia tanpa membuka ulang halaman.
 
 Gunakan typewriter scrolling saat Anda ingin baris aktif tetap berada di posisi
 yang stabil saat menulis.
@@ -56,7 +97,7 @@ Gunakan fitur berikut sesuai kebutuhan:
 
 ## Pakai floating toolbar
 
-Aktifkan **Enable floating toolbar** di tab **Toolbar** untuk menampilkan
+Aktifkan **Enable floating toolbar** di halaman **Toolbar** untuk menampilkan
 toolbar formatting kecil saat Anda menyeleksi teks di Source mode.
 
 Catatan:
@@ -85,7 +126,7 @@ Catatan:
   quote (`>`/`>>`) tetap dipertahankan. Seleksi yang memotong header
   callout di tengah (bukan di baris pertama) ditolak dengan penjelasan,
   bukan diperbaiki diam-diam. Isi menu mengikuti catalog callout yang
-  enabled dan urutan di tab **Callouts**; opsi terakhir menu, **Manage
+  enabled dan urutan di halaman **Callouts**; opsi terakhir menu, **Manage
   callouts…**, membuka Settings langsung ke tab tersebut,
 - ikon pin di ujung kanan toolbar men-toggle mode dock langsung tanpa
   membuka Settings — sama seperti **Pin toolbar as a dock**, termasuk
@@ -104,7 +145,7 @@ diubah dengan dua cara:
   pun. Menahan cukup lama untuk memulai drag tidak ikut menjalankan aksi
   formatting item tersebut — klik singkat (sebelum threshold) tetap berjalan
   normal,
-- tombol panah atas/bawah di tab **Toolbar** pada Settings memindahkan item
+- tombol panah atas/bawah di halaman **Toolbar** pada Settings memindahkan item
   satu posisi setiap klik. Kedua cara memakai pengaturan yang sama, jadi
   reorder dari salah satu langsung terlihat di keduanya.
 
@@ -124,7 +165,7 @@ yang sama). Command ID mengikuti Floaty Toolbar asli: `floaty-bold`,
 masing-masing menyisipkan marker uppercase-nya sendiri. Command-command ini
 tidak muncul di command palette pada mobile atau saat editor aktif bukan CM6
 Live Preview/Source. Command **Manage callouts** (baru, bukan dari upstream)
-membuka Settings langsung ke tab Callouts dari mana saja, termasuk mobile.
+membuka Settings langsung ke halaman Callouts dari mana saja, termasuk mobile.
 
 Toolbar dapat dipin sebagai dock:
 
@@ -164,7 +205,7 @@ untuk plugin.
 
 ## Kelola catalog callout
 
-Buka tab **Callouts** di pengaturan MD Writer (atau pilih **Manage callouts…**
+Buka halaman **Callouts** di pengaturan MD Writer (atau pilih **Manage callouts…**
 di dropdown Callout pada toolbar) untuk:
 
 - menyembunyikan/menampilkan tipe callout bawaan Obsidian dari dropdown
@@ -202,14 +243,14 @@ yang dirender tetap mengikuti kata yang sebenarnya dipilih — "Important" tetap
 terbaca "Important", bukan "Tip" — sehingga keduanya bisa dipilih/disisipkan
 secara independen dari toolbar maupun command palette.
 
-Informasi kompatibilitas GitHub muncul di tab **Callouts**, bukan di toolbar:
+Informasi kompatibilitas GitHub muncul di halaman **Callouts**, bukan di toolbar:
 setiap entry menampilkan keterangan compact "Obsidian only" atau "Obsidian and
 GitHub" di bawah ID-nya. Label ini murni informatif — tidak membatasi apa yang
 bisa dipilih di toolbar, dan tidak mengubah note lama secara otomatis.
 
 ## Atur tampilan callout
 
-Di tab **Callouts**, setiap callout memiliki satu grup konfigurasi seperti
+Di halaman **Callouts**, setiap callout memiliki satu grup konfigurasi seperti
 settings Outliner. Preview berada paling atas dan selalu menampilkan ikon,
 warna, dan label asli callout tersebut, dengan badan preview berisi `ID: <id>
 · Obsidian only` atau `ID: <id> · Obsidian and GitHub` — informasi ini selalu
@@ -245,7 +286,7 @@ reset (ikon panah putar) di header mengembalikan style ke inherit dan label
 built-in ke default; toggle dan urutan tetap dipertahankan. Reset mengembalikan
 tampilan ke inherit tanpa mengubah note, tema, atau file snippet. Preview
 memakai renderer callout Obsidian dan tema document settings saat ini; buka
-kembali tab Callouts untuk merender ulang setelah perubahan tema.
+kembali halaman Callouts untuk merender ulang setelah perubahan tema.
 
 Styling ini membutuhkan MD Writer tetap aktif. Warna/ikon tidak otomatis ikut
 ke GitHub atau Publish. Preview selalu memperlihatkan rendering Obsidian,

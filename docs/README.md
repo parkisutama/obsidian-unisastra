@@ -54,6 +54,9 @@ Gunakan bagian ini untuk aturan stabil, checklist, dan spesifikasi panjang:
 
 ## Active specifications
 
+- [Compact settings: accepted spec](./specs/compact-settings-layout/spec.md)
+- [Compact settings: accepted plan](./specs/compact-settings-layout/plan.md)
+- [Compact settings: implementation and acceptance ledger](./specs/compact-settings-layout/tasks.md)
 - [Editor bug fixing: accepted spec](./specs/editor-bug-fixing/spec.md)
 - [Editor bug fixing: accepted plan](./specs/editor-bug-fixing/plan.md)
 - [Editor bug fixing: accepted tasks](./specs/editor-bug-fixing/tasks.md)

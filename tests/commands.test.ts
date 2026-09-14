@@ -237,72 +237,75 @@ describe("command registration", () => {
     expect(toggle).not.toHaveBeenCalled();
   });
 
-  it("disables managed feature states when switching to normal mode", async () => {
-    const toggles = {
-      currentLine: vi.fn(),
-      dimming: vi.fn(),
-      hemingwayMode: vi.fn(),
-      maxChar: vi.fn(),
-      outliner: vi.fn(),
-      showWhitespace: vi.fn(),
-      typewriter: vi.fn(),
-      writingFocus: vi.fn(),
-    };
-    const { default: WritingModeActive } = await import(
-      "@/capabilities/features/writing-modes/active-mode"
-    );
-    const tm = {
-      features: {
-        currentLine: {
-          "currentLine.isHighlightCurrentLineEnabled": {
-            toggle: toggles.currentLine,
+  it.each(["normal", "writing"] as const)(
+    "applies the requested default recipe for %s",
+    async (mode) => {
+      const toggles = {
+        currentLine: vi.fn(),
+        dimming: vi.fn(),
+        hemingwayMode: vi.fn(),
+        maxChar: vi.fn(),
+        outliner: vi.fn(),
+        showWhitespace: vi.fn(),
+        typewriter: vi.fn(),
+        writingFocus: vi.fn(),
+      };
+      const { default: WritingModeActive } = await import(
+        "@/capabilities/features/writing-modes/active-mode"
+      );
+      const tm = {
+        features: {
+          currentLine: {
+            "currentLine.isHighlightCurrentLineEnabled": {
+              toggle: toggles.currentLine,
+            },
+          },
+          dimming: {
+            "dimming.isDimUnfocusedEnabled": { toggle: toggles.dimming },
+          },
+          hemingwayMode: {
+            "hemingwayMode.isHemingwayModeEnabled": {
+              toggle: toggles.hemingwayMode,
+            },
+          },
+          maxChar: {
+            "maxChars.isMaxCharsPerLineEnabled": { toggle: toggles.maxChar },
+          },
+          outliner: {
+            "outliner.isOutlinerEnabled": { toggle: toggles.outliner },
+          },
+          showWhitespace: {
+            "showWhitespace.isShowWhitespaceEnabled": {
+              toggle: toggles.showWhitespace,
+            },
+          },
+          typewriter: {
+            "typewriter.isTypewriterScrollEnabled": {
+              toggle: toggles.typewriter,
+            },
           },
         },
-        dimming: {
-          "dimming.isDimUnfocusedEnabled": { toggle: toggles.dimming },
-        },
-        hemingwayMode: {
-          "hemingwayMode.isHemingwayModeEnabled": {
-            toggle: toggles.hemingwayMode,
+        commands: {
+          "writing-focus": {
+            setWritingFocusEnabled: toggles.writingFocus,
           },
         },
-        maxChar: {
-          "maxChars.isMaxCharsPerLineEnabled": { toggle: toggles.maxChar },
-        },
-        outliner: {
-          "outliner.isOutlinerEnabled": { toggle: toggles.outliner },
-        },
-        showWhitespace: {
-          "showWhitespace.isShowWhitespaceEnabled": {
-            toggle: toggles.showWhitespace,
-          },
-        },
-        typewriter: {
-          "typewriter.isTypewriterScrollEnabled": {
-            toggle: toggles.typewriter,
-          },
-        },
-      },
-      commands: {
-        "writing-focus": {
-          setWritingFocusEnabled: toggles.writingFocus,
-        },
-      },
-      settings: structuredClone(DEFAULT_SETTINGS),
-    };
+        settings: structuredClone(DEFAULT_SETTINGS),
+      };
 
-    new WritingModeActive(tm as never).applyMode("normal");
+      new WritingModeActive(tm as never).applyMode(mode);
 
-    expect(tm.settings.writingMode.activeMode).toBe("normal");
-    expect(toggles.outliner).toHaveBeenCalledWith(false);
-    expect(toggles.hemingwayMode).toHaveBeenCalledWith(false);
-    expect(toggles.typewriter).toHaveBeenCalledWith(false);
-    expect(toggles.dimming).toHaveBeenCalledWith(false);
-    expect(toggles.currentLine).toHaveBeenCalledWith(false);
-    expect(toggles.showWhitespace).toHaveBeenCalledWith(false);
-    expect(toggles.maxChar).toHaveBeenCalledWith(false);
-    expect(toggles.writingFocus).toHaveBeenCalledWith(false);
-  });
+      expect(tm.settings.writingMode.activeMode).toBe(mode);
+      expect(toggles.outliner).toHaveBeenCalledWith(mode === "normal");
+      expect(toggles.hemingwayMode).toHaveBeenCalledWith(false);
+      expect(toggles.typewriter).toHaveBeenCalledWith(mode === "writing");
+      expect(toggles.dimming).toHaveBeenCalledWith(mode === "writing");
+      expect(toggles.currentLine).toHaveBeenCalledWith(false);
+      expect(toggles.showWhitespace).toHaveBeenCalledWith(false);
+      expect(toggles.maxChar).toHaveBeenCalledWith(false);
+      expect(toggles.writingFocus).toHaveBeenCalledWith(mode === "writing");
+    }
+  );
 });
 
 describe("toolbar action commands", () => {

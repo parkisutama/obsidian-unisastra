@@ -17,6 +17,47 @@ const createVault = (cursorPositions?: Record<string, unknown>) =>
   }) as unknown as Vault;
 
 describe("settings defaults and migrations", () => {
+  it("matches the maintainer's complete default recipe matrix", () => {
+    const enabled = Object.fromEntries(
+      Object.entries(DEFAULT_SETTINGS.writingMode.presets).map(
+        ([mode, preset]) => [
+          mode,
+          Object.entries(preset)
+            .filter(([, value]) => value)
+            .map(([key]) => key)
+            .sort(),
+        ]
+      )
+    );
+    expect(enabled).toEqual({
+      normal: ["outliner"],
+      idea: ["hemingwayMode", "outliner", "writingFocus"],
+      writing: ["dimming", "typewriter", "writingFocus"],
+      editing: ["currentLine", "maxChars", "showWhitespace"],
+    });
+    expect(DEFAULT_SETTINGS.writingMode.activeMode).toBe("none");
+  });
+
+  it("preserves explicit old recipes while filling missing values with new defaults", async () => {
+    const migrated = await applyStartupMigrations(
+      {
+        general: { ...DEFAULT_SETTINGS.general },
+        writingMode: {
+          activeMode: "normal",
+          presets: {
+            normal: { outliner: false },
+            writing: { hemingwayMode: true },
+          },
+        },
+      } as unknown as Partial<TypewriterModeSettings>,
+      createVault(),
+      "plugins/md-writer"
+    );
+    expect(migrated.writingMode.presets.normal.outliner).toBe(false);
+    expect(migrated.writingMode.presets.writing.hemingwayMode).toBe(true);
+    expect(migrated.writingMode.presets.writing.typewriter).toBe(true);
+    expect(migrated.writingMode.activeMode).toBe("normal");
+  });
   it("adds opt-in toolbar defaults without sharing mutable values", async () => {
     const oldSettings = { general: { ...DEFAULT_SETTINGS.general } };
     const first = await applyStartupMigrations(
@@ -222,7 +263,7 @@ describe("settings defaults and migrations", () => {
       dimming: false,
       hemingwayMode: false,
       maxChars: false,
-      outliner: false,
+      outliner: true,
       showWhitespace: false,
       typewriter: false,
       writingFocus: false,

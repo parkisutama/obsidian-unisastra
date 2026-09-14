@@ -313,7 +313,7 @@ export const DEFAULT_SETTINGS: TypewriterModeSettings = {
       },
       writing: {
         outliner: false,
-        hemingwayMode: true,
+        hemingwayMode: false,
         writingFocus: true,
         typewriter: true,
         dimming: true,
@@ -332,7 +332,7 @@ export const DEFAULT_SETTINGS: TypewriterModeSettings = {
         maxChars: true,
       },
       normal: {
-        outliner: false,
+        outliner: true,
         hemingwayMode: false,
         writingFocus: false,
         typewriter: false,

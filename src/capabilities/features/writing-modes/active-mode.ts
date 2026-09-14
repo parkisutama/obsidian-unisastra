@@ -54,7 +54,7 @@ export default class WritingModeActive extends Feature {
       setting
         .setName("Active writing mode")
         .setDesc(
-          "Activate a saved preset recipe. Choose normal to disable managed plugin features, or none to manage features manually without undoing current states."
+          "Activate a saved preset recipe. Normal enables outliner by default. Choose none to manage features manually without undoing current states."
         )
         .setClass("md-writer-setting")
         .addDropdown((dropdown) => {

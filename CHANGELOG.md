@@ -4,6 +4,8 @@
 
 ### Added
 
+- Add compact settings overview with detail pages for capabilities and writing-mode recipes; group GitHub compatibility under General and Keep Lines under Typewriter. Host acceptance is pending.
+- Align new writing-mode recipes with the maintainer's matrix: Normal enables Outliner and Writing disables Hemingway, while preserving saved recipes.
 - Add in-development GitHub alert output with five uppercase presets and refusal of incompatible or partial conversions without editing the document. Runtime acceptance is pending.
 - Add in-development CSS callout discovery with partial scan reporting, explicit candidate addition, and manual ID fallback. Theme/snippet runtime acceptance is pending.
 - Add in-development callout style controls with inherit/override, validated hex colors and Lucide icons, reset, and an Obsidian preview. Runtime acceptance is pending.
