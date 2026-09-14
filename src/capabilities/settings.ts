@@ -86,7 +86,17 @@ export interface RestoreCursorPositionSettings {
 
 export interface HemingwayModeSettings {
   hemingwayModeStatusBarText: string;
+  isAllowArrowDownInHemingwayModeEnabled: boolean;
+  isAllowArrowLeftInHemingwayModeEnabled: boolean;
+  isAllowArrowRightInHemingwayModeEnabled: boolean;
+  isAllowArrowUpInHemingwayModeEnabled: boolean;
   isAllowBackspaceInHemingwayModeEnabled: boolean;
+  isAllowDeleteInHemingwayModeEnabled: boolean;
+  isAllowEndInHemingwayModeEnabled: boolean;
+  isAllowHomeInHemingwayModeEnabled: boolean;
+  isAllowPageDownInHemingwayModeEnabled: boolean;
+  isAllowPageUpInHemingwayModeEnabled: boolean;
+  isAllowUndoInHemingwayModeEnabled: boolean;
   isHemingwayModeEnabled: boolean;
   isShowHemingwayModeStatusBarEnabled: boolean;
 }
@@ -265,6 +275,16 @@ export const DEFAULT_SETTINGS: TypewriterModeSettings = {
   hemingwayMode: {
     isHemingwayModeEnabled: false,
     isAllowBackspaceInHemingwayModeEnabled: false,
+    isAllowArrowLeftInHemingwayModeEnabled: false,
+    isAllowArrowRightInHemingwayModeEnabled: true,
+    isAllowArrowUpInHemingwayModeEnabled: false,
+    isAllowArrowDownInHemingwayModeEnabled: false,
+    isAllowHomeInHemingwayModeEnabled: false,
+    isAllowEndInHemingwayModeEnabled: false,
+    isAllowPageUpInHemingwayModeEnabled: false,
+    isAllowPageDownInHemingwayModeEnabled: false,
+    isAllowDeleteInHemingwayModeEnabled: false,
+    isAllowUndoInHemingwayModeEnabled: false,
     isShowHemingwayModeStatusBarEnabled: true,
     hemingwayModeStatusBarText: "Hemingway",
   },
@@ -518,6 +538,26 @@ function migrateHemingwaySettings(
     isAllowBackspaceInHemingwayModeEnabled:
       legacy.isAllowBackspaceInHemingwayModeEnabled ??
       DEFAULT_SETTINGS.hemingwayMode.isAllowBackspaceInHemingwayModeEnabled,
+    isAllowArrowLeftInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowArrowLeftInHemingwayModeEnabled,
+    isAllowArrowRightInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowArrowRightInHemingwayModeEnabled,
+    isAllowArrowUpInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowArrowUpInHemingwayModeEnabled,
+    isAllowArrowDownInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowArrowDownInHemingwayModeEnabled,
+    isAllowHomeInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowHomeInHemingwayModeEnabled,
+    isAllowEndInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowEndInHemingwayModeEnabled,
+    isAllowPageUpInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowPageUpInHemingwayModeEnabled,
+    isAllowPageDownInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowPageDownInHemingwayModeEnabled,
+    isAllowDeleteInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowDeleteInHemingwayModeEnabled,
+    isAllowUndoInHemingwayModeEnabled:
+      DEFAULT_SETTINGS.hemingwayMode.isAllowUndoInHemingwayModeEnabled,
     isShowHemingwayModeStatusBarEnabled:
       legacy.isShowHemingwayModeStatusBarEnabled ??
       DEFAULT_SETTINGS.hemingwayMode.isShowHemingwayModeStatusBarEnabled,

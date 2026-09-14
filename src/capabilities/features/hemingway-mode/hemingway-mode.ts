@@ -61,29 +61,28 @@ export default class HemingwayMode extends FeatureToggle {
       return;
     }
 
-    const forbiddenKeys = [
-      "ArrowLeft",
-      "ArrowRight",
-      "ArrowUp",
-      "ArrowDown",
-      "Home",
-      "End",
-      "PageUp",
-      "PageDown",
-      "Delete",
-    ];
-
+    const settings = this.tm.settings.hemingwayMode;
     const isUndo = event.key === "z" && (event.ctrlKey || event.metaKey);
-    const isBackspace = event.key === "Backspace";
-    const isAllowBackspace =
-      this.tm.settings.hemingwayMode.isAllowBackspaceInHemingwayModeEnabled;
 
-    if (forbiddenKeys.includes(event.key) || isUndo) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
+    const keyAllowSettings: Record<string, boolean> = {
+      ArrowLeft: settings.isAllowArrowLeftInHemingwayModeEnabled,
+      ArrowRight: settings.isAllowArrowRightInHemingwayModeEnabled,
+      ArrowUp: settings.isAllowArrowUpInHemingwayModeEnabled,
+      ArrowDown: settings.isAllowArrowDownInHemingwayModeEnabled,
+      Home: settings.isAllowHomeInHemingwayModeEnabled,
+      End: settings.isAllowEndInHemingwayModeEnabled,
+      PageUp: settings.isAllowPageUpInHemingwayModeEnabled,
+      PageDown: settings.isAllowPageDownInHemingwayModeEnabled,
+      Delete: settings.isAllowDeleteInHemingwayModeEnabled,
+      Backspace: settings.isAllowBackspaceInHemingwayModeEnabled,
+    };
 
-    if (isBackspace && !isAllowBackspace) {
+    const isForbiddenKey =
+      event.key in keyAllowSettings && !keyAllowSettings[event.key];
+    const isForbiddenUndo =
+      isUndo && !settings.isAllowUndoInHemingwayModeEnabled;
+
+    if (isForbiddenKey || isForbiddenUndo) {
       event.preventDefault();
       event.stopPropagation();
     }
