@@ -914,18 +914,44 @@ minus Pomodoro.
 
 ### T19 — Notice MIT tetap terbawa dalam artifacts
 
-- [ ] Implemented dan verified.
+- [x] Implemented dan verified.
 - Dependency: T18; AC-11.
 - Acceptance: full upstream MIT notice embedded main.js banner termasuk minified
   build; dist/licenses notice tersedia untuk zip; artifact verification menolak
   notice hilang/mismatch dan tidak menghapus copyright existing.
-- Files (4): `scripts/lib/build.ts`, `scripts/lib/artifact-verification.ts`,
-  `tests/artifact-verification.test.ts`,
-  `docs/for-developers/create-a-github-release.md`.
-- Verify: fixture missing/mismatch notice tests, `pnpm run check:ci`, review
-  workflow zip/standalone assets tanpa menjalankan release/deploy/push.
-  Workflow `.github/workflows/release.yml` sudah menyalin seluruh dist secara
-  recursive ke zip; tidak perlu edit workflow untuk menambah notice dist/licenses.
+- Files: `scripts/lib/license-banner.ts` (new — single source of truth for the
+  exact banner text both build and verification use, so they can never drift
+  apart from each other; `floatyToolbarLicenseBanner(notice)` wraps the full
+  `licenses/floaty-toolbar-MIT.txt` contents as a `/*! ... */` comment),
+  `scripts/lib/build.ts` (copies `licenses/floaty-toolbar-MIT.txt` to
+  `dist/licenses/floaty-toolbar-MIT.txt`; passes `banner: { js:
+  floatyToolbarLicenseBanner(...) }` to esbuild — esbuild prepends banner text
+  to the output raw, after minification runs, so it survives `minify: true`
+  and `stripDebug: true`, unlike an ordinary source comment which
+  `minifySyntax` would strip), `scripts/lib/artifact-verification.ts`
+  (`assertFloatyToolbarNoticePreserved()`: reads the current source notice,
+  rebuilds the expected banner from it via the same `license-banner.ts`
+  helper, and requires `dist/main.js` to contain that exact banner — this
+  catches both a missing banner AND a stale one left over from a build made
+  before the source notice last changed, since the freshly-recomputed
+  expected banner won't match an old embedded one; separately requires
+  `dist/licenses/floaty-toolbar-MIT.txt` to exist and be byte-identical to
+  the source file. Purely additive/read-only — never deletes or rewrites
+  `README.md`'s existing Acknowledgements section or any other copyright
+  notice), `tests/artifact-verification.test.ts` (fixture helper now writes
+  `licenses/floaty-toolbar-MIT.txt` plus a matching `dist/main.js` banner and
+  `dist/licenses/` copy; new cases: missing banner, banner stale relative to
+  a changed source notice, missing dist notice copy, dist notice copy
+  mismatching the source), `docs/for-developers/create-a-github-release.md`
+  (documents the notice check as part of `verify:artifacts`/`check:ci`/the
+  release workflow, and that the zip picks up `dist/licenses/` automatically
+  since the workflow already copies all of `dist/` recursively — confirmed
+  by reading `.github/workflows/release.yml`, no workflow edit needed).
+- Verify: `pnpm run check:ci` green — 19 files / 130 tests, typecheck, lint,
+  styles, build, artifacts, docs build; confirmed against the REAL build
+  output (not just the test fixture): `dist/main.js` starts with the full
+  banner and `diff dist/licenses/floaty-toolbar-MIT.txt
+  licenses/floaty-toolbar-MIT.txt` is empty. No release/deploy/push was run.
 
 ## Slice I: Handover dan acceptance final
 
@@ -974,10 +1000,11 @@ diotorisasi; jangan menjalankan dev/deploy ke vault operasional implisit.
 ## Status validation fase
 
 SPECIFY, PLAN, dan kelanjutan implementation telah diotorisasi maintainer dalam
-sesi. T01-T18 (termasuk follow-up compact catalog C1/C2) diimplementasikan dan
+sesi. T01-T19 (termasuk follow-up compact catalog C1/C2) diimplementasikan dan
 diverifikasi otomatis; acceptance runtime dicatat terpisah di ledger. Atomic
 Conventional Commits setelah slice selesai dikonfirmasi maintainer pada
-2026-09-13. T19 (notice MIT pada artifacts) adalah task berikutnya.
+2026-09-13. T20 (dokumentasi current state dan acceptance report final) adalah
+task berikutnya — task terakhir di rencana.
 
 ## Maintainer-requested follow-up: compact unified catalog — 2026-09-13
 

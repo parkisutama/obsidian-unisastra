@@ -76,6 +76,15 @@ Aset minimum yang harus ada:
 
 Repo ini juga mengunggah zip plugin untuk kemudahan distribusi manual.
 
+`pnpm run verify:artifacts` (bagian dari `check:ci` dan workflow release) juga
+menolak build bila notice MIT Floaty Toolbar hilang atau tidak sinkron:
+`dist/main.js` harus memuat banner notice penuh (`licenses/floaty-
+toolbar-MIT.txt`, tertanam lewat opsi `banner` esbuild sehingga tetap ada
+meski build diminifikasi), dan `dist/licenses/floaty-toolbar-MIT.txt` harus
+identik dengan sumbernya. `md-writer.zip` otomatis ikut membawa
+`dist/licenses/` karena workflow menyalin seluruh isi `dist/` secara
+recursive — tidak perlu langkah manual tambahan.
+
 ## 6. Verifikasi kompatibilitas BRAT
 
 Untuk BRAT, yang penting adalah:

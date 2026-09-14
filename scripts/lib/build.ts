@@ -1,9 +1,11 @@
-import { copyFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import builtins from "builtin-modules";
 import esbuild from "esbuild";
 import { compile as sassCompile } from "sass";
+import { floatyToolbarLicenseBanner } from "./license-banner";
 
 const LEADING_BOM = /^﻿/;
+const FLOATY_TOOLBAR_LICENSE_PATH = "licenses/floaty-toolbar-MIT.txt";
 
 export interface BuildOptions {
   entrypoints?: {
@@ -48,6 +50,18 @@ export async function build({
     `${rootDir}/${outDir}/manifest.json`
   );
 
+  console.log("Copying license notices");
+  const licensesOutDir = `${rootDir}/${outDir}/licenses`;
+  mkdirSync(licensesOutDir, { recursive: true });
+  const floatyToolbarNotice = readFileSync(
+    `${rootDir}/${FLOATY_TOOLBAR_LICENSE_PATH}`,
+    "utf-8"
+  );
+  copyFileSync(
+    `${rootDir}/${FLOATY_TOOLBAR_LICENSE_PATH}`,
+    `${licensesOutDir}/floaty-toolbar-MIT.txt`
+  );
+
   // Build js
   console.log("Building main");
   const esbuildFormat = format === "cjs" ? "cjs" : "esm";
@@ -62,6 +76,9 @@ export async function build({
     target: "es2022",
     platform: "browser",
     format: esbuildFormat,
+    // Embedded raw (not run through the minifier), so the notice survives a
+    // minified/stripDebug build the same as an unminified dev build.
+    banner: { js: floatyToolbarLicenseBanner(floatyToolbarNotice) },
     // `drop: ["console"]` removes every console.* call; `pure` + minifySyntax
     // only eliminates the specific debug/log calls listed here, so
     // console.error/console.warn survive into the production bundle.
