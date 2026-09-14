@@ -2,7 +2,6 @@ import { type Component, Notice, Setting, SettingGroup } from "obsidian";
 import {
   BUILTIN_LABEL_BY_ID,
   canonicalBuiltinCalloutId,
-  compatibilityLabel,
 } from "@/capabilities/features/callouts/catalog";
 import {
   type CalloutEntrySettings,
@@ -55,6 +54,7 @@ export function renderCalloutManager(
     const panel = container.createDiv({
       cls: "ptm-callout-manager-entry",
     });
+    panel.setAttribute("data-callout-id", entry.id);
     const group = new SettingGroup(panel);
     const header = group.listEl.createDiv({
       cls: "ptm-callout-manager-header",
@@ -62,9 +62,10 @@ export function renderCalloutManager(
     const preview = header.createDiv({
       cls: "ptm-callout-style-preview markdown-rendered",
     });
-    const setting = new Setting(header)
-      .setName(`ID: ${entry.id}`)
-      .setDesc(compatibilityLabel(entry.id));
+    // ID and compatibility now live in the preview body itself (always
+    // visible, see callout-style-editor.ts), so this Setting is buttons
+    // only — no redundant name/desc duplicating that text.
+    const setting = new Setting(header);
 
     setting.addExtraButton((button) =>
       button

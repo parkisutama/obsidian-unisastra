@@ -304,10 +304,10 @@
 .ptm-callout-style-preview {
   overflow-wrap: anywhere;
 
-  &:not(.is-expanded) .callout-content {
-    display: none;
-  }
-
+  // The body (ID + compatibility) always shows, collapsed or expanded — it
+  // carries the entry's identity, so hiding it would leave nothing but an
+  // icon/title once the separate header Setting's name/desc were removed.
+  // Only the style configuration form below the preview is expand-gated.
   .callout {
     margin: 0;
   }

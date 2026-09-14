@@ -116,7 +116,7 @@ export function renderCalloutStyleEditor(
     try {
       await MarkdownRenderer.render(
         tm.plugin.app,
-        `> [!${entry.id}]\n> ${compatibilityLabel(entry.id)}`,
+        `> [!${entry.id}]\n> ID: ${entry.id} · ${compatibilityLabel(entry.id)}`,
         result,
         "",
         previewComponent

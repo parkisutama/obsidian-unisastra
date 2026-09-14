@@ -828,6 +828,43 @@ type).
     with tip/warning's appearance, and that the new header Save icon and
     compact preview body look right in a real theme, remains pending.
 
+## Maintainer-requested follow-up: preview always shows ID/compatibility, single source of truth — 2026-09-14
+
+Maintainer clarified C3's preview further: the ID + compatibility info should
+always be visible (collapsed or expanded), not only after expanding, and
+should be the *only* place that text appears — moving it into the preview
+entirely instead of duplicating it in a separate header `Setting` name/desc.
+
+- [x] C4: Always-visible preview body carries ID + compatibility; header
+  `Setting` no longer duplicates it.
+  - `src/components/callout-style-editor.ts`: preview sample body changed
+    from `${compatibilityLabel(entry.id)}` alone to `ID: ${entry.id} ·
+    ${compatibilityLabel(entry.id)}`, so both pieces of info live in one
+    place — the preview itself, rendered at the callout's real size/color.
+  - `src/styles/ui/_floaty-toolbar.scss`: removed the
+    `&:not(.is-expanded) .callout-content { display: none; }` rule — the
+    preview body (now carrying identity info, not filler) is always visible;
+    only the style configuration form below it stays expand-gated via the
+    existing `configuration` div / `bindCalloutExpansion`.
+  - `src/components/callout-manager.ts`: removed `.setName(\`ID:
+    ${entry.id}\`)`/`.setDesc(compatibilityLabel(entry.id))` from the header
+    `Setting` — it is now buttons-only (reorder/enable/reset/save/delete),
+    since that text would otherwise duplicate what the preview now always
+    shows. Added `panel.setAttribute("data-callout-id", entry.id)` on each
+    entry's outer panel — a harmless, generally useful hook (e.g. for a CSS
+    snippet targeting one entry), and also how the regression test verifies
+    per-entry identity/order now that the header carries no name text.
+  - `tests/callout-manager.test.ts`: order-verification assertion switched
+    from reading the (now-removed) header Setting name to reading
+    `panel.attributes.get("data-callout-id")`.
+  - `docs/for-users/use-md-writer-features.md`: "Atur tampilan callout"
+    rewritten to describe the preview as always carrying ID/compatibility,
+    with no separate ID text elsewhere, and the Save button description
+    trimmed of the now-removed "expand to see compatibility" behavior.
+  - Verify: `pnpm run check:ci` green — 19 files / 130 tests (assertions
+    updated in place). Visual confirmation in real Obsidian that the preview
+    reads as compact/organized as intended remains pending.
+
 ## Slice G: GitHub Alerts dan command parity
 
 ### T17a — Output mode GitHub

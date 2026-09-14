@@ -106,8 +106,8 @@ describe("callout manager grouping", () => {
     );
     expect(panels).toHaveLength(callouts.entries.length);
     expect(
-      panels.map((panel) => panel.children[0].children[0].children[1].name)
-    ).toEqual(callouts.entries.map((entry) => `ID: ${entry.id}`));
+      panels.map((panel) => panel.attributes.get("data-callout-id"))
+    ).toEqual(callouts.entries.map((entry) => entry.id));
     for (const panel of panels) {
       const [header, configuration] = panel.children[0].children;
       const preview = header.children[0];

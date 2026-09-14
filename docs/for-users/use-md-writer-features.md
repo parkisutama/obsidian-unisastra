@@ -210,9 +210,14 @@ bisa dipilih di toolbar, dan tidak mengubah note lama secara otomatis.
 ## Atur tampilan callout
 
 Di tab **Callouts**, setiap callout memiliki satu grup konfigurasi seperti
-settings Outliner. Preview berada paling atas, diikuti nama/ID, toggle tampil
-di menu, urutan dan reset, lalu
-konfigurasi. Klik ikon picker (tooltip **Choose icon**) untuk mencari ikon yang tersedia pada versi
+settings Outliner. Preview berada paling atas dan selalu menampilkan ikon,
+warna, dan label asli callout tersebut, dengan badan preview berisi `ID: <id>
+· Obsidian only` atau `ID: <id> · Obsidian and GitHub` — informasi ini selalu
+terlihat, baik saat grup collapsed maupun expanded, jadi tidak ada teks ID
+terpisah lagi di sebelahnya. Klik preview untuk expand/collapse form
+konfigurasi warna/ikon di bawahnya. Toggle tampil di menu, urutan, dan tombol
+reset/save berada di baris yang sama dengan preview. Klik ikon picker (tooltip
+**Choose icon**) untuk mencari ikon yang tersedia pada versi
 Obsidian saat ini; memilih ikon mengisi ID secara otomatis. Color picker
 berdampingan dengan input hex sehingga warna bisa dipilih atau diketik.
 Semua kontrol berada di grup callout yang sama. Toggle hanya menyembunyikan pilihan
@@ -240,10 +245,7 @@ reset (ikon panah putar) di header mengembalikan style ke inherit dan label
 built-in ke default; toggle dan urutan tetap dipertahankan. Reset mengembalikan
 tampilan ke inherit tanpa mengubah note, tema, atau file snippet. Preview
 memakai renderer callout Obsidian dan tema document settings saat ini; buka
-kembali tab Callouts untuk merender ulang setelah perubahan tema. Saat
-di-expand, badan preview menampilkan keterangan kompatibilitas compact
-("Obsidian only"/"Obsidian and GitHub") alih-alih kalimat contoh generik,
-sehingga langsung terlihat pada ukuran/warna aslinya di tema aktif.
+kembali tab Callouts untuk merender ulang setelah perubahan tema.
 
 Styling ini membutuhkan MD Writer tetap aktif. Warna/ikon tidak otomatis ikut
 ke GitHub atau Publish. Preview selalu memperlihatkan rendering Obsidian,
