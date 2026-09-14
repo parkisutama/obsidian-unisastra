@@ -722,6 +722,13 @@ serta computed defaults tanpa persist override ditambahkan. `check:ci` lolos
 
 ## Known issues / deferred feedback — 2026-09-14
 
+Completed follow-up: [editor bug-fixing spec](../editor-bug-fixing/spec.md),
+[accepted plan](../editor-bug-fixing/plan.md), and
+[tasks/evidence ledger](../editor-bug-fixing/tasks.md) now track callout dimming
+and Advanced Canvas. Both fixes were implemented and the reported symptoms
+accepted by the maintainer on 2026-09-14; additional QA is deferred. The entries
+below preserve the original reports and their then-deferred status.
+
 Maintainer reported items while reviewing C1/C2/T17b-T20 in a real vault.
 
 1. **Bug (still deferred, not addressed): rendered callouts do not dim under

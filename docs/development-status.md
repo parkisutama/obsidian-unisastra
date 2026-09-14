@@ -2,6 +2,55 @@
 
 Snapshot: 2026-09-12. Status ini memisahkan implementasi tooling dari bukti validasi.
 
+## Development dependency security checkpoint — 2026-09-14
+
+- Branch `bug-fixing`: Electron diperbarui dari 40.10.6 ke 41.10.7 untuk
+  menangani Dependabot #48/#49; advisory tidak menyediakan patch seri 40.
+- Override transitive `js-yaml@^4` ke 4.3.2 menangani #73. Override khusus
+  `vitepress>vite` ke 6.4.3 menangani #19/#20/#21 dan menghapus esbuild
+  0.21.5 yang rentan (#18). VitePress tetap 1.6.4; plugin Vue 5.2.4 mendukung
+  Vite 6. Settings dan dependency CM6 yang dipin tetap dipertahankan.
+- Instalasi, termasuk binary Electron dan Husky prepare, selesai. Pada Node
+  24.19.0 / pnpm 11.21.0, `pnpm audit --json` melaporkan 0 vulnerability;
+  `pnpm run check:ci` lolos seluruh QA, 19 files / 130 tests, build plugin,
+  artifacts 1.1.0, dan build dokumentasi dengan Vite 6.
+- `pnpm peers check` masih melaporkan mismatch yang sudah ada sebelum perubahan:
+  Obsidian dengan eslint-plugin-obsidianmd; ESLint 10 dengan plugin SDL,
+  React, dan import; serta esbuild 0.25.12 dengan Vite 8 milik Vitest.
+  Gate otomatis di atas lolos; warning peer ini belum diselesaikan.
+- Hasil audit adalah bukti lokal. Penutupan alert GitHub menunggu perubahan
+  tersedia di default branch dan pemindaian ulang. Tidak ada commit, push,
+  deploy, atau perubahan runtime untuk dua bug editor dalam checkpoint ini.
+
+## Editor bug-fixing closure — 2026-09-14
+
+Current closure: maintainer confirmed both reported bugs resolved and requested
+closure for now on 2026-09-14. Callout and Canvas fixes are implemented and
+accepted for the reported host cases (Obsidian 1.14.1, installer 1.13.7,
+Advanced Canvas 7.0.0). Additional host/platform/settings coverage is deferred,
+not marked Pass. CSS scope may affect other embedded editors, empty-area clicking
+or nested/theme interactions; reopen on concrete regression evidence.
+No further implementation is planned now. [Accepted spec](./specs/editor-bug-fixing/spec.md),
+[plan](./specs/editor-bug-fixing/plan.md) and
+[completion/evidence ledger](./specs/editor-bug-fixing/tasks.md) preserve scope,
+diagnosis, acceptance and deferred QA F01–F05.
+
+Callout CSS dims rendered widget subtrees once while preserving active source
+and existing focus/pause branches. Canvas clickable-sizer now requires a
+Markdown source-view ancestor in existing active-leaf/iframe contexts; note/card
+DOM evidence confirmed that distinction. The pseudo-element height-growth trigger
+was isolated in the host; the internal auto-sizing feedback remains an inference.
+
+Standalone browser regression using existing Electron/Sass passes 155 checks
+against actual compiled SCSS. It reproduced 40 callout failures before its fix
+and 8 Canvas failures before the scope fix. No added dependencies or CM6 changes
+were needed for the editor fixes. This browser runner is separate from CI and
+does not simulate the entire Obsidian/Advanced Canvas host.
+
+`pnpm run check:ci` passed all QA, 19 files / 130 tests, plugin build,
+artifacts 1.1.0 and docs build. Local main integration and pruning merged branches
+are authorized; push/release/deployment are outside this integration scope.
+
 ## Standardization implemented
 
 - Husky menggantikan Lefthook; pre-commit memakai QA read-only.

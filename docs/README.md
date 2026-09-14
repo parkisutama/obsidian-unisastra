@@ -54,6 +54,9 @@ Gunakan bagian ini untuk aturan stabil, checklist, dan spesifikasi panjang:
 
 ## Active specifications
 
+- [Editor bug fixing: accepted spec](./specs/editor-bug-fixing/spec.md)
+- [Editor bug fixing: accepted plan](./specs/editor-bug-fixing/plan.md)
+- [Editor bug fixing: accepted tasks](./specs/editor-bug-fixing/tasks.md)
 - [Floaty Toolbar adoption: accepted spec](./specs/floaty-toolbar/spec.md)
 - [Floaty Toolbar: accepted implementation plan](./specs/floaty-toolbar/plan.md)
 - [Floaty Toolbar: draft task breakdown](./specs/floaty-toolbar/tasks.md)

@@ -18,6 +18,18 @@ export default defineConfig({
         text: "Active specifications",
         items: [
           {
+            link: "/specs/editor-bug-fixing/spec",
+            text: "Editor bug fixing: accepted spec",
+          },
+          {
+            link: "/specs/editor-bug-fixing/plan",
+            text: "Editor bug fixing: accepted plan",
+          },
+          {
+            link: "/specs/editor-bug-fixing/tasks",
+            text: "Editor bug fixing: accepted tasks",
+          },
+          {
             link: "/specs/floaty-toolbar/spec",
             text: "Floaty Toolbar: accepted spec",
           },

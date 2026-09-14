@@ -17,6 +17,25 @@ seluruh fitur sudah lolos acceptance di Obsidian.
 
 ## Floaty toolbar work in progress
 
+Callout dimming follow-up pada `bug-fixing`: wrapper rendered callout kini
+ditargetkan di cabang Dim Unfocused existing, termasuk unfocused `dim-all`.
+Nested subtree dimmed sekali; ancestor source aktif tidak diredupkan oleh rule
+wrapper. Regression compiled-Sass browser standalone lolos 141 checks setelah
+40 failures sebelum patch. Maintainer mengonfirmasi callout sekarang dimmed dan
+gejala utama selesai pada host Obsidian (2026-09-14). Matrix tambahan menjadi
+deferred follow-up sesuai keputusan closure maintainer;
+lihat [ledger](./specs/editor-bug-fixing/tasks.md).
+
+Canvas follow-up: clickable-sizer kini membutuhkan ancestor
+`.markdown-source-view.mod-cm6` dalam konteks leaf aktif atau iframe existing.
+Rule tidak lagi mengenai `.cm-sizer` card tanpa source view, sesuai DOM host
+yang dilaporkan. Regression browser gabungan lolos 155 checks setelah 8 failures
+Canvas sebelum scope fix. Maintainer mengonfirmasi gejala Canvas sembuh dan
+menutup kedua bug untuk saat ini pada Obsidian 1.14.1 / installer 1.13.7,
+Advanced Canvas 7.0.0. Full multiline/reopen/area klik/lifecycle/mobile/popout
+matrix belum dikonfirmasi; dampak scope CSS pada embedded editor lain menjadi
+follow-up bila regresi muncul. Tidak ada klaim compatibility universal.
+
 Branch `codex/adopt-floaty-toolbar` mengimplementasikan T01-T19, seluruh task
 sumber di [tasks.md](./specs/floaty-toolbar/tasks.md) kecuali T20 (dokumen ini)
 sendiri. `pnpm run check:ci` hijau: 19 file test / 130 tests, typecheck, lint,
@@ -61,14 +80,16 @@ mempertahankan konfigurasi dan draft styling. Input manual tetap tersedia.
 Runtime styling menerima warna hex 3/6 digit dan ikon Lucide yang tersedia;
 inherit tidak membuat override otomatis.
 
-### Known issues not yet addressed
+### Known issues dan follow-up
 
-Dicatat di [tasks.md](./specs/floaty-toolbar/tasks.md) sebagai deferred,
-menunggu keputusan/prioritas terpisah dari maintainer:
+Catatan awal ada di [tasks.md](./specs/floaty-toolbar/tasks.md). Status terkini
+dua bug editor ditrack di [bug-fixing ledger](./specs/editor-bug-fixing/tasks.md):
 
-- Callout yang dirender tidak ikut dimmed di bawah mode Dim Unfocused
-  (paragraphs/sentences) seperti paragraf biasa — analisis awal ada di
-  tasks.md, root cause belum dikonfirmasi via DevTools Obsidian nyata.
+- Callout dimming: fix dan gejala utama diterima maintainer; closed for now,
+  matrix mode/pause/nested/mobile/popout tambahan deferred.
+- Canvas card growth: pemicu pseudo-element 100vh terisolasi dan CSS scope fix
+  diimplementasikan dan diterima maintainer pada Advanced Canvas 7.0.0;
+  closed for now dengan full matrix tambahan deferred.
 - Redesign preview collapsed pada Callout manager (info compact ID/
   compatibility menggantikan kalimat sample body generik, opsi menjadikan
   IMPORTANT/CAUTION sebagai contoh custom-entry, dan tombol Save style
