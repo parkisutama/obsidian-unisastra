@@ -2,6 +2,21 @@
 
 Snapshot: 2026-09-12. Status ini memisahkan implementasi tooling dari bukti validasi.
 
+## Mononote (single tab per note) — 2026-09-14
+
+Pada `feature/mononote-single-tab`: toggle "Keep one tab per note" ditambahkan
+ke General settings (`general.isMononoteEnabled`, default off) dan
+diimplementasikan di `src/capabilities/features/general/mononote.ts`, diadaptasi
+dari [MonoNote](https://github.com/czottmann/obsidian-mononote) oleh
+[czottmann](https://github.com/czottmann) (MIT). Saat aktif, membuka file yang
+sudah terbuka di tab lain pada grup tab yang sama akan memfokuskan tab lama
+alih-alih membuka tab duplikat. `pnpm run check` dan `pnpm run test` (141
+tests) lolos. Belum ada Vitest khusus untuk fitur ini, sejalan dengan fitur
+event-workspace sejenis (mis. restore cursor position) yang juga tidak
+memiliki unit test karena bergantung pada internal `WorkspaceLeaf` yang tidak
+dipublikasikan Obsidian. Acceptance runtime desktop/mobile/popout di Obsidian
+belum diuji.
+
 ## Compact settings checkpoint — 2026-09-14
 
 Pada `codex/compact-settings-layout`, spec, plan, dan tasks sudah disetujui

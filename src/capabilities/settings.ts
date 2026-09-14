@@ -23,6 +23,7 @@ import {
 export interface GeneralSettings {
   enabledPlatforms: EnabledPlatforms;
   isAnnounceUpdatesEnabled: boolean;
+  isMononoteEnabled: boolean;
   isOnlyActivateAfterFirstInteractionEnabled: boolean;
   isPluginActivated: boolean;
   version: string | null;
@@ -210,6 +211,7 @@ export const DEFAULT_SETTINGS: TypewriterModeSettings = {
     isAnnounceUpdatesEnabled: true,
     isPluginActivated: true,
     isOnlyActivateAfterFirstInteractionEnabled: false,
+    isMononoteEnabled: false,
     enabledPlatforms: ENABLED_PLATFORMS.BOTH,
   },
   typewriter: {
@@ -398,6 +400,7 @@ function migrateGeneralSettings(legacy: Partial<LegacyTypewriterModeSettings>) {
     isOnlyActivateAfterFirstInteractionEnabled:
       legacy.isOnlyActivateAfterFirstInteractionEnabled ??
       DEFAULT_SETTINGS.general.isOnlyActivateAfterFirstInteractionEnabled,
+    isMononoteEnabled: DEFAULT_SETTINGS.general.isMononoteEnabled,
     enabledPlatforms: DEFAULT_SETTINGS.general.enabledPlatforms,
   };
 }
