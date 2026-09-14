@@ -2,9 +2,13 @@ import { describe, expect, it, vi } from "vitest";
 import WritingModePresetConfig from "@/capabilities/features/writing-modes/preset-config";
 import { DEFAULT_SETTINGS } from "@/capabilities/settings";
 
+const CH_UNIT_PATTERN = /ch/;
+const CHARACTER_COUNT_PATTERN = /character count/;
+
 function render(feature: WritingModePresetConfig, mode: "idea" | "writing") {
   const rows: Array<{
     name: string;
+    desc?: string;
     value?: boolean;
     change?: (value: boolean) => void;
   }> = [];
@@ -17,7 +21,8 @@ function render(feature: WritingModePresetConfig, mode: "idea" | "writing") {
           row.name = name;
           return setting;
         },
-        setDesc() {
+        setDesc(desc: string) {
+          row.desc = desc;
           return setting;
         },
         setHeading() {
@@ -68,5 +73,19 @@ describe("writing mode recipe details", () => {
       render(feature, "idea").find((row) => row.name === "Outliner")?.value
     ).toBe(false);
     expect(render(feature, "writing")[0].name).toBe("Writing mode");
+  });
+
+  it("clarifies that Line Width bundles two differently-measured behaviors", () => {
+    const tm = {
+      settings: structuredClone(DEFAULT_SETTINGS),
+      saveSettings: vi.fn().mockResolvedValue(undefined),
+      features: { outliner: { toggle: vi.fn() } },
+    };
+    const feature = new WritingModePresetConfig(tm as never);
+    const lineWidthRow = render(feature, "idea").find(
+      (row) => row.name === "Line Width"
+    );
+    expect(lineWidthRow?.desc).toMatch(CH_UNIT_PATTERN);
+    expect(lineWidthRow?.desc).toMatch(CHARACTER_COUNT_PATTERN);
   });
 });

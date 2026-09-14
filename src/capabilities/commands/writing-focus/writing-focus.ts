@@ -145,28 +145,31 @@ export class WritingFocus {
   }
 
   private enableFocusModeForView() {
+    // Must be idempotent: two presets in a row can both have writingFocus
+    // enabled (e.g. Idea -> Writing), which calls this twice with no
+    // disable in between. Re-running used to flip the maximized/focus body
+    // classes back off (toggleClass negates current state) and re-run
+    // startFullscreen(), which re-captures prevWasFullscreen as `true`
+    // (since we're already fullscreen) and permanently disables
+    // exitFullscreen()'s ability to ever leave native fullscreen again.
+    if (this.focusModeActive) {
+      return;
+    }
+
     this.focusModeActive = true;
     const activeDocument = this.getActiveDocument();
 
-    if (!activeDocument.body.classList.contains(this.focusModeClass)) {
-      this.storeSplitsValues();
-    }
-
+    this.storeSplitsValues();
     this.collapseSplits();
 
     this.tm.plugin.app.workspace.containerEl.toggleClass(
       this.maximizedClass,
-      !this.tm.plugin.app.workspace.containerEl.hasClass(this.maximizedClass)
+      true
     );
 
-    activeDocument.body.classList.toggle(
-      this.focusModeClass,
-      !activeDocument.body.classList.contains(this.focusModeClass)
-    );
+    activeDocument.body.classList.add(this.focusModeClass);
 
-    if (activeDocument.body.classList.contains(this.focusModeClass)) {
-      this.updateWorkspaceSplitVisibility();
-    }
+    this.updateWorkspaceSplitVisibility();
 
     if (this.tm.settings.writingFocus.isWritingFocusFullscreen) {
       this.startFullscreen();
@@ -201,8 +204,15 @@ export class WritingFocus {
   }
 
   disableFocusMode() {
-    const view = this.tm.plugin.app.workspace.getActiveViewOfType(ItemView);
-    if (!view || view?.getViewType() === "empty") {
+    // Unlike enableFocusModeForView, disableFocusModeForView does not read
+    // from the active view — it only restores previously-stored global
+    // state (splits, fullscreen, body classes). Gating this on an active
+    // ItemView (as enable does) meant that if no matching view was active
+    // when exiting (e.g. focus moved to a non-editor pane while in native
+    // fullscreen), this returned early and left the user stuck in
+    // fullscreen with no window controls and no way to retry, since
+    // focusModeActive never got reset either.
+    if (!this.focusModeActive) {
       return;
     }
     this.disableFocusModeForView();

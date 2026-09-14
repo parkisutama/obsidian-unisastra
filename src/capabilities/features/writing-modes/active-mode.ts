@@ -42,6 +42,11 @@ const MANAGED_FEATURES: Array<{
     featureGroup: "maxChar",
     settingKey: "maxChars.isMaxCharsPerLineEnabled",
   },
+  {
+    presetKey: "maxChars",
+    featureGroup: "maxChar",
+    settingKey: "maxChars.isWarnLongLineEnabled",
+  },
 ];
 
 export default class WritingModeActive extends Feature {
