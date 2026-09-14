@@ -13,6 +13,15 @@ const FEATURE_LABELS: Record<keyof WritingModePreset, string> = {
   maxChars: "Line Width",
 };
 
+// Line Width bundles two differently-measured behaviors: the editor column
+// width (in `ch`, the CSS character unit) and the long-line warning
+// highlight (a raw character count on one document line). See the two
+// underlying toggles in the "Line Width" settings tab for details.
+const FEATURE_DESCRIPTIONS: Partial<Record<keyof WritingModePreset, string>> = {
+  maxChars:
+    "Controls both the editor column width (measured in characters, ch) and the long-line warning highlight (a raw character count per line) together.",
+};
+
 const MODE_DESCRIPTIONS: Record<Exclude<WritingMode, "none">, string> = {
   idea: "Brainstorm and structure ideas. Outliner zoom + Hemingway for forward-only ideation.",
   writing:
@@ -59,6 +68,7 @@ export default class WritingModePresetConfig extends Feature {
       settingGroup.addSetting((setting) =>
         setting
           .setName(FEATURE_LABELS[featureKey])
+          .setDesc(FEATURE_DESCRIPTIONS[featureKey] ?? "")
           .setClass("md-writer-setting")
           .addToggle((toggle) =>
             toggle.setValue(preset[featureKey]).onChange((newValue) => {

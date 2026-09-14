@@ -16,7 +16,7 @@ MD Writer is a specialized Obsidian editor environment for high-precision drafti
 
 **Focus Dimming**: Unfocused paragraphs or sentences are dimmed to reduce distraction. Supports paragraph and sentence granularity, with configurable opacity and pause-on-scroll/select.
 
-**Line Width**: Limit the maximum number of characters per line to constrain the editor area for better readability. Separately, warn when a line exceeds a configurable character limit — useful for keeping lines short for clean Git diffs.
+**Line Width**: Limit the editor column to a comfortable reading width (measured in `ch`, the character-width CSS unit). Separately, warn when a raw document line (in practice, one paragraph — Obsidian doesn't hard-wrap prose) exceeds a character count, to keep paragraphs skimmable and diffs clean. A true per-sentence effectiveness warning is a possible future direction, pending research into a sensible threshold.
 
 **Writing Focus**: Distraction-free fullscreen writing mode with custom font size and togglable header/status bar.
 
