@@ -1,4 +1,6 @@
-.mod-inside-iframe .cm-sizer, .workspace-leaf.mod-active .cm-sizer {
+// Canvas card editors also have cm-sizer; only Markdown source views need this area.
+.mod-inside-iframe .markdown-source-view.mod-cm6 .cm-sizer,
+.workspace-leaf.mod-active .markdown-source-view.mod-cm6 .cm-sizer {
   position: relative;
   z-index: 1;
 

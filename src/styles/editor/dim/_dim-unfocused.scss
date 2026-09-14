@@ -1,6 +1,13 @@
 @use "dim-highlight-list-parent";
 @use "dimmed";
 
+@mixin apply-dim-callout {
+  // Dim a rendered subtree once; never dim an ancestor of active source lines.
+  .cm-embed-block.cm-callout:not(.cm-active, :has(.cm-active), .cm-embed-block.cm-callout:not(.cm-active, :has(.cm-active)) .cm-embed-block.cm-callout) {
+    @include dimmed.dimmed(true);
+  }
+}
+
 @mixin apply-dim-sentence($line-condition) {
   @include dimmed.dimmed(true);
 
@@ -55,6 +62,7 @@
     }
 
     @include apply-dim-table($dim-table-as-one);
+    @include apply-dim-callout;
 
     @if $mode == 'paragraphs' {
       .cm-line:not(.cm-active)#{$line-condition} {
@@ -82,6 +90,8 @@
 
       @if $behavior == 'dim-all' {
         .cm-editor:not(.cm-focused) {
+          @include apply-dim-callout;
+
           @if $mode == 'paragraphs' {
             .CodeMirror-lines:not(.selecting) .CodeMirror-code, .cm-line#{$line-condition} {
               @include dimmed.dimmed(true);
@@ -129,4 +139,3 @@ body.ptm-dim-unfocused {
     }
   }
 }
-

@@ -1,0 +1,177 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>MD Writer editor CSS regression</title>
+<style>
+:root {
+  --dimmed-opacity: 0.25;
+}
+/* COMPILED_CSS */
+</style>
+<div class="cm-editor cm-focused" id="editor">
+  <div class="cm-line cm-active ptm-active-sentence-line" id="source">
+    <span class="active-sentence" id="sentence">Active sentence.</span>
+  </div>
+  <div class="cm-line" id="inactive">Other paragraph.</div>
+  <div class="cm-embed-block cm-callout" id="callout">
+    <div class="callout" id="body">
+      Rendered callout
+      <div class="cm-embed-block cm-callout" id="nested">Nested callout</div>
+    </div>
+  </div>
+  <div class="cm-embed-block cm-callout" id="editing">
+    <div class="cm-line cm-active ptm-active-sentence-line">
+      <span class="active-sentence" id="editingSentence"
+        >Editing nested source.</span
+      >
+    </div>
+    <div class="cm-embed-block cm-callout" id="editingSibling">
+      Inactive sibling
+    </div>
+  </div>
+  <div class="table-editor">
+    <div class="table-cell-wrapper" id="cell">Cell</div>
+  </div>
+</div>
+<div class="markdown-preview-view">
+  <div class="callout" id="reading">Reading callout</div>
+</div>
+<script>
+"use strict";
+window.runRegression = () => {
+  const failures = [];
+  let checks = 0;
+  const el = (id) => document.getElementById(id);
+  const effective = (node) => {
+    let value = 1;
+    for (let current = node; current; current = current.parentElement) {
+      value *= Number(getComputedStyle(current).opacity);
+    }
+    return value;
+  };
+  const check = (label, id, expected) => {
+    checks++;
+    const actual = effective(el(id));
+    if (Math.abs(actual - expected) > 0.001) {
+      failures.push(`${label}: ${id} expected ${expected}, got ${actual}`);
+    }
+  };
+  const verifyCase = (mode, behavior, focused) => {
+    document.body.className = "ptm-dim-unfocused";
+    document.body.dataset.ptmDimUnfocusedMode = mode;
+    document.body.dataset.ptmDimUnfocusedEditorsBehavior = behavior;
+    el("editor").className = `cm-editor${focused ? " cm-focused" : ""}`;
+    const dim = focused || behavior !== "dim-none";
+    const label = `${mode}/${behavior}/${focused}`;
+    for (const id of [
+      "callout",
+      "body",
+      "nested",
+      "editingSibling",
+      "inactive",
+    ]) {
+      check(label, id, dim ? 0.25 : 1);
+    }
+    check(label, "cell", dim && (focused || behavior === "dim") ? 0.25 : 1);
+    for (const id of ["source", "sentence", "editingSentence"]) {
+      check(
+        label,
+        id,
+        !focused && behavior === "dim-all" && mode === "paragraphs" ? 0.25 : 1
+      );
+    }
+    for (const id of ["editing", "reading"]) {
+      check(label, id, 1);
+    }
+  };
+  for (const mode of ["paragraphs", "sentences"]) {
+    for (const behavior of ["dim", "dim-none", "dim-all"]) {
+      for (const focused of [true, false]) {
+        verifyCase(mode, behavior, focused);
+      }
+    }
+    document.body.dataset.ptmDimUnfocusedEditorsBehavior = "dim";
+    for (const [bodyClass, editorClass] of [
+      ["", "ptm-first-open"],
+      ["ptm-dim-unfocused-pause-while-scrolling", "ptm-scroll"],
+      ["ptm-dim-unfocused-pause-while-selecting", "ptm-select"],
+      [
+        "ptm-dim-unfocused-pause-while-scrolling ptm-dim-unfocused-pause-while-selecting",
+        "ptm-scroll ptm-select",
+      ],
+    ]) {
+      document.body.className = `ptm-dim-unfocused ${bodyClass}`;
+      el("editor").className = `cm-editor cm-focused ${editorClass}`;
+      check(`${mode}/pause`, "callout", 1);
+    }
+  }
+  document.body.className = "";
+  check("disabled", "callout", 1);
+  return { checks, failures };
+};
+</script>
+<script>
+"use strict";
+window.runSizerRegression = async () => {
+  const failures = [];
+  let checks = 0;
+  const assert = (label, passed) => {
+    checks++;
+    if (!passed) {
+      failures.push(label);
+    }
+  };
+  const verifySizer = async (isFrame, isNote) => {
+    const frame = document.createElement("iframe");
+    frame.style.height = "118px";
+    document.body.appendChild(frame);
+    const doc = frame.contentDocument;
+    const win = frame.contentWindow;
+    const style = doc.createElement("style");
+    style.textContent = document.querySelector("style").textContent;
+    doc.head.appendChild(style);
+    // Separate documents exercise iframe/popout-like stylesheet scope.
+    doc.body.className = isFrame ? "mod-inside-iframe" : "";
+    const leaf = doc.createElement("div");
+    leaf.className = isFrame ? "" : "workspace-leaf mod-active";
+    const source = doc.createElement("div");
+    source.className = isNote
+      ? "markdown-source-view mod-cm6"
+      : "canvas-node-content";
+    const sizer = doc.createElement("div");
+    sizer.className = "cm-sizer";
+    const content = doc.createElement("div");
+    content.style.height = "86px";
+    sizer.appendChild(content);
+    source.appendChild(sizer);
+    leaf.appendChild(source);
+    doc.body.appendChild(leaf);
+    const label = `${isFrame ? "iframe" : "leaf"}/${isNote ? "note" : "card"}`;
+    const before = win.getComputedStyle(sizer, "::before");
+    assert(`${label}: pseudo scope`, (before.content === '""') === isNote);
+    assert(
+      `${label}: position scope`,
+      (win.getComputedStyle(sizer).position === "relative") === isNote
+    );
+    if (!isNote) {
+      const initial = sizer.scrollHeight;
+      // Model a host that sizes the viewport from measured scroll height plus chrome.
+      for (let i = 0; i < 3; i++) {
+        frame.style.height = `${sizer.scrollHeight + 32}px`;
+        await new Promise((resolve) => requestAnimationFrame(resolve));
+      }
+      assert(`${label}: no repeated growth`, sizer.scrollHeight === initial);
+      content.style.height = "200px";
+      assert(`${label}: multiline can grow`, sizer.scrollHeight >= 200);
+      content.style.height = "40px";
+      assert(`${label}: deletion can shrink`, sizer.scrollHeight === 40);
+    }
+    frame.remove();
+  };
+  for (const isFrame of [false, true]) {
+    for (const isNote of [false, true]) {
+      await verifySizer(isFrame, isNote);
+    }
+  }
+  return { checks, failures };
+};
+</script>
