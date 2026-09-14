@@ -1,6 +1,6 @@
 # Current state
 
-Snapshot source MD Writer pada 2026-09-13. Ini peta implementasi, bukan klaim
+Snapshot source MD Writer pada 2026-09-14. Ini peta implementasi, bukan klaim
 seluruh fitur sudah lolos acceptance di Obsidian.
 
 ## Implemented in source
@@ -17,39 +17,88 @@ seluruh fitur sudah lolos acceptance di Obsidian.
 
 ## Floaty toolbar work in progress
 
-Branch `codex/adopt-floaty-toolbar` mengimplementasikan T01-T16 dan T17a: formatting,
-heading/link/callout actions, floating/dock UI, timer status bar window utama,
-catalog manager, serta lifecycle custom style per document. HUD hanya di status
-bar, termasuk ketika toolbar dock. Runtime style menerima warna hex 3/6 digit
-dan ikon Lucide yang tersedia; inherit tidak membuat override. Form styling dan
-preview (T15) tersedia di panel per callout bersama toggle visibility dan
-kontrol catalog, dengan explicit save/reset. Discovery CSSOM best effort membaca
-literal ID/nested rules, melaporkan scan parsial, dan hanya menyimpan kandidat
-melalui Add; refresh/css-change mempertahankan konfigurasi dan draft styling.
-Input manual tetap tersedia. Task lanjutan belum selesai. Test host styling tidak membuktikan tampilan
-Obsidian desktop/mobile/popout.
+Branch `codex/adopt-floaty-toolbar` mengimplementasikan T01-T19, seluruh task
+sumber di [tasks.md](./specs/floaty-toolbar/tasks.md) kecuali T20 (dokumen ini)
+sendiri. `pnpm run check:ci` hijau: 19 file test / 130 tests, typecheck, lint,
+styles, build, verifikasi artefak, dan docs build. Runtime acceptance di
+Obsidian nyata (desktop/mobile/popout) tetap belum diuji untuk task manapun —
+lihat tabel ledger di bawah dan [tasks.md](./specs/floaty-toolbar/tasks.md#runtime-acceptance-ledger)
+untuk skenario yang masih pending.
 
-T17a menghubungkan output mode tersimpan ke menu dan executor. Mode GitHub
-menawarkan lima uppercase markers dengan visibility kanonis bersama untuk
-TIP/IMPORTANT dan WARNING/CAUTION. Conversion custom/title/folding/nesting,
-selection sebagian baris, atau blok quote yang tidak lengkap ditolak tanpa
-dispatch/undo entry. Body kompatibel tetap utuh; output switch tidak mengubah
-note existing otomatis. Command parity T17b belum diimplementasikan.
+Ringkasan per area:
 
-Setiap callout memakai satu native SettingGroup seperti settings Outliner;
-header, preview, dan form langsung terlihat tanpa accordion/nested cards.
-Preview ditempatkan sebelum header identitas/controls. Reset header tunggal
-mengembalikan style/label builtin; color picker native dan searchable icon picker
-mengisi warna/ID. Ikon berasal dari registry host Obsidian, tanpa paket Lucide
-terpisah atau pin versi Lucide plugin.
-CSS memakai ID ikon Lucide, bukan data URL. Preview memperbarui SVG melalui
-setIcon; perubahan CSS tersimpan memicu css-change. Field inherit menampilkan
-nilai computed theme yang dikenali tanpa mempersistnya sebagai override.
-Pembacaan warna mendukung tuple/hex/rgb/rgba dan fallback computed warna ikon.
-Sinkronisasi picker default tidak memicu onChange user, override, atau unsaved.
-Mengedit warna/ikon otomatis memilih override; nilai valid mengubah
-custom properties preview lokal sebelum save. Style note mengikuti settings
-yang berhasil disimpan; inherit diterapkan ke preview setelah save/reset.
+- **Toolbar formatting**: bold/italic/strikethrough/code/highlight/link,
+  heading (dropdown eksplisit P/H1-H4), dan callout — semua lewat satu
+  executor/guard yang sama, dipakai baik oleh klik toolbar maupun 16 command
+  palette entries (`floaty-bold`, `floaty-heading-1..4`,
+  `floaty-callout-note/tip/warning/important/caution`, dst., ID mengikuti
+  upstream Floaty Toolbar) serta command `manage-callouts` (baru).
+- **Callout catalog**: satu catalog unified — tidak ada lagi pilihan output
+  mode Obsidian/GitHub. Toolbar selalu menyisipkan marker uppercase (valid
+  untuk Obsidian secara case-insensitive, dan untuk lima marker GitHub Alert
+  yang kompatibel); label kompatibilitas ("Obsidian only" / "Also GitHub
+  alerts compatible (...)") hanya tampil di tab Callouts, tidak di toolbar.
+  Custom types selalu tersedia terlepas dari kompatibilitas GitHub-nya.
+  Manager per-entry memakai header preview compact (ikon/warna/label asli,
+  bukan placeholder) yang expand/collapse untuk menampilkan form styling.
+- **Dock/pin/timer**: dock persistent, HUD status bar window utama, dual
+  timer (session/file) dengan interval dapat dikonfigurasi — tidak berubah
+  sejak checkpoint sebelumnya.
+- **Reorder**: kedelapan item toolbar (enam tombol aksi plus dropdown
+  heading/callout) dapat diurutkan lewat long-press (~500ms) langsung di
+  toolbar, atau panah atas/bawah di tab Toolbar Settings — keduanya menulis
+  `settings.toolbar.buttonOrder` yang sama. Escape dan unload/window close
+  membatalkan drag yang sedang berlangsung secara bersih; state drag per
+  window, tidak dibagi lintas popout.
+- **Distribusi**: notice MIT Floaty Toolbar tertanam sebagai banner
+  `/*! ... */` di `dist/main.js` (bertahan meski build diminifikasi) dan
+  disalin ke `dist/licenses/floaty-toolbar-MIT.txt`; `verify:artifacts`
+  menolak build bila salah satu hilang atau tidak sinkron dengan sumber.
+
+Discovery CSSOM (T16) best effort membaca literal ID/nested rules, melaporkan
+scan parsial, dan hanya menyimpan kandidat melalui Add; refresh/css-change
+mempertahankan konfigurasi dan draft styling. Input manual tetap tersedia.
+Runtime styling menerima warna hex 3/6 digit dan ikon Lucide yang tersedia;
+inherit tidak membuat override otomatis.
+
+### Known issues not yet addressed
+
+Dicatat di [tasks.md](./specs/floaty-toolbar/tasks.md) sebagai deferred,
+menunggu keputusan/prioritas terpisah dari maintainer:
+
+- Callout yang dirender tidak ikut dimmed di bawah mode Dim Unfocused
+  (paragraphs/sentences) seperti paragraf biasa — analisis awal ada di
+  tasks.md, root cause belum dikonfirmasi via DevTools Obsidian nyata.
+- Redesign preview collapsed pada Callout manager (info compact ID/
+  compatibility menggantikan kalimat sample body generik, opsi menjadikan
+  IMPORTANT/CAUTION sebagai contoh custom-entry, dan tombol Save style
+  menjadi ikon floppy-disk sejajar reset) — diminta maintainer, belum
+  diimplementasikan.
+
+## Floaty toolbar acceptance criteria status
+
+Ringkasan status setiap AC dari [spec.md](./specs/floaty-toolbar/spec.md);
+detail skenario dan evidence lengkap ada di
+[tasks.md](./specs/floaty-toolbar/tasks.md).
+
+| AC | Evidence otomatis | Status |
+| --- | --- | --- |
+| AC-01 (no Pomodoro) | Review source manual — tidak ada kata "pomodoro" di `src/` atau docs pengguna | Done |
+| AC-02 (dock always-visible, mobile no dock) | `toolbar-controller.test.ts` (`dockVisibility` matrix) | Automated; runtime pending |
+| AC-03 (formatting target/undo aman) | `toolbar-actions.test.ts`, `callout-markdown.test.ts` | Automated; runtime pending |
+| AC-04 (timer toggle/prefix persist) | `settings.test.ts`, `toolbar-elapsed.test.ts` (HUD segments) | Automated; runtime pending (tooltip text) |
+| AC-05 (elapsed bukan created/modified) | `toolbar-elapsed.test.ts` (idle counting, A/B/A, reset) | Automated; runtime pending |
+| AC-06 (catalog entries di menu, invalid ditolak) | `callout-catalog.test.ts` (normalizeCalloutSettings, calloutMenuOptions unified) | Automated; runtime pending (theme discovery) |
+| AC-07 (manager catalog/styling, insert benar) | `callout-styles.test.ts`, `callout-markdown.test.ts` | Automated; runtime pending (visual/tema) |
+| AC-08 (migration additive, command IDs utuh) | `settings.test.ts` (migration), `commands.test.ts` (duplicate-ID check) | Done (automated only, tidak butuh runtime) |
+| AC-09 (cleanup disable/unload, popout target benar) | `toolbar-controller.test.ts`, `toolbar-reorder.test.ts` (`cancel()`/timer cleanup) | Automated; runtime pending (popout nyata) |
+| AC-10 (keyboard/touch, desktop/mobile/popout) | Command palette mobile-hidden test (`commands.test.ts`); tidak ada DOM test untuk toolbar UI (harness `environment: "node"`) | Mostly runtime pending |
+| AC-11 (atribusi/notice MIT) | `artifact-verification.test.ts` (T19) + review source header/README manual; diverifikasi terhadap build asli (`dist/main.js`, `dist/licenses/`) | Done |
+
+Baris "Automated; runtime pending" berarti test model/logic lolos tetapi
+perilaku DOM/Obsidian nyata (desktop, mobile, popout) belum diverifikasi di
+host Obsidian — environment ini tidak menyediakannya. Jangan menyatakan AC
+tersebut selesai sepenuhnya sampai runtime acceptance dilakukan dan dicatat.
 
 ## Compatibility contracts
 

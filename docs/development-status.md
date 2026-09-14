@@ -263,3 +263,77 @@ Refusal tidak dispatch atau menambah undo entry; note existing tidak diubah
 oleh output switch. Suite lolos 18 files / 106 tests. `check:ci` mencakup QA,
 build, artifact verification, dan docs build. Runtime output switch/rendered
 markers belum diuji di Obsidian. T17b command parity belum dimulai.
+
+## Compact catalog follow-up (C1/C2) checkpoint — 2026-09-14
+
+Maintainer meminta redesign compact untuk Callout manager dan penyatuan
+catalog output sebelum melanjutkan T17b. C1: header preview compact
+(ikon/warna/label asli, bukan placeholder "Preview") dengan expand/collapse
+keyboard-accessible yang tidak mengulang draft form; kontrol catalog
+(ID/source/reorder/enable/reset) pindah ke `Setting` terpisah di sisi kanan
+header. C2: dihapus toggle global "Output format" Obsidian/GitHub; toolbar
+sekarang satu catalog unified yang selalu menyisipkan marker uppercase
+(`wrapAsCallout`/`changeCalloutType` di-uppercase-kan, `calloutEdit` kehilangan
+parameter `mode`), sehingga custom types dan title/folding/nesting selalu
+didukung tanpa restriksi mode. Label kompatibilitas GitHub
+(`githubAlertMarkersForCanonicalId`) hanya tampil di tab Callouts. `outputMode`
+tetap ada di settings untuk kompatibilitas data lama, tidak lagi dibaca saat
+runtime. `pnpm run check:ci` hijau 18 files / 106 tests setelah C2. Runtime
+Obsidian belum diuji.
+
+## T17b command palette parity checkpoint — 2026-09-14
+
+16 command baru (`floaty-bold`, `floaty-italic`, ..., lima command callout,
+ID sama persis dengan upstream Floaty Toolbar) plus `manage-callouts` (baru).
+Setiap command memakai `ToolbarController.target()` dan `executeToolbarAction`
+yang sama dengan toolbar UI — guard/refusal identik, bukan diimplementasikan
+ulang. Command disembunyikan dari palette di mobile atau saat tidak ada CM6
+view aktif. `pnpm run check:ci` hijau 18 files / 111 tests. Runtime command
+palette belum diuji di Obsidian.
+
+## T18 reorder checkpoint — 2026-09-14
+
+Delapan item toolbar (enam tombol aksi plus dropdown heading/callout) dapat
+diurutkan lewat long-press (~500ms, mengikuti `LONG_PRESS_MS` upstream) atau
+panah atas/bawah di tab Toolbar Settings, keduanya menulis
+`settings.toolbar.buttonOrder` yang sama (field ini sudah ada sejak T01 tapi
+baru sekarang benar-benar dipakai rendering). State drag per-surface (per
+window), bukan singleton modul seperti upstream, sehingga popout tidak saling
+berbagi state. Long-press yang mencapai fase dragging selalu menekan klik
+trailing-nya — memperbaiki perilaku upstream yang mengeksekusi aksi pada
+`mousedown` sebelum timer long-press sempat berjalan. Escape dan
+`destroy()` surface (unload/window close) membatalkan drag secara bersih.
+`pnpm run check:ci` hijau 19 files / 126 tests. Runtime click-vs-hold,
+ghost tracking, dan popout belum diuji di Obsidian.
+
+## T19 license notice checkpoint — 2026-09-14
+
+Notice MIT Floaty Toolbar ditanam sebagai banner `/*! ... */` di
+`dist/main.js` lewat opsi `banner` esbuild (bertahan meski build
+diminifikasi/`stripDebug`, karena banner ditambahkan setelah minifikasi,
+bukan diparse olehnya), dan disalin ke `dist/licenses/floaty-toolbar-MIT.txt`
+untuk zip release (workflow sudah menyalin seluruh `dist/` secara recursive).
+`verify:artifacts` menolak build bila banner hilang/stale atau salinan dist
+tidak sinkron dengan sumber. Diverifikasi terhadap build asli, bukan hanya
+fixture test: `dist/main.js` memuat banner penuh dan
+`diff dist/licenses/floaty-toolbar-MIT.txt licenses/floaty-toolbar-MIT.txt`
+kosong. `pnpm run check:ci` hijau 19 files / 130 tests.
+
+## Deferred maintainer feedback — 2026-09-14
+
+Dicatat sebagai known issue/backlog di tasks.md, sengaja tidak dikerjakan agar
+T17b-T19 selesai lebih dulu:
+
+- Bug: callout yang dirender tidak ikut dimmed di bawah mode Dim Unfocused
+  (paragraphs/sentences). Analisis awal (tanpa host Obsidian untuk konfirmasi
+  DevTools) ada di tasks.md; kemungkinan terkait bagaimana rendering callout
+  Obsidian membungkus `.cm-line` di dalam `.callout`, memengaruhi bagaimana
+  class active/inactive per-line diterapkan. Fitur dim-unfocused sendiri
+  mendahului pekerjaan floaty-toolbar dan bukan bagian ADR-002.
+- Redesign UI: preview collapsed Callout manager diminta menampilkan info
+  compact (ID + label kompatibilitas singkat "Obsidian only"/"Obsidian and
+  GitHub") menggantikan kalimat sample body generik; IMPORTANT/CAUTION
+  diusulkan sebagai contoh custom-entry bersumber dari GitHub Alerts (masih
+  konflik dengan aturan dedup alias saat ini, perlu keputusan desain); dan
+  tombol "Save style"/"Apply style" diganti ikon floppy-disk sejajar tombol
+  reset. Belum diimplementasikan.

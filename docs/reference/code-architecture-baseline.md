@@ -1,6 +1,6 @@
 # Code architecture baseline
 
-Baseline pada 2026-09-12 mendeskripsikan struktur yang ada. Aturan di bawah
+Baseline pada 2026-09-14 mendeskripsikan struktur yang ada. Aturan di bawah
 ditinjau manual; repo belum memiliki test khusus dependency direction atau cycles.
 
 ## Responsibilities
@@ -11,13 +11,17 @@ ditinjau manual; repo belum memiliki test khusus dependency direction atau cycle
 | `src/lib.ts` | Composition and coordination of settings, features, editor integration |
 | `src/capabilities/base/` | Command, feature, toggle, and loadable abstractions |
 | `src/capabilities/features/` | Feature configuration and activation |
-| `src/capabilities/commands/` | Editor commands and outline navigation |
+| `src/capabilities/features/toolbar/` | Toolbar settings, actions/executor (shared by UI and commands), CM6 controller, elapsed/HUD models |
+| `src/capabilities/features/callouts/` | Callout catalog, settings, lossless Markdown edit/conversion, runtime style generation, theme discovery model |
+| `src/capabilities/commands/` | Editor commands, outline navigation, and toolbar-action command-palette parity (`toolbar-actions.ts`) |
 | `src/capabilities/settings.ts` | Persisted settings model and defaults |
 | `src/cm6/` | CodeMirror editor transactions, decorations, and outliner state |
 | `src/components/` | Obsidian settings, outline view, and update UI |
+| `src/components/floaty-toolbar/` | Floating/dock toolbar DOM (buttons, dropdowns, HUD, long-press reorder gesture) — not unit-tested beyond pure helpers, since Vitest here runs with `environment: "node"` |
+| `src/components/callout-*.ts` | Callout manager settings-tab UI, style editor/preview, discovery UI, compact expand/collapse |
 | `src/gfm-anchor/` | Anchor resolution, navigation, preview, and hover integration |
 | `src/styles/` | Editor and UI SCSS, compiled into styles.css |
-| `scripts/lib/` | Build, test-vault setup, deploy, artifact and release tooling |
+| `scripts/lib/` | Build (incl. license-banner embedding), test-vault setup, deploy, artifact verification, and release tooling |
 | `tests/` | Vitest behavior tests |
 
 ## Change rules

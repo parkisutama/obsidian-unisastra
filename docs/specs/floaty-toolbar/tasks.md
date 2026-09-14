@@ -957,23 +957,54 @@ minus Pomodoro.
 
 ### T20 — Dokumentasi current state dan acceptance report
 
-- [ ] Implemented dan verified.
+- [x] Implemented dan verified.
 - Dependency: T19; seluruh AC-01 sampai AC-11.
 - Acceptance: docs menyebut behavior yang benar-benar ada dan limits; setiap AC
   mempunyai test/runtime evidence atau blocker; attribution/compatibility manual
   reviewed, tidak mengklaim shipped tanpa runtime acceptance yang diperlukan.
-- Files (5): `docs/current-state.md`, `docs/development-status.md`,
-  `docs/reference/code-architecture-baseline.md`,
-  `docs/for-users/use-md-writer-features.md`,
-  `docs/for-developers/run-qa-before-merge-or-release.md`.
-- Verify: `pnpm run check:ci`; final source/README/license review, dependency
-  direction manual, runtime matrix di bawah. CHANGELOG versi release mengikuti
-  keputusan release terpisah; tidak bump metadata/tag dalam task ini.
+- Files: `docs/current-state.md` (rewrite bagian floaty toolbar: ringkasan per
+  area — formatting, catalog unified, dock/pin/timer, reorder, distribusi —
+  plus tabel status AC-01..AC-11 baru dengan evidence otomatis dan status
+  "Automated; runtime pending" eksplisit per baris, dan sub-bagian "Known
+  issues not yet addressed" mendaftar dua item deferred maintainer feedback
+  secara eksplisit supaya tidak hilang dari radar), `docs/development-status.md`
+  (checkpoint baru untuk C1/C2, T17b, T18, T19, dan deferred feedback — pola
+  sama dengan checkpoint sebelumnya di file ini, bukan menulis ulang histori
+  lama), `docs/reference/code-architecture-baseline.md` (tambah baris
+  `src/capabilities/features/toolbar/`, `src/capabilities/features/callouts/`,
+  `src/components/floaty-toolbar/`, `src/components/callout-*.ts` ke tabel
+  Responsibilities — sebelumnya modul-modul ini besar tapi tidak tercatat sama
+  sekali di baseline), `docs/for-developers/run-qa-before-merge-or-release.md`
+  (checklist baru "Floaty Toolbar dan Callouts" dengan skenario manual
+  konkret — toolbar muncul, tiap aksi, command palette, long-press reorder,
+  settings reorder, compact preview expand/collapse, marker uppercase/label
+  kompatibilitas, dock/pin/HUD/popout — dan link balik ke tabel AC dan ledger
+  runtime), `docs/for-users/use-md-writer-features.md` sudah diperbarui
+  incremental selama T17b/T18/C1/C2 (command palette, reorder, catalog
+  unified); direview ulang di T20, tidak ada referensi stale ke "Output
+  format"/`calloutOutputMode` yang tersisa (dicek dengan grep).
+- Verify: `pnpm run check:ci` hijau — 19 files / 130 tests, typecheck, lint,
+  styles, `lint:md`, build, artifacts, docs build. Review manual: grep
+  `pomodoro` (AC-01, kosong), grep `from "@/components` di `src/capabilities/`
+  (satu hit pre-existing di `outliner-sidebar.ts`, tidak terkait pekerjaan
+  floaty-toolbar — tidak ada capabilities->components baru diperkenalkan oleh
+  toolbar/callout work), grep header atribusi upstream masih utuh di file
+  yang memang mengadaptasi kode upstream (`actions.ts`, `reorder.ts`,
+  `toolbar-actions.ts` — path+revision+copyright); `markdown.ts` (callout
+  wrap/convert) tidak pernah punya header upstream karena logic-nya original
+  MD Writer, bukan adaptasi Floaty Toolbar (Floaty Toolbar upstream tidak
+  punya fitur callout-wrapping). README Acknowledgements masih menyebut
+  Floaty Toolbar/0png tanpa perubahan. CHANGELOG version bump tidak dilakukan
+  — keputusan release terpisah.
 
-Checkpoint final T18-T20: QA otomatis hijau, review code quality/compatibility,
-dan status runtime akurat. Task source yang verified dapat dilaporkan selesai
-meskipun readiness keseluruhan masih blocked oleh QA Obsidian; jangan menyatakan
-seluruh objective complete jika required acceptance masih pending.
+Checkpoint final T18-T20: QA otomatis hijau (19 files / 130 tests), review
+code quality/compatibility selesai, dan status runtime dicatat akurat di
+current-state.md + ledger di bawah. Task source T01-T20 semuanya verified
+secara otomatis, tetapi readiness keseluruhan tetap blocked oleh QA Obsidian
+runtime yang belum dilakukan sama sekali di environment ini — jangan
+menyatakan seluruh objective complete. Dua item feedback maintainer (bug
+dim-unfocused, redesign preview/save-button) sengaja dicatat sebagai deferred,
+bukan bagian T01-T20.
 
 ## Runtime acceptance ledger
 
@@ -1000,11 +1031,14 @@ diotorisasi; jangan menjalankan dev/deploy ke vault operasional implisit.
 ## Status validation fase
 
 SPECIFY, PLAN, dan kelanjutan implementation telah diotorisasi maintainer dalam
-sesi. T01-T19 (termasuk follow-up compact catalog C1/C2) diimplementasikan dan
+sesi. T01-T20 (termasuk follow-up compact catalog C1/C2) diimplementasikan dan
 diverifikasi otomatis; acceptance runtime dicatat terpisah di ledger. Atomic
 Conventional Commits setelah slice selesai dikonfirmasi maintainer pada
-2026-09-13. T20 (dokumentasi current state dan acceptance report final) adalah
-task berikutnya — task terakhir di rencana.
+2026-09-13. Seluruh task berencana (T01-T20) sudah source-verified per
+2026-09-14; tidak ada task tersisa di rencana selain dua item deferred
+maintainer feedback (bug dim-unfocused, redesign preview/save-button) dan
+runtime acceptance matrix penuh di Obsidian, yang keduanya menunggu prioritas/
+keputusan terpisah dari maintainer sebelum dikerjakan.
 
 ## Maintainer-requested follow-up: compact unified catalog — 2026-09-13
 
