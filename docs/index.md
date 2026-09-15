@@ -3,59 +3,103 @@ layout: home
 
 hero:
   name: MD Writer
-  text: Documentation
-  tagline: High-precision drafting for Obsidian with typewriter scrolling, whitespace visualization, and outliner focus.
+  text: Dokumentasi
+  tagline: Pengalaman Markdown Kreatif & Penuh Perhatian yang Terpadu
   actions:
     - theme: brand
-      text: Install the plugin
-      link: /for-users/install-md-writer
+      text: Pasang Plugin
+      link: /untuk-pengguna/install-md-writer
     - theme: alt
-      text: Contribute
-      link: /for-developers/setup-local-development
+      text: Pelajari Fitur
+      link: /untuk-pengguna/gunakan-fitur-md-writer
 
 features:
-  - title: For plugin users
-    details: Install MD Writer, learn the main writing features, and troubleshoot common Obsidian setup issues.
-  - title: For developers
-    details: Set up local development, run QA, follow branch conventions, and prepare releases.
-  - title: Reference
-    details: Keep stable release gates, branching rules, audit prompts, and long-form implementation plans in one place.
+  - title: Mode Preset Menulis
+    details: Pilih tahap menulis Anda (Ide, Menulis, Edit, Normal) dan aktifkan perangkat yang tepat secara instan.
+  - title: Integrasi Kaya & Fleksibel
+    details: Set lengkap fitur — typewriter, dimming, toolbar, timer, anchor heading GitHub — semua bekerja bersama dengan mulus.
+  - title: Sepenuhnya Dapat Disesuaikan
+    details: Toggle fitur apa pun on/off secara independen. Sesuaikan pengaturan per tool. Buat callout khusus. Workflow Anda, cara Anda.
 ---
 
-# MD Writer documentation
+# MD Writer
 
-## Start here
+## Mengapa Preset?
 
-Choose the path that matches what you want to do.
+Menulis adalah perjalanan, bukan keadaan tunggal. Brainstorming membutuhkan tools berbeda dari menulis fokus panjang, yang membutuhkan tools berbeda dari editing.
 
-### Pengguna plugin
+Preset MD Writer menggabungkan fitur yang tepat untuk setiap tahap — dibangun dari workflow penulis markdown berpengalaman. Satu klik mengaktifkan seluruh lingkungan menulis Anda.
 
-- [Install MD Writer](./for-users/install-md-writer.md)
-- [Use MD Writer features](./for-users/use-md-writer-features.md)
-- [Troubleshoot MD Writer](./for-users/troubleshooting.md)
+**Tetapi Anda tidak terkunci.** Setiap fitur bekerja secara independen. Mix, match, dan bangun workflow sempurna Anda. Preset hanya titik awal.
 
-### Developer dan maintainer
+## Mode Menulis Sekilas
 
-- [AI Assisted Development](./for-developers/ai-assisted-development.md)
-- [Current state](./current-state.md)
-- [Development status](./development-status.md)
-- [Set up local development](./for-developers/setup-local-development.md)
-- [Start a feature or bugfix](./for-developers/start-a-feature-or-bugfix.md)
-- [Run QA before merge or release](./for-developers/run-qa-before-merge-or-release.md)
-- [Create a GitHub release for BRAT and Obsidian](./for-developers/create-a-github-release.md)
+| Mode | Gunakan Untuk | Fitur | Default? |
+| --- | --- | --- | --- |
+| **Ide** | Brainstorming, capture cepat | Writing Focus + Hemingway + Sentence Focus | — |
+| **Menulis** | Long-form, distraction-free | Dimming + Typewriter + Show Whitespace | — |
+| **Edit** | Penyempurnaan detail | Current Line + Whitespace + Line Width | — |
+| **Normal** | Penggunaan umum, seimbang | Typewriter + Outliner | ✅ |
 
-### Reference
+Ini adalah Kemampuan Default untuk setiap mode preset, Anda dapat mengubahnya sesuai selera Anda
 
-- [Compact settings: accepted spec](./specs/compact-settings-layout/spec.md)
-- [Compact settings: accepted plan](./specs/compact-settings-layout/plan.md)
-- [Compact settings: implementation and acceptance ledger](./specs/compact-settings-layout/tasks.md)
-- [Callout and Advanced Canvas bug fixing: accepted spec](./specs/editor-bug-fixing/spec.md)
-- [Editor bug fixing: accepted plan](./specs/editor-bug-fixing/plan.md)
-- [Editor bug fixing: accepted tasks](./specs/editor-bug-fixing/tasks.md)
-- [Floaty Toolbar adoption: accepted spec](./specs/floaty-toolbar/spec.md)
-- [Floaty Toolbar: accepted implementation plan](./specs/floaty-toolbar/plan.md)
-- [Floaty Toolbar: draft task breakdown](./specs/floaty-toolbar/tasks.md)
-- [ADR-002: toolbar and callout management (Accepted)](./reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md)
-- [Branching conventions](./reference/branching-conventions.md)
-- [Release gates](./reference/release-gates.md)
-- [Outliner integration URD, PRD, and implementation plan](./reference/outliner-urd-prd.md)
+| Kemampuan              | Normal | Ide | Menulis    | Edit |
+| :---------------------- | :----- | :--- | :--------- | :------ |
+| Writing Focus           | Off    | On   | On         | Off     |
+| Outliner                | On     | On   | Off        | Off     |
+| Hemingway               | Off    | On   | Off        | Off     |
+| Dimming                 | Off    | Off  | On         | Off     |
+| Current Line            | Off    | Off  | Off        | On      |
+| Typewriter / Keep Lines | Off    | Off  | Typewriter | Off     |
+| Whitespace              | Off    | Off  | Off        | On      |
+| Line Width              | Off    | Off  | Off        | On      |
+
+**Cara menggunakan:**
+
+1. Buka Settings → MD Writer → Active Writing Mode
+2. Pilih preset (atau None untuk mengelola fitur secara manual)
+3. Semua fitur di preset itu aktif secara instan
+4. Pengaturan Anda per mode selalu disimpan
+5. Beralih anytime
+
+[Pelajari lebih lanjut tentang setiap fitur →](./untuk-pengguna/gunakan-fitur-md-writer.md)
+
+## Mulai dalam 3 Langkah
+
+### Langkah 1: Pasang
+
+Unduh MD Writer dari Obsidian Community Plugins atau BRAT.
+
+[Panduan Instalasi →](./untuk-pengguna/install-md-writer.md)
+
+### Langkah 2: Pilih Mode
+
+Buka Settings, pilih preset yang sesuai tahap menulis Anda.
+
+[Preset & Pengaturan →](./untuk-pengguna/gunakan-fitur-md-writer.md)
+
+### Langkah 3: Mulai Menulis
+
+Mulai dengan default seimbang, sesuaikan saat berjalan.
+
+[Troubleshooting →](./untuk-pengguna/troubleshooting.md)
+
+## Sumber Daya Lainnya
+
+### Pelajari
+
+- [Panduan Fitur](./untuk-pengguna/gunakan-fitur-md-writer.md) — Pelajaran mendalam tentang setiap fitur
+- [Troubleshooting](./untuk-pengguna/troubleshooting.md) — Masalah umum & solusi
+
+### Jelajahi
+
+- [Status Pengembangan](/en/development-status) — Apa yang sedang dikerjakan
+- [Pengakuan](/en/reference/ATTRIBUTION) — Penulis & lisensi
+
+### Berkontribusi
+
+- [Setup Developer](./untuk-developer/setup-local-development.md) — Setup lingkungan lokal
+
+### Dibangun dari 10+ plugin open-source
+
+Lihat [Pengakuan](/en/reference/ATTRIBUTION) untuk atribusi lengkap.
