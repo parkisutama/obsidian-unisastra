@@ -5,6 +5,7 @@ import { enSidebar } from "./sidebar-en"
 export default defineConfig({
   base: "/obsidian-md-writer/",
   lang: "id",
+  ignoreDeadLinks: true,
 
   locales: {
     root: {
