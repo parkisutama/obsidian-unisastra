@@ -34,6 +34,7 @@ import type { Feature } from "./capabilities/base/feature";
 import { getCommands } from "./capabilities/commands";
 import { getFeatures } from "./capabilities/features";
 import { CalloutStyles } from "./capabilities/features/callouts/styles";
+import type SidebarEqualResize from "./capabilities/features/general/sidebar-equal-resize";
 import type RestoreCursorPosition from "./capabilities/features/restore-cursor-position/restore-cursor-position";
 import { ToolbarController } from "./capabilities/features/toolbar/controller";
 import {
@@ -223,6 +224,7 @@ export default class TypewriterModeLib {
   }
 
   unload() {
+    this.getSidebarResizeFeature().dispose();
     this.calloutStyles.destroy();
     this.toolbar.destroy();
     for (const category of Object.values(this.features)) {
@@ -250,6 +252,7 @@ export default class TypewriterModeLib {
   }
 
   async saveSettings() {
+    this.getSidebarResizeFeature().refresh();
     await this.saveData(this.settings);
     if (this.calloutStyles.update(this.settings.callouts.entries)) {
       this.plugin.app.workspace.trigger("css-change");
@@ -260,6 +263,12 @@ export default class TypewriterModeLib {
 
   setCSSVariable(property: string, value: string) {
     this.perWindowProps.cssVariables[property] = value;
+  }
+
+  private getSidebarResizeFeature(): SidebarEqualResize {
+    return this.features.general[
+      "general.isSidebarEqualResizeEnabled"
+    ] as SidebarEqualResize;
   }
 
   reconfigureOutliner() {

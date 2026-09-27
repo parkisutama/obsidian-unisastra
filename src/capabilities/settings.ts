@@ -26,6 +26,7 @@ export interface GeneralSettings {
   isMononoteEnabled: boolean;
   isOnlyActivateAfterFirstInteractionEnabled: boolean;
   isPluginActivated: boolean;
+  isSidebarEqualResizeEnabled: boolean;
   version: string | null;
 }
 
@@ -222,6 +223,7 @@ export const DEFAULT_SETTINGS: TypewriterModeSettings = {
     isPluginActivated: true,
     isOnlyActivateAfterFirstInteractionEnabled: false,
     isMononoteEnabled: false,
+    isSidebarEqualResizeEnabled: false,
     enabledPlatforms: ENABLED_PLATFORMS.BOTH,
   },
   typewriter: {
@@ -421,6 +423,8 @@ function migrateGeneralSettings(legacy: Partial<LegacyTypewriterModeSettings>) {
       legacy.isOnlyActivateAfterFirstInteractionEnabled ??
       DEFAULT_SETTINGS.general.isOnlyActivateAfterFirstInteractionEnabled,
     isMononoteEnabled: DEFAULT_SETTINGS.general.isMononoteEnabled,
+    isSidebarEqualResizeEnabled:
+      DEFAULT_SETTINGS.general.isSidebarEqualResizeEnabled,
     enabledPlatforms: DEFAULT_SETTINGS.general.enabledPlatforms,
   };
 }

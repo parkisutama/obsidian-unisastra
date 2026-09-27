@@ -17,6 +17,25 @@ const createVault = (cursorPositions?: Record<string, unknown>) =>
   }) as unknown as Vault;
 
 describe("settings defaults and migrations", () => {
+  it("defaults sidebar synchronization off and preserves an explicit preference", async () => {
+    expect(DEFAULT_SETTINGS.general.isSidebarEqualResizeEnabled).toBe(false);
+    for (const value of [undefined, false, true]) {
+      const general =
+        value === undefined ? {} : { isSidebarEqualResizeEnabled: value };
+      const settings = await applyStartupMigrations(
+        { general } as Partial<TypewriterModeSettings>,
+        createVault(),
+        "plugins/md-writer"
+      );
+      expect(settings.general.isSidebarEqualResizeEnabled).toBe(value ?? false);
+    }
+    const legacy = await applyStartupMigrations(
+      {},
+      createVault(),
+      "plugins/md-writer"
+    );
+    expect(legacy.general.isSidebarEqualResizeEnabled).toBe(false);
+  });
   it("matches the maintainer's complete default recipe matrix", () => {
     const enabled = Object.fromEntries(
       Object.entries(DEFAULT_SETTINGS.writingMode.presets).map(

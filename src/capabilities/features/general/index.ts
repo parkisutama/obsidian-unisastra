@@ -4,6 +4,7 @@ import AnnounceUpdates from "../updates/announce-updates";
 import EnabledPlatforms from "./enabled-platforms";
 import Mononote from "./mononote";
 import OnlyActivateAfterFirstInteraction from "./only-activate-after-first-interaction";
+import SidebarEqualResize from "./sidebar-equal-resize";
 import TogglePluginActivation from "./toggle-plugin-activation";
 
 export default function getGeneralFeatures(tm: TypewriterModeLib) {
@@ -15,6 +16,7 @@ export default function getGeneralFeatures(tm: TypewriterModeLib) {
       new AnnounceUpdates(tm),
       new RestoreCursorPosition(tm),
       new Mononote(tm),
+      new SidebarEqualResize(tm),
     ].map((feature) => [feature.getSettingKey(), feature])
   );
 }
