@@ -1,4 +1,4 @@
-import { type EditorView, ViewPlugin } from "@codemirror/view";
+import { type EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
 import type { App, TFile } from "obsidian";
 import { editorInfoField, editorLivePreviewField } from "obsidian";
 import { rewriteAnchorForPreview } from "./reading-mode";
@@ -10,23 +10,101 @@ export function createLivePreviewPlugin(app: App, isEnabled: () => boolean) {
     class {
       private readonly view: EditorView;
       private rafId = 0;
+      private disposed = false;
+      private enabled = isEnabled();
+      private readonly observer: MutationObserver;
+      private readonly metadataRef;
+      private readonly resolvedRef;
+      private readonly sourceRef;
+
+      private get ownerWindow() {
+        return this.view.dom.ownerDocument.defaultView ?? window;
+      }
 
       constructor(view: EditorView) {
         this.view = view;
+        this.observer = new MutationObserver((mutations) => {
+          const hasAnchor = (node: Node) => {
+            const element = node as Element;
+            return (
+              element.matches?.(ANCHOR_SELECTOR) ||
+              element.querySelector?.(ANCHOR_SELECTOR)
+            );
+          };
+          if (
+            mutations.some((mutation) =>
+              mutation.type === "attributes"
+                ? (mutation.target as Element).matches?.(ANCHOR_SELECTOR)
+                : Array.from(mutation.addedNodes).some(hasAnchor)
+            )
+          ) {
+            this.scheduleRewrite();
+          }
+        });
+        this.observe();
+        this.metadataRef = app.metadataCache.on("changed", () =>
+          this.scheduleRewrite()
+        );
+        this.resolvedRef = app.metadataCache.on("resolved", () =>
+          this.scheduleRewrite()
+        );
+        this.sourceRef = app.workspace.on("file-open", () =>
+          this.scheduleRewrite()
+        );
         this.scheduleRewrite();
       }
 
-      update(): void {
-        this.scheduleRewrite();
+      update(update: ViewUpdate): void {
+        const enabled = isEnabled();
+        if (enabled !== this.enabled) {
+          this.enabled = enabled;
+          this.observer.disconnect();
+          this.observe();
+          this.scheduleRewrite();
+        } else if (
+          update.docChanged ||
+          update.viewportChanged ||
+          update.transactions.some((tr) => tr.reconfigured)
+        ) {
+          this.scheduleRewrite();
+        }
       }
 
       destroy(): void {
-        window.cancelAnimationFrame(this.rafId);
+        this.disposed = true;
+        this.observer.disconnect();
+        app.metadataCache.offref(this.metadataRef);
+        app.metadataCache.offref(this.resolvedRef);
+        app.workspace.offref(this.sourceRef);
+        this.ownerWindow.cancelAnimationFrame(this.rafId);
+      }
+
+      private observe(): void {
+        if (!this.disposed && isEnabled()) {
+          this.observer.observe(this.view.contentDOM, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ["href", "data-href", "class"],
+          });
+        }
       }
 
       private scheduleRewrite(): void {
-        window.cancelAnimationFrame(this.rafId);
-        this.rafId = window.requestAnimationFrame(() => {
+        if (this.disposed || !isEnabled()) {
+          this.ownerWindow.cancelAnimationFrame(this.rafId);
+          this.rafId = 0;
+          return;
+        }
+        if (this.rafId) {
+          return;
+        }
+        this.rafId = this.ownerWindow.requestAnimationFrame(() => {
+          this.rafId = 0;
+          if (this.disposed) {
+            return;
+          }
+          this.observer.disconnect();
           try {
             this.rewriteAnchors();
           } catch (error: unknown) {
@@ -34,6 +112,8 @@ export function createLivePreviewPlugin(app: App, isEnabled: () => boolean) {
               "[md-writer] GFM anchor Live Preview rewrite failed",
               error
             );
+          } finally {
+            this.observe();
           }
         });
       }

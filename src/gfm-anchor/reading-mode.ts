@@ -33,7 +33,17 @@ export function rewriteAnchorForPreview(
   anchor: HTMLAnchorElement,
   sourcePath: string
 ): void {
+  const href = anchor.getAttribute("href");
+  const dataHref = anchor.getAttribute("data-href");
+  const previous = anchor.dataset.gfmRewrittenHref;
+  // Live Preview may reuse an anchor while compatibility is disabled.
+  const changedHref =
+    previous && href !== null && href !== previous ? href : null;
+  const changedDataHref =
+    previous && dataHref !== null && dataHref !== previous ? dataHref : null;
   const raw =
+    changedHref ??
+    changedDataHref ??
     anchor.dataset.gfmOriginalHref ??
     anchor.getAttribute("data-href") ??
     anchor.getAttribute("href");
@@ -60,6 +70,7 @@ export function rewriteAnchorForPreview(
   anchor.dataset.gfmOriginalHref = raw;
 
   const rewritten = formatAnchor(parsed.filePart, heading);
+  anchor.dataset.gfmRewrittenHref = rewritten;
   anchor.setAttribute("href", rewritten);
   anchor.setAttribute("data-href", rewritten);
 }

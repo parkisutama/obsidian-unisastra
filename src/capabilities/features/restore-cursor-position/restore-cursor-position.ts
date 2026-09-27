@@ -16,6 +16,8 @@ function clampCursorPosition(position: number, docLength: number): number {
 }
 
 export default class RestoreCursorPosition extends FeatureToggle {
+  private readonly frames = new Map<number, Window>();
+  private enabled = false;
   readonly settingKey =
     "restoreCursorPosition.isRestoreCursorPositionEnabled" as const;
   protected settingTitle = "Restore cursor position";
@@ -50,6 +52,10 @@ export default class RestoreCursorPosition extends FeatureToggle {
   }
 
   override enable(): void {
+    if (this.enabled) {
+      return;
+    }
+    this.enabled = true;
     super.enable();
 
     this.tm.plugin.registerEvent(
@@ -70,6 +76,11 @@ export default class RestoreCursorPosition extends FeatureToggle {
   }
 
   override disable(): void {
+    this.enabled = false;
+    for (const [frame, win] of this.frames) {
+      win.cancelAnimationFrame(frame);
+    }
+    this.frames.clear();
     this.saveState().catch((error: unknown) => {
       console.error("Failed to save cursor positions:", error);
     });
@@ -143,9 +154,18 @@ export default class RestoreCursorPosition extends FeatureToggle {
     }
 
     // Trigger restoration - use requestAnimationFrame to ensure DOM is ready
-    window.requestAnimationFrame(() => {
-      this.restoreSavedPosition(file.path);
+    const win =
+      this.tm.plugin.app.workspace.containerEl.ownerDocument.defaultView;
+    if (!(win && this.enabled)) {
+      return;
+    }
+    const frame = win.requestAnimationFrame(() => {
+      this.frames.delete(frame);
+      if (this.enabled) {
+        this.restoreSavedPosition(file.path);
+      }
     });
+    this.frames.set(frame, win);
   };
 
   private restoreSavedPosition(filePath: string): void {

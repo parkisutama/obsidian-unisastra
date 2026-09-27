@@ -51,13 +51,20 @@ export abstract class FeatureToggle extends Feature {
       newValue = !this.getSettingValue();
     }
 
-    // assign the new value and call the correct enable / disable function
-    this.setSettingValue(newValue);
-    newValue ? this.enable() : this.disable();
+    this.applyValue(newValue);
 
     this.tm.saveSettings().catch((error) => {
       console.error("Failed to save settings:", error);
     });
+  }
+
+  /** Apply a preset member without persisting a partially applied recipe. */
+  applyValue(value: boolean): void {
+    if (this.getSettingValue() === value) {
+      return;
+    }
+    this.setSettingValue(value);
+    value ? this.enable() : this.disable();
   }
 
   override enable() {

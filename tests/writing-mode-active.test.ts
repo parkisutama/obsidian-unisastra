@@ -8,7 +8,7 @@ function createFakeToggle(
 ) {
   const [group, key] = path.split(".");
   return {
-    toggle: vi.fn((value: boolean) => {
+    applyValue: vi.fn((value: boolean) => {
       (tm.settings as never as Record<string, Record<string, boolean>>)[group][
         key
       ] = value;

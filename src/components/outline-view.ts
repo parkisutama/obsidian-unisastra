@@ -1,6 +1,7 @@
 import { syntaxTree } from "@codemirror/language";
 import { EditorView } from "@codemirror/view";
 import {
+  Component,
   ItemView,
   MarkdownRenderer,
   MarkdownView,
@@ -345,6 +346,24 @@ export class OutlineView extends ItemView {
   private guideRows: OutlineGuideRow[] = [];
   private updateTimeout: number | null = null;
   private readonly tm: TypewriterModeLib;
+  private generation = 0;
+  private closed = false;
+  private renderComponent: Component | null = null;
+  private pendingComponent: Component | null = null;
+  private renderSignature = "";
+  private renderedEditor: EditorView | null = null;
+
+  private get ownerWindow() {
+    return this.contentEl.ownerDocument.defaultView ?? window;
+  }
+
+  private invalidateRender() {
+    this.generation += 1;
+    if (this.pendingComponent) {
+      this.removeChild(this.pendingComponent);
+      this.pendingComponent = null;
+    }
+  }
 
   constructor(leaf: WorkspaceLeaf, tm: TypewriterModeLib) {
     super(leaf);
@@ -395,9 +414,13 @@ export class OutlineView extends ItemView {
   }
 
   override onOpen(): Promise<void> {
+    this.closed = false;
     this.buildOutline();
     // Retry after delay in case syntax tree wasn't ready
-    this.updateTimeout = window.setTimeout(() => this.buildOutline(), 1000);
+    this.updateTimeout = this.ownerWindow.setTimeout(
+      () => this.buildOutline(),
+      1000
+    );
 
     this.registerEvent(
       this.app.workspace.on("active-leaf-change", () => {
@@ -415,8 +438,11 @@ export class OutlineView extends ItemView {
       })
     );
     this.registerEvent(
-      this.app.metadataCache.on("changed", () => {
-        this.scheduleUpdate();
+      this.app.metadataCache.on("changed", (file) => {
+        if (file.path === this.getActiveSourcePath()) {
+          this.renderSignature = "";
+          this.scheduleUpdate();
+        }
       })
     );
 
@@ -424,8 +450,16 @@ export class OutlineView extends ItemView {
   }
 
   override onClose(): Promise<void> {
+    this.closed = true;
+    this.invalidateRender();
+    if (this.renderComponent) {
+      this.removeChild(this.renderComponent);
+      this.renderComponent = null;
+    }
+    this.renderSignature = "";
+    this.renderedEditor = null;
     if (this.updateTimeout) {
-      window.clearTimeout(this.updateTimeout);
+      this.ownerWindow.clearTimeout(this.updateTimeout);
       this.updateTimeout = null;
     }
     if (this.collapseSaveTimeout) {
@@ -437,10 +471,17 @@ export class OutlineView extends ItemView {
   }
 
   private scheduleUpdate() {
-    if (this.updateTimeout) {
-      window.clearTimeout(this.updateTimeout);
+    if (this.closed) {
+      return;
     }
-    this.updateTimeout = window.setTimeout(() => this.buildOutline(), 200);
+    this.invalidateRender();
+    if (this.updateTimeout) {
+      this.ownerWindow.clearTimeout(this.updateTimeout);
+    }
+    this.updateTimeout = this.ownerWindow.setTimeout(
+      () => this.buildOutline(),
+      200
+    );
   }
 
   private getActiveEntryIndex(
@@ -1065,10 +1106,15 @@ export class OutlineView extends ItemView {
     focusedRootPos: number | null,
     cm: EditorView,
     sourcePath: string,
-    taskProgressByIndex: Map<number, TaskProgress>
+    taskProgressByIndex: Map<number, TaskProgress>,
+    guideRows: OutlineGuideRow[],
+    component: Component,
+    generation: number
   ) {
-    this.guideRows = buildOutlineGuides(visibleEntries);
     for (const [visibleIndex, entry] of visibleEntries.entries()) {
+      if (this.closed || generation !== this.generation) {
+        return;
+      }
       const item = list.createDiv({
         cls: `ptm-outline-item ptm-outline-${entry.type}`,
       });
@@ -1086,7 +1132,7 @@ export class OutlineView extends ItemView {
         cls: "ptm-outline-link",
       });
 
-      this.renderEntryLead(content, cm, entry, this.guideRows[visibleIndex]);
+      this.renderEntryLead(content, cm, entry, guideRows[visibleIndex]);
 
       const markdownEl = content.createDiv({
         cls: "ptm-outline-content markdown-rendered",
@@ -1097,8 +1143,12 @@ export class OutlineView extends ItemView {
         entry.contentMarkdown,
         markdownEl,
         sourcePath,
-        this
+        component
       );
+      if (this.closed || generation !== this.generation) {
+        component.unload();
+        return;
+      }
       this.buildItemActions(
         item,
         entry,
@@ -1151,7 +1201,7 @@ export class OutlineView extends ItemView {
     }
     applyOutlineTrail(
       list,
-      getOutlineTrail(this.guideRows, activeEntryIndex),
+      getOutlineTrail(guideRows, activeEntryIndex),
       "is-active-connector"
     );
   }
@@ -1191,11 +1241,16 @@ export class OutlineView extends ItemView {
   }
 
   private async buildOutline() {
-    const container = this.contentEl;
-    container.empty();
+    if (this.closed) {
+      return;
+    }
+    this.invalidateRender();
+    const generation = this.generation;
+    const container = this.contentEl.ownerDocument.createElement("div");
 
     const editorContext = this.getActiveEditorContext();
     if (!editorContext) {
+      this.clearRenderedOutline();
       this.renderEmptyState("No active document");
       return;
     }
@@ -1205,12 +1260,12 @@ export class OutlineView extends ItemView {
 
     const entries = collectOutlineEntries(cm);
     if (entries.length === 0) {
+      this.clearRenderedOutline();
       this.renderEmptyState("No outline entries");
       return;
     }
 
     const treeEntries = this.buildTreeEntries(entries);
-    this.treeEntries = treeEntries;
     const activeEntryIndex = this.getActiveEntryIndex(
       entries,
       cm.state.selection.main.head
@@ -1238,6 +1293,30 @@ export class OutlineView extends ItemView {
       branchRootIndex
     );
     const taskProgressByIndex = this.getTaskProgress(treeEntries);
+    const signature = JSON.stringify([
+      sourcePath,
+      focusedRootPos,
+      filterMode,
+      visibleEntries,
+      [...taskProgressByIndex],
+      [...this.collapseState],
+    ]);
+    const existingList =
+      this.contentEl.querySelector<HTMLElement>(".ptm-outline-list");
+    if (
+      signature === this.renderSignature &&
+      cm === this.renderedEditor &&
+      existingList
+    ) {
+      this.updateActiveOutlineRow(existingList, activeEntryIndex, entries);
+      this.handleRevealResult(
+        existingList,
+        filterMode,
+        focusedRootPos,
+        sourcePath
+      );
+      return;
+    }
     if (activeEntryIndex >= 0) {
       this.buildToolbar(
         container,
@@ -1247,17 +1326,81 @@ export class OutlineView extends ItemView {
     }
 
     const list = container.createDiv({ cls: "ptm-outline-list" });
-
-    await this.renderOutlineList(
-      list,
-      visibleEntries,
-      activeEntryIndex,
-      focusedRootPos,
-      cm,
-      sourcePath,
-      taskProgressByIndex
-    );
+    const guideRows = buildOutlineGuides(visibleEntries);
+    const component = this.addChild(new Component());
+    this.pendingComponent = component;
+    try {
+      await this.renderOutlineList(
+        list,
+        visibleEntries,
+        activeEntryIndex,
+        focusedRootPos,
+        cm,
+        sourcePath,
+        taskProgressByIndex,
+        guideRows,
+        component,
+        generation
+      );
+    } catch (error) {
+      this.removeChild(component);
+      if (this.pendingComponent === component) {
+        this.pendingComponent = null;
+      }
+      console.error("MD Writer: outline render failed", error);
+      return;
+    }
+    if (this.closed || generation !== this.generation) {
+      this.removeChild(component);
+      return;
+    }
+    if (this.renderComponent) {
+      this.removeChild(this.renderComponent);
+    }
+    this.renderComponent = component;
+    this.pendingComponent = null;
+    this.treeEntries = treeEntries;
+    this.guideRows = guideRows;
+    this.renderSignature = signature;
+    this.renderedEditor = cm;
+    this.contentEl.replaceChildren(...Array.from(container.childNodes));
     this.handleRevealResult(list, filterMode, focusedRootPos, sourcePath);
+  }
+
+  private clearRenderedOutline() {
+    if (this.renderComponent) {
+      this.removeChild(this.renderComponent);
+      this.renderComponent = null;
+    }
+    this.renderSignature = "";
+    this.renderedEditor = null;
+    this.treeEntries = [];
+    this.guideRows = [];
+    this.contentEl.empty();
+  }
+
+  private updateActiveOutlineRow(
+    list: HTMLElement,
+    activeIndex: number,
+    entries: OutlineEntry[]
+  ) {
+    for (const row of Array.from(
+      list.querySelectorAll<HTMLElement>(".ptm-outline-item")
+    )) {
+      row.classList.toggle(
+        "is-active",
+        Number(row.dataset.treeIndex) === activeIndex
+      );
+    }
+    const title = this.contentEl.querySelector(".ptm-outline-toolbar-title");
+    if (title) {
+      title.textContent = entries[activeIndex]?.title ?? "";
+    }
+    applyOutlineTrail(
+      list,
+      getOutlineTrail(this.guideRows, activeIndex),
+      "is-active-connector"
+    );
   }
 
   private buildToolbar(

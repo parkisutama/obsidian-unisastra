@@ -13,6 +13,8 @@ export default class HemingwayMode extends FeatureToggle {
     "Prevents editing previously written text. Blocks navigation keys (arrows, Home, End, Page Up/Down), Delete key, and undo operations to enforce forward-only writing.";
 
   private statusBarItem: HTMLElement | null = null;
+  private keyboardDocument: Document | null = null;
+  private readonly onWindowUnload = () => this.unregisterKeyboardHandler();
 
   override load() {
     super.load();
@@ -89,14 +91,30 @@ export default class HemingwayMode extends FeatureToggle {
   };
 
   private registerKeyboardHandler() {
-    window.activeDocument.addEventListener("keydown", this.keyboardHandler, {
+    const doc = window.activeDocument;
+    if (this.keyboardDocument === doc) {
+      return;
+    }
+    this.unregisterKeyboardHandler();
+    this.keyboardDocument = doc;
+    doc.defaultView?.addEventListener("unload", this.onWindowUnload);
+    doc.addEventListener("keydown", this.keyboardHandler, {
       capture: true,
     });
   }
 
   private unregisterKeyboardHandler() {
-    window.activeDocument.removeEventListener("keydown", this.keyboardHandler, {
-      capture: true,
-    });
+    this.keyboardDocument?.defaultView?.removeEventListener(
+      "unload",
+      this.onWindowUnload
+    );
+    this.keyboardDocument?.removeEventListener(
+      "keydown",
+      this.keyboardHandler,
+      {
+        capture: true,
+      }
+    );
+    this.keyboardDocument = null;
   }
 }

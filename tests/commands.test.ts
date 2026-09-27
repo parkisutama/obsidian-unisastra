@@ -168,31 +168,31 @@ describe("command registration", () => {
       features: {
         currentLine: {
           "currentLine.isHighlightCurrentLineEnabled": {
-            toggle: toggles.currentLine,
+            applyValue: toggles.currentLine,
           },
         },
         dimming: {
-          "dimming.isDimUnfocusedEnabled": { toggle: toggles.dimming },
+          "dimming.isDimUnfocusedEnabled": { applyValue: toggles.dimming },
         },
         hemingwayMode: {
           "hemingwayMode.isHemingwayModeEnabled": {
-            toggle: toggles.hemingwayMode,
+            applyValue: toggles.hemingwayMode,
           },
         },
         maxChar: {
-          "maxChars.isMaxCharsPerLineEnabled": { toggle: toggles.maxChar },
+          "maxChars.isMaxCharsPerLineEnabled": { applyValue: toggles.maxChar },
         },
         outliner: {
-          "outliner.isOutlinerEnabled": { toggle: toggles.outliner },
+          "outliner.isOutlinerEnabled": { applyValue: toggles.outliner },
         },
         showWhitespace: {
           "showWhitespace.isShowWhitespaceEnabled": {
-            toggle: toggles.showWhitespace,
+            applyValue: toggles.showWhitespace,
           },
         },
         typewriter: {
           "typewriter.isTypewriterScrollEnabled": {
-            toggle: toggles.typewriter,
+            applyValue: toggles.typewriter,
           },
         },
       },
@@ -257,31 +257,33 @@ describe("command registration", () => {
         features: {
           currentLine: {
             "currentLine.isHighlightCurrentLineEnabled": {
-              toggle: toggles.currentLine,
+              applyValue: toggles.currentLine,
             },
           },
           dimming: {
-            "dimming.isDimUnfocusedEnabled": { toggle: toggles.dimming },
+            "dimming.isDimUnfocusedEnabled": { applyValue: toggles.dimming },
           },
           hemingwayMode: {
             "hemingwayMode.isHemingwayModeEnabled": {
-              toggle: toggles.hemingwayMode,
+              applyValue: toggles.hemingwayMode,
             },
           },
           maxChar: {
-            "maxChars.isMaxCharsPerLineEnabled": { toggle: toggles.maxChar },
+            "maxChars.isMaxCharsPerLineEnabled": {
+              applyValue: toggles.maxChar,
+            },
           },
           outliner: {
-            "outliner.isOutlinerEnabled": { toggle: toggles.outliner },
+            "outliner.isOutlinerEnabled": { applyValue: toggles.outliner },
           },
           showWhitespace: {
             "showWhitespace.isShowWhitespaceEnabled": {
-              toggle: toggles.showWhitespace,
+              applyValue: toggles.showWhitespace,
             },
           },
           typewriter: {
             "typewriter.isTypewriterScrollEnabled": {
-              toggle: toggles.typewriter,
+              applyValue: toggles.typewriter,
             },
           },
         },

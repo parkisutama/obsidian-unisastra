@@ -103,8 +103,8 @@ export default class WritingModeActive extends Feature {
       }
 
       const feature = category[entry.settingKey];
-      if (feature && "toggle" in feature) {
-        (feature as { toggle: (value: boolean) => void }).toggle(
+      if (feature && "applyValue" in feature) {
+        (feature as { applyValue: (value: boolean) => void }).applyValue(
           preset[entry.presetKey]
         );
       }

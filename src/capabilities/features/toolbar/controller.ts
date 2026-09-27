@@ -73,6 +73,7 @@ export class ToolbarController {
   private readonly fileElapsed = new Map<Document, FileElapsedState>();
   private session: ElapsedState = STOPPED_ELAPSED;
   private statusBarEl: HTMLElement | null = null;
+  private hudSignature = "";
   private tickHandle: number | null = null;
   private tickIntervalSeconds: number | null = null;
   private disposed = false;
@@ -126,6 +127,9 @@ export class ToolbarController {
     );
     this.syncSession();
     workspace.onLayoutReady(() => {
+      if (this.disposed) {
+        return;
+      }
       const view = workspace.getActiveViewOfType(MarkdownView);
       if (view) {
         this.syncFileElapsed(view, view.containerEl.ownerDocument);
@@ -153,7 +157,12 @@ export class ToolbarController {
       this.session = STOPPED_ELAPSED;
       this.fileElapsed.clear();
     }
-    if (enabled) {
+    const timers = this.tm.settings.toolbar.timers;
+    if (
+      enabled &&
+      !Platform.isMobile &&
+      (timers.sessionVisible || timers.fileVisible)
+    ) {
       this.ensureTick();
     } else {
       this.stopTick();
@@ -240,17 +249,22 @@ export class ToolbarController {
     this.changed(view);
   }
   changed(view: EditorView): void {
+    if (this.disposed) {
+      return;
+    }
     const doc = view.dom.ownerDocument;
     if (view.hasFocus || !this.active.has(doc)) {
       this.active.set(doc, view);
     }
-    this.schedule(doc);
+    if (this.tm.settings.toolbar.enabled) {
+      this.schedule(doc);
+    }
   }
   notifyTyping(view: EditorView): void {
     this.reportDockEvent(view.dom.ownerDocument, "typing");
   }
   reportDockEvent(doc: Document, event: DockEvent): void {
-    if (this.disposed) {
+    if (this.disposed || !this.tm.settings.toolbar.enabled) {
       return;
     }
     const toolbar = this.tm.settings.toolbar;
@@ -346,17 +360,35 @@ export class ToolbarController {
       });
   }
   refresh(): void {
+    if (this.disposed) {
+      return;
+    }
     this.syncSession();
     for (const doc of new Set([
       ...this.active.keys(),
       ...this.surfaces.keys(),
     ])) {
-      this.reportDockEvent(doc, "reveal");
+      if (this.tm.settings.toolbar.enabled) {
+        this.reportDockEvent(doc, "reveal");
+      } else {
+        const frame = this.frames.get(doc);
+        if (frame !== undefined) {
+          doc.defaultView?.cancelAnimationFrame(frame);
+          this.frames.delete(doc);
+        }
+        this.schedule(doc);
+      }
     }
   }
   private schedule(doc: Document): void {
     const win = doc.defaultView;
     if (this.disposed || !win || this.frames.has(doc)) {
+      return;
+    }
+    if (!this.tm.settings.toolbar.enabled) {
+      this.surfaces.get(doc)?.destroy();
+      this.surfaces.delete(doc);
+      this.updateStatusBarHud(doc, false);
       return;
     }
     const frame = win.requestAnimationFrame(() => {
@@ -367,7 +399,10 @@ export class ToolbarController {
   }
   private render(doc: Document): void {
     const view = this.active.get(doc);
-    const target = view ? this.target(view).policy() : null;
+    const target =
+      view && this.tm.settings.toolbar.enabled
+        ? this.target(view).policy()
+        : null;
     if (!(target?.enabled && target.current && this.factory)) {
       this.surfaces.get(doc)?.destroy();
       this.surfaces.delete(doc);
@@ -413,7 +448,10 @@ export class ToolbarController {
     return this.statusBarEl;
   }
   private updateStatusBarHud(doc: Document, shouldShow: boolean): void {
-    if (!(shouldShow && this.isMainWindowDocument(doc))) {
+    if (!this.isMainWindowDocument(doc)) {
+      return;
+    }
+    if (!shouldShow) {
       this.statusBarEl?.hide();
       return;
     }
@@ -427,6 +465,12 @@ export class ToolbarController {
       return;
     }
     const el = this.ensureStatusBarEl();
+    const signature = JSON.stringify(segments);
+    if (signature === this.hudSignature) {
+      el.show();
+      return;
+    }
+    this.hudSignature = signature;
     const ownerDoc = el.ownerDocument;
     el.replaceChildren();
     for (const [index, segment] of segments.entries()) {
@@ -482,6 +526,8 @@ export class ToolbarController {
     }
     this.editors.clear();
     this.active.clear();
+    this.fileElapsed.clear();
+    this.dockVisible.clear();
     this.session = STOPPED_ELAPSED;
     this.stopTick();
     this.statusBarEl?.remove();

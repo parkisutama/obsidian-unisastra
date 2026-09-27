@@ -36,6 +36,26 @@ class TypewriterModeCM6Plugin {
   protected view: EditorView;
 
   private domResizeObserver: ResizeObserver | null = null;
+  private embedObserver: MutationObserver | null = null;
+  private readonly frames = new Set<number>();
+  private disposed = false;
+
+  private get ownerWindow() {
+    return this.view.dom.ownerDocument.defaultView ?? window;
+  }
+
+  private scheduleFrame(callback: () => void) {
+    if (this.disposed) {
+      return;
+    }
+    const frame = this.ownerWindow.requestAnimationFrame(() => {
+      this.frames.delete(frame);
+      if (!this.disposed) {
+        callback();
+      }
+    });
+    this.frames.add(frame);
+  }
 
   private readonly onScrollEventKey: "wheel" | "touchmove";
   private isListeningToOnScroll = false;
@@ -61,6 +81,13 @@ class TypewriterModeCM6Plugin {
   }
 
   destroy() {
+    this.disposed = true;
+    this.embedObserver?.disconnect();
+    this.embedObserver = null;
+    for (const frame of this.frames) {
+      this.ownerWindow.cancelAnimationFrame(frame);
+    }
+    this.frames.clear();
     this.domResizeObserver?.disconnect();
 
     this.destroyCurrentLine();
@@ -79,7 +106,7 @@ class TypewriterModeCM6Plugin {
     this.watchEmbeddedMarkdown();
     this.onReconfigured();
 
-    window.requestAnimationFrame(() => {
+    this.scheduleFrame(() => {
       this.restoreCursorPosition(this.view);
     });
   }
@@ -237,6 +264,9 @@ class TypewriterModeCM6Plugin {
     const selector = ".markdown-embed-content iframe.embed-iframe";
     const props = this.tm.perWindowProps;
     const observer = new MutationObserver((mutations) => {
+      if (this.disposed) {
+        return;
+      }
       mutations.forEach((mutation) => {
         [].forEach.call(mutation.addedNodes, (node: Node) => {
           if (
@@ -252,6 +282,7 @@ class TypewriterModeCM6Plugin {
         });
       });
     });
+    this.embedObserver = observer;
     observer.observe(this.view.dom.ownerDocument, {
       childList: true,
       subtree: true,
@@ -393,15 +424,17 @@ class TypewriterModeCM6Plugin {
     this.view.requestMeasure({
       key,
       read: (view: EditorView) =>
-        new TypewriterOffsetCalculator(
-          this.tm,
-          view
-        ).getTypewriterPositionData(),
+        this.disposed
+          ? null
+          : new TypewriterOffsetCalculator(
+              this.tm,
+              view
+            ).getTypewriterPositionData(),
       write: (measure, view) => {
         if (!measure) {
           return;
         }
-        window.requestAnimationFrame(() => {
+        this.scheduleFrame(() => {
           write(measure, view);
         });
       },

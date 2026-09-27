@@ -40,8 +40,15 @@ export default class Mononote extends FeatureToggle {
     "Focus a note's existing tab instead of opening a duplicate when it's already open elsewhere in the same tab group.";
 
   private readonly processingLeafIds = new Set<string>();
+  private readonly pending = new Set<() => void>();
+  private enabled = false;
+  private generation = 0;
 
   override enable(): void {
+    if (this.enabled) {
+      return;
+    }
+    this.enabled = true;
     super.enable();
 
     this.tm.plugin.registerEvent(
@@ -53,6 +60,12 @@ export default class Mononote extends FeatureToggle {
   }
 
   override disable(): void {
+    this.enabled = false;
+    this.generation += 1;
+    for (const cancel of this.pending) {
+      cancel();
+    }
+    this.pending.clear();
     super.disable();
     this.tm.plugin.app.workspace.off(
       "active-leaf-change",
@@ -64,7 +77,7 @@ export default class Mononote extends FeatureToggle {
   private readonly onActiveLeafChange = (
     activeLeaf: WorkspaceLeaf | null
   ): void => {
-    if (!activeLeaf) {
+    if (!(activeLeaf && this.enabled)) {
       return;
     }
 
@@ -74,12 +87,15 @@ export default class Mononote extends FeatureToggle {
     }
 
     this.processingLeafIds.add(leaf.id);
+    const generation = this.generation;
     this.processActiveLeaf(leaf)
       .catch((error: unknown) => {
         console.error("Mononote failed to process active leaf:", error);
       })
       .finally(() => {
-        this.processingLeafIds.delete(leaf.id);
+        if (generation === this.generation) {
+          this.processingLeafIds.delete(leaf.id);
+        }
       });
   };
 
@@ -121,9 +137,25 @@ export default class Mononote extends FeatureToggle {
       duplicateLeaves.find((leaf) => !leaf.pinned)) as InternalLeaf;
 
     return new Promise((resolve) => {
+      const generation = this.generation;
+      const ownerWindow =
+        activeLeaf.view.containerEl?.ownerDocument.defaultView ?? window;
+      let timer: number;
+      const finish = () => {
+        ownerWindow.clearTimeout(timer);
+        ownerWindow.removeEventListener?.("unload", finish);
+        this.pending.delete(finish);
+        resolve();
+      };
+      this.pending.add(finish);
+      ownerWindow.addEventListener?.("unload", finish);
       // Deferred so Obsidian has time to update the leaf's navigation
       // history before the "has history?" check below runs.
-      window.setTimeout(() => {
+      timer = ownerWindow.setTimeout(() => {
+        if (generation !== this.generation) {
+          finish();
+          return;
+        }
         const ephemeralState = { ...activeLeaf.getEphemeralState() };
         const hasEphemeralState = Object.keys(ephemeralState).length > 0;
 
@@ -135,18 +167,26 @@ export default class Mononote extends FeatureToggle {
           // leaf id is already in processingLeafIds.
           activeLeaf.history.back();
         } else if (activeLeaf.pinned) {
-          resolve();
+          finish();
           return;
         } else {
           activeLeaf.detach();
         }
 
-        window.setTimeout(() => {
+        if (generation !== this.generation) {
+          finish();
+          return;
+        }
+        timer = ownerWindow.setTimeout(() => {
+          if (generation !== this.generation) {
+            finish();
+            return;
+          }
           workspace.setActiveLeaf(targetToFocus, { focus: true });
           if (hasEphemeralState) {
             targetToFocus.setEphemeralState(ephemeralState);
           }
-          resolve();
+          finish();
         }, FOCUS_DELAY_MS);
       }, FOCUS_DELAY_MS);
     });
