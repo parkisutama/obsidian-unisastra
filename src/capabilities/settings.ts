@@ -14,6 +14,7 @@ import {
   DEFAULT_CALLOUT_SETTINGS,
   normalizeCalloutSettings,
 } from "./features/callouts/settings";
+import { normalizeFoldState } from "./features/fold-persist/settings";
 import {
   DEFAULT_TOOLBAR_SETTINGS,
   normalizeToolbarSettings,
@@ -723,5 +724,8 @@ export async function applyStartupMigrations(
   }
   merged.toolbar = normalizeToolbarSettings(settings.toolbar);
   merged.callouts = normalizeCalloutSettings(settings.callouts);
+  merged.foldPersist.foldState = normalizeFoldState(
+    merged.foldPersist.foldState
+  );
   return merged;
 }

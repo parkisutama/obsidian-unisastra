@@ -4,5 +4,5 @@ export default class BlockIdEnabled extends FeatureToggle {
   readonly settingKey = "blockId.isBlockIdEnabled" as const;
   protected settingTitle = "Enable block IDs";
   protected settingDesc =
-    "Allow generating stable block IDs for list items, enabling block linking and fold persistence.";
+    "Enable automatic block ID features for list items. Manual ID and link commands remain available when this is off.";
 }

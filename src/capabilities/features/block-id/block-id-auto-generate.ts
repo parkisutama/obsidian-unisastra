@@ -4,5 +4,5 @@ export default class BlockIdAutoGenerate extends FeatureToggle {
   readonly settingKey = "blockId.isAutoGenerateOnFoldEnabled" as const;
   protected settingTitle = "Auto-generate on fold";
   protected settingDesc =
-    "Automatically generate a block ID when a list item is folded, if it does not already have one.";
+    "Add a block ID when a list item is folded by you or another plugin. MD Writer restore and undo/redo do not generate IDs. Insertion can be undone.";
 }

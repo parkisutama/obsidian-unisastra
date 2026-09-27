@@ -12,7 +12,10 @@ import {
   createOutlinerExtension,
   getOutlinerReconfigureEffects,
 } from "@/cm6/outliner";
+import { createBlockIdHiderPlugin } from "@/cm6/outliner/block-id";
 import { calculateOutlinerRange } from "@/cm6/outliner/calculate-range";
+import { foldPlatformEnabled } from "@/cm6/outliner/fold-context";
+import { createFoldPersistExtension } from "@/cm6/outliner/fold-persist";
 import {
   dispatchOutlinerFocus,
   dispatchOutlinerUnfocus,
@@ -34,6 +37,7 @@ import type { Feature } from "./capabilities/base/feature";
 import { getCommands } from "./capabilities/commands";
 import { getFeatures } from "./capabilities/features";
 import { CalloutStyles } from "./capabilities/features/callouts/styles";
+import { FoldPersistenceCoordinator } from "./capabilities/features/fold-persist/coordinator";
 import type SidebarEqualResize from "./capabilities/features/general/sidebar-equal-resize";
 import type RestoreCursorPosition from "./capabilities/features/restore-cursor-position/restore-cursor-position";
 import { ToolbarController } from "./capabilities/features/toolbar/controller";
@@ -42,13 +46,13 @@ import {
   DEFAULT_SETTINGS,
   type TypewriterModeSettings,
 } from "./capabilities/settings";
+import { SettingsWriter } from "./settings-writer";
 
 export default class TypewriterModeLib {
   readonly plugin: Plugin;
   private readonly loadData: () => Promise<TypewriterModeSettings>;
-  private readonly saveData: (
-    settings: TypewriterModeSettings
-  ) => Promise<void>;
+  private readonly settingsWriter: SettingsWriter<TypewriterModeSettings>;
+  readonly foldPersistence: FoldPersistenceCoordinator;
 
   settings: TypewriterModeSettings = DEFAULT_SETTINGS;
 
@@ -75,7 +79,14 @@ export default class TypewriterModeLib {
   ) {
     this.plugin = plugin;
     this.loadData = loadData;
-    this.saveData = saveData;
+    this.settingsWriter = new SettingsWriter(saveData);
+    this.foldPersistence = new FoldPersistenceCoordinator({
+      enabled: () =>
+        foldPlatformEnabled(this) &&
+        this.settings.foldPersist.isFoldPersistEnabled,
+      state: () => this.settings.foldPersist.foldState,
+      persist: (allowed) => this.settingsWriter.save(this.settings, allowed),
+    });
     this.toolbar = new ToolbarController(this);
 
     // Features must be loaded first!
@@ -83,6 +94,8 @@ export default class TypewriterModeLib {
     this.commands = getCommands(this);
 
     this.editorExtensions = [
+      createBlockIdHiderPlugin(this),
+      createFoldPersistExtension(this),
       createToolbarSelectionExtension(this.toolbar),
       createTypewriterModeViewPlugin(this),
       createShowWhitespaceExtension(),
@@ -106,6 +119,16 @@ export default class TypewriterModeLib {
     );
     this.loadPerWindowProps();
     this.loadEditorExtension();
+    this.plugin.registerEvent(
+      this.plugin.app.vault.on("rename", (file, oldPath) =>
+        this.foldPersistence.rename(oldPath, file.path)
+      )
+    );
+    this.plugin.registerEvent(
+      this.plugin.app.vault.on("delete", (file) =>
+        this.foldPersistence.delete(file.path)
+      )
+    );
     this.toolbar.setSurfaceFactory(createFloatyToolbarSurface);
     this.toolbar.load();
     this.loadCalloutStyles();
@@ -224,6 +247,7 @@ export default class TypewriterModeLib {
   }
 
   unload() {
+    this.foldPersistence.destroy();
     this.getSidebarResizeFeature().dispose();
     this.calloutStyles.destroy();
     this.toolbar.destroy();
@@ -252,8 +276,9 @@ export default class TypewriterModeLib {
   }
 
   async saveSettings() {
+    this.foldPersistence.refresh();
     this.getSidebarResizeFeature().refresh();
-    await this.saveData(this.settings);
+    await this.settingsWriter.save(this.settings);
     if (this.calloutStyles.update(this.settings.callouts.entries)) {
       this.plugin.app.workspace.trigger("css-change");
     }

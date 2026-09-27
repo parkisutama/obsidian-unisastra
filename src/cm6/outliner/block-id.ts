@@ -1,3 +1,4 @@
+import { syntaxTree } from "@codemirror/language";
 import {
   Decoration,
   type DecorationSet,
@@ -5,49 +6,130 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
+import { editorLivePreviewField } from "obsidian";
+import { resolveListItem } from "@/cm6/list-service";
+import type TypewriterModeLib from "@/lib";
+import { foldEditorContext } from "./fold-context";
 
 const BLOCK_ID_LINE_RE = / \^[\w-]+$/;
 
+function hiddenIdRange(
+  view: EditorView,
+  line: { text: string; from: number; to: number }
+) {
+  const match = line.text.match(BLOCK_ID_LINE_RE);
+  if (
+    !match ||
+    match.index === undefined ||
+    resolveListItem(view.state, line.from)?.from !== line.from
+  ) {
+    return null;
+  }
+  const from = line.from + match.index;
+  if (
+    view.state.selection.ranges.some(
+      (selection) => selection.from <= line.to && selection.to >= from
+    )
+  ) {
+    return null;
+  }
+  return { from, to: line.to };
+}
+
 /** ViewPlugin that hides block IDs in Live Preview via Decoration.replace() */
-export const blockIdHiderPlugin = ViewPlugin.fromClass(
-  class {
-    decorations: DecorationSet;
+export function createBlockIdHiderPlugin(tm: TypewriterModeLib) {
+  return ViewPlugin.fromClass(
+    class {
+      decorations: DecorationSet;
+      enabled = false;
 
-    constructor(view: EditorView) {
-      this.decorations = this.build(view);
-    }
-
-    update(update: ViewUpdate) {
-      if (update.docChanged || update.viewportChanged) {
-        this.decorations = this.build(update.view);
+      constructor(view: EditorView) {
+        this.decorations = this.build(view);
       }
-    }
 
-    build(view: EditorView): DecorationSet {
-      const ranges: Array<{ from: number; to: number }> = [];
-      const doc = view.state.doc;
-
-      for (const { from, to } of view.visibleRanges) {
-        let pos = from;
-        while (pos <= to) {
-          const line = doc.lineAt(pos);
-          const match = line.text.match(BLOCK_ID_LINE_RE);
-          if (match && match.index !== undefined) {
-            const idStart = line.from + match.index;
-            ranges.push({ from: idStart, to: line.to });
+      update(update: ViewUpdate) {
+        if (
+          update.docChanged ||
+          update.viewportChanged ||
+          update.selectionSet ||
+          update.state !== update.startState
+        ) {
+          if (
+            !(
+              update.docChanged ||
+              update.viewportChanged ||
+              update.selectionSet
+            ) &&
+            syntaxTree(update.state) === syntaxTree(update.startState) &&
+            this.enabled === this.isEnabled(update.view)
+          ) {
+            return;
           }
-          pos = line.to + 1;
+          this.decorations = this.build(update.view);
         }
       }
 
-      return Decoration.set(
-        ranges.map((r) => Decoration.replace({}).range(r.from, r.to)),
-        true
-      );
+      isEnabled(view: EditorView): boolean {
+        return (
+          tm.settings.blockId.isBlockIdEnabled &&
+          tm.settings.blockId.isHideIdsInLivePreviewEnabled &&
+          !!view.state.field(editorLivePreviewField, false) &&
+          !!foldEditorContext(tm, view)
+        );
+      }
+
+      build(view: EditorView): DecorationSet {
+        this.enabled = this.isEnabled(view);
+        if (!this.enabled) {
+          return Decoration.none;
+        }
+        const ranges: Array<{ from: number; to: number }> = [];
+        const seen = new Set<number>();
+        const doc = view.state.doc;
+
+        for (const { from, to } of view.visibleRanges) {
+          let pos = from;
+          while (pos <= to) {
+            const line = doc.lineAt(pos);
+            if (seen.has(line.from)) {
+              pos = line.to + 1;
+              continue;
+            }
+            seen.add(line.from);
+            const range = hiddenIdRange(view, line);
+            if (range) {
+              ranges.push(range);
+            }
+            pos = line.to + 1;
+          }
+        }
+
+        return Decoration.set(
+          ranges.map((r) => Decoration.replace({}).range(r.from, r.to)),
+          true
+        );
+      }
+    },
+    { decorations: (v) => v.decorations }
+  );
+}
+
+export function collectBlockIds(text: string): Set<string> {
+  return new Set(
+    [...text.matchAll(/\s\^([\w-]+)[ \t]*$/gm)].map((match) => match[1])
+  );
+}
+
+export function generateUniqueBlockId(ids: Set<string>): string {
+  for (let attempt = 0; attempt < 64; attempt++) {
+    const id = generateBlockId();
+    if (!ids.has(id)) {
+      ids.add(id);
+      return id;
     }
-  },
-  { decorations: (v) => v.decorations }
-);
+  }
+  throw new Error("Unable to generate a unique block ID");
+}
 
 /** Generate a new block ID string in the format ol-XXXXX */
 export function generateBlockId(): string {
@@ -70,7 +152,9 @@ export function insertBlockId(view: EditorView): string {
     return existing[0].trim().slice(1); // Return existing ID without ^
   }
 
-  const newId = generateBlockId();
+  const newId = generateUniqueBlockId(
+    collectBlockIds(view.state.doc.toString())
+  );
   view.dispatch({
     changes: {
       from: line.to,
