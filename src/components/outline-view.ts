@@ -21,6 +21,13 @@ import {
   getVisibleRange,
 } from "@/cm6/outliner/utils";
 import type TypewriterModeLib from "@/lib";
+import {
+  applyOutlineTrail,
+  buildOutlineGuides,
+  getOutlineTrail,
+  type OutlineGuideRow,
+  renderOutlineGuides,
+} from "./outline-guides";
 
 type TreeNodeRef = Parameters<
   NonNullable<Parameters<ReturnType<typeof syntaxTree>["iterate"]>[0]["enter"]>
@@ -335,6 +342,7 @@ export class OutlineView extends ItemView {
   private pendingReveal = false;
   private pendingFocusReveal = false;
   private treeEntries: OutlineTreeEntry[] = [];
+  private guideRows: OutlineGuideRow[] = [];
   private updateTimeout: number | null = null;
   private readonly tm: TypewriterModeLib;
 
@@ -664,6 +672,7 @@ export class OutlineView extends ItemView {
   }
 
   private clearHoverTrail() {
+    applyOutlineTrail(this.contentEl, new Set(), "is-hover-connector");
     for (const item of Array.from(
       this.contentEl.querySelectorAll<HTMLElement>(
         ".ptm-outline-item.is-hover-trail"
@@ -675,6 +684,11 @@ export class OutlineView extends ItemView {
 
   private applyHoverTrail(entry: OutlineTreeEntry) {
     this.clearHoverTrail();
+    applyOutlineTrail(
+      this.contentEl,
+      getOutlineTrail(this.guideRows, entry.index),
+      "is-hover-connector"
+    );
     const trailIndices = [...entry.ancestorIndices, entry.index];
     for (const index of trailIndices) {
       const item = this.contentEl.querySelector<HTMLElement>(
@@ -988,29 +1002,13 @@ export class OutlineView extends ItemView {
   private renderEntryLead(
     content: HTMLElement,
     cm: EditorView,
-    entry: OutlineTreeEntry
+    entry: OutlineTreeEntry,
+    guideRow: OutlineGuideRow
   ) {
     const lead = content.createDiv({
       cls: "ptm-outline-lead",
     });
-    const guides = lead.createDiv({ cls: "ptm-outline-guides" });
-
-    for (const ancestorIndex of entry.ancestorIndices) {
-      const ancestorGuide = guides.createDiv({
-        cls: "ptm-outline-guide-column",
-      });
-      ancestorGuide.classList.toggle(
-        "is-continuing",
-        !this.isTreeEntryLastSiblingByIndex(entry, ancestorIndex)
-      );
-    }
-
-    const junction = guides.createDiv({
-      cls: "ptm-outline-junction",
-    });
-    junction.classList.toggle("is-root", entry.visualDepth === 0);
-    junction.classList.toggle("is-last-sibling", entry.isLastSibling);
-    junction.createDiv({ cls: "ptm-outline-junction-elbow" });
+    renderOutlineGuides(lead, guideRow, entry.hasChildren);
 
     const node = lead.createDiv({
       cls: `ptm-outline-node ptm-outline-node-${entry.type}`,
@@ -1035,7 +1033,6 @@ export class OutlineView extends ItemView {
         this.toggleCollapsed(entry);
       });
     } else {
-      junction.addClass("is-leaf");
       node.createDiv({ cls: "ptm-outline-disclosure-spacer" });
     }
 
@@ -1061,20 +1058,6 @@ export class OutlineView extends ItemView {
     });
   }
 
-  private isTreeEntryLastSiblingByIndex(
-    entry: OutlineTreeEntry,
-    ancestorIndex: number
-  ): boolean {
-    return (
-      entry.ancestorIndices.includes(ancestorIndex) &&
-      this.getTreeEntryIsLastSibling(ancestorIndex)
-    );
-  }
-
-  private getTreeEntryIsLastSibling(index: number): boolean {
-    return this.treeEntries[index]?.isLastSibling ?? true;
-  }
-
   private async renderOutlineList(
     list: HTMLElement,
     visibleEntries: OutlineTreeEntry[],
@@ -1084,6 +1067,7 @@ export class OutlineView extends ItemView {
     sourcePath: string,
     taskProgressByIndex: Map<number, TaskProgress>
   ) {
+    this.guideRows = buildOutlineGuides(visibleEntries);
     for (const [visibleIndex, entry] of visibleEntries.entries()) {
       const item = list.createDiv({
         cls: `ptm-outline-item ptm-outline-${entry.type}`,
@@ -1102,7 +1086,7 @@ export class OutlineView extends ItemView {
         cls: "ptm-outline-link",
       });
 
-      this.renderEntryLead(content, cm, entry);
+      this.renderEntryLead(content, cm, entry, this.guideRows[visibleIndex]);
 
       const markdownEl = content.createDiv({
         cls: "ptm-outline-content markdown-rendered",
@@ -1133,6 +1117,18 @@ export class OutlineView extends ItemView {
       item.addEventListener("mouseleave", () => {
         this.clearHoverTrail();
       });
+      item.addEventListener("focusin", () => {
+        applyOutlineTrail(
+          list,
+          getOutlineTrail(this.guideRows, entry.index),
+          "is-focus-connector"
+        );
+      });
+      item.addEventListener("focusout", (event) => {
+        if (!item.contains(event.relatedTarget as Node | null)) {
+          applyOutlineTrail(list, new Set(), "is-focus-connector");
+        }
+      });
       item.addEventListener("click", navigateToEntry);
       item.addEventListener("dblclick", (event) => {
         event.preventDefault();
@@ -1153,6 +1149,11 @@ export class OutlineView extends ItemView {
         );
       });
     }
+    applyOutlineTrail(
+      list,
+      getOutlineTrail(this.guideRows, activeEntryIndex),
+      "is-active-connector"
+    );
   }
 
   private handleRevealResult(

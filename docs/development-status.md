@@ -2,6 +2,35 @@
 
 Snapshot: 2026-09-12. Status ini memisahkan implementasi tooling dari bukti validasi.
 
+## Outline connectors — 2026-09-26
+
+Scope dan implementasi diotorisasi maintainer melalui laporan screenshot:
+garis parent-child tersambung pada baris multiline, ujung cabang melengkung,
+dan hover/aktif hanya mempertegas jalur terkait. Branch: `codex/outline-connectors`.
+
+Plan: hitung konektor dari hierarchy yang terlihat setelah collapse/filter;
+gunakan tinggi baris untuk garis dan pisahkan stem anak dari ujung sibling.
+Pertahankan operasi editor, identifier, settings, dan Markdown vault.
+Perubahan lokal awal pada renderer dan SCSS diperiksa dan menjadi dasar koreksi.
+
+Model konektor, renderer, SCSS, dan regression tests selesai. Empat unit tests
+lolos; `node scripts/outline-css-regression.cjs` lolos 440 browser checks pada
+dua lebar sidebar dan dua ukuran font, termasuk collapse/filter dan path
+hover/aktif/fokus. Fixture memakai renderer konektor produksi dan Sass asli;
+tidak memuat MarkdownRenderer atau seluruh host Obsidian. Preview diperiksa.
+
+`pnpm run check` lolos pada Node 24.21.0 / pnpm 11.21.0. Gate menemukan 20
+tautan lama di dua dokumen status ini; target diperbaiki ke lokasi `docs/en/`
+yang sudah ada. `pnpm run check:ci` lolos: seluruh QA, 26 test files / 161 tests,
+build plugin, verifikasi artefak 1.1.0, dan build VitePress.
+
+Maintainer menerima perbaikan yang dilaporkan, meminta penutupan, dan
+mengotorisasi commit serta merge lokal ke main pada 2026-09-27. Issue ditutup
+untuk scope laporan ini. Matrix lengkap desktop/mobile/popout, tema, dan semua
+interaksi belum dikonfirmasi satu per satu; dicatat sebagai deferred, bukan
+Pass. Review source menjaga identifier, Markdown, dan operasi editor existing.
+Push, release, dan deployment tidak termasuk integrasi lokal ini.
+
 ## Mononote (single tab per note) — 2026-09-14
 
 Pada `feature/mononote-single-tab`: toggle "Keep one tab per note" ditambahkan
@@ -30,7 +59,7 @@ tests, build plugin, artifacts 1.1.0, dan build VitePress. Node 24.19.0;
 pnpm memakai versi pinned 11.21.0.
 
 Host desktop/mobile/popout belum diuji untuk layout baru; H01–H06 tetap Pending
-di [ledger](./specs/compact-settings-layout/tasks.md). Tidak ada commit, push,
+di [ledger](./en/specs/compact-settings-layout/tasks.md). Tidak ada commit, push,
 release, atau deployment ke vault pada scope ini. Heading General mengikuti
 permintaan eksplisit maintainer dengan pengecualian lint terlokalisasi; aturan
 QA lainnya tetap dijalankan.
@@ -74,9 +103,9 @@ accepted for the reported host cases (Obsidian 1.14.1, installer 1.13.7,
 Advanced Canvas 7.0.0). Additional host/platform/settings coverage is deferred,
 not marked Pass. CSS scope may affect other embedded editors, empty-area clicking
 or nested/theme interactions; reopen on concrete regression evidence.
-No further implementation is planned now. [Accepted spec](./specs/editor-bug-fixing/spec.md),
-[plan](./specs/editor-bug-fixing/plan.md) and
-[completion/evidence ledger](./specs/editor-bug-fixing/tasks.md) preserve scope,
+No further implementation is planned now. [Accepted spec](./en/specs/editor-bug-fixing/spec.md),
+[plan](./en/specs/editor-bug-fixing/plan.md) and
+[completion/evidence ledger](./en/specs/editor-bug-fixing/tasks.md) preserve scope,
 diagnosis, acceptance and deferred QA F01–F05.
 
 Callout CSS dims rendered widget subtrees once while preserving active source
@@ -128,10 +157,10 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
 
 ## Floaty Toolbar planning
 
-- Branch `codex/adopt-floaty-toolbar`: [spec](./specs/floaty-toolbar/spec.md)
-  accepted oleh maintainer; [plan](./specs/floaty-toolbar/plan.md) dan
-  [ADR-002](./reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md)
-  Accepted. [Task breakdown](./specs/floaty-toolbar/tasks.md): T01-T10 (Slice A
+- Branch `codex/adopt-floaty-toolbar`: [spec](./en/specs/floaty-toolbar/spec.md)
+  accepted oleh maintainer; [plan](./en/specs/floaty-toolbar/plan.md) dan
+  [ADR-002](./en/reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md)
+  Accepted. [Task breakdown](./en/specs/floaty-toolbar/tasks.md): T01-T10 (Slice A
   — settings contract, bold executor, CM6/controller bridge, floating toolbar
   UI/settings tab; Slice B — italic/strikethrough/code/highlight, cycling
   heading, and link insert/unwrap with clipboard capture/revalidation; Slice C
@@ -333,8 +362,8 @@ diubah otomatis; reset header mengembalikannya ke inherit.
 - Dependency direction dan cycles belum ditegakkan dengan architecture tests.
 - Akurasi docs dan ukuran atomic commit tetap memerlukan review manusia.
 
-Lihat [AI Assisted Development](./for-developers/ai-assisted-development.md)
-dan [QA guide](./for-developers/run-qa-before-merge-or-release.md).
+Lihat [AI Assisted Development](./en/for-developers/ai-assisted-development.md)
+dan [QA guide](./en/for-developers/run-qa-before-merge-or-release.md).
 
 ## T16 discovery checkpoint — 2026-09-13
 

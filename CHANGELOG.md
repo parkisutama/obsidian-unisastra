@@ -15,6 +15,7 @@
 
 ### Fixed
 
+- Connect sidebar outline branches across multiline rows, round branch elbows, and highlight only the hovered, focused, or active path. Maintainer accepted the reported fix and closed the issue.
 - Scope the clickable editor area to Markdown source views so Canvas card editors do not receive a viewport-height pseudo-element that can trigger repeated card growth. Maintainer confirmed the reported issue resolved with Advanced Canvas 7.0.0.
 - Dim inactive rendered callout wrappers in Dim Unfocused without multiplying nested callout opacity. Maintainer confirmed the reported dimming issue resolved in Obsidian.
 - Correct in-development callout icon overrides to use Obsidian icon IDs and refresh preview icons; show recognized inherited values in the style form.

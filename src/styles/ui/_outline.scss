@@ -1,5 +1,6 @@
 .workspace-leaf-content[data-type="md-writer-outline"] {
   --ptm-outline-indent-size: 18px;
+  --ptm-outline-row-padding: 4px;
   --ptm-outline-branch-color: color-mix(
     in srgb,
     var(--background-modifier-border) 72%,
@@ -121,7 +122,7 @@
     grid-template-areas: "lead content trailing";
     gap: 6px;
     align-items: stretch;
-    padding: 4px 4px 4px 2px;
+    padding: var(--ptm-outline-row-padding) 4px var(--ptm-outline-row-padding) 2px;
     cursor: pointer;
   }
 
@@ -135,80 +136,78 @@
   }
 
   .ptm-outline-guides {
+    position: relative;
     display: flex;
+    align-self: stretch;
     align-items: stretch;
-    min-height: 100%;
+    pointer-events: none;
   }
 
   .ptm-outline-guide-column,
   .ptm-outline-junction {
     position: relative;
-    width: 18px;
-    min-width: 18px;
-  }
-
-  .ptm-outline-guide-column::before,
-  .ptm-outline-junction::before {
-    position: absolute;
-    top: -8px;
-    bottom: -8px;
-    left: 9px;
-    border-left: 1px solid transparent;
-    opacity: 0.38;
-    transition:
-      opacity 120ms ease,
-      border-color 120ms ease;
-    content: "";
+    width: var(--ptm-outline-indent-size);
+    min-width: var(--ptm-outline-indent-size);
   }
 
   .ptm-outline-guide-column.is-continuing::before,
-  .ptm-outline-junction::before {
-    border-left-color: var(--ptm-outline-branch-color);
+  .ptm-outline-junction::before,
+  .ptm-outline-child-stem::before {
+    position: absolute;
+    top: calc(-1 * var(--ptm-outline-row-padding));
+    bottom: calc(-1 * var(--ptm-outline-row-padding));
+    left: 9px;
+    border-left: 1px solid var(--ptm-outline-branch-color);
+    opacity: 0.6;
+    content: "";
   }
 
   .ptm-outline-junction.is-last-sibling::before,
-  .ptm-outline-junction.is-leaf::before {
-    bottom: calc(50% - 1px);
-  }
-
   .ptm-outline-junction.is-root::before {
     display: none;
   }
 
-  .ptm-outline-junction-elbow {
+  .ptm-outline-child-stem {
     position: absolute;
     top: 50%;
+    bottom: 0;
+    left: 100%;
+    width: 0;
+
+    &::before {
+      top: 0;
+    }
+  }
+
+  .ptm-outline-junction-elbow {
+    position: absolute;
+    top: calc(-1 * var(--ptm-outline-row-padding));
+    bottom: calc(50% - 0.5px);
     left: 9px;
-    width: 9px;
-    border-top: 1px solid var(--ptm-outline-branch-color);
-    opacity: 0.38;
-    transform: translateY(-0.5px);
-    transition:
-      opacity 120ms ease,
-      border-color 120ms ease;
+    width: 13px;
+    border-left: 1px solid var(--ptm-outline-branch-color);
+    border-bottom: 1px solid var(--ptm-outline-branch-color);
+    border-bottom-left-radius: 5px;
+    opacity: 0.6;
+  }
+
+  .ptm-outline-junction.is-leaf .ptm-outline-junction-elbow {
+    width: 28px;
   }
 
   .ptm-outline-junction.is-root .ptm-outline-junction-elbow {
     display: none;
   }
 
-  .ptm-outline-item:hover .ptm-outline-guide-column::before,
-  .ptm-outline-item:hover .ptm-outline-junction::before,
-  .ptm-outline-item:hover .ptm-outline-junction-elbow,
-  .ptm-outline-item.is-hover-trail .ptm-outline-guide-column::before,
-  .ptm-outline-item.is-hover-trail .ptm-outline-junction::before,
-  .ptm-outline-item.is-hover-trail .ptm-outline-junction-elbow,
-  .ptm-outline-item:focus-within .ptm-outline-guide-column::before,
-  .ptm-outline-item:focus-within .ptm-outline-junction::before,
-  .ptm-outline-item:focus-within .ptm-outline-junction-elbow,
-  .ptm-outline-item.is-active .ptm-outline-guide-column::before,
-  .ptm-outline-item.is-active .ptm-outline-junction::before,
-  .ptm-outline-item.is-active .ptm-outline-junction-elbow,
-  .ptm-outline-item.is-focused-root .ptm-outline-guide-column::before,
-  .ptm-outline-item.is-focused-root .ptm-outline-junction::before,
-  .ptm-outline-item.is-focused-root .ptm-outline-junction-elbow {
+  // Only real connectors on the path receive emphasis, never empty columns.
+  [data-outline-connector].is-hover-connector::before,
+  [data-outline-connector].is-active-connector::before,
+  [data-outline-connector].is-focus-connector::before,
+  .ptm-outline-junction-elbow.is-hover-connector,
+  .ptm-outline-junction-elbow.is-active-connector,
+  .ptm-outline-junction-elbow.is-focus-connector {
     border-color: var(--ptm-outline-branch-color-emphasis);
-    opacity: 0.96;
+    opacity: 1;
   }
 
   .ptm-outline-node {
@@ -484,24 +483,8 @@
     background: color-mix(in srgb, var(--interactive-accent) 48%, transparent);
   }
 
-  .ptm-outline-item[data-progress-tone="active"] .ptm-outline-guide-column::before,
-  .ptm-outline-item[data-progress-tone="active"] .ptm-outline-junction::before,
-  .ptm-outline-item[data-progress-tone="active"] .ptm-outline-junction-elbow {
-    border-color: color-mix(
-      in srgb,
-      var(--interactive-accent) 30%,
-      var(--background-modifier-border)
-    );
-  }
-
   .ptm-outline-item[data-progress-tone="complete"] .ptm-outline-marker {
     background: color-mix(in srgb, var(--color-green) 56%, transparent);
-  }
-
-  .ptm-outline-item[data-progress-tone="complete"] .ptm-outline-guide-column::before,
-  .ptm-outline-item[data-progress-tone="complete"] .ptm-outline-junction::before,
-  .ptm-outline-item[data-progress-tone="complete"] .ptm-outline-junction-elbow {
-    border-color: var(--ptm-outline-branch-color-complete);
   }
 
   .ptm-outline-item[data-progress-tone="complete"] .ptm-outline-marker-heading {

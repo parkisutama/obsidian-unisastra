@@ -26,6 +26,14 @@ ditinjau manual; repo belum memiliki test khusus dependency direction atau cycle
 
 ## Change rules
 
+Sidebar guide geometry and path highlighting live in
+`src/components/outline-guides.ts`. The outline view supplies visible entries
+after filtering/collapse and retains editor actions, persistence, and lifecycle.
+The helper has no Node or editor dependencies; SCSS sizes rails to actual row
+height. `tests/outline-guides.test.ts` covers topology and path selection;
+`node scripts/outline-css-regression.cjs` checks browser geometry with compiled
+SCSS and the production guide renderer, separately from Obsidian host acceptance.
+
 Compact settings menggunakan `src/components/settings-tab.ts` sebagai overview
 dan detail-page composition, termasuk revision guard untuk callback redraw dan
 cleanup preview Callouts. `src/components/typewriter-settings.ts` menggabungkan

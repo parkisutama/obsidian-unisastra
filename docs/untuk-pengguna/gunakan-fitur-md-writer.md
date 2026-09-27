@@ -75,6 +75,10 @@ Fitur ini berguna untuk:
 
 ## Fokus pada heading atau list item
 
+Sidebar outline menghubungkan parent dan child dengan garis bersambung serta
+ujung melengkung. Hover, fokus keyboard, dan posisi aktif mempertegas jalur
+cabang terkait; konektor mengikuti baris multiline serta expand/collapse.
+
 Gunakan outliner zoom saat Anda ingin fokus pada satu heading atau list item
 beserta child content-nya.
 

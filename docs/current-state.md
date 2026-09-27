@@ -5,6 +5,14 @@ seluruh fitur sudah lolos acceptance di Obsidian.
 
 ## Implemented in source
 
+Sidebar outline connectors (2026-09-26) use visible parent/sibling relationships,
+with separate child stems and rounded elbows that span each row's actual height.
+Hover, keyboard focus, and the active entry emphasize only their connector paths.
+Unit tests and a standalone browser fixture cover layout and path selection;
+maintainer accepted the reported fix and authorized local main integration on
+2026-09-27. Full desktop/mobile/popout coverage remains unverified. See
+[development status](./development-status.md#outline-connectors--2026-09-26).
+
 Settings compact (2026-09-14) pada `codex/compact-settings-layout`: overview
 menggantikan 14 tab, dengan General/GitHub compatibility inline, selector mode
 aktif, dan baris chevron menuju Toolbar, Callouts, empat preset, serta delapan
@@ -17,7 +25,7 @@ Deep merge mempertahankan recipe yang tersimpan dan mengisi nilai yang belum
 ada. Mode awal tetap None; Keep Lines tidak ditambahkan sebagai field recipe.
 Test navigation/mock DOM mencakup Back focus/scroll, direct Callouts, cleanup,
 dan stale redraw; bukan bukti acceptance host. Lihat
-[tasks dan acceptance ledger](./specs/compact-settings-layout/tasks.md).
+[tasks dan acceptance ledger](./en/specs/compact-settings-layout/tasks.md).
 
 Koreksi visual dari screenshot maintainer menyatukan General dan compatibility
 dalam satu SettingGroup, mengelompokkan preset/Capabilities dalam panel dengan
@@ -46,7 +54,7 @@ wrapper. Regression compiled-Sass browser standalone lolos 141 checks setelah
 40 failures sebelum patch. Maintainer mengonfirmasi callout sekarang dimmed dan
 gejala utama selesai pada host Obsidian (2026-09-14). Matrix tambahan menjadi
 deferred follow-up sesuai keputusan closure maintainer;
-lihat [ledger](./specs/editor-bug-fixing/tasks.md).
+lihat [ledger](./en/specs/editor-bug-fixing/tasks.md).
 
 Canvas follow-up: clickable-sizer kini membutuhkan ancestor
 `.markdown-source-view.mod-cm6` dalam konteks leaf aktif atau iframe existing.
@@ -59,11 +67,11 @@ matrix belum dikonfirmasi; dampak scope CSS pada embedded editor lain menjadi
 follow-up bila regresi muncul. Tidak ada klaim compatibility universal.
 
 Branch `codex/adopt-floaty-toolbar` mengimplementasikan T01-T19, seluruh task
-sumber di [tasks.md](./specs/floaty-toolbar/tasks.md) kecuali T20 (dokumen ini)
+sumber di [tasks.md](./en/specs/floaty-toolbar/tasks.md) kecuali T20 (dokumen ini)
 sendiri. `pnpm run check:ci` hijau: 19 file test / 130 tests, typecheck, lint,
 styles, build, verifikasi artefak, dan docs build. Runtime acceptance di
 Obsidian nyata (desktop/mobile/popout) tetap belum diuji untuk task manapun —
-lihat tabel ledger di bawah dan [tasks.md](./specs/floaty-toolbar/tasks.md#runtime-acceptance-ledger)
+lihat tabel ledger di bawah dan [tasks.md](./en/specs/floaty-toolbar/tasks.md#runtime-acceptance-ledger)
 untuk skenario yang masih pending.
 
 Ringkasan per area:
@@ -104,8 +112,8 @@ inherit tidak membuat override otomatis.
 
 ### Known issues dan follow-up
 
-Catatan awal ada di [tasks.md](./specs/floaty-toolbar/tasks.md). Status terkini
-dua bug editor ditrack di [bug-fixing ledger](./specs/editor-bug-fixing/tasks.md):
+Catatan awal ada di [tasks.md](./en/specs/floaty-toolbar/tasks.md). Status terkini
+dua bug editor ditrack di [bug-fixing ledger](./en/specs/editor-bug-fixing/tasks.md):
 
 - Callout dimming: fix dan gejala utama diterima maintainer; closed for now,
   matrix mode/pause/nested/mobile/popout tambahan deferred.
@@ -120,9 +128,9 @@ dua bug editor ditrack di [bug-fixing ledger](./specs/editor-bug-fixing/tasks.md
 
 ## Floaty toolbar acceptance criteria status
 
-Ringkasan status setiap AC dari [spec.md](./specs/floaty-toolbar/spec.md);
+Ringkasan status setiap AC dari [spec.md](./en/specs/floaty-toolbar/spec.md);
 detail skenario dan evidence lengkap ada di
-[tasks.md](./specs/floaty-toolbar/tasks.md).
+[tasks.md](./en/specs/floaty-toolbar/tasks.md).
 
 | AC | Evidence otomatis | Status |
 | --- | --- | --- |
@@ -160,7 +168,7 @@ Test saat ini mencakup commands, settings, GFM anchors, kalkulasi offset
 typewriter, artefak build, dan validasi release. Coverage ini tidak membuktikan
 semua perilaku editor, mobile, atau popout. Lihat
 [development status](./development-status.md) untuk hasil validasi terbaru dan
-[QA guide](./for-developers/run-qa-before-merge-or-release.md) untuk acceptance.
+[QA guide](./en/for-developers/run-qa-before-merge-or-release.md) untuk acceptance.
 
-Spesifikasi [outliner](./reference/outliner-urd-prd.md) memuat kebutuhan dan rencana;
+Spesifikasi [outliner](./en/reference/outliner-urd-prd.md) memuat kebutuhan dan rencana;
 periksa source dan tests sebelum menyatakan suatu bagian sudah selesai.
