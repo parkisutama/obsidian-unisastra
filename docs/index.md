@@ -98,6 +98,16 @@ Mulai dengan default seimbang, sesuaikan saat berjalan.
 
 ### Berkontribusi
 
+- [Spec block ID dan fold persistence](./specs/block-id-fold-persistence/spec.md)
+- [Plan block ID dan fold persistence](./specs/block-id-fold-persistence/plan.md)
+- [Implementasi block ID dan fold persistence](./specs/block-id-fold-persistence/tasks.md)
+- [ADR-004: efek fold native](./en/reference/decisions/ADR-004-fold-native-effects.md)
+- [Spec performa dan kerapian kode](./specs/performance-code-quality/spec.md)
+- [Plan performa dan kerapian kode](./specs/performance-code-quality/plan.md)
+- [Tasks performa dan kerapian kode](./specs/performance-code-quality/tasks.md)
+- [Spesifikasi sinkronisasi lebar sidebar](./specs/sidebar-equal-resize/spec.md)
+- [Plan sinkronisasi lebar sidebar](./specs/sidebar-equal-resize/plan.md)
+- [Progres dan acceptance sinkronisasi lebar sidebar](./specs/sidebar-equal-resize/tasks.md)
 - [Setup Developer](./untuk-developer/setup-local-development.md) — Setup lingkungan lokal
 
 ### Dibangun dari 10+ plugin open-source

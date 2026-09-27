@@ -4,6 +4,8 @@
 
 ### Added
 
+- Connect opt-in Live Preview block ID hiding, undoable ID generation on native folds, and per-file fold persistence for uniquely identified list items. Auto-ID can respond to other plugins; internal restore and undo/redo are excluded. Full native acceptance remains pending.
+- Add opt-in "Sinkronkan lebar sidebar" in General for synchronized desktop sidebar resizing, with reopening precedence, bounded native sizes, and cleanup on disable. The native adapter is currently verified for Obsidian 1.14.2 only; full host acceptance is pending.
 - Add compact settings overview with detail pages for capabilities and writing-mode recipes; group GitHub compatibility under General and Keep Lines under Typewriter. Host acceptance is pending.
 - Align new writing-mode recipes with the maintainer's matrix: Normal enables Outliner and Writing disables Hemingway, while preserving saved recipes.
 - Add in-development GitHub alert output with five uppercase presets and refusal of incompatible or partial conversions without editing the document. Runtime acceptance is pending.
@@ -15,6 +17,9 @@
 
 ### Fixed
 
+- Bound synchronized sidebar widths by a shared viewport budget to prevent overflowing workspace geometry from amplifying widths; suspend when native minima cannot fit. Deployment and native acceptance of this correction remain pending.
+- Clean up editor observers and pending callbacks, cancel delayed MonoNote work, and remove Hemingway listeners from their original document.
+- Apply presets without intermediate settings writes, skip inactive toolbar/GFM work, and prevent stale outline renders and accumulating render components. Native acceptance remains pending.
 - Connect sidebar outline branches across multiline rows, round branch elbows, and highlight only the hovered, focused, or active path. Maintainer accepted the reported fix and closed the issue.
 - Scope the clickable editor area to Markdown source views so Canvas card editors do not receive a viewport-height pseudo-element that can trigger repeated card growth. Maintainer confirmed the reported issue resolved with Advanced Canvas 7.0.0.
 - Dim inactive rendered callout wrappers in Dim Unfocused without multiplying nested callout opacity. Maintainer confirmed the reported dimming issue resolved in Obsidian.

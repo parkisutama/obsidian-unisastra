@@ -46,6 +46,29 @@ mengubah nilai Keep Lines yang sudah tersimpan saat mode diaktifkan.
 Layout ini sudah diuji secara otomatis; tampilan, fokus, dan navigasi di
 Obsidian desktop/mobile/popout masih menunggu acceptance host.
 
+## Synchronize sidebar widths
+
+Enable **Sinkronkan lebar sidebar** in **General** to resize both main desktop
+sidebars together while both are open. It defaults off. The current native
+adapter supports Obsidian 1.14.2; synchronization is suspended on other versions.
+Full visual acceptance in Obsidian remains pending.
+
+Activation starts from the average of both widths. With one sidebar closed,
+resizing the other preserves the closed sidebar's saved width. When the second
+sidebar opens, its width becomes the reference. Closing either side pauses
+synchronization; disabling the setting or plugin retains the last widths.
+
+The center pane uses remaining space, with no readable line length changes.
+The two synchronized sidebars share an 80% budget of the smaller workspace or
+window width. If the window cannot fit both native minimum widths within that
+budget, synchronization pauses; enlarge the window or close one sidebar.
+If using a build affected by oversized saved widths, keep synchronization off
+until the corrected build is installed. Disabling sync does not reset saved widths.
+Disable conflicting snippets that force sidebar width. If native bounds cannot
+accommodate equal widths, Obsidian retains control. This feature does not resize
+center splits, popouts, or mobile drawers. General activation and platform
+settings also apply.
+
 ## Pakai typewriter scrolling
 
 Di **Capabilities → Typewriter**, pengaturan Typewriter dan Keep Lines berada
@@ -306,9 +329,29 @@ mengubah isi file Markdown.
 
 ## Data yang disimpan
 
+### Block IDs dan fold persistence
+
+Aktifkan master Block IDs untuk memakai hide ID pada Live Preview atau auto-ID.
+Command generate ID, copy link, dan copy embed tetap tersedia saat master mati.
+Caret atau selection pada suffix membuat ID terlihat agar dapat diedit; Source mode selalu menampilkannya.
+
+Auto-generate on fold menambahkan ID hanya pada item list tanpa ID saat terjadi fold native,
+termasuk fold yang dikirim plugin lain. Restore internal MD Writer dan undo/redo tidak menghasilkan ID baru.
+Insertion dapat di-undo; Hemingway, editor read-only, platform yang dimatikan,
+serta frontmatter `md-writer: false` mencegah insertion otomatis.
+
+Persist fold state bekerja independen dari master Block IDs dan hanya memakai ID unik yang sudah ada.
+Fold terakhir menjadi acuan saat reopen; pane lain yang masih terbuka tidak ikut dilipat.
+Rename memindahkan state, delete membuangnya, dan ID duplikat dilewati.
+Mematikan fitur mempertahankan fold dan ID saat itu.
+Implementasi diuji otomatis; acceptance native reopen, popout, dan mobile masih berlangsung.
+
+### Penyimpanan lokal
+
 MD Writer menyimpan:
 
 - pengaturan plugin,
-- riwayat posisi kursor per file.
+- riwayat posisi kursor per file,
+- fold state per file dan ID saat persist diaktifkan.
 
 Vault content dan isi note tidak dikirim keluar oleh fitur ini.

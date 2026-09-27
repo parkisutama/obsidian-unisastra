@@ -1,9 +1,58 @@
 # Current state
 
+## Perbaikan performa lintas fitur — 2026-09-27
+
+Editor menyimpan dan membatalkan observer/RAF; cursor restore membatalkan frame
+pending saat disable. MonoNote membatalkan delay dan menyelesaikan promise;
+Hemingway menyimpan document registrasi untuk cleanup. Preset menerapkan state
+melalui `applyValue`, kemudian caller menyimpan sekali. Toolbar menghindari render
+saat disabled, menghentikan display tick jika kedua timer tersembunyi, dan
+mempertahankan HUD yang tidak berubah. GFM menginvalidasi berdasarkan perubahan
+doc/viewport/config/metadata dan anchor DOM. Outline menggunakan render generation,
+child Component per render, dan update active row tanpa render ulang Markdown.
+
+Source dan regression terverifikasi otomatis; native acceptance lintas fitur
+belum selesai. Gap wiring block ID/fold ditangani oleh implementasi terpisah di bawah.
+
+## Block ID dan fold persistence — 2026-09-27
+
+Composition mendaftarkan hider Live Preview dan bridge fold CM6.
+Hider hanya mengganti tampilan suffix pada list valid; caret/selection membuka ID untuk diedit.
+Capture membaca foldedRanges dan menyimpan true/false untuk ID unik per file editor.
+Restore mengirim efek fold/unfold tanpa mengganti teks atau selection.
+Coordinator memakai revision pada aksi, debounce 250 ms, pembatalan owner dan serialisasi save settings;
+save fold tidak memanggil updateOptions. Rename memindahkan map, delete menghapusnya.
+Parser diberi maksimal tiga percobaan 20 ms; dokumen yang belum siap dilewati tanpa polling idle.
+
+Auto-ID tetap opt-in dan mengikuti efek fold native dari pengguna maupun plugin lain,
+kecuali restore internal dan undo/redo sesuai ADR-004.
+Insertion terpisah di history, memeriksa collision, read-only, Hemingway dan focused range.
+Master mengendalikan hide/auto-ID; persist independen dan tidak membuat ID sendiri.
+Command manual, default settings, key foldState dan format Markdown tetap kompatibel.
+Unit dan browser fixture memverifikasi perilaku tersebut; browser memakai parser sintetis.
+Probe host 1.14.2 memverifikasi efek fold native, tetapi acceptance reopen/popout/mobile belum ditutup.
+Lihat [ledger implementasi](./specs/block-id-fold-persistence/tasks.md).
+
 Snapshot source MD Writer pada 2026-09-14. Ini peta implementasi, bukan klaim
 seluruh fitur sudah lolos acceptance di Obsidian.
 
 ## Implemented in source
+
+Sidebar equal resize (2026-09-27) adds the opt-in General setting
+`general.isSidebarEqualResizeEnabled`, default false. Model, controller, and
+guarded native adapter preserve closed sidebar widths and synchronize drag,
+activation averages, reopening, and bounded workspace resize. The adapter
+currently accepts Obsidian 1.14.2 only, whose internal contract was probed;
+other versions suspend synchronization without changing the plugin manifest.
+The maintainer confirmed the feature works on 2026-09-27; the full scenario
+matrix is not individually confirmed. A subsequent performance review reduced
+repeated geometry reads and redundant source-side writes, retaining native
+guards and subpixel equality. Optimized runtime acceptance remains unverified.
+After a reported runaway width, the adapter now caps both widths together at 80%
+of the smaller workspace/viewport width. It suspends if native minima cannot fit;
+an overflowing workspace can no longer inflate the synchronization bound.
+This correction is verified in an isolated browser fixture, not yet deployed.
+See the [implementation ledger](./specs/sidebar-equal-resize/tasks.md).
 
 Sidebar outline connectors (2026-09-26) use visible parent/sibling relationships,
 with separate child stems and rounded elbows that span each row's actual height.

@@ -2,6 +2,212 @@
 
 Snapshot: 2026-09-12. Status ini memisahkan implementasi tooling dari bukti validasi.
 
+## Commit lokal — 2026-09-27
+
+Maintainer mengotorisasi commit melalui "oke commit kalau begitu".
+Source dipisahkan menjadi `e7085b3` (sidebar dan guard viewport),
+`f3f2d49` (performa/lifecycle), dan `e1007e6` (block ID/fold persistence).
+Hooks check dan commitlint lulus; gate penuh terakhir lulus 212 tests dan build/docs.
+Catatan "belum commit" pada checkpoint sebelumnya adalah status saat checkpoint tersebut.
+Push, deployment dan release belum dilakukan. Sinkronisasi pada host tetap nonaktif
+setelah pemulihan ukuran ke 280 px; acceptance native perbaikan tetap terbuka.
+
+## Pemulihan bug sidebar memenuhi layar — 2026-09-27
+
+Diagnostik live read-only menemukan kedua sidebar 21.474.836,8 px, root tengah 0 px,
+viewport 962 px dan toggle sync sudah mati. Dengan izin eksplisit maintainer,
+keduanya direset ke 280 px dan requestSaveLayout dipanggil; verifikasi berikutnya
+menunjukkan render 280/280, workspace/viewport 1536 px dan root tengah 976 px.
+Tidak ada catatan dibaca/diubah dan toggle tetap nonaktif.
+
+Fixture mereproduksi kegagalan: batas 80% workspace per sisi dapat digandakan,
+dan workspace yang overflow menaikkan batasnya sendiri. Guard baru memakai
+80% dari `min(workspace, viewport)` sebagai budget pasangan; minimum native
+yang tidak feasible membuat sync suspend. Bukti terbaru ada di
+[ledger sidebar](./specs/sidebar-equal-resize/tasks.md).
+Perbaikan source ini belum dideploy ke vault; acceptance native tetap terbuka.
+`check:ci` lulus 33 files / 212 tests, lint, build, artifacts dan docs.
+Fixture sidebar: 29 checks lulus, 120 reads / 60 writes untuk 60 drag updates,
+idle reads 0. Test ekstrem gagal sebelum guard dan lulus setelah perbaikan.
+
+## Implementasi perbaikan performa — 2026-09-27
+
+Maintainer menyetujui spec/plan/tasks dengan "oke implementasikan". R1–R7
+memiliki perubahan source: ownership observer/RAF editor dan cursor restore;
+cancellation MonoNote; listener Hemingway melekat pada document asal;
+apply preset tanpa persist per-toggle; guard/tick/HUD toolbar; invalidasi anchor
+GFM; serta generasi render outline dan child Component yang dibersihkan.
+
+Regression awal MonoNote/Hemingway gagal sebelum fix dan lulus sesudahnya.
+Probe produksi editor: 50 create/destroy menghasilkan nol observer/RAF tertahan.
+Toolbar: 100 disabled updates tanpa RAF; timer display tersembunyi tanpa interval.
+Outline browser: selection-only tanpa Markdown rebuild, stale generation tidak
+dipublikasikan, 50 rebuild hanya satu render component, close membuang pekerjaan pending.
+
+Gate final: `pnpm run check:ci` lulus 31 files / 200 tests, lint tanpa warning
+kompleksitas, build, artifacts 1.1.0 dan VitePress. Fixture browser lulus 13 checks
+performa dan 24 checks sidebar; sidebar tetap 120 reads / 60 writes dan idle nol.
+Ini belum profil CPU/FPS/heap native. P01–P10
+tidak ditutup menyeluruh karena native acceptance dan beberapa skenario matriks
+masih terbuka; lihat [ledger](./specs/performance-code-quality/tasks.md).
+Tidak ada deployment/commit. Maintainer memilih R8 menjadi
+[spec block ID/fold terpisah](./specs/block-id-fold-persistence/spec.md);
+spec D1–D6 dan scope kemudian disetujui; [plan](./specs/block-id-fold-persistence/plan.md)
+disetujui melalui "lanjut ke task breakdown". [Tasks](./specs/block-id-fold-persistence/tasks.md)
+accepted melalui "Task Breakdown accepted lanjut implementasi".
+Implementasi hide/auto-ID/capture/restore kini terhubung, dengan coordinator per file,
+save settings serial, rename/delete dan cancellation lifecycle.
+Probe Obsidian 1.14.2 menggunakan editor detached sintetis tanpa file dan callbacks save dimatikan.
+foldMore/foldLess memakai efek CM6 host; teks dan selection tetap sama.
+Range parent 18–55 dan child 38–55 membuktikan range native dimulai setelah newline.
+Annotation tidak membedakan asal pengguna/plugin; maintainer mengizinkan keduanya untuk opt-in auto-ID (ADR-004).
+Tests dan native acceptance terbaru dicatat di [ledger fold](./specs/block-id-fold-persistence/tasks.md).
+Probe ini bukan bukti acceptance fitur lengkap di vault, popout, atau mobile.
+Gate otomatis implementasi fold: 33 files / 211 tests; 28 browser checks fold,
+13 checks performa, 24 sidebar; typecheck/lint/build/artifacts/docs lulus.
+Browser fold mencakup dua pane dan 50 editor create/destroy dengan parser sintetis;
+native H01–H08 tetap terbuka. Tidak ada commit atau deployment.
+
+## Audit performa dan kerapian seluruh kelompok fitur — 2026-09-27
+
+Tindak lanjut perencanaan tersedia sebagai [spec](./specs/performance-code-quality/spec.md),
+[plan](./specs/performance-code-quality/plan.md), dan
+[tasks](./specs/performance-code-quality/tasks.md), kemudian disetujui untuk
+implementasi R1–R7/R9. Keputusan R8 tetap terpisah. Temuan di bawah adalah
+baseline sebelum perbaikan; status terbaru berada pada checkpoint di atas.
+
+Audit atas working tree `codex/sidebar-equal-resize`, termasuk perubahan sidebar
+yang belum di-commit. Cakupan: registrasi fitur, jalur editor/render, lifecycle,
+penyimpanan settings, dan tests yang tersedia. Ini audit source dan probe
+terisolasi, bukan profil FPS, CPU, atau heap Obsidian pada vault pengguna.
+Tidak ada perubahan runtime, deployment, atau commit dalam audit ini.
+
+### Temuan yang perlu ditindaklanjuti
+
+1. **P1 — observer embed tidak dilepas.** `src/cm6/plugin.ts:236` membuat
+   `MutationObserver` lokal untuk seluruh owner document setiap editor dibuat;
+   `destroy()` pada baris 63 tidak menyimpannya atau memanggil `disconnect()`.
+   Callback menangkap instance editor. Probe terisolasi memakai metode asli
+   `watchEmbeddedMarkdown` dan `destroy`, dengan observer/window tiruan:
+   50 siklus create/destroy meninggalkan 50 observer aktif; satu penambahan node
+   yang tidak terkait menyebabkan 50 pemeriksaan. Perbaikan: kepemilikan observer
+   yang eksplisit dan disconnect saat destroy; pertimbangkan satu observer per
+   document. Tambahkan regression test lifecycle. RAF startup dan RAF pengukuran
+   pada baris 82/404 juga perlu dibatalkan atau diberi guard saat destroy.
+2. **P2 — satu preset memicu penyimpanan berulang.** Delapan entri
+   `MANAGED_FEATURES` di `src/capabilities/features/writing-modes/active-mode.ts`
+   memanggil `FeatureToggle.toggle()`, masing-masing memanggil `saveSettings()`
+   (`src/capabilities/base/feature-toggle.ts:58`), bahkan untuk nilai yang sama.
+   Jalur UI menyimpan sekali lagi. Setiap save memperbarui workspace options dan
+   toolbar (`src/lib.ts:254`). Pisahkan penerapan state dari persist dan simpan
+   sekali setelah seluruh preset diterapkan. Uji jumlah write dan refresh.
+3. **P2 — toolbar melakukan pekerjaan tanpa perubahan tampilan.**
+   `src/capabilities/features/toolbar/controller.ts:148` mengaktifkan interval
+   selama toolbar enabled meski kedua timer disembunyikan. Render menghitung
+   target/policy sebelum guard enabled (baris 368), sedangkan selection extension
+   tetap menjadwalkan perubahan ketika toolbar mati. HUD memakai
+   `replaceChildren()` setiap render (baris 431). Guard lebih awal, hentikan tick
+   jika tidak ada output waktu yang terlihat, dan update label hanya bila berubah.
+   Besarnya biaya layout/FPS masih perlu profil native.
+4. **P2 — outline membangun ulang seluruh daftar untuk event yang terlalu luas.**
+   `src/components/outline-view.ts:418` menerima perubahan metadata semua file;
+   `buildOutline()` mengosongkan container (baris 1193) lalu merender Markdown
+   setiap baris secara async (baris 1095). Debounce 200 ms tidak membatalkan
+   render yang sudah berjalan. Filter event berdasarkan sumber outline, tambahkan
+   revision/disposal guard, dan pisahkan update active row dari rebuild konten.
+   Risiko interleaving perlu regression test dengan renderer yang ditunda.
+5. **P2 — callback MonoNote tetap berjalan setelah disable.**
+   `src/capabilities/features/general/mononote.ts:126` dan 144 menjadwalkan timeout
+   tanpa menyimpan handle; disable hanya melepas event dan membersihkan Set.
+   Callback tertunda masih dapat detach/navigate/focus tab setelah fitur dimatikan.
+   Batalkan timeout atau gunakan generation guard; selesaikan promise yang dibatalkan.
+6. **P2 — Hemingway melepas listener dari document yang bisa berbeda.**
+   `src/capabilities/features/hemingway-mode/hemingway-mode.ts:92` memasang listener
+   pada `window.activeDocument`; disable membaca active document kembali.
+   Berpindah ke popout sebelum disable dapat meninggalkan listener pada document
+   awal. Simpan target registrasi dan cleanup target yang sama; uji pergantian
+   document, toggle berulang, dan unload.
+7. **P2 — sebagian pengaturan block ID/fold belum tersambung.**
+   Registrasi di `src/lib.ts` tidak memakai `blockIdHiderPlugin`,
+   `createFoldPersistExtension`, atau `restoreFoldState`; pencarian referensi source
+   hanya menemukan deklarasinya. Toggle hide IDs, auto-generate on fold, dan fold
+   persistence tersedia tetapi tidak memasang behavior tersebut. Ini gap wiring,
+   bukan biaya runtime aktif. Jangan langsung menghubungkan helper fold yang ada:
+   implementasinya menandai item beranak sebagai folded tanpa membaca fold state,
+   dan restore hanya mengubah selection. Perlu kontrak/test native sebelum integrasi.
+8. **P3 — GFM Live Preview menjadwalkan scan pada setiap update.**
+   `src/gfm-anchor/live-preview.ts:19` selalu menjadwalkan RAF; guard enabled baru
+   dijalankan di callback. Ketika aktif, seluruh anchor pada contentDOM dipindai
+   kembali termasuk saat perubahan selection saja. Guard sebelum schedule dan
+   invalidasi berdasarkan perubahan DOM/doc/viewport perlu diuji agar anchor yang
+   muncul belakangan tetap ditangani. Gunakan owner window untuk RAF popout.
+
+### Cakupan dan bagian yang sudah memiliki pembatasan biaya
+
+| Kelompok | Hasil audit source |
+| --- | --- |
+| General, platform, frontmatter, cursor restore | Observer/RAF perlu cleanup; cursor disimpan berdasarkan view, tetapi persist memakai refresh global. |
+| Writing modes | Delapan toggle dalam satu preset belum dibatch. |
+| Writing focus | Operasi event-driven dan enable idempotent; cleanup fullscreen/window dan unload masih perlu QA native. |
+| Typewriter, keep above/below | Pembacaan geometri memakai CM6 requestMeasure; RAF lanjutan belum memiliki cleanup. |
+| Current line, fade, dimming | CSS/dekorasi lokal; sentence scan dibatasi baris aktif. Tetap berbagi lifecycle plugin editor yang bermasalah. |
+| Whitespace, strict break, max chars | Dekorasi memakai visibleRanges; selalu terpasang merupakan keputusan kompatibilitas yang disengaja. |
+| Outliner focus dan keyboard | Extension memakai compartment; operasi list berdasarkan syntax tree. Outline sidebar memiliki rebuild penuh. |
+| Block ID, fold persistence | Command manual tersedia; helper hide/fold belum diregistrasikan. |
+| Hemingway, MonoNote | Cleanup lintas document dan callback tertunda perlu diperbaiki. |
+| Toolbar, timer, reorder, command parity | RAF dikoalesensikan per document dan destroy tersedia; tick/render yang tidak perlu masih ada. |
+| Callout catalog, style, discovery | Style memiliki equality guard dan cleanup per document; discovery berjalan saat UI/refresh/CSS change, bukan polling vault. |
+| GFM compatibility | Resolver memakai metadata cache; Live Preview masih menjadwalkan pekerjaan pada setiap update. |
+| Update announcement | Toggle berbasis class, tidak ditemukan polling background pada feature tersebut. |
+| Sidebar equal resize | Budget operasi dan cleanup sudah diuji; angka fixture dicatat pada checkpoint di bawah. |
+
+### Validasi dan urutan tindak lanjut
+
+`pnpm run check:ci` kembali lulus: 29 files / 193 tests, typecheck, seluruh lint,
+build plugin, verifikasi artifacts 1.1.0, dan VitePress. Gate ini tidak mengukur
+kebocoran heap atau menjamin performa semua fitur di Obsidian.
+
+Urutan yang disarankan: cleanup observer/RAF; cleanup MonoNote/Hemingway;
+batch preset persistence; kurangi pekerjaan toolbar/GFM; invalidasi/render outline.
+Gap block ID/fold memerlukan keputusan implementasi terpisah, bukan cleanup mekanis.
+Setiap perbaikan perlu regression test dan penerimaan desktop/popout/mobile yang
+relevan. Pengukuran native berikutnya sebaiknya mencakup banyak siklus buka/tutup
+editor, idle dengan fitur mati, dokumen panjang, banyak pane, serta outline besar.
+
+## Sidebar equal resize — 2026-09-27
+
+Maintainer mengonfirmasi fitur berhasil dan meminta evaluasi performa/kerapian.
+Optimasi mempertahankan perilaku: satu pembacaan geometri per flush, guard write
+tanpa layout read tambahan, dan hanya menulis sisi yang perlu berubah.
+Pada fixture 60 pembaruan/600 pointer events, reads turun 360 → 120 dan writes
+120 → 60; idle reads tetap nol. Browser fixture lolos 24 checks. Ini bukan
+pengukuran FPS/CPU vault pengguna. Optimasi belum dideploy oleh agen; acceptance
+laporan maintainer berlaku pada behavior sebelumnya, matrix detail belum dikonfirmasi.
+
+Gate sesudah optimasi: `pnpm run check:ci` Pass, 29 test files / 193 tests,
+QA, build plugin, artifacts 1.1.0, dan build VitePress. Pengujian budget operasi
+dan cleanup ditambahkan agar biaya drag tidak kembali meningkat tanpa terdeteksi.
+
+Spec, plan, ADR-003, dan task breakdown disetujui maintainer pada branch
+`codex/sidebar-equal-resize`. Toggle General, additive settings, model,
+controller, dan adapter native sudah diimplementasikan. Adapter dibatasi ke
+Obsidian 1.14.2; manifest minimum tidak dinaikkan dan versi lain tidak menulis
+lebar. Verifikasi versi lain masih terbuka.
+
+Probe CLI menjalankan metode native pada elemen terlepas tanpa mengubah sidebar
+aktif atau menyimpan layout vault. Setter tidak melakukan clamp; handler drag
+membatasi 200px hingga max(200px, 80% lebar workspace). Collapse/expand
+mempertahankan logical size dan menandai animasi dengan overflow hidden.
+Probe ini bukan acceptance visual penuh pada sidebar operasional.
+
+`pnpm run check` dan `pnpm run check:ci` lolos pada Node 24.21.0 / pnpm 11.21.0:
+29 test files / 191 tests, QA, build, artifacts 1.1.0, dan VitePress build.
+Fixture adapter/controller produksi lolos 17 browser checks. Review memperbaiki
+regresi toleransi antarsisi melalui test gagal sebelum perbaikan.
+[Ledger](./specs/sidebar-equal-resize/tasks.md) memisahkan hasil ini dari
+acceptance native H01–H08 yang belum dijalankan pada plugin terpasang.
+Tidak ada commit, merge, push, release, atau deployment.
+
 ## Outline connectors — 2026-09-26
 
 Scope dan implementasi diotorisasi maintainer melalui laporan screenshot:
