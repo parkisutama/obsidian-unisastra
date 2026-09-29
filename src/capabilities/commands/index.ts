@@ -1,4 +1,4 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import type { AbstractCommand } from "../base/abstract-command";
 import { CopyBlockEmbed } from "./copy-block-embed";
 import { CopyBlockLink } from "./copy-block-link";
@@ -33,7 +33,7 @@ import {
 import { WritingFocusCommand } from "./writing-focus";
 
 export function getCommands(
-  tm: TypewriterModeLib
+  tm: UnisastraCore
 ): Record<string, AbstractCommand> {
   return Object.fromEntries(
     [

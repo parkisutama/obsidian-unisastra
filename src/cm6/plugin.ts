@@ -13,26 +13,26 @@ import {
 import type { PerWindowProps } from "@/cm6/per-window-props";
 import type { TypewriterPositionData } from "@/cm6/typewriter-offset-calculator";
 import { TypewriterOffsetCalculator } from "@/cm6/typewriter-offset-calculator";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import { getActiveSentenceDecos } from "./highlight-sentence";
 import { getEditorDom, getScrollDom, getSizerDom } from "./selectors";
 
-const currentLineClass = "ptm-current-line";
+const currentLineClass = "unisastra-current-line";
 
 // these elements are a workaround, because webkit does not allow
 // ::before and ::after elements to have a different mix-blend-mode than their parent
-const fadeBeforeClass = "ptm-current-line-fade-before";
-const fadeAfterClass = "ptm-current-line-fade-after";
+const fadeBeforeClass = "unisastra-current-line-fade-before";
+const fadeAfterClass = "unisastra-current-line-fade-after";
 
 // Regex patterns for user event validation
 const USER_EVENT_ALLOWED_DEFAULT = /^(select|input|delete|undo|redo)(\..+)?$/;
 const USER_EVENT_DISALLOWED_DEFAULT = /^(select.pointer)$/;
 const USER_EVENT_ALLOWED_COMMANDS_ONLY = /^(input|delete|undo|redo)(\..+)?$/;
 const USER_EVENT_DISALLOWED_COMMANDS_ONLY = /^(select)(\..+)?$/;
-const frontmatterDisableKey = "md-writer";
+const frontmatterDisableKey = "unisastra";
 
-class TypewriterModeCM6Plugin {
-  protected tm: TypewriterModeLib;
+class UnisastraCM6Plugin {
+  protected tm: UnisastraCore;
   protected view: EditorView;
 
   private domResizeObserver: ResizeObserver | null = null;
@@ -71,7 +71,7 @@ class TypewriterModeCM6Plugin {
   private readonly onScrollBound = this.onScroll.bind(this);
   private readonly onResizeBound = this.onResize.bind(this);
 
-  constructor(tm: TypewriterModeLib, view: EditorView) {
+  constructor(tm: UnisastraCore, view: EditorView) {
     this.tm = tm;
     this.view = view;
 
@@ -447,13 +447,13 @@ class TypewriterModeCM6Plugin {
 
     const editorDom = getEditorDom(this.view);
     if (editorDom) {
-      editorDom.classList.remove("ptm-scroll");
+      editorDom.classList.remove("unisastra-scroll");
       this.isOnScrollClassSet = false;
 
-      editorDom.classList.remove("ptm-select");
+      editorDom.classList.remove("unisastra-select");
 
       if (this.isInitialInteraction) {
-        editorDom.classList.remove("ptm-first-open");
+        editorDom.classList.remove("unisastra-first-open");
         this.isInitialInteraction = false;
       }
     }
@@ -461,7 +461,7 @@ class TypewriterModeCM6Plugin {
     this.isRenderingAllowedUserEvent = true;
 
     this.measureTypewriterPosition(
-      "TypewriterModeUpdateAfterAllowedUserEvent",
+      "UnisastraUpdateAfterAllowedUserEvent",
       (measure, view) => {
         if (!measure) {
           return;
@@ -483,15 +483,15 @@ class TypewriterModeCM6Plugin {
 
     if (editorDom) {
       if (this.isInitialInteraction) {
-        editorDom.classList.remove("ptm-first-open");
+        editorDom.classList.remove("unisastra-first-open");
         this.isInitialInteraction = false;
       }
 
-      editorDom.classList.add("ptm-select");
+      editorDom.classList.add("unisastra-select");
     }
 
     this.measureTypewriterPosition(
-      "TypewriterModeUpdateAfterDisallowedUserEvent",
+      "UnisastraUpdateAfterDisallowedUserEvent",
       (measure, view) => {
         if (!measure) {
           return;
@@ -519,7 +519,7 @@ class TypewriterModeCM6Plugin {
     if (this.tm.settings.general.isOnlyActivateAfterFirstInteractionEnabled) {
       const editorDom = getEditorDom(this.view);
       if (editorDom) {
-        editorDom.classList.add("ptm-first-open");
+        editorDom.classList.add("unisastra-first-open");
       }
     }
   }
@@ -527,7 +527,7 @@ class TypewriterModeCM6Plugin {
   private moveByCommand() {
     const editorDom = getEditorDom(this.view);
     if (editorDom) {
-      editorDom.classList.remove("ptm-select");
+      editorDom.classList.remove("unisastra-select");
     }
     this.updateAllowedUserEvent();
   }
@@ -540,25 +540,22 @@ class TypewriterModeCM6Plugin {
   }
 
   private onScroll() {
-    this.measureTypewriterPosition(
-      "TypewriterModeOnScroll",
-      (measure, view) => {
-        // This is placed here to debounce DOM manipulation
-        if (!this.isOnScrollClassSet) {
-          const editorDom = getEditorDom(this.view);
-          if (editorDom) {
-            editorDom.classList.add("ptm-scroll");
-            this.isOnScrollClassSet = true;
-          }
+    this.measureTypewriterPosition("UnisastraOnScroll", (measure, view) => {
+      // This is placed here to debounce DOM manipulation
+      if (!this.isOnScrollClassSet) {
+        const editorDom = getEditorDom(this.view);
+        if (editorDom) {
+          editorDom.classList.add("unisastra-scroll");
+          this.isOnScrollClassSet = true;
         }
-
-        if (!measure) {
-          return;
-        }
-        const { activeLineOffset, lineOffset, lineHeight } = measure;
-        this.moveCurrentLine(view, activeLineOffset, lineOffset, lineHeight);
       }
-    );
+
+      if (!measure) {
+        return;
+      }
+      const { activeLineOffset, lineOffset, lineHeight } = measure;
+      this.moveCurrentLine(view, activeLineOffset, lineOffset, lineHeight);
+    });
   }
 
   private applyDecorations() {
@@ -586,7 +583,7 @@ class TypewriterModeCM6Plugin {
     this.applyDecorations();
 
     this.measureTypewriterPosition(
-      "TypewriterModeUpdateAfterExternalEvent",
+      "UnisastraUpdateAfterExternalEvent",
       (measure, view) => {
         this.setupScrollListener();
 
@@ -728,10 +725,10 @@ class TypewriterModeCM6Plugin {
   }
 }
 
-export default function createTypewriterModeViewPlugin(tm: TypewriterModeLib) {
+export default function createUnisastraViewPlugin(tm: UnisastraCore) {
   return ViewPlugin.define(
     (view: EditorView) => {
-      return new TypewriterModeCM6Plugin(tm, view);
+      return new UnisastraCM6Plugin(tm, view);
     },
     { decorations: (v) => v.decorations }
   );

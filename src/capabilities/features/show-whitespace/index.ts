@@ -1,11 +1,11 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import ShowSpaces from "./show-spaces";
 import ShowStrictLineBreak from "./show-strict-line-break";
 import ShowTabs from "./show-tabs";
 import ShowTrailing from "./show-trailing";
 import ShowWhitespace from "./show-whitespace";
 
-export default function getShowWhitespaceFeatures(tm: TypewriterModeLib) {
+export default function getShowWhitespaceFeatures(tm: UnisastraCore) {
   return Object.fromEntries(
     [
       new ShowWhitespace(tm),

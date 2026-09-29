@@ -1,4 +1,4 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import OutlinerCursorStick from "./outliner-cursor-stick";
 import OutlinerEnabled from "./outliner-enabled";
 import OutlinerKeyboardOps from "./outliner-keyboard-ops";
@@ -8,7 +8,7 @@ import OutlinerSmartEnter from "./outliner-smart-enter";
 import OutlinerSmartSelect from "./outliner-smart-select";
 import OutlinerSmartTab from "./outliner-smart-tab";
 
-export default function getOutlinerFeatures(tm: TypewriterModeLib) {
+export default function getOutlinerFeatures(tm: UnisastraCore) {
   return Object.fromEntries(
     [
       new OutlinerEnabled(tm),

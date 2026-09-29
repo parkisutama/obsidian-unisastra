@@ -1,5 +1,29 @@
 # Development status
 
+## Rebranding Unisastra — 2026-09-29
+
+Implementasi lokal mengganti plugin ID dan nama tampilan menjadi `unisastra` /
+Unisastra, command toggle, tipe panel outline, key frontmatter, CSS prefix,
+package, arsip rilis, URL repo tujuan, dan dokumentasi aktif. Versi disiapkan
+sebagai `1.2.0`. Guard deploy menolak folder plugin yang namanya tidak sesuai
+dengan ID manifest hasil build. Tidak ada migrasi data vault lama.
+
+`pnpm run check:ci` lulus: 34 file tes, 216 tes, typecheck, lint, build,
+verifikasi artefak, dan build docs. Fixture Electron outline lulus 440 checks,
+fixture editor lulus 155 checks. `dist/manifest.json` memuat ID `unisastra`,
+nama Unisastra, versi `1.2.0`, dan repo tujuan
+`parkisutama/obsidian-unisastra`. Lihat
+[ledger rebrand](./specs/unisastra-rebrand/tasks.md) dan
+[ADR-005](./en/reference/decisions/ADR-005-unisastra-identity.md).
+
+Repositori GitHub belum diubah; Git remote lokal masih menunjuk repo lama.
+Push, tag, release, deployment vault operasional, dan acceptance native Obsidian
+belum dilakukan pada checkpoint ini.
+
+## Update announcements — 2026-09-28
+
+Toggle dan modal release notes dihapus; key settings lama tetap inert untuk kompatibilitas data. `pnpm run check:ci` lulus (33 file test, 213 test, build dan docs). Acceptance native Obsidian belum dilakukan.
+
 Snapshot: 2026-09-12. Status ini memisahkan implementasi tooling dari bukti validasi.
 
 ## Commit lokal — 2026-09-27

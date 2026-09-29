@@ -10,8 +10,8 @@ export default class CurrentLineHighlightStyle extends Feature {
 
   override getBodyClasses(): string[] {
     return [
-      "ptm-current-line-highlight-box",
-      "ptm-current-line-highlight-underline",
+      "unisastra-current-line-highlight-box",
+      "unisastra-current-line-highlight-underline",
     ];
   }
 
@@ -20,7 +20,7 @@ export default class CurrentLineHighlightStyle extends Feature {
       setting
         .setName("Current line highlight style")
         .setDesc("The style of the current line highlight")
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addDropdown((dropdown) =>
           dropdown
             .addOption(CURRENT_LINE_HIGHLIGHT_STYLE.BOX, "Box")
@@ -41,7 +41,7 @@ export default class CurrentLineHighlightStyle extends Feature {
   }
 
   private applyClass() {
-    const currentLineStyleClass = `ptm-current-line-highlight-${this.getSettingValue()}`;
+    const currentLineStyleClass = `unisastra-current-line-highlight-${this.getSettingValue()}`;
     for (const cl of this.getBodyClasses()) {
       this.tm.perWindowProps.bodyClasses.remove(cl);
     }

@@ -45,6 +45,9 @@ function writeJson(path: string, value: unknown): void {
 }
 
 function createArtifactFixture({
+  manifestId = "unisastra",
+  manifestName = "Unisastra",
+  packageName = "unisastra",
   distManifestVersion = "1.2.3",
   packageVersion = "1.2.3",
   versions = { "1.2.3": "1.11.0" },
@@ -53,6 +56,9 @@ function createArtifactFixture({
   noticeOverrides = {},
   distNoticeOverrides = {},
 }: {
+  manifestId?: string;
+  manifestName?: string;
+  packageName?: string;
   distManifestVersion?: string;
   packageVersion?: string;
   versions?: Record<string, string>;
@@ -61,7 +67,7 @@ function createArtifactFixture({
   noticeOverrides?: Record<string, string>;
   distNoticeOverrides?: Record<string, string>;
 } = {}): string {
-  const dir = mkdtempSync(join(tmpdir(), "md-writer-artifacts-"));
+  const dir = mkdtempSync(join(tmpdir(), "unisastra-artifacts-"));
   mkdirSync(join(dir, "dist"));
   mkdirSync(join(dir, "licenses"));
   mkdirSync(join(dir, "dist", "licenses"));
@@ -87,11 +93,14 @@ function createArtifactFixture({
     `${bannerText}console.log('built');\n`
   );
 
-  writeFileSync(join(dir, "dist", "styles.css"), ".md-writer {}\n");
+  writeFileSync(join(dir, "dist", "styles.css"), ".unisastra {}\n");
   writeJson(join(dir, "dist", "manifest.json"), {
+    id: manifestId,
+    name: manifestName,
     version: distManifestVersion,
   });
   writeJson(join(dir, "package.json"), {
+    name: packageName,
     version: packageVersion,
   });
   writeJson(join(dir, "versions.json"), versions);
@@ -123,6 +132,17 @@ describe("artifact verification", () => {
     expect(() => verifyArtifacts()).toThrow(
       "dist/manifest.json version 1.2.4 does not match package.json version 1.2.3"
     );
+  });
+
+  it("rejects old plugin identity in release artifacts", () => {
+    for (const options of [
+      { manifestId: "md-writer" },
+      { manifestName: "MD Writer" },
+      { packageName: "md-writer" },
+    ]) {
+      process.chdir(createArtifactFixture(options));
+      expect(() => verifyArtifacts()).toThrow("Release identity must use");
+    }
   });
 
   it("rejects a missing versions.json entry", () => {

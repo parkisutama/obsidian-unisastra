@@ -2,8 +2,8 @@ export const enSidebar = [
   {
     text: "For Plugin Users",
     items: [
-      { text: "Install MD Writer", link: "/en/for-users/install-md-writer" },
-      { text: "Use Features", link: "/en/for-users/use-md-writer-features" },
+      { text: "Install Unisastra", link: "/en/for-users/install-unisastra" },
+      { text: "Use Features", link: "/en/for-users/use-unisastra-features" },
       { text: "Troubleshooting", link: "/en/for-users/troubleshooting" }
     ]
   },

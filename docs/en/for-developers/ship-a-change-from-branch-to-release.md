@@ -16,7 +16,7 @@ Di akhir tutorial ini Anda akan:
 
 - `pnpm` sudah terpasang.
 - Dependensi repo sudah ter-install.
-- Anda sudah berada di root repo `obsidian-md-writer`.
+- Anda sudah berada di root repo `obsidian-unisastra`.
 
 ## 1. Buat branch kerja
 

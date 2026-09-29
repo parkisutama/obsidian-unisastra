@@ -1,5 +1,5 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 
 const DIST_FILES = ["main.js", "styles.css", "manifest.json"] as const;
 const OBSIDIAN_VAULT_PLUGIN_PATH_PATTERN = /^OBSIDIAN_VAULT_PLUGIN_PATH=(.+)$/m;
@@ -52,6 +52,16 @@ export function deployPlugin({
     if (!existsSync(sourcePath)) {
       throw new Error(`Missing dist/${file}; run the build first`);
     }
+  }
+
+  const manifest = JSON.parse(
+    readFileSync(resolve(distDir, "manifest.json"), "utf-8")
+  ) as { id?: string };
+  const destinationId = basename(resolve(pluginDir));
+  if (!manifest.id || destinationId !== manifest.id) {
+    throw new Error(
+      `Configured plugin folder "${destinationId}" does not match built plugin ID "${manifest.id ?? "missing"}". Update OBSIDIAN_VAULT_PLUGIN_PATH before deploying.`
+    );
   }
 
   if (!existsSync(pluginDir)) {

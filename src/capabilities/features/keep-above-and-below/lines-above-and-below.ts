@@ -11,7 +11,7 @@ export default class LinesAboveAndBelow extends Feature {
         .setDesc(
           "The amount of lines to always keep above and below the current line"
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addText((text) =>
           text
             .setValue((this.getSettingValue() as number).toString())

@@ -15,7 +15,7 @@ export default class DimUnfocusedEditorsBehavior extends Feature {
         .setDesc(
           "Choose how unfocused split panes dim paragraphs and sentences."
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addDropdown((dropdown) =>
           dropdown
             .addOption(
@@ -40,7 +40,7 @@ export default class DimUnfocusedEditorsBehavior extends Feature {
   override load() {
     super.load();
     this.tm.perWindowProps.bodyAttrs[
-      "data-ptm-dim-unfocused-editors-behavior"
+      "data-unisastra-dim-unfocused-editors-behavior"
     ] = this.getSettingValue() as DimUnfocusedEditorsBehaviorType;
   }
 
@@ -49,7 +49,7 @@ export default class DimUnfocusedEditorsBehavior extends Feature {
   ) {
     this.setSettingValue(newValue);
     this.tm.perWindowProps.bodyAttrs[
-      "data-ptm-dim-unfocused-editors-behavior"
+      "data-unisastra-dim-unfocused-editors-behavior"
     ] = newValue;
     this.tm.saveSettings().catch((error) => {
       console.error("Failed to save settings:", error);

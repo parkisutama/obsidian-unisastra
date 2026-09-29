@@ -1,11 +1,11 @@
 {
-  "id": "md-writer",
-  "name": "MD Writer",
-  "version": "1.1.0",
+  "id": "unisastra",
+  "name": "Unisastra",
+  "version": "1.2.0",
   "minAppVersion": "1.11.0",
   "description": "A specialized environment for high-precision drafting. Combines typewriter scrolling, whitespace visualization, and outliner zoom focus.",
   "author": "Parkis Utama",
   "authorUrl": "https://github.com/parkisutama",
-  "repoUrl": "https://github.com/parkisutama/obsidian-md-writer",
+  "repoUrl": "https://github.com/parkisutama/obsidian-unisastra",
   "isDesktopOnly": false
 }

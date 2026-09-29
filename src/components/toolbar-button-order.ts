@@ -3,7 +3,7 @@ import {
   TOOLBAR_ITEM_LABELS,
   type ToolbarItemId,
 } from "@/capabilities/features/toolbar/settings";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 /** Swaps `order[index]` with its neighbor at `index + delta`, in place. No-op past either end. */
 export function moveToolbarItem(
@@ -19,7 +19,7 @@ export function moveToolbarItem(
   order.splice(targetIndex, 0, item as ToolbarItemId);
 }
 
-function saveAndRerender(tm: TypewriterModeLib, rerender: () => void): void {
+function saveAndRerender(tm: UnisastraCore, rerender: () => void): void {
   tm.saveSettings()
     .catch((error) => {
       console.error("Failed to save settings:", error);
@@ -37,7 +37,7 @@ function saveAndRerender(tm: TypewriterModeLib, rerender: () => void): void {
  */
 export function renderToolbarButtonOrder(
   container: HTMLElement,
-  tm: TypewriterModeLib,
+  tm: UnisastraCore,
   rerender: () => void
 ): void {
   const order = tm.settings.toolbar.buttonOrder;

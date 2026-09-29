@@ -8,7 +8,7 @@
     view = app.viewRegistry.viewByType.markdown({
       app,
       containerEl: document.createElement("div"),
-      id: "md-writer-fold-probe",
+      id: "unisastra-fold-probe",
       history: { backHistory: [], forwardHistory: [] },
       getRoot: () => app.workspace.rootSplit,
     });

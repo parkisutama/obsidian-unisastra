@@ -1,23 +1,23 @@
-# MD Writer documentation
+# Unisastra documentation
 
 Dokumentasi ini diatur berdasarkan aksi yang paling mungkin dilakukan oleh dua
 persona utama:
 
-- pengguna plugin yang ingin memasang, memakai, dan memperbaiki masalah MD
-  Writer di Obsidian,
+- pengguna plugin yang ingin memasang, memakai, dan memperbaiki masalah
+  Unisastra di Obsidian,
 - developer atau maintainer yang ingin berkontribusi, menjalankan QA, dan
   merilis perubahan.
 
 ## Pengguna plugin
 
-Mulai dari sini jika tujuan Anda adalah memakai MD Writer di vault Obsidian:
+Mulai dari sini jika tujuan Anda adalah memakai Unisastra di vault Obsidian:
 
-- [Install MD Writer](./for-users/install-md-writer.md)
-- [Use MD Writer features](./for-users/use-md-writer-features.md)
-- [Troubleshoot MD Writer](./for-users/troubleshooting.md)
+- [Install Unisastra](./for-users/install-unisastra.md)
+- [Use Unisastra features](./for-users/use-unisastra-features.md)
+- [Troubleshoot Unisastra](./for-users/troubleshooting.md)
 
 Informasi singkat untuk pengguna juga tersedia di
-[README utama](https://github.com/parkisutama/obsidian-md-writer/blob/main/README.md).
+[README utama](https://github.com/parkisutama/obsidian-unisastra/blob/main/README.md).
 
 ## Developer dan maintainer
 
@@ -37,7 +37,7 @@ Mulai dari sini jika tujuan Anda adalah mengubah kode, dokumentasi, atau release
 - [SDLC for this plugin](./for-developers/sdlc-for-this-plugin.md)
 
 Quickstart contributor tetap ada di
-[DEVELOPMENT.md](https://github.com/parkisutama/obsidian-md-writer/blob/main/DEVELOPMENT.md).
+[DEVELOPMENT.md](https://github.com/parkisutama/obsidian-unisastra/blob/main/DEVELOPMENT.md).
 
 ## Reference
 
@@ -54,6 +54,10 @@ Gunakan bagian ini untuk aturan stabil, checklist, dan spesifikasi panjang:
 
 ## Active specifications
 
+- [Unisastra rebrand: spec](../specs/unisastra-rebrand/spec.md)
+- [Unisastra rebrand: plan](../specs/unisastra-rebrand/plan.md)
+- [Unisastra rebrand: tasks](../specs/unisastra-rebrand/tasks.md)
+- [ADR-005: Unisastra identity](./reference/decisions/ADR-005-unisastra-identity.md)
 - [Compact settings: accepted spec](./specs/compact-settings-layout/spec.md)
 - [Compact settings: accepted plan](./specs/compact-settings-layout/plan.md)
 - [Compact settings: implementation and acceptance ledger](./specs/compact-settings-layout/tasks.md)

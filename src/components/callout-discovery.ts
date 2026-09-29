@@ -1,12 +1,9 @@
 import { type Component, Notice, Setting } from "obsidian";
 import { canonicalBuiltinCalloutId } from "@/capabilities/features/callouts/catalog";
 import { discoverCallouts } from "@/capabilities/features/callouts/discovery";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
-async function saveCandidate(
-  tm: TypewriterModeLib,
-  id: string
-): Promise<boolean> {
+async function saveCandidate(tm: UnisastraCore, id: string): Promise<boolean> {
   const entries = tm.settings.callouts.entries;
   const entry = {
     id,
@@ -33,7 +30,7 @@ async function saveCandidate(
 
 export function renderCalloutDiscovery(
   container: HTMLElement,
-  tm: TypewriterModeLib,
+  tm: UnisastraCore,
   component: Component,
   rerender: () => void
 ): void {

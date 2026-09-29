@@ -109,7 +109,7 @@ export function createLivePreviewPlugin(app: App, isEnabled: () => boolean) {
             this.rewriteAnchors();
           } catch (error: unknown) {
             console.warn(
-              "[md-writer] GFM anchor Live Preview rewrite failed",
+              "[unisastra] GFM anchor Live Preview rewrite failed",
               error
             );
           } finally {

@@ -2,7 +2,7 @@ import { EditorView } from "@codemirror/view";
 import { MarkdownView, Notice, Platform } from "obsidian";
 import { calloutMenuOptions } from "@/capabilities/features/callouts/settings";
 import { getVisibleRange } from "@/cm6/outliner/utils";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import type { ToolbarAction } from "./actions";
 import {
   type ElapsedState,
@@ -78,8 +78,8 @@ export class ToolbarController {
   private tickIntervalSeconds: number | null = null;
   private disposed = false;
   private factory: SurfaceFactory | null = null;
-  private readonly tm: TypewriterModeLib;
-  constructor(tm: TypewriterModeLib) {
+  private readonly tm: UnisastraCore;
+  constructor(tm: UnisastraCore) {
     this.tm = tm;
   }
 
@@ -222,13 +222,13 @@ export class ToolbarController {
       return;
     }
     this.tm.saveSettings().catch((error: unknown) => {
-      console.error("MD Writer: failed to save settings.", error);
+      console.error("Unisastra: failed to save settings.", error);
     });
   }
   reorderButtons(newOrder: ToolbarItemId[]): void {
     this.tm.settings.toolbar.buttonOrder = newOrder;
     this.tm.saveSettings().catch((error: unknown) => {
-      console.error("MD Writer: failed to save settings.", error);
+      console.error("Unisastra: failed to save settings.", error);
     });
     for (const doc of this.active.keys()) {
       this.schedule(doc);
@@ -325,7 +325,7 @@ export class ToolbarController {
             general.isPluginActivated &&
             general.enabledPlatforms !== "mobile" &&
             !Platform.isMobile &&
-            frontmatter?.["md-writer"] !== false,
+            frontmatter?.unisastra !== false,
           current:
             !this.disposed &&
             this.active.get(doc) === view &&
@@ -356,7 +356,7 @@ export class ToolbarController {
         this.schedule(doc);
       })
       .catch((error: unknown) => {
-        console.error("MD Writer: toolbar action failed.", error);
+        console.error("Unisastra: toolbar action failed.", error);
       });
   }
   refresh(): void {
@@ -443,7 +443,7 @@ export class ToolbarController {
   private ensureStatusBarEl(): HTMLElement {
     if (!this.statusBarEl) {
       this.statusBarEl = this.tm.plugin.addStatusBarItem();
-      this.statusBarEl.addClass("ptm-floaty-toolbar-status-bar-hud");
+      this.statusBarEl.addClass("unisastra-floaty-toolbar-status-bar-hud");
     }
     return this.statusBarEl;
   }
@@ -481,7 +481,7 @@ export class ToolbarController {
       span.textContent = segment.label;
       span.title = segment.tooltip;
       if (segment.resettable) {
-        span.classList.add("ptm-floaty-toolbar-status-bar-hud-reset");
+        span.classList.add("unisastra-floaty-toolbar-status-bar-hud-reset");
         span.setAttribute("role", "button");
         span.tabIndex = 0;
         span.addEventListener("click", (event) => {

@@ -21,13 +21,13 @@ import {
   dispatchOutlinerUnfocus,
 } from "@/cm6/outliner/utils";
 import type { PerWindowProps } from "@/cm6/per-window-props";
-import createTypewriterModeViewPlugin from "@/cm6/plugin";
+import createUnisastraViewPlugin from "@/cm6/plugin";
 import { createShowWhitespaceExtension } from "@/cm6/show-whitespace";
 import { createToolbarSelectionExtension } from "@/cm6/toolbar-selection";
 import { createWarnLongLineExtension } from "@/cm6/warn-long-line";
 import { createFloatyToolbarSurface } from "@/components/floaty-toolbar/toolbar";
 import { OUTLINE_VIEW_TYPE, OutlineView } from "@/components/outline-view";
-import TypewriterModeSettingTab from "@/components/settings-tab";
+import UnisastraSettingTab from "@/components/settings-tab";
 import {
   createGFMAnchorLivePreviewExtension,
   registerGFMAnchorCompatibility,
@@ -44,17 +44,17 @@ import { ToolbarController } from "./capabilities/features/toolbar/controller";
 import {
   applyStartupMigrations,
   DEFAULT_SETTINGS,
-  type TypewriterModeSettings,
+  type UnisastraSettings,
 } from "./capabilities/settings";
 import { SettingsWriter } from "./settings-writer";
 
-export default class TypewriterModeLib {
+export default class UnisastraCore {
   readonly plugin: Plugin;
-  private readonly loadData: () => Promise<TypewriterModeSettings>;
-  private readonly settingsWriter: SettingsWriter<TypewriterModeSettings>;
+  private readonly loadData: () => Promise<UnisastraSettings>;
+  private readonly settingsWriter: SettingsWriter<UnisastraSettings>;
   readonly foldPersistence: FoldPersistenceCoordinator;
 
-  settings: TypewriterModeSettings = DEFAULT_SETTINGS;
+  settings: UnisastraSettings = DEFAULT_SETTINGS;
 
   perWindowProps: PerWindowProps = {
     cssVariables: {},
@@ -70,12 +70,12 @@ export default class TypewriterModeLib {
   readonly commands: Record<string, AbstractCommand>;
   readonly toolbar: ToolbarController;
   private readonly calloutStyles = new CalloutStyles();
-  private settingTab: TypewriterModeSettingTab | null = null;
+  private settingTab: UnisastraSettingTab | null = null;
 
   constructor(
     plugin: Plugin,
-    loadData: () => Promise<TypewriterModeSettings>,
-    saveData: (settings: TypewriterModeSettings) => Promise<void>
+    loadData: () => Promise<UnisastraSettings>,
+    saveData: (settings: UnisastraSettings) => Promise<void>
   ) {
     this.plugin = plugin;
     this.loadData = loadData;
@@ -97,7 +97,7 @@ export default class TypewriterModeLib {
       createBlockIdHiderPlugin(this),
       createFoldPersistExtension(this),
       createToolbarSelectionExtension(this.toolbar),
-      createTypewriterModeViewPlugin(this),
+      createUnisastraViewPlugin(this),
       createShowWhitespaceExtension(),
       createOutlinerExtension(this.settings.outliner, (view, pos) =>
         this.outlinerFocusAtPosition(view, pos)
@@ -222,7 +222,7 @@ export default class TypewriterModeLib {
   }
 
   loadSettingsTab() {
-    this.settingTab = new TypewriterModeSettingTab(this.plugin.app, this);
+    this.settingTab = new UnisastraSettingTab(this.plugin.app, this);
     this.plugin.addSettingTab(this.settingTab);
   }
 
@@ -262,7 +262,7 @@ export default class TypewriterModeLib {
     const manifestDir = this.plugin.manifest.dir;
     if (!manifestDir) {
       console.error(
-        "MD Writer: Unable to determine plugin manifest directory."
+        "Unisastra: Unable to determine plugin manifest directory."
       );
       return;
     }

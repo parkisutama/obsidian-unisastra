@@ -1,42 +1,42 @@
-.workspace-leaf-content[data-type="md-writer-outline"] {
-  --ptm-outline-indent-size: 18px;
-  --ptm-outline-row-padding: 4px;
-  --ptm-outline-branch-color: color-mix(
+.workspace-leaf-content[data-type="unisastra-outline"] {
+  --unisastra-outline-indent-size: 18px;
+  --unisastra-outline-row-padding: 4px;
+  --unisastra-outline-branch-color: color-mix(
     in srgb,
     var(--background-modifier-border) 72%,
     transparent
   );
-  --ptm-outline-branch-color-emphasis: color-mix(
+  --unisastra-outline-branch-color-emphasis: color-mix(
     in srgb,
     var(--interactive-accent) 58%,
     var(--background-modifier-border)
   );
-  --ptm-outline-branch-color-complete: color-mix(
+  --unisastra-outline-branch-color-complete: color-mix(
     in srgb,
     var(--color-green) 54%,
     var(--background-modifier-border)
   );
-  --ptm-outline-heading-color: color-mix(
+  --unisastra-outline-heading-color: color-mix(
     in srgb,
     var(--text-normal) 88%,
     var(--text-muted)
   );
-  --ptm-outline-item-bg-hover: color-mix(
+  --unisastra-outline-item-bg-hover: color-mix(
     in srgb,
     var(--background-modifier-hover) 60%,
     transparent
   );
-  --ptm-outline-item-bg-active: color-mix(
+  --unisastra-outline-item-bg-active: color-mix(
     in srgb,
     var(--interactive-accent) 10%,
     transparent
   );
-  --ptm-outline-item-border-active: color-mix(
+  --unisastra-outline-item-border-active: color-mix(
     in srgb,
     var(--interactive-accent) 38%,
     transparent
   );
-  --ptm-outline-item-border-focused: color-mix(
+  --unisastra-outline-item-border-focused: color-mix(
     in srgb,
     var(--color-accent) 55%,
     transparent
@@ -52,19 +52,19 @@
       );
   }
 
-  .ptm-outline-empty {
+  .unisastra-outline-empty {
     padding: 8px 10px;
     color: var(--text-muted);
     font-size: var(--font-ui-small);
   }
 
-  .ptm-outline-list {
+  .unisastra-outline-list {
     display: flex;
     flex-direction: column;
     gap: 0;
   }
 
-  .ptm-outline-toolbar {
+  .unisastra-outline-toolbar {
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -73,20 +73,20 @@
     border-bottom: 1px solid var(--background-modifier-border);
   }
 
-  .ptm-outline-toolbar-title {
+  .unisastra-outline-toolbar-title {
     color: var(--text-normal);
     font-size: var(--font-ui-small);
     font-weight: 600;
     line-height: 1.3;
   }
 
-  .ptm-outline-toolbar-meta {
+  .unisastra-outline-toolbar-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
   }
 
-  .ptm-outline-toolbar-meta-item {
+  .unisastra-outline-toolbar-meta-item {
     padding: 2px 8px;
     border: 1px solid var(--background-modifier-border);
     border-radius: 999px;
@@ -109,24 +109,24 @@
     }
   }
 
-  .ptm-outline-item {
+  .unisastra-outline-item {
     position: relative;
     border-radius: 6px;
     transition: none;
   }
 
-  .ptm-outline-link {
+  .unisastra-outline-link {
     position: relative;
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas: "lead content trailing";
     gap: 6px;
     align-items: stretch;
-    padding: var(--ptm-outline-row-padding) 4px var(--ptm-outline-row-padding) 2px;
+    padding: var(--unisastra-outline-row-padding) 4px var(--unisastra-outline-row-padding) 2px;
     cursor: pointer;
   }
 
-  .ptm-outline-lead {
+  .unisastra-outline-lead {
     display: grid;
     grid-template-columns: auto auto;
     align-items: center;
@@ -135,7 +135,7 @@
     align-self: stretch;
   }
 
-  .ptm-outline-guides {
+  .unisastra-outline-guides {
     position: relative;
     display: flex;
     align-self: stretch;
@@ -143,31 +143,31 @@
     pointer-events: none;
   }
 
-  .ptm-outline-guide-column,
-  .ptm-outline-junction {
+  .unisastra-outline-guide-column,
+  .unisastra-outline-junction {
     position: relative;
-    width: var(--ptm-outline-indent-size);
-    min-width: var(--ptm-outline-indent-size);
+    width: var(--unisastra-outline-indent-size);
+    min-width: var(--unisastra-outline-indent-size);
   }
 
-  .ptm-outline-guide-column.is-continuing::before,
-  .ptm-outline-junction::before,
-  .ptm-outline-child-stem::before {
+  .unisastra-outline-guide-column.is-continuing::before,
+  .unisastra-outline-junction::before,
+  .unisastra-outline-child-stem::before {
     position: absolute;
-    top: calc(-1 * var(--ptm-outline-row-padding));
-    bottom: calc(-1 * var(--ptm-outline-row-padding));
+    top: calc(-1 * var(--unisastra-outline-row-padding));
+    bottom: calc(-1 * var(--unisastra-outline-row-padding));
     left: 9px;
-    border-left: 1px solid var(--ptm-outline-branch-color);
+    border-left: 1px solid var(--unisastra-outline-branch-color);
     opacity: 0.6;
     content: "";
   }
 
-  .ptm-outline-junction.is-last-sibling::before,
-  .ptm-outline-junction.is-root::before {
+  .unisastra-outline-junction.is-last-sibling::before,
+  .unisastra-outline-junction.is-root::before {
     display: none;
   }
 
-  .ptm-outline-child-stem {
+  .unisastra-outline-child-stem {
     position: absolute;
     top: 50%;
     bottom: 0;
@@ -179,23 +179,23 @@
     }
   }
 
-  .ptm-outline-junction-elbow {
+  .unisastra-outline-junction-elbow {
     position: absolute;
-    top: calc(-1 * var(--ptm-outline-row-padding));
+    top: calc(-1 * var(--unisastra-outline-row-padding));
     bottom: calc(50% - 0.5px);
     left: 9px;
     width: 13px;
-    border-left: 1px solid var(--ptm-outline-branch-color);
-    border-bottom: 1px solid var(--ptm-outline-branch-color);
+    border-left: 1px solid var(--unisastra-outline-branch-color);
+    border-bottom: 1px solid var(--unisastra-outline-branch-color);
     border-bottom-left-radius: 5px;
     opacity: 0.6;
   }
 
-  .ptm-outline-junction.is-leaf .ptm-outline-junction-elbow {
+  .unisastra-outline-junction.is-leaf .unisastra-outline-junction-elbow {
     width: 28px;
   }
 
-  .ptm-outline-junction.is-root .ptm-outline-junction-elbow {
+  .unisastra-outline-junction.is-root .unisastra-outline-junction-elbow {
     display: none;
   }
 
@@ -203,14 +203,14 @@
   [data-outline-connector].is-hover-connector::before,
   [data-outline-connector].is-active-connector::before,
   [data-outline-connector].is-focus-connector::before,
-  .ptm-outline-junction-elbow.is-hover-connector,
-  .ptm-outline-junction-elbow.is-active-connector,
-  .ptm-outline-junction-elbow.is-focus-connector {
-    border-color: var(--ptm-outline-branch-color-emphasis);
+  .unisastra-outline-junction-elbow.is-hover-connector,
+  .unisastra-outline-junction-elbow.is-active-connector,
+  .unisastra-outline-junction-elbow.is-focus-connector {
+    border-color: var(--unisastra-outline-branch-color-emphasis);
     opacity: 1;
   }
 
-  .ptm-outline-node {
+  .unisastra-outline-node {
     position: relative;
     z-index: 1;
     display: flex;
@@ -219,7 +219,7 @@
     align-self: center;
   }
 
-  .ptm-outline-disclosure {
+  .unisastra-outline-disclosure {
     position: relative;
     z-index: 1;
     width: 11px;
@@ -239,13 +239,13 @@
     }
   }
 
-  .ptm-outline-disclosure-spacer {
+  .unisastra-outline-disclosure-spacer {
     width: 11px;
     min-width: 11px;
     height: 11px;
   }
 
-  .ptm-outline-marker {
+  .unisastra-outline-marker {
     position: relative;
     z-index: 1;
     width: 6px;
@@ -259,7 +259,7 @@
       transform 120ms ease;
   }
 
-  .ptm-outline-marker-heading {
+  .unisastra-outline-marker-heading {
     width: 9px;
     min-width: 9px;
     height: 9px;
@@ -276,19 +276,19 @@
     transform: rotate(45deg);
   }
 
-  .ptm-outline-item:hover .ptm-outline-marker,
-  .ptm-outline-item.is-hover-trail .ptm-outline-marker,
-  .ptm-outline-item:focus-within .ptm-outline-marker,
-  .ptm-outline-item.is-active .ptm-outline-marker,
-  .ptm-outline-item.is-focused-root .ptm-outline-marker {
+  .unisastra-outline-item:hover .unisastra-outline-marker,
+  .unisastra-outline-item.is-hover-trail .unisastra-outline-marker,
+  .unisastra-outline-item:focus-within .unisastra-outline-marker,
+  .unisastra-outline-item.is-active .unisastra-outline-marker,
+  .unisastra-outline-item.is-focused-root .unisastra-outline-marker {
     background: color-mix(in srgb, var(--interactive-accent) 56%, transparent);
   }
 
-  .ptm-outline-item:hover .ptm-outline-marker-heading,
-  .ptm-outline-item.is-hover-trail .ptm-outline-marker-heading,
-  .ptm-outline-item:focus-within .ptm-outline-marker-heading,
-  .ptm-outline-item.is-active .ptm-outline-marker-heading,
-  .ptm-outline-item.is-focused-root .ptm-outline-marker-heading {
+  .unisastra-outline-item:hover .unisastra-outline-marker-heading,
+  .unisastra-outline-item.is-hover-trail .unisastra-outline-marker-heading,
+  .unisastra-outline-item:focus-within .unisastra-outline-marker-heading,
+  .unisastra-outline-item.is-active .unisastra-outline-marker-heading,
+  .unisastra-outline-item.is-focused-root .unisastra-outline-marker-heading {
     border-color: color-mix(
       in srgb,
       var(--interactive-accent) 68%,
@@ -297,7 +297,7 @@
     background: color-mix(in srgb, var(--interactive-accent) 18%, transparent);
   }
 
-  .ptm-outline-task-toggle {
+  .unisastra-outline-task-toggle {
     position: relative;
     z-index: 1;
     width: 13px;
@@ -308,7 +308,7 @@
     transition: none;
   }
 
-  .ptm-outline-content {
+  .unisastra-outline-content {
     grid-area: content;
     align-self: start;
     min-width: 0;
@@ -341,27 +341,27 @@
     }
   }
 
-  .ptm-outline-heading {
-    .ptm-outline-content {
-      color: var(--ptm-outline-heading-color);
+  .unisastra-outline-heading {
+    .unisastra-outline-content {
+      color: var(--unisastra-outline-heading-color);
       font-size: 0.95em;
       font-weight: 600;
       letter-spacing: 0.01em;
     }
   }
 
-  .ptm-outline-list-item {
-    .ptm-outline-content {
+  .unisastra-outline-list-item {
+    .unisastra-outline-content {
       color: color-mix(in srgb, var(--text-normal) 80%, var(--text-muted));
       font-size: var(--font-ui-small);
     }
   }
 
-  .ptm-outline-item-meta {
+  .unisastra-outline-item-meta {
     display: none;
   }
 
-  .ptm-outline-item-trailing {
+  .unisastra-outline-item-trailing {
     grid-area: trailing;
     display: flex;
     align-items: center;
@@ -374,7 +374,7 @@
     padding-top: 1px;
   }
 
-  .ptm-outline-item-progress {
+  .unisastra-outline-item-progress {
     padding: 1px 7px;
     border: 1px solid var(--background-modifier-border);
     border-radius: 999px;
@@ -416,7 +416,7 @@
     }
   }
 
-  .ptm-outline-item-actions {
+  .unisastra-outline-item-actions {
     position: absolute;
     top: 50%;
     right: 0;
@@ -434,14 +434,14 @@
       transform 120ms ease;
   }
 
-  .ptm-outline-item:hover .ptm-outline-item-actions,
-  .ptm-outline-item:focus-within .ptm-outline-item-actions {
+  .unisastra-outline-item:hover .unisastra-outline-item-actions,
+  .unisastra-outline-item:focus-within .unisastra-outline-item-actions {
     opacity: 1;
     pointer-events: auto;
     transform: translate(0, -50%);
   }
 
-  .ptm-outline-item-action {
+  .unisastra-outline-item-action {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -479,15 +479,15 @@
     }
   }
 
-  .ptm-outline-item[data-progress-tone="active"] .ptm-outline-marker {
+  .unisastra-outline-item[data-progress-tone="active"] .unisastra-outline-marker {
     background: color-mix(in srgb, var(--interactive-accent) 48%, transparent);
   }
 
-  .ptm-outline-item[data-progress-tone="complete"] .ptm-outline-marker {
+  .unisastra-outline-item[data-progress-tone="complete"] .unisastra-outline-marker {
     background: color-mix(in srgb, var(--color-green) 56%, transparent);
   }
 
-  .ptm-outline-item[data-progress-tone="complete"] .ptm-outline-marker-heading {
+  .unisastra-outline-item[data-progress-tone="complete"] .unisastra-outline-marker-heading {
     border-color: color-mix(in srgb, var(--color-green) 62%, transparent);
     background: color-mix(in srgb, var(--color-green) 14%, transparent);
   }

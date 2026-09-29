@@ -1,4 +1,4 @@
-// Writing focus, adapted for MD Writer from Obsidian Focus Mode by
+// Writing focus, adapted for Unisastra from Obsidian Focus Mode by
 // ryanpcmcquen, licensed under the Mozilla Public License 2.0.
 // https://github.com/ryanpcmcquen/obsidian-focus-mode, main.ts
 // (FocusMode: storeSplitsValues, collapseSplits, restoreSplits,
@@ -20,20 +20,21 @@
 //   instead of upstream's direct, type-suppressed `this.app` access.
 
 import { ItemView, Platform } from "obsidian";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 export class WritingFocus {
-  private readonly tm: TypewriterModeLib;
+  private readonly tm: UnisastraCore;
 
-  constructor(tm: TypewriterModeLib) {
+  constructor(tm: UnisastraCore) {
     this.tm = tm;
   }
 
   private focusModeActive = false;
 
-  private readonly maximizedClass = "ptm-maximized";
-  private readonly focusModeClass = "ptm-focus-mode";
-  private readonly hiddenWorkspaceSplitClass = "ptm-writing-focus-hidden-split";
+  private readonly maximizedClass = "unisastra-maximized";
+  private readonly focusModeClass = "unisastra-focus-mode";
+  private readonly hiddenWorkspaceSplitClass =
+    "unisastra-writing-focus-hidden-split";
 
   private leftSplitCollapsed = false;
   private rightSplitCollapsed = false;

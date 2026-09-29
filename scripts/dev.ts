@@ -6,7 +6,7 @@ import { build } from "./lib/build";
 import { deployPlugin } from "./lib/deploy-plugin";
 import { setupTestVault } from "./lib/setup-test-vault";
 
-const PLUGIN_ID = "md-writer";
+const PLUGIN_ID = "unisastra";
 const DIST_DIR = "./dist";
 const TEST_VAULT_PATH = "./test-vault";
 const WATCH_TARGETS = ["src", "manifest.json"] as const;

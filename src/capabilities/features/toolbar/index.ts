@@ -1,4 +1,4 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import EditTimerFilePrefix from "./edit-timer-file-prefix";
 import EditTimerSessionPrefix from "./edit-timer-session-prefix";
 import EditTimerUpdateInterval from "./edit-timer-update-interval";
@@ -9,7 +9,7 @@ import ToggleSmartUrl from "./toggle-smart-url";
 import ToggleTimerFileVisible from "./toggle-timer-file-visible";
 import ToggleTimerSessionVisible from "./toggle-timer-session-visible";
 
-export default function getToolbarFeatures(tm: TypewriterModeLib) {
+export default function getToolbarFeatures(tm: UnisastraCore) {
   return Object.fromEntries(
     [
       new ToggleToolbarEnabled(tm),

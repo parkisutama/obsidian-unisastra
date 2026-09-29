@@ -21,7 +21,7 @@ import {
   getLineContentEndBeforeBlockId,
   getVisibleRange,
 } from "@/cm6/outliner/utils";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import {
   applyOutlineTrail,
   buildOutlineGuides,
@@ -34,7 +34,7 @@ type TreeNodeRef = Parameters<
   NonNullable<Parameters<ReturnType<typeof syntaxTree>["iterate"]>[0]["enter"]>
 >[0];
 
-export const OUTLINE_VIEW_TYPE = "md-writer-outline";
+export const OUTLINE_VIEW_TYPE = "unisastra-outline";
 
 interface OutlineEntry {
   contentMarkdown: string;
@@ -345,7 +345,7 @@ export class OutlineView extends ItemView {
   private treeEntries: OutlineTreeEntry[] = [];
   private guideRows: OutlineGuideRow[] = [];
   private updateTimeout: number | null = null;
-  private readonly tm: TypewriterModeLib;
+  private readonly tm: UnisastraCore;
   private generation = 0;
   private closed = false;
   private renderComponent: Component | null = null;
@@ -365,7 +365,7 @@ export class OutlineView extends ItemView {
     }
   }
 
-  constructor(leaf: WorkspaceLeaf, tm: TypewriterModeLib) {
+  constructor(leaf: WorkspaceLeaf, tm: UnisastraCore) {
     super(leaf);
     this.tm = tm;
   }
@@ -716,7 +716,7 @@ export class OutlineView extends ItemView {
     applyOutlineTrail(this.contentEl, new Set(), "is-hover-connector");
     for (const item of Array.from(
       this.contentEl.querySelectorAll<HTMLElement>(
-        ".ptm-outline-item.is-hover-trail"
+        ".unisastra-outline-item.is-hover-trail"
       )
     )) {
       item.removeClass("is-hover-trail");
@@ -884,7 +884,7 @@ export class OutlineView extends ItemView {
 
   private renderEmptyState(message: string) {
     this.contentEl.createDiv({
-      cls: "ptm-outline-empty",
+      cls: "unisastra-outline-empty",
       text: message,
     });
   }
@@ -1047,16 +1047,16 @@ export class OutlineView extends ItemView {
     guideRow: OutlineGuideRow
   ) {
     const lead = content.createDiv({
-      cls: "ptm-outline-lead",
+      cls: "unisastra-outline-lead",
     });
     renderOutlineGuides(lead, guideRow, entry.hasChildren);
 
     const node = lead.createDiv({
-      cls: `ptm-outline-node ptm-outline-node-${entry.type}`,
+      cls: `unisastra-outline-node unisastra-outline-node-${entry.type}`,
     });
     if (entry.hasChildren) {
       const disclosure = node.createEl("button", {
-        cls: "ptm-outline-disclosure",
+        cls: "unisastra-outline-disclosure",
         attr: {
           "aria-expanded": String(
             !(this.collapseState.get(entry.stateKey) ?? false)
@@ -1074,12 +1074,12 @@ export class OutlineView extends ItemView {
         this.toggleCollapsed(entry);
       });
     } else {
-      node.createDiv({ cls: "ptm-outline-disclosure-spacer" });
+      node.createDiv({ cls: "unisastra-outline-disclosure-spacer" });
     }
 
     if (entry.isTask) {
       const checkbox = node.createEl("input", {
-        cls: "ptm-outline-task-toggle",
+        cls: "unisastra-outline-task-toggle",
         attr: {
           type: "checkbox",
           "aria-label": `Toggle task ${entry.title}`,
@@ -1095,7 +1095,7 @@ export class OutlineView extends ItemView {
     }
 
     node.createDiv({
-      cls: `ptm-outline-marker ptm-outline-marker-${entry.type}`,
+      cls: `unisastra-outline-marker unisastra-outline-marker-${entry.type}`,
     });
   }
 
@@ -1116,9 +1116,12 @@ export class OutlineView extends ItemView {
         return;
       }
       const item = list.createDiv({
-        cls: `ptm-outline-item ptm-outline-${entry.type}`,
+        cls: `unisastra-outline-item unisastra-outline-${entry.type}`,
       });
-      item.style.setProperty("--ptm-outline-depth", `${entry.visualDepth}`);
+      item.style.setProperty(
+        "--unisastra-outline-depth",
+        `${entry.visualDepth}`
+      );
       item.classList.toggle("is-active", entry.index === activeEntryIndex);
       item.classList.toggle("is-focused-root", focusedRootPos === entry.pos);
       item.setAttribute("role", "button");
@@ -1129,13 +1132,13 @@ export class OutlineView extends ItemView {
       item.dataset.visibleIndex = String(visibleIndex);
 
       const content = item.createDiv({
-        cls: "ptm-outline-link",
+        cls: "unisastra-outline-link",
       });
 
       this.renderEntryLead(content, cm, entry, guideRows[visibleIndex]);
 
       const markdownEl = content.createDiv({
-        cls: "ptm-outline-content markdown-rendered",
+        cls: "unisastra-outline-content markdown-rendered",
       });
 
       await MarkdownRenderer.render(
@@ -1213,7 +1216,7 @@ export class OutlineView extends ItemView {
     sourcePath: string
   ) {
     const activeItem = list.querySelector<HTMLElement>(
-      ".ptm-outline-item.is-active"
+      ".unisastra-outline-item.is-active"
     );
     if (activeItem) {
       if (this.pendingReveal) {
@@ -1301,8 +1304,9 @@ export class OutlineView extends ItemView {
       [...taskProgressByIndex],
       [...this.collapseState],
     ]);
-    const existingList =
-      this.contentEl.querySelector<HTMLElement>(".ptm-outline-list");
+    const existingList = this.contentEl.querySelector<HTMLElement>(
+      ".unisastra-outline-list"
+    );
     if (
       signature === this.renderSignature &&
       cm === this.renderedEditor &&
@@ -1325,7 +1329,7 @@ export class OutlineView extends ItemView {
       );
     }
 
-    const list = container.createDiv({ cls: "ptm-outline-list" });
+    const list = container.createDiv({ cls: "unisastra-outline-list" });
     const guideRows = buildOutlineGuides(visibleEntries);
     const component = this.addChild(new Component());
     this.pendingComponent = component;
@@ -1347,7 +1351,7 @@ export class OutlineView extends ItemView {
       if (this.pendingComponent === component) {
         this.pendingComponent = null;
       }
-      console.error("MD Writer: outline render failed", error);
+      console.error("Unisastra: outline render failed", error);
       return;
     }
     if (this.closed || generation !== this.generation) {
@@ -1385,14 +1389,16 @@ export class OutlineView extends ItemView {
     entries: OutlineEntry[]
   ) {
     for (const row of Array.from(
-      list.querySelectorAll<HTMLElement>(".ptm-outline-item")
+      list.querySelectorAll<HTMLElement>(".unisastra-outline-item")
     )) {
       row.classList.toggle(
         "is-active",
         Number(row.dataset.treeIndex) === activeIndex
       );
     }
-    const title = this.contentEl.querySelector(".ptm-outline-toolbar-title");
+    const title = this.contentEl.querySelector(
+      ".unisastra-outline-toolbar-title"
+    );
     if (title) {
       title.textContent = entries[activeIndex]?.title ?? "";
     }
@@ -1408,13 +1414,15 @@ export class OutlineView extends ItemView {
     activeEntry: OutlineEntry,
     visibleCount: number
   ) {
-    const toolbar = container.createDiv({ cls: "ptm-outline-toolbar" });
-    const heading = toolbar.createDiv({ cls: "ptm-outline-toolbar-title" });
+    const toolbar = container.createDiv({ cls: "unisastra-outline-toolbar" });
+    const heading = toolbar.createDiv({
+      cls: "unisastra-outline-toolbar-title",
+    });
     heading.setText(activeEntry.title);
 
-    const meta = toolbar.createDiv({ cls: "ptm-outline-toolbar-meta" });
+    const meta = toolbar.createDiv({ cls: "unisastra-outline-toolbar-meta" });
     meta.createDiv({
-      cls: "ptm-outline-toolbar-meta-item",
+      cls: "unisastra-outline-toolbar-meta-item",
       text: `${visibleCount} visible`,
     });
   }
@@ -1440,24 +1448,28 @@ export class OutlineView extends ItemView {
     progress: TaskProgress | undefined,
     progressByIndex: Map<number, TaskProgress>
   ) {
-    const linkEl = itemEl.querySelector<HTMLElement>(".ptm-outline-link");
+    const linkEl = itemEl.querySelector<HTMLElement>(".unisastra-outline-link");
     if (!linkEl) {
       return;
     }
 
-    const trailing = linkEl.createDiv({ cls: "ptm-outline-item-trailing" });
+    const trailing = linkEl.createDiv({
+      cls: "unisastra-outline-item-trailing",
+    });
     if (this.shouldShowTaskProgress(entry, progress, progressByIndex)) {
       const progressTone = this.getTaskProgressTone(progress);
       itemEl.dataset.progressTone = progressTone;
       trailing.createDiv({
-        cls: `ptm-outline-item-progress is-${progressTone}`,
+        cls: `unisastra-outline-item-progress is-${progressTone}`,
         text: `${progress.completed}/${progress.total}`,
       });
     } else {
       delete itemEl.dataset.progressTone;
     }
 
-    const actions = trailing.createDiv({ cls: "ptm-outline-item-actions" });
+    const actions = trailing.createDiv({
+      cls: "unisastra-outline-item-actions",
+    });
     const actionSpecs: OutlineActionSpec[] = [
       {
         icon: "list-tree",
@@ -1541,7 +1553,7 @@ export class OutlineView extends ItemView {
 
   private createItemAction(container: HTMLElement, action: OutlineActionSpec) {
     const button = container.createEl("button", {
-      cls: "ptm-outline-item-action",
+      cls: "unisastra-outline-item-action",
       attr: {
         type: "button",
         "aria-label": action.label,

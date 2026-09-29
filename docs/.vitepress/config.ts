@@ -3,7 +3,7 @@ import { idSidebar } from "./sidebar-id"
 import { enSidebar } from "./sidebar-en"
 
 export default defineConfig({
-  base: "/obsidian-md-writer/",
+  base: "/obsidian-unisastra/",
   lang: "id",
   ignoreDeadLinks: true,
 
@@ -11,14 +11,14 @@ export default defineConfig({
     root: {
       label: "Bahasa Indonesia",
       lang: "id",
-      title: "Dokumentasi MD Writer",
+      title: "Dokumentasi Unisastra",
       description: "Pengalaman Markdown Kreatif & Penuh Perhatian yang Terpadu",
       link: "/"
     },
     en: {
       label: "English",
       lang: "en",
-      title: "MD Writer Documentation",
+      title: "Unisastra Documentation",
       description: "Unified Markdown Creative & Attentive Experience",
       link: "/en/"
     }
@@ -40,7 +40,7 @@ export default defineConfig({
     socialLinks: [
       {
         icon: "github",
-        link: "https://github.com/parkisutama/obsidian-md-writer",
+        link: "https://github.com/parkisutama/obsidian-unisastra",
       },
     ],
   },

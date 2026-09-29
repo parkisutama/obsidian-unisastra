@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
-<title>MD Writer editor CSS regression</title>
+<title>Unisastra editor CSS regression</title>
 <style>
 :root {
   --dimmed-opacity: 0.25;
@@ -8,7 +8,7 @@
 /* COMPILED_CSS */
 </style>
 <div class="cm-editor cm-focused" id="editor">
-  <div class="cm-line cm-active ptm-active-sentence-line" id="source">
+  <div class="cm-line cm-active unisastra-active-sentence-line" id="source">
     <span class="active-sentence" id="sentence">Active sentence.</span>
   </div>
   <div class="cm-line" id="inactive">Other paragraph.</div>
@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="cm-embed-block cm-callout" id="editing">
-    <div class="cm-line cm-active ptm-active-sentence-line">
+    <div class="cm-line cm-active unisastra-active-sentence-line">
       <span class="active-sentence" id="editingSentence"
         >Editing nested source.</span
       >
@@ -56,9 +56,9 @@ window.runRegression = () => {
     }
   };
   const verifyCase = (mode, behavior, focused) => {
-    document.body.className = "ptm-dim-unfocused";
-    document.body.dataset.ptmDimUnfocusedMode = mode;
-    document.body.dataset.ptmDimUnfocusedEditorsBehavior = behavior;
+    document.body.className = "unisastra-dim-unfocused";
+    document.body.dataset.unisastraDimUnfocusedMode = mode;
+    document.body.dataset.unisastraDimUnfocusedEditorsBehavior = behavior;
     el("editor").className = `cm-editor${focused ? " cm-focused" : ""}`;
     const dim = focused || behavior !== "dim-none";
     const label = `${mode}/${behavior}/${focused}`;
@@ -89,17 +89,17 @@ window.runRegression = () => {
         verifyCase(mode, behavior, focused);
       }
     }
-    document.body.dataset.ptmDimUnfocusedEditorsBehavior = "dim";
+    document.body.dataset.unisastraDimUnfocusedEditorsBehavior = "dim";
     for (const [bodyClass, editorClass] of [
-      ["", "ptm-first-open"],
-      ["ptm-dim-unfocused-pause-while-scrolling", "ptm-scroll"],
-      ["ptm-dim-unfocused-pause-while-selecting", "ptm-select"],
+      ["", "unisastra-first-open"],
+      ["unisastra-dim-unfocused-pause-while-scrolling", "unisastra-scroll"],
+      ["unisastra-dim-unfocused-pause-while-selecting", "unisastra-select"],
       [
-        "ptm-dim-unfocused-pause-while-scrolling ptm-dim-unfocused-pause-while-selecting",
-        "ptm-scroll ptm-select",
+        "unisastra-dim-unfocused-pause-while-scrolling unisastra-dim-unfocused-pause-while-selecting",
+        "unisastra-scroll unisastra-select",
       ],
     ]) {
-      document.body.className = `ptm-dim-unfocused ${bodyClass}`;
+      document.body.className = `unisastra-dim-unfocused ${bodyClass}`;
       el("editor").className = `cm-editor cm-focused ${editorClass}`;
       check(`${mode}/pause`, "callout", 1);
     }

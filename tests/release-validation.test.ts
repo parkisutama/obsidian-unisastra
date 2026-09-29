@@ -19,7 +19,7 @@ function createReleaseFixture({
   packageVersion?: string;
   versions?: Record<string, string>;
 } = {}): string {
-  const dir = mkdtempSync(join(tmpdir(), "md-writer-release-"));
+  const dir = mkdtempSync(join(tmpdir(), "unisastra-release-"));
   mkdirSync(join(dir, "dist"));
   writeJson(join(dir, "package.json"), {
     obsidianMinAppVersion: "1.11.0",

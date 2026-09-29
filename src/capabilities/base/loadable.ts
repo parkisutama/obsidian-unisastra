@@ -1,9 +1,9 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 export default abstract class Loadable {
-  protected tm: TypewriterModeLib;
+  protected tm: UnisastraCore;
 
-  constructor(tm: TypewriterModeLib) {
+  constructor(tm: UnisastraCore) {
     this.tm = tm;
   }
 

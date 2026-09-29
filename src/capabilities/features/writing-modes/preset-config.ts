@@ -69,7 +69,7 @@ export default class WritingModePresetConfig extends Feature {
         setting
           .setName(FEATURE_LABELS[featureKey])
           .setDesc(FEATURE_DESCRIPTIONS[featureKey] ?? "")
-          .setClass("md-writer-setting")
+          .setClass("unisastra-setting")
           .addToggle((toggle) =>
             toggle.setValue(preset[featureKey]).onChange((newValue) => {
               this.tm.settings.writingMode.presets[mode][featureKey] = newValue;

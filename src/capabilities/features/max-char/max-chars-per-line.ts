@@ -9,7 +9,7 @@ export default class MaxCharsPerLine extends Feature {
       setting
         .setName("Maximum number of characters per line")
         .setDesc("The maximum number of characters per line")
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addText((text) =>
           text
             .setValue((this.getSettingValue() as number).toString())

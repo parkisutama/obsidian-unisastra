@@ -7,7 +7,7 @@ import { FeatureToggle } from "@/capabilities/base/feature-toggle";
 
 export default class HemingwayMode extends FeatureToggle {
   readonly settingKey = "hemingwayMode.isHemingwayModeEnabled" as const;
-  protected override toggleClass = "ptm-hemingway-mode-enabled";
+  protected override toggleClass = "unisastra-hemingway-mode-enabled";
   protected settingTitle = "Hemingway mode";
   protected settingDesc =
     "Prevents editing previously written text. Blocks navigation keys (arrows, Home, End, Page Up/Down), Delete key, and undo operations to enforce forward-only writing.";
@@ -19,7 +19,7 @@ export default class HemingwayMode extends FeatureToggle {
   override load() {
     super.load();
     this.statusBarItem = this.tm.plugin.addStatusBarItem();
-    this.statusBarItem.addClass("ptm-hemingway-mode-status");
+    this.statusBarItem.addClass("unisastra-hemingway-mode-status");
     this.updateStatusBar();
   }
 

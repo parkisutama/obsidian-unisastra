@@ -1,11 +1,11 @@
 // ADAPTED FROM https://github.com/ryanpcmcquen/obsidian-focus-mode
 
 @mixin writing-focus-hide-elements {
-  &:not(.ptm-writing-focus-shows-status-bar) .status-bar,
-  &:not(.ptm-writing-focus-shows-header) .view-header,
+  &:not(.unisastra-writing-focus-shows-status-bar) .status-bar,
+  &:not(.unisastra-writing-focus-shows-header) .view-header,
   .inline-title,
-  .workspace-split.ptm-maximized .workspace-leaf:not(.mod-active),
-  .workspace-split.ptm-maximized .workspace-leaf.mod-active ~ .workspace-split,
+  .workspace-split.unisastra-maximized .workspace-leaf:not(.mod-active),
+  .workspace-split.unisastra-maximized .workspace-leaf.mod-active ~ .workspace-split,
   .workspace-ribbon,
   .workspace-tab-header-container {
     display: none;
@@ -15,7 +15,7 @@
     padding-left: var(--size-4-8);
   }
 
-  .workspace-split.ptm-writing-focus-hidden-split {
+  .workspace-split.unisastra-writing-focus-hidden-split {
     display: none;
   }
 
@@ -23,7 +23,7 @@
     height: 100%;
   }
 
-  .workspace-split.ptm-maximized .workspace-leaf.mod-active {
+  .workspace-split.unisastra-maximized .workspace-leaf.mod-active {
     /* 4px is for scrollbar width: */
     flex-basis: calc(100% - 4px);
   }

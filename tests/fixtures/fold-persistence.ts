@@ -19,7 +19,7 @@ import {
   createFoldPersistExtension,
   internalFoldChange,
 } from "../../src/cm6/outliner/fold-persist";
-import type TypewriterModeLib from "../../src/lib";
+import type UnisastraCore from "../../src/lib";
 import { editorInfoField, editorLivePreviewField } from "./fold-obsidian";
 
 const GENERATED_ID = /\^ol-[a-z0-9]{5}/;
@@ -66,7 +66,7 @@ async function runFoldRegression() {
     plugin: {
       app: { metadataCache: { getFileCache: () => ({ frontmatter }) } },
     },
-  } as unknown as TypewriterModeLib;
+  } as unknown as UnisastraCore;
   const make = (doc: string, path = "fixture.md", preview = true) => {
     const fold = createFoldPersistExtension(tm);
     const hide = createBlockIdHiderPlugin(tm);
@@ -202,7 +202,7 @@ async function runFoldRegression() {
     settings.general.isPluginActivated = guard !== "plugin";
     settings.general.enabledPlatforms =
       guard === "platform" ? "mobile" : "both";
-    frontmatter = guard === "frontmatter" ? { "md-writer": false } : undefined;
+    frontmatter = guard === "frontmatter" ? { unisastra: false } : undefined;
     const guarded = make("- Parent\n  - Child", guard);
     if (guard === "readOnly") {
       guarded.view.dispatch({

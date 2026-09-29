@@ -15,7 +15,7 @@ export default class EditTimerUpdateInterval extends Feature {
         .setDesc(
           "How often the session and file timers refresh their displayed time. Lower values (e.g. 1) update live; higher values (e.g. 60) reduce distraction. Clamped between 1 and 300 seconds."
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addText((text) =>
           text
             .setValue(timers.updateIntervalSeconds.toString())

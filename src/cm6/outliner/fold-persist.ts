@@ -10,7 +10,7 @@ import {
 import { Annotation, type EditorState } from "@codemirror/state";
 import { EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
 import { getAllListItems } from "@/cm6/list-service";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import { collectBlockIds, generateUniqueBlockId } from "./block-id";
 import { foldEditorContext } from "./fold-context";
 import { captureFolds, restoreFolds, uniqueBlockIds } from "./fold-model";
@@ -34,7 +34,7 @@ function identifiedFolds(state: EditorState) {
 }
 
 /** Owns callbacks in the editor's window. No active-pane lookup or idle polling. */
-export function createFoldPersistExtension(tm: TypewriterModeLib) {
+export function createFoldPersistExtension(tm: UnisastraCore) {
   return ViewPlugin.fromClass(
     class {
       private frame: number | null = null;
@@ -262,7 +262,7 @@ export function createFoldPersistExtension(tm: TypewriterModeLib) {
             try {
               callback();
             } catch (error) {
-              console.error("MD Writer: fold operation failed", error);
+              console.error("Unisastra: fold operation failed", error);
             }
           }
         });

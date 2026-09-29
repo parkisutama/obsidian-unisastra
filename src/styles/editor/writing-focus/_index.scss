@@ -1,6 +1,6 @@
 @use "hide-elements";
 
-body.ptm-focus-mode {
+body.unisastra-focus-mode {
   @include hide-elements.writing-focus-hide-elements;
 
   .markdown-source-view.cm-s-obsidian,

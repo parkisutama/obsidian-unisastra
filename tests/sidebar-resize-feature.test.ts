@@ -2,7 +2,7 @@ import type { SettingGroup } from "obsidian";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import SidebarEqualResize from "@/capabilities/features/general/sidebar-equal-resize";
 import { DEFAULT_SETTINGS } from "@/capabilities/settings";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 const mock = vi.hoisted(() => ({
   desktop: true,
@@ -40,7 +40,7 @@ function fixture() {
       app: { workspace: { onLayoutReady: (cb: () => void) => ready.push(cb) } },
     },
     saveSettings: vi.fn().mockResolvedValue(undefined),
-  } as unknown as TypewriterModeLib);
+  } as unknown as UnisastraCore);
   return {
     feature,
     settings,

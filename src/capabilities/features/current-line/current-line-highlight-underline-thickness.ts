@@ -12,7 +12,7 @@ export default class CurrentLineHighlightUnderlineThickness extends Feature {
         .setDesc(
           "The thickness of the underline that highlights the current line"
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addSlider((slider) =>
           slider
             .setLimits(1, 5, 1)

@@ -1,12 +1,12 @@
-# Use MD Writer features
+# Use Unisastra features
 
-Dokumen ini menjelaskan aksi umum pengguna saat memakai MD Writer di Obsidian.
+Dokumen ini menjelaskan aksi umum pengguna saat memakai Unisastra di Obsidian.
 
 ## Buka pengaturan plugin
 
 1. Buka **Settings** di Obsidian.
 2. Pilih **Community plugins**.
-3. Cari **MD Writer**.
+3. Cari **Unisastra**.
 4. Buka pengaturan plugin.
 
 Halaman utama menampilkan **General**, selector mode aktif, serta baris
@@ -46,28 +46,31 @@ mengubah nilai Keep Lines yang sudah tersimpan saat mode diaktifkan.
 Layout ini sudah diuji secara otomatis; tampilan, fokus, dan navigasi di
 Obsidian desktop/mobile/popout masih menunggu acceptance host.
 
-## Synchronize sidebar widths
+## Sinkronkan lebar sidebar
 
-Enable **Sinkronkan lebar sidebar** in **General** to resize both main desktop
-sidebars together while both are open. It defaults off. The current native
-adapter supports Obsidian 1.14.2; synchronization is suspended on other versions.
-Full visual acceptance in Obsidian remains pending.
+Di **General**, aktifkan **Sinkronkan lebar sidebar** untuk membuat sidebar
+kiri dan kanan mengikuti resize satu sama lain saat keduanya terbuka.
+Pengaturan default nonaktif. Implementasi saat ini mendukung Obsidian desktop
+1.14.2; pada versi lain sinkronisasi ditangguhkan. Acceptance visual lengkap
+masih menunggu pengujian di Obsidian.
 
-Activation starts from the average of both widths. With one sidebar closed,
-resizing the other preserves the closed sidebar's saved width. When the second
-sidebar opens, its width becomes the reference. Closing either side pauses
-synchronization; disabling the setting or plugin retains the last widths.
+- Saat diaktifkan dengan kedua sidebar terbuka, lebar awal memakai rata-rata.
+- Saat hanya satu sidebar terbuka, lebarnya bebas diubah tanpa mengubah ukuran
+  tersimpan sisi tertutup. Ketika sisi kedua dibuka, lebarnya menjadi acuan.
+- Menutup salah satu sisi menghentikan sinkronisasi sementara. Menonaktifkan
+  pengaturan atau plugin mempertahankan ukuran terakhir.
+- Panel tengah memakai ruang tersisa; readable line length tidak berubah.
+- Gabungan kedua sidebar dibatasi hingga 80% lebar terkecil antara workspace
+  dan jendela. Jika minimum native tidak muat, sinkronisasi berhenti sementara;
+  perbesar jendela atau tutup satu sidebar.
+- Nonaktifkan snippet yang memaksa lebar sidebar bila bertentangan. Jika batas
+  ukuran tidak memungkinkan sinkronisasi, kendali ukuran tetap pada Obsidian.
 
-The center pane uses remaining space, with no readable line length changes.
-The two synchronized sidebars share an 80% budget of the smaller workspace or
-window width. If the window cannot fit both native minimum widths within that
-budget, synchronization pauses; enlarge the window or close one sidebar.
-If using a build affected by oversized saved widths, keep synchronization off
-until the corrected build is installed. Disabling sync does not reset saved widths.
-Disable conflicting snippets that force sidebar width. If native bounds cannot
-accommodate equal widths, Obsidian retains control. This feature does not resize
-center splits, popouts, or mobile drawers. General activation and platform
-settings also apply.
+Fitur hanya mengatur sidebar utama desktop, bukan panel tengah, popout, atau
+mobile. General activation dan pilihan platform juga berlaku untuk fitur ini.
+
+Jika build lama menyimpan lebar yang terlalu besar, biarkan sinkronisasi mati
+sampai build perbaikan dipasang. Mematikan sync tidak mereset ukuran tersimpan.
 
 ## Pakai typewriter scrolling
 
@@ -97,6 +100,10 @@ Fitur ini berguna untuk:
 - menjaga file Markdown tetap rapi untuk Git.
 
 ## Fokus pada heading atau list item
+
+Sidebar outline menghubungkan parent dan child dengan garis bersambung serta
+ujung melengkung. Hover, fokus keyboard, dan posisi aktif mempertegas jalur
+cabang terkait; konektor mengikuti baris multiline serta expand/collapse.
 
 Gunakan outliner zoom saat Anda ingin fokus pada satu heading atau list item
 beserta child content-nya.
@@ -228,7 +235,7 @@ untuk plugin.
 
 ## Kelola catalog callout
 
-Buka halaman **Callouts** di pengaturan MD Writer (atau pilih **Manage callouts…**
+Buka halaman **Callouts** di pengaturan Unisastra (atau pilih **Manage callouts…**
 di dropdown Callout pada toolbar) untuk:
 
 - menyembunyikan/menampilkan tipe callout bawaan Obsidian dari dropdown
@@ -311,20 +318,20 @@ tampilan ke inherit tanpa mengubah note, tema, atau file snippet. Preview
 memakai renderer callout Obsidian dan tema document settings saat ini; buka
 kembali halaman Callouts untuk merender ulang setelah perubahan tema.
 
-Styling ini membutuhkan MD Writer tetap aktif. Warna/ikon tidak otomatis ikut
+Styling ini membutuhkan Unisastra tetap aktif. Warna/ikon tidak otomatis ikut
 ke GitHub atau Publish. Preview selalu memperlihatkan rendering Obsidian,
 terlepas dari kompatibilitas GitHub alerts yang tertulis di badge entry.
 
 ## Pakai GitHub-style heading anchors
 
-MD Writer dapat membuka link heading bergaya GitHub seperti:
+Unisastra dapat membuka link heading bergaya GitHub seperti:
 
 ```markdown
-[Install](#install-md-writer)
+[Install](#install-unisastra)
 ```
 
 Fitur ini bekerja saat membaca atau menulis catatan yang juga akan dipakai di
-GitHub. MD Writer hanya mengubah perilaku navigasi saat runtime dan tidak
+GitHub. Unisastra hanya mengubah perilaku navigasi saat runtime dan tidak
 mengubah isi file Markdown.
 
 ## Data yang disimpan
@@ -336,9 +343,9 @@ Command generate ID, copy link, dan copy embed tetap tersedia saat master mati.
 Caret atau selection pada suffix membuat ID terlihat agar dapat diedit; Source mode selalu menampilkannya.
 
 Auto-generate on fold menambahkan ID hanya pada item list tanpa ID saat terjadi fold native,
-termasuk fold yang dikirim plugin lain. Restore internal MD Writer dan undo/redo tidak menghasilkan ID baru.
+termasuk fold yang dikirim plugin lain. Restore internal Unisastra dan undo/redo tidak menghasilkan ID baru.
 Insertion dapat di-undo; Hemingway, editor read-only, platform yang dimatikan,
-serta frontmatter `md-writer: false` mencegah insertion otomatis.
+serta frontmatter `unisastra: false` mencegah insertion otomatis.
 
 Persist fold state bekerja independen dari master Block IDs dan hanya memakai ID unik yang sudah ada.
 Fold terakhir menjadi acuan saat reopen; pane lain yang masih terbuka tidak ikut dilipat.
@@ -348,7 +355,7 @@ Implementasi diuji otomatis; acceptance native reopen, popout, dan mobile masih 
 
 ### Penyimpanan lokal
 
-MD Writer menyimpan:
+Unisastra menyimpan:
 
 - pengaturan plugin,
 - riwayat posisi kursor per file,

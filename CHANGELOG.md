@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.2.0
+
+### Changed
+
+- Rebrand MD Writer as Unisastra, with a new plugin ID, command namespace,
+  outline view type, CSS prefix, frontmatter opt-out key, package, and
+  documentation. Existing personal vault configuration is not migrated.
+- Rename the release archive to `unisastra.zip` and prepare repository links
+  for `parkisutama/obsidian-unisastra`.
+
+### Removed
+
+- Remove the unused Announce Updates toggle and release notes modal.
+
 ## 1.1.0
 
 ### Added

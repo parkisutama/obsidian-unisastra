@@ -1,6 +1,6 @@
 # Set up local development
 
-Dokumen ini untuk developer yang ingin menjalankan MD Writer secara lokal.
+Dokumen ini untuk developer yang ingin menjalankan Unisastra secara lokal.
 
 ## Prerequisites
 
@@ -21,7 +21,7 @@ Dokumen ini untuk developer yang ingin menjalankan MD Writer secara lokal.
 ## Development loop
 
 Instalasi mengaktifkan hook Husky. Baca
-[AI Assisted Development](./ai-assisted-development.md) untuk urutan konteks,
+[AI Assisted Development](../for-developers/ai-assisted-development.md) untuk urutan konteks,
 Conventional Commits, dan batas validasi otomatis.
 
 Gunakan perintah ini saat mengembangkan plugin:
@@ -32,6 +32,9 @@ pnpm run dev
 
 Perintah ini build plugin, menyiapkan `test-vault`, dan mencoba deploy ke vault
 Obsidian lokal jika konfigurasi deploy tersedia.
+Jika `OBSIDIAN_VAULT_PLUGIN_PATH` di `.env` dipakai, arahkan ke folder
+`.obsidian/plugins/unisastra`. Script deploy menolak folder dengan nama lain
+sebelum menulis artefak.
 
 ## Build tanpa deploy
 
@@ -87,5 +90,5 @@ itu tidak perlu di-commit.
 
 ## Next steps
 
-- Mulai pekerjaan baru: [Start a feature or bugfix](./start-a-feature-or-bugfix.md)
-- Jalankan QA: [Run QA before merge or release](./run-qa-before-merge-or-release.md)
+- Mulai pekerjaan baru: [Start a feature or bugfix](../for-developers/start-a-feature-or-bugfix.md)
+- Jalankan QA: [Run QA before merge or release](../for-developers/run-qa-before-merge-or-release.md)

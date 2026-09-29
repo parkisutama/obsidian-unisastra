@@ -1,9 +1,9 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import BlockIdAutoGenerate from "./block-id-auto-generate";
 import BlockIdEnabled from "./block-id-enabled";
 import BlockIdHide from "./block-id-hide";
 
-export default function getBlockIdFeatures(tm: TypewriterModeLib) {
+export default function getBlockIdFeatures(tm: UnisastraCore) {
   return Object.fromEntries(
     [
       new BlockIdEnabled(tm),

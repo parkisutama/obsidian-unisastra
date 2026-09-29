@@ -1,4 +1,4 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import type { Feature } from "../base/feature";
 import blockId from "./block-id";
 import compatibility from "./compatibility";
@@ -17,7 +17,7 @@ import writingFocus from "./writing-focus";
 import writingModes from "./writing-modes";
 
 export function getFeatures(
-  tm: TypewriterModeLib
+  tm: UnisastraCore
 ): Record<string, Record<string, Feature>> {
   return {
     writingModes: writingModes(tm),

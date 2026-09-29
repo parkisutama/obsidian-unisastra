@@ -13,7 +13,7 @@ export default class DimUnfocusedMode extends Feature {
       setting
         .setName("Dim unfocused mode")
         .setDesc("Choose to dim unfocused paragraphs or sentences")
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addDropdown((dropdown) =>
           dropdown
             .addOption(DIM_UNFOCUSED_MODE.PARAGRAPHS, "Paragraphs")
@@ -28,13 +28,14 @@ export default class DimUnfocusedMode extends Feature {
 
   override load() {
     super.load();
-    this.tm.perWindowProps.bodyAttrs["data-ptm-dim-unfocused-mode"] =
+    this.tm.perWindowProps.bodyAttrs["data-unisastra-dim-unfocused-mode"] =
       this.getSettingValue() as DimUnfocusedModeType;
   }
 
   private change(newValue: DimUnfocusedModeType) {
     this.setSettingValue(newValue);
-    this.tm.perWindowProps.bodyAttrs["data-ptm-dim-unfocused-mode"] = newValue;
+    this.tm.perWindowProps.bodyAttrs["data-unisastra-dim-unfocused-mode"] =
+      newValue;
     this.tm.saveSettings().catch((error) => {
       console.error("Failed to save settings:", error);
     });

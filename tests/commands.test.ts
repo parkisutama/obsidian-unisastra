@@ -87,6 +87,8 @@ describe("command registration", () => {
     expect(new Set(commandKeys).size).toBe(commandKeys.length);
     expect(new Set(registeredIds).size).toBe(registeredIds.length);
     expect(registeredIds.length).toBeGreaterThan(commandKeys.length);
+    expect(registeredIds).toContain("unisastra-plugin-toggle");
+    expect(registeredIds.some((id) => id.includes("md-writer"))).toBe(false);
   });
 
   it("activates a writing mode through the command palette command", async () => {

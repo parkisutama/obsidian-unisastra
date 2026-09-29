@@ -12,7 +12,7 @@ export default class ToggleDockAlwaysVisible extends Feature {
         .setDesc(
           "Keep the docked toolbar visible at all times instead of auto-hiding while typing. Turning this on pins the toolbar as a dock."
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addToggle((toggle) =>
           toggle.setValue(toolbar.dockAlwaysVisible).onChange((value) => {
             toolbar.dockAlwaysVisible = value;

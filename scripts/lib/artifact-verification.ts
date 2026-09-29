@@ -27,10 +27,13 @@ const THIRD_PARTY_NOTICES = [
 ] as const;
 
 interface ManifestJson {
+  id: string;
+  name: string;
   version: string;
 }
 
 interface PackageJson {
+  name: string;
   version: string;
 }
 
@@ -110,6 +113,16 @@ export function verifyArtifacts(): string {
   if (manifest.version !== packageJson.version) {
     throw new Error(
       `dist/manifest.json version ${manifest.version} does not match package.json version ${packageJson.version}.`
+    );
+  }
+
+  if (
+    packageJson.name !== "unisastra" ||
+    manifest.id !== "unisastra" ||
+    manifest.name !== "Unisastra"
+  ) {
+    throw new Error(
+      "Release identity must use package unisastra, manifest ID unisastra, and display name Unisastra."
     );
   }
 

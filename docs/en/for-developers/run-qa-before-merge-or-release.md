@@ -116,8 +116,8 @@ Jika vault lokal tidak menerima build terbaru:
 - jalankan `pnpm run build` lalu `pnpm run verify:artifacts` untuk memastikan
   `dist/main.js`, `dist/manifest.json`, dan `dist/styles.css` valid,
 - jalankan `pnpm run dev` ulang untuk menyalin artefak ke `test-vault`,
-- cek `test-vault/.obsidian/plugins/md-writer` berisi tiga artefak tersebut,
-- pastikan community plugin `md-writer` aktif di
+- cek `test-vault/.obsidian/plugins/unisastra` berisi tiga artefak tersebut,
+- pastikan community plugin `unisastra` aktif di
   `test-vault/.obsidian/community-plugins.json`,
 - jika memakai deploy tambahan di luar `test-vault`, jalankan `pnpm run deploy`
   dan ikuti error path yang ditampilkan script.

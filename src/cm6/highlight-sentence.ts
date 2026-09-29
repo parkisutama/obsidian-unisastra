@@ -157,7 +157,9 @@ export function getActiveSentenceDecos(view: EditorView, settings: Settings) {
   if (start !== end) {
     // Line decoration must come first (lowest startSide) for correct sort order
     widgets.push(
-      Decoration.line({ class: "ptm-active-sentence-line" }).range(line.from)
+      Decoration.line({ class: "unisastra-active-sentence-line" }).range(
+        line.from
+      )
     );
 
     addWidget(start, end, "active-sentence");

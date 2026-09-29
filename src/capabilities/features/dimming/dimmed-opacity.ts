@@ -9,7 +9,7 @@ export default class DimmedOpacity extends Feature {
       setting
         .setName("Opacity of dimmed elements")
         .setDesc("The opacity of dimmed elements")
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addSlider((slider) =>
           slider
             .setLimits(0, 100, 5)

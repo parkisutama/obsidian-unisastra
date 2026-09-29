@@ -1,10 +1,10 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import OnlyMaintainTypewriterOffsetWhenReached from "./only-maintain-typewriter-offset-when-reached";
 import TypewriterOffset from "./typewriter-offset";
 import TypewriterOnlyUseCommands from "./typewriter-only-use-commands";
 import TypewriterScroll from "./typewriter-scroll";
 
-export default function getTypewriterFeatures(tm: TypewriterModeLib) {
+export default function getTypewriterFeatures(tm: UnisastraCore) {
   return Object.fromEntries(
     [
       new TypewriterScroll(tm),

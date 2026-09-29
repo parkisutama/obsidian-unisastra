@@ -9,7 +9,7 @@ export default class FadeLinesIntensity extends Feature {
       setting
         .setName("Intensity of the fade lines gradient")
         .setDesc("How soon lines shall be faded out")
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addSlider((slider) =>
           slider
             .setLimits(0, 100, 5)
@@ -24,14 +24,17 @@ export default class FadeLinesIntensity extends Feature {
 
   override load() {
     this.tm.setCSSVariable(
-      "--ptm-fade-lines-intensity",
+      "--unisastra-fade-lines-intensity",
       `${(this.getSettingValue() as number) * 100}%`
     );
   }
 
   private changeFadeLinesIntensity(newValue = 0.5) {
     this.setSettingValue(newValue);
-    this.tm.setCSSVariable("--ptm-fade-lines-intensity", `${newValue * 100}%`);
+    this.tm.setCSSVariable(
+      "--unisastra-fade-lines-intensity",
+      `${newValue * 100}%`
+    );
     this.tm.saveSettings().catch((error) => {
       console.error("Failed to save settings:", error);
     });

@@ -13,7 +13,7 @@ export default class ToggleDockMode extends Feature {
         .setDesc(
           "Keep the toolbar docked at the bottom of the window instead of floating near your selection."
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addToggle((toggle) =>
           toggle.setValue(toolbar.mode === "dock").onChange((value) => {
             const refusal = setDockMode(toolbar, value);

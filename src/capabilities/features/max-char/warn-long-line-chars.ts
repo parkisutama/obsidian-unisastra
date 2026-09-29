@@ -11,7 +11,7 @@ export default class WarnLongLineChars extends Feature {
         .setDesc(
           "Lines with more than this number of characters will be highlighted"
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addText((text) =>
           text
             .setValue((this.getSettingValue() as number).toString())

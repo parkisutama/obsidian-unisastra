@@ -1,4 +1,4 @@
-// Keep-one-tab-per-note, adapted for MD Writer from MonoNote by Carlo
+// Keep-one-tab-per-note, adapted for Unisastra from MonoNote by Carlo
 // Zottmann (MIT).
 // https://github.com/czottmann/obsidian-mononote, src/main.ts
 // (onActiveLeafChange, processActiveLeaf, duplicateLeaves sort/filter,

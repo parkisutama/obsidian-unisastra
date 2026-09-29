@@ -1,7 +1,7 @@
 import { Notice } from "obsidian";
 import { Command } from "@/capabilities/base/command";
 import type { WritingMode } from "@/capabilities/settings";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 export const WRITING_MODES: Array<{ mode: WritingMode; label: string }> = [
   { mode: "idea", label: "Idea" },
@@ -16,7 +16,7 @@ export default class SetWritingModeCommand extends Command {
   private readonly _commandTitle: string;
   private readonly mode: WritingMode;
 
-  constructor(tm: TypewriterModeLib, mode: WritingMode, label: string) {
+  constructor(tm: UnisastraCore, mode: WritingMode, label: string) {
     super(tm);
     this.mode = mode;
     this._commandKey = `set-writing-mode-${mode}`;

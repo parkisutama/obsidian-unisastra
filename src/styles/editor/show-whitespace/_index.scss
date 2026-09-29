@@ -10,11 +10,11 @@
 // decorations are invisible by default.
 
 // Visibility is gated by body classes set by FeatureToggle:
-//   .ptm-show-whitespace  — master toggle
-//   .ptm-show-spaces      — gates .cm-highlightSpace visibility
-//   .ptm-show-tabs        — gates .cm-highlightTab visibility
-//   .ptm-show-trailing    — gates .cm-trailingSpace visibility
-//   .ptm-show-strict-line-break — gates .cm-strictLineBreak visibility
+//   .unisastra-show-whitespace  — master toggle
+//   .unisastra-show-spaces      — gates .cm-highlightSpace visibility
+//   .unisastra-show-tabs        — gates .cm-highlightTab visibility
+//   .unisastra-show-trailing    — gates .cm-trailingSpace visibility
+//   .unisastra-show-strict-line-break — gates .cm-strictLineBreak visibility
 
 // Reset CM6 base theme whitespace styles — decorations invisible by default
 .cm-editor .cm-highlightSpace {
@@ -30,24 +30,24 @@
 }
 
 // Custom properties — user-overridable via Obsidian CSS snippet
-.ptm-show-whitespace {
-  --ptm-ws-space-char: "˽";
-  --ptm-ws-tab-char: "→";
-  --ptm-ws-trailing-char: "↔";
-  --ptm-ws-strict-break-char: "↵";
-  --ptm-ws-symbol-size: 1em;
-  --ptm-ws-color: color-mix(in srgb, var(--text-faint) 90%, transparent);
-  --ptm-ws-trailing-color: var(--color-orange);
-  --ptm-ws-strict-break-color: var(--color-blue);
+.unisastra-show-whitespace {
+  --unisastra-ws-space-char: "˽";
+  --unisastra-ws-tab-char: "→";
+  --unisastra-ws-trailing-char: "↔";
+  --unisastra-ws-strict-break-char: "↵";
+  --unisastra-ws-symbol-size: 1em;
+  --unisastra-ws-color: color-mix(in srgb, var(--text-faint) 90%, transparent);
+  --unisastra-ws-trailing-color: var(--color-orange);
+  --unisastra-ws-strict-break-color: var(--color-blue);
 }
 
 // Mid-line spaces — only visible when both master and spaces toggles active
-.ptm-show-whitespace.ptm-show-spaces {
+.unisastra-show-whitespace.unisastra-show-spaces {
   .cm-editor .cm-highlightSpace {
     &::before {
-      content: var(--ptm-ws-space-char);
-      color: var(--ptm-ws-color);
-      font-size: var(--ptm-ws-symbol-size);
+      content: var(--unisastra-ws-space-char);
+      color: var(--unisastra-ws-color);
+      font-size: var(--unisastra-ws-symbol-size);
       pointer-events: none;
       position: absolute;
     }
@@ -55,37 +55,37 @@
 }
 
 // Tab characters — only visible when both master and tabs toggles active
-.ptm-show-whitespace.ptm-show-tabs {
+.unisastra-show-whitespace.unisastra-show-tabs {
   .cm-editor .cm-highlightTab {
     &::before {
-      content: var(--ptm-ws-tab-char);
-      color: var(--ptm-ws-color);
-      font-size: var(--ptm-ws-symbol-size);
+      content: var(--unisastra-ws-tab-char);
+      color: var(--unisastra-ws-color);
+      font-size: var(--unisastra-ws-symbol-size);
       pointer-events: none;
     }
   }
 }
 
 // Trailing spaces — orange warning signal for SSG rendering impact
-.ptm-show-whitespace.ptm-show-trailing {
+.unisastra-show-whitespace.unisastra-show-trailing {
   .cm-editor .cm-trailingSpace {
-    background-color: color-mix(in srgb, var(--ptm-ws-trailing-color) 20%, transparent);
-    outline: 1px solid color-mix(in srgb, var(--ptm-ws-trailing-color) 40%, transparent);
+    background-color: color-mix(in srgb, var(--unisastra-ws-trailing-color) 20%, transparent);
+    outline: 1px solid color-mix(in srgb, var(--unisastra-ws-trailing-color) 40%, transparent);
     border-radius: 2px;
 
     &::before {
-      content: var(--ptm-ws-trailing-char);
-      color: var(--ptm-ws-trailing-color);
-      font-size: var(--ptm-ws-symbol-size);
+      content: var(--unisastra-ws-trailing-char);
+      color: var(--unisastra-ws-trailing-color);
+      font-size: var(--unisastra-ws-symbol-size);
     }
   }
 }
 
 // Strict line breaks (  \n) — blue informational signal for intentional content
-.ptm-show-whitespace.ptm-show-strict-line-break {
+.unisastra-show-whitespace.unisastra-show-strict-line-break {
   .cm-editor .cm-strictLineBreak {
-    background-color: color-mix(in srgb, var(--ptm-ws-strict-break-color) 15%, transparent);
-    outline: 1px dashed color-mix(in srgb, var(--ptm-ws-strict-break-color) 50%, transparent);
+    background-color: color-mix(in srgb, var(--unisastra-ws-strict-break-color) 15%, transparent);
+    outline: 1px dashed color-mix(in srgb, var(--unisastra-ws-strict-break-color) 50%, transparent);
     border-radius: 2px;
   }
 }

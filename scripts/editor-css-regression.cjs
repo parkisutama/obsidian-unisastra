@@ -31,7 +31,7 @@ if (process.versions.electron) {
   });
 } else {
   const sass = require("sass");
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mdw-editor-css-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "unisastra-editor-css-"));
   try {
     const css = [
       "src/styles/editor/dim/_dim-unfocused.scss",

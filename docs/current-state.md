@@ -1,5 +1,25 @@
 # Current state
 
+## Unisastra identity — 2026-09-29
+
+Implementasi lokal memakai plugin ID `unisastra` dan nama tampilan Unisastra.
+Command namespace mengikuti ID baru; command toggle plugin memakai
+`unisastra-plugin`. Outline view memakai `unisastra-outline`, frontmatter
+opt-out memakai `unisastra: false`, dan kelas/variabel CSS memakai prefix
+`unisastra-`. Package dan arsip rilis bernama `unisastra`; metadata lokal
+disiapkan untuk versi `1.2.0` dan URL repo tujuan
+`parkisutama/obsidian-unisastra`. Nama repo GitHub belum diubah.
+
+Tidak ada migrasi settings, hotkey, workspace, snippet, atau frontmatter lama.
+Perubahan source dan gate otomatis dijelaskan di
+[spec rebrand](./specs/unisastra-rebrand/spec.md) dan
+[status pengembangan](./development-status.md). Acceptance Obsidian native
+belum diklaim.
+
+## Update announcements — 2026-09-28
+
+Toggle Announce Updates dan modal release notes yang tidak terhubung ke runtime telah dihapus. `general.isAnnounceUpdatesEnabled` tetap disimpan sebagai key lama tanpa efek agar data settings pengguna tetap kompatibel. Plugin tidak lagi memiliki jalur request GitHub Releases untuk pengumuman pembaruan. Acceptance native untuk perubahan ini belum dicatat.
+
 ## Perbaikan performa lintas fitur — 2026-09-27
 
 Editor menyimpan dan membatalkan observer/RAF; cursor restore membatalkan frame
@@ -91,7 +111,7 @@ scenario matrix di ledger tetap belum dikonfirmasi satu per satu.
 - `src/capabilities/commands/` mendaftarkan operasi editor dan navigasi outline.
 - `src/cm6/` mengimplementasikan extension editor, termasuk fokus outliner,
   batas selection, keyboard operations, block IDs, dan fold persistence.
-- `src/components/` berisi settings tab, outline view, dan update modal.
+- `src/components/` berisi settings tab dan outline view.
 - `src/gfm-anchor/` menangani navigasi anchor, hover, reading mode, dan Live Preview.
 
 ## Floaty toolbar work in progress
@@ -202,10 +222,10 @@ tersebut selesai sepenuhnya sampai runtime acceptance dilakukan dan dicatat.
 
 ## Compatibility contracts
 
-Plugin ID adalah `md-writer`; manifest menyatakan dukungan mobile
-(`isDesktopOnly: false`) dan minimum Obsidian 1.11.0. Nama internal
-`TypewriterModeLib` dan prefix CSS `ptm-` masih digunakan. Jangan mengganti
-identifier hanya untuk menyamakan penamaan dengan repo lain.
+Plugin ID adalah `unisastra`; manifest menyatakan dukungan mobile
+(`isDesktopOnly: false`) dan minimum Obsidian 1.11.0. Nama komposisi internal
+`UnisastraCore` dan prefix CSS `unisastra-` digunakan. Perubahan identitas
+dari MD Writer dicatat di [ADR-005](./en/reference/decisions/ADR-005-unisastra-identity.md).
 
 Settings disimpan melalui Obsidian `loadData` / `saveData`. Perubahan settings,
 command ID, frontmatter, block ID, atau format Markdown memerlukan analisis

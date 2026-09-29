@@ -1,4 +1,4 @@
-// Long-press-to-reorder, adapted for MD Writer from Floaty Toolbar by 0png (MIT).
+// Long-press-to-reorder, adapted for Unisastra from Floaty Toolbar by 0png (MIT).
 // https://github.com/0png/Floaty-Toolbar, src/drag.ts and src/toolbar.ts
 // (attachLongPressDrag), and src/toolbar-types.ts (LONG_PRESS_MS,
 // ToolbarItemId, DEFAULT_BUTTON_ORDER).

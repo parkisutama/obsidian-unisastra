@@ -13,8 +13,8 @@ Sebelum menulis, tentukan pembaca utamanya:
 
 ## Taruh berdasarkan aksi
 
-- Pengguna ingin install plugin: `docs/for-users/install-md-writer.md`.
-- Pengguna ingin memakai fitur: `docs/for-users/use-md-writer-features.md`.
+- Pengguna ingin install plugin: `docs/for-users/install-unisastra.md`.
+- Pengguna ingin memakai fitur: `docs/for-users/use-unisastra-features.md`.
 - Pengguna mengalami masalah: `docs/for-users/troubleshooting.md`.
 - Developer ingin setup repo: `docs/for-developers/setup-local-development.md`.
 - Developer ingin mulai branch: `docs/for-developers/start-a-feature-or-bugfix.md`.

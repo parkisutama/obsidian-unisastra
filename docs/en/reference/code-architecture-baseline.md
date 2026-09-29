@@ -16,7 +16,7 @@ ditinjau manual; repo belum memiliki test khusus dependency direction atau cycle
 | `src/capabilities/commands/` | Editor commands, outline navigation, and toolbar-action command-palette parity (`toolbar-actions.ts`) |
 | `src/capabilities/settings.ts` | Persisted settings model and defaults |
 | `src/cm6/` | CodeMirror editor transactions, decorations, and outliner state |
-| `src/components/` | Obsidian settings, outline view, and update UI |
+| `src/components/` | Obsidian settings and outline view |
 | `src/components/floaty-toolbar/` | Floating/dock toolbar DOM (buttons, dropdowns, HUD, long-press reorder gesture) — not unit-tested beyond pure helpers, since Vitest here runs with `environment: "node"` |
 | `src/components/callout-*.ts` | Callout manager settings-tab UI, style editor/preview, discovery UI, compact expand/collapse |
 | `src/gfm-anchor/` | Anchor resolution, navigation, preview, and hover integration |
@@ -78,8 +78,9 @@ aktivasi tetap milik feature existing. Tidak ada schema atau dependency baru.
   Node filesystem/deploy operations belong in build tooling.
 - Preserve lifecycle cleanup and editor transaction semantics. Check selection,
   folding, embedded editors, and popout windows when modifying CodeMirror code.
-- Preserve settings, command IDs, plugin ID, frontmatter, Markdown IDs, and CSS
-  hooks documented in [current state](../current-state.md).
+- The current plugin ID, commands, outline view, frontmatter key, and CSS
+  hooks follow [ADR-005](./decisions/ADR-005-unisastra-identity.md). Preserve
+  those current contracts and Markdown block ID format in later changes.
 - Do not claim domain/application layer isolation: current modules integrate
   directly with Obsidian and CodeMirror. A layer migration is separate work.
 

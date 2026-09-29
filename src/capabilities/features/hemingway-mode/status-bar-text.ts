@@ -13,7 +13,7 @@ export default class HemingwayModeStatusBarText extends Feature {
       setting
         .setName(this.settingTitle)
         .setDesc(this.settingDesc)
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addText((text) =>
           text
             .setValue(this.getSettingValue() as string)

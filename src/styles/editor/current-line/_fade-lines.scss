@@ -1,5 +1,5 @@
-body.ptm-fade-lines {
-  .ptm-current-line-fade-before {
+body.unisastra-fade-lines {
+  .unisastra-current-line-fade-before {
     display: block;
     position: absolute;
     height: 100vh;
@@ -7,10 +7,10 @@ body.ptm-fade-lines {
     width: 100%;
     pointer-events: none;
     z-index: 100;
-    background: linear-gradient(to top, transparent, var(--background-primary) var(--ptm-fade-lines-intensity));
+    background: linear-gradient(to top, transparent, var(--background-primary) var(--unisastra-fade-lines-intensity));
   }
 
-  .ptm-current-line-fade-after {
+  .unisastra-current-line-fade-after {
     display: block;
     position: absolute;
     height: 100vh;
@@ -18,6 +18,6 @@ body.ptm-fade-lines {
     width: 100%;
     pointer-events: none;
     z-index: 100;
-    background: linear-gradient(to bottom, transparent, var(--background-primary) var(--ptm-fade-lines-intensity));
+    background: linear-gradient(to bottom, transparent, var(--background-primary) var(--unisastra-fade-lines-intensity));
   }
 }

@@ -25,7 +25,7 @@ export function buildLicenseBanner(
 export function floatyToolbarLicenseBanner(notice: string): string {
   return buildLicenseBanner(
     [
-      "MD Writer includes code adapted from Floaty Toolbar by 0png, MIT licensed.",
+      "Unisastra includes code adapted from Floaty Toolbar by 0png, MIT licensed.",
       "https://github.com/0png/Floaty-Toolbar",
     ],
     notice
@@ -35,7 +35,7 @@ export function floatyToolbarLicenseBanner(notice: string): string {
 export function writingFocusLicenseBanner(notice: string): string {
   return buildLicenseBanner(
     [
-      "MD Writer includes code adapted from Obsidian Focus Mode by ryanpcmcquen, MPL-2.0 licensed.",
+      "Unisastra includes code adapted from Obsidian Focus Mode by ryanpcmcquen, MPL-2.0 licensed.",
       "https://github.com/ryanpcmcquen/obsidian-focus-mode",
     ],
     notice
@@ -45,7 +45,7 @@ export function writingFocusLicenseBanner(notice: string): string {
 export function mononoteLicenseBanner(notice: string): string {
   return buildLicenseBanner(
     [
-      "MD Writer includes code adapted from MonoNote by Carlo Zottmann, MIT licensed.",
+      "Unisastra includes code adapted from MonoNote by Carlo Zottmann, MIT licensed.",
       "https://github.com/czottmann/obsidian-mononote",
     ],
     notice

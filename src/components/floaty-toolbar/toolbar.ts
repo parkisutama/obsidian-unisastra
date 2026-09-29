@@ -52,7 +52,7 @@ const HEADING_OPTIONS: ReadonlyArray<{
 
 const MARGIN_PX = 8;
 
-const DOCK_CLASS = "ptm-floaty-toolbar-dock";
+const DOCK_CLASS = "unisastra-floaty-toolbar-dock";
 
 export function dockBottomOffsetPx(statusBarHeight: number): number {
   return statusBarHeight > 0 ? statusBarHeight + MARGIN_PX : MARGIN_PX;
@@ -60,7 +60,7 @@ export function dockBottomOffsetPx(statusBarHeight: number): number {
 
 function createDivider(doc: Document): HTMLElement {
   const divider = doc.createElement("div");
-  divider.className = "ptm-floaty-toolbar-divider";
+  divider.className = "unisastra-floaty-toolbar-divider";
   return divider;
 }
 
@@ -94,11 +94,11 @@ function attachDropdown(
     }
     const rect = trigger.getBoundingClientRect();
     panel = doc.createElement("div");
-    panel.className = "ptm-floaty-toolbar-dropdown-panel";
+    panel.className = "unisastra-floaty-toolbar-dropdown-panel";
     panel.setAttribute("role", "listbox");
     for (const item of items) {
       const row = doc.createElement("div");
-      row.className = "ptm-floaty-toolbar-dropdown-item";
+      row.className = "unisastra-floaty-toolbar-dropdown-item";
       row.setAttribute("role", "option");
       row.tabIndex = 0;
       row.textContent = item.label;
@@ -186,7 +186,7 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
 ): ToolbarSurface => {
   const win = doc.defaultView ?? window;
   const el = doc.createElement("div");
-  el.className = "ptm-floaty-toolbar";
+  el.className = "unisastra-floaty-toolbar";
   el.setAttribute("role", "toolbar");
   el.setAttribute("aria-label", "Formatting toolbar");
   el.hidden = true;
@@ -216,7 +216,7 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   }
   function clearDropHighlight(): void {
     for (const itemEl of itemEls.values()) {
-      itemEl.classList.remove("ptm-floaty-toolbar-drop-target");
+      itemEl.classList.remove("unisastra-floaty-toolbar-drop-target");
     }
   }
   function onDragMove(event: MouseEvent): void {
@@ -228,7 +228,9 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
     const target = findDropTarget(event.clientX, event.clientY);
     clearDropHighlight();
     if (target) {
-      itemEls.get(target)?.classList.add("ptm-floaty-toolbar-drop-target");
+      itemEls
+        .get(target)
+        ?.classList.add("unisastra-floaty-toolbar-drop-target");
     }
   }
   function onDragMouseUp(event: MouseEvent): void {
@@ -245,10 +247,10 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
           return;
         }
         dragSourceEl = sourceEl;
-        sourceEl.classList.add("ptm-floaty-toolbar-drag-source");
+        sourceEl.classList.add("unisastra-floaty-toolbar-drag-source");
         const rect = sourceEl.getBoundingClientRect();
         const ghost = doc.createElement("div");
-        ghost.className = "ptm-floaty-toolbar-drag-ghost";
+        ghost.className = "unisastra-floaty-toolbar-drag-ghost";
         ghost.style.width = `${rect.width}px`;
         ghost.style.height = `${rect.height}px`;
         ghost.style.left = `${rect.left}px`;
@@ -264,7 +266,7 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
       onDragEnd: () => {
         doc.removeEventListener("mousemove", onDragMove);
         doc.removeEventListener("mouseup", onDragMouseUp);
-        dragSourceEl?.classList.remove("ptm-floaty-toolbar-drag-source");
+        dragSourceEl?.classList.remove("unisastra-floaty-toolbar-drag-source");
         dragSourceEl = null;
         ghostEl?.remove();
         ghostEl = null;
@@ -293,7 +295,7 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
 
   for (const { id, action, icon, title } of TOOLBAR_BUTTONS) {
     const button = doc.createElement("div");
-    button.className = "ptm-floaty-toolbar-button";
+    button.className = "unisastra-floaty-toolbar-button";
     button.setAttribute("role", "button");
     button.tabIndex = 0;
     setIcon(button, icon);
@@ -317,13 +319,13 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   }
 
   const headingTrigger = doc.createElement("div");
-  headingTrigger.className = "ptm-floaty-toolbar-dropdown-trigger";
+  headingTrigger.className = "unisastra-floaty-toolbar-dropdown-trigger";
   headingTrigger.setAttribute("aria-label", "Heading level");
   const headingLabel = doc.createElement("span");
   headingLabel.textContent = "P";
   headingTrigger.appendChild(headingLabel);
   const headingChevron = doc.createElement("span");
-  headingChevron.className = "ptm-floaty-toolbar-chevron";
+  headingChevron.className = "unisastra-floaty-toolbar-chevron";
   setIcon(headingChevron, "chevron-down");
   headingTrigger.appendChild(headingChevron);
   let headingDisabled = false;
@@ -344,14 +346,14 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
 
   const calloutTrigger = doc.createElement("div");
   calloutTrigger.className =
-    "ptm-floaty-toolbar-dropdown-trigger ptm-floaty-toolbar-callout-trigger";
+    "unisastra-floaty-toolbar-dropdown-trigger unisastra-floaty-toolbar-callout-trigger";
   calloutTrigger.setAttribute("aria-label", "Insert callout");
   calloutTrigger.title = "Insert callout";
   const calloutIcon = doc.createElement("span");
   setIcon(calloutIcon, "quote");
   calloutTrigger.appendChild(calloutIcon);
   const calloutChevron = doc.createElement("span");
-  calloutChevron.className = "ptm-floaty-toolbar-chevron";
+  calloutChevron.className = "unisastra-floaty-toolbar-chevron";
   setIcon(calloutChevron, "chevron-down");
   calloutTrigger.appendChild(calloutChevron);
   let latestCalloutOptions: readonly ToolbarCalloutOption[] = [];
@@ -375,7 +377,7 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
   const trailingDivider = createDivider(doc);
 
   const pinButton = doc.createElement("div");
-  pinButton.className = "ptm-floaty-toolbar-pin-btn";
+  pinButton.className = "unisastra-floaty-toolbar-pin-btn";
   pinButton.setAttribute("role", "button");
   pinButton.tabIndex = 0;
   pinButton.title = "Pin toolbar as a dock";
@@ -451,10 +453,10 @@ export const createFloatyToolbarSurface: SurfaceFactory = (
           calloutDropdown.close();
         }
         el.hidden = !view;
-        el.classList.toggle("ptm-floaty-toolbar-dock-peek", !dockVisible);
+        el.classList.toggle("unisastra-floaty-toolbar-dock-peek", !dockVisible);
         return;
       }
-      el.classList.remove(DOCK_CLASS, "ptm-floaty-toolbar-dock-peek");
+      el.classList.remove(DOCK_CLASS, "unisastra-floaty-toolbar-dock-peek");
       el.style.removeProperty("bottom");
       const range = view?.state.selection.main;
       const coords =

@@ -14,7 +14,7 @@ import { FeatureToggle } from "@/capabilities/base/feature-toggle";
 import { ToolbarController } from "@/capabilities/features/toolbar/controller";
 import WritingModeActive from "@/capabilities/features/writing-modes/active-mode";
 import { DEFAULT_SETTINGS } from "@/capabilities/settings";
-import createTypewriterModeViewPlugin from "@/cm6/plugin";
+import createUnisastraViewPlugin from "@/cm6/plugin";
 import { createLivePreviewPlugin } from "@/gfm-anchor/live-preview";
 
 afterEach(() => vi.unstubAllGlobals());
@@ -107,7 +107,7 @@ it("releases all editor observers and queued startup frames across 50 cycles", (
     state: EditorState.create(),
     dispatch: vi.fn(),
   };
-  const plugin = createTypewriterModeViewPlugin(tm as never);
+  const plugin = createUnisastraViewPlugin(tm as never);
   for (let index = 0; index < 50; index++) {
     const instance = instantiate(plugin, view);
     instance.destroy();

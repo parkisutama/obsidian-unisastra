@@ -10,7 +10,7 @@ import type WritingModePresetConfig from "@/capabilities/features/writing-modes/
 import { renderCalloutManager } from "@/components/callout-manager";
 import { renderToolbarButtonOrder } from "@/components/toolbar-button-order";
 import { renderTypewriterSettings } from "@/components/typewriter-settings";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 const CAPABILITIES = [
   ["writingFocus", "Writing Focus"],
@@ -23,7 +23,7 @@ const CAPABILITIES = [
   ["maxChar", "Line Width"],
 ] as const;
 
-export default class TypewriterModeSettingTab extends PluginSettingTab {
+export default class UnisastraSettingTab extends PluginSettingTab {
   override icon = "type-outline";
   private activeTab = "overview";
   private previewComponent: Component | null = null;
@@ -31,9 +31,9 @@ export default class TypewriterModeSettingTab extends PluginSettingTab {
   private revision = 0;
   private overviewScroll = 0;
   private returnRow: string | null = null;
-  private readonly tm: TypewriterModeLib;
+  private readonly tm: UnisastraCore;
 
-  constructor(app: App, tm: TypewriterModeLib) {
+  constructor(app: App, tm: UnisastraCore) {
     super(app, tm.plugin);
     this.tm = tm;
   }

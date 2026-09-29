@@ -1,4 +1,4 @@
-.ptm-floaty-toolbar {
+.unisastra-floaty-toolbar {
   position: fixed;
   z-index: var(--layer-popover);
   display: flex;
@@ -15,7 +15,7 @@
     display: none;
   }
 
-  &.ptm-floaty-toolbar-dock {
+  &.unisastra-floaty-toolbar-dock {
     top: auto;
     left: 50%;
     max-width: min(480px, calc(100vw - #{2 * 8px}));
@@ -30,13 +30,13 @@
 
     // Auto-hidden but still hoverable: `display: none` would make it
     // impossible to ever mouseenter it again to bring it back.
-    &.ptm-floaty-toolbar-dock-peek {
+    &.unisastra-floaty-toolbar-dock-peek {
       opacity: 0.12;
     }
   }
 }
 
-.ptm-floaty-toolbar-divider {
+.unisastra-floaty-toolbar-divider {
   width: 1px;
   height: 18px;
   background-color: var(--background-modifier-border);
@@ -45,7 +45,7 @@
   border-radius: 1px;
 }
 
-.ptm-floaty-toolbar-button {
+.unisastra-floaty-toolbar-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,7 +91,7 @@
   }
 }
 
-.ptm-floaty-toolbar-dropdown-trigger {
+.unisastra-floaty-toolbar-dropdown-trigger {
   display: flex;
   align-items: center;
   gap: 3px;
@@ -147,7 +147,7 @@
   }
 }
 
-.ptm-floaty-toolbar-chevron {
+.unisastra-floaty-toolbar-chevron {
   width: 10px;
   height: 10px;
   opacity: 0.5;
@@ -161,12 +161,12 @@
   }
 }
 
-.ptm-floaty-toolbar-dropdown-trigger.is-open .ptm-floaty-toolbar-chevron {
+.unisastra-floaty-toolbar-dropdown-trigger.is-open .unisastra-floaty-toolbar-chevron {
   transform: rotate(180deg);
   opacity: 0.8;
 }
 
-.ptm-floaty-toolbar-dropdown-panel {
+.unisastra-floaty-toolbar-dropdown-panel {
   position: fixed;
   z-index: var(--layer-popover);
   min-width: 140px;
@@ -177,7 +177,7 @@
   box-shadow: var(--shadow-s);
 }
 
-.ptm-floaty-toolbar-dropdown-item {
+.unisastra-floaty-toolbar-dropdown-item {
   padding: 6px 10px;
   border-radius: var(--radius-s);
   color: var(--text-muted);
@@ -211,20 +211,20 @@
 }
 
 // Long-press-to-reorder: dimmed source while its ghost follows the cursor,
-// and a highlighted drop target. `.ptm-floaty-toolbar-drag-ghost` is a
+// and a highlighted drop target. `.unisastra-floaty-toolbar-drag-ghost` is a
 // document.body-level clone (position: fixed) so it can follow the cursor
 // across the whole window, not just inside the toolbar container.
-.ptm-floaty-toolbar-drag-source {
+.unisastra-floaty-toolbar-drag-source {
   opacity: 0.35;
 }
 
-.ptm-floaty-toolbar-drop-target {
+.unisastra-floaty-toolbar-drop-target {
   outline: 2px solid var(--interactive-accent);
   outline-offset: 1px;
   border-radius: var(--radius-s);
 }
 
-.ptm-floaty-toolbar-drag-ghost {
+.unisastra-floaty-toolbar-drag-ghost {
   position: fixed;
   z-index: calc(var(--layer-popover) + 1);
   display: flex;
@@ -238,7 +238,7 @@
   box-shadow: var(--shadow-s);
 }
 
-.ptm-floaty-toolbar-pin-btn {
+.unisastra-floaty-toolbar-pin-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -280,11 +280,11 @@
   }
 }
 
-.ptm-floaty-toolbar-status-bar-hud {
+.unisastra-floaty-toolbar-status-bar-hud {
   cursor: default;
 }
 
-.ptm-callout-manager-entry {
+.unisastra-callout-manager-entry {
   margin-block: var(--size-4-4);
 
   .setting-item-control {
@@ -296,12 +296,12 @@
   }
 }
 
-.ptm-callout-style-status {
+.unisastra-callout-style-status {
   color: var(--text-muted);
   overflow-wrap: anywhere;
 }
 
-.ptm-callout-style-preview {
+.unisastra-callout-style-preview {
   overflow-wrap: anywhere;
 
   // The body (ID + compatibility) always shows, collapsed or expanded — it
@@ -331,13 +331,13 @@
   }
 }
 
-.ptm-callout-manager-header {
+.unisastra-callout-manager-header {
   display: flex;
   align-items: flex-start;
   gap: var(--size-4-3);
   flex-wrap: wrap;
 
-  .ptm-callout-style-preview {
+  .unisastra-callout-style-preview {
     flex: 1 1 220px;
     min-width: 0;
   }
@@ -349,11 +349,11 @@
   }
 }
 
-.ptm-callout-configuration[hidden] {
+.unisastra-callout-configuration[hidden] {
   display: none;
 }
 
-.ptm-floaty-toolbar-status-bar-hud-reset {
+.unisastra-floaty-toolbar-status-bar-hud-reset {
   cursor: pointer;
   outline: none;
   box-shadow: none;

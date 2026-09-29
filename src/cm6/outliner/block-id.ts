@@ -8,7 +8,7 @@ import {
 } from "@codemirror/view";
 import { editorLivePreviewField } from "obsidian";
 import { resolveListItem } from "@/cm6/list-service";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import { foldEditorContext } from "./fold-context";
 
 const BLOCK_ID_LINE_RE = / \^[\w-]+$/;
@@ -37,7 +37,7 @@ function hiddenIdRange(
 }
 
 /** ViewPlugin that hides block IDs in Live Preview via Decoration.replace() */
-export function createBlockIdHiderPlugin(tm: TypewriterModeLib) {
+export function createBlockIdHiderPlugin(tm: UnisastraCore) {
   return ViewPlugin.fromClass(
     class {
       decorations: DecorationSet;

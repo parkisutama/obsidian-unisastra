@@ -9,14 +9,14 @@ export default class EnabledPlatforms extends Feature {
   readonly settingKey = "general.enabledPlatforms" as const;
   protected settingTitle = "Enable on platforms";
   protected settingDesc =
-    "Select the platforms where MD Writer should be active";
+    "Select the platforms where Unisastra should be active";
 
   registerSetting(settingGroup: SettingGroup): void {
     settingGroup.addSetting((setting) =>
       setting
         .setName(this.settingTitle)
         .setDesc(this.settingDesc)
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addDropdown((dropdown) =>
           dropdown
             .addOption(ENABLED_PLATFORMS.BOTH, "Desktop and mobile")

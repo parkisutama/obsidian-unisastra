@@ -11,7 +11,7 @@ import { AbstractCommand } from "@/capabilities/base/abstract-command";
 import { Command } from "@/capabilities/base/command";
 import type { ToolbarAction } from "@/capabilities/features/toolbar/actions";
 import { executeToolbarAction } from "@/capabilities/features/toolbar/executor";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 function editorViewOf(editor: Editor): EditorView | null {
   return (editor as unknown as { cm?: EditorView }).cm ?? null;
@@ -26,7 +26,7 @@ function editorViewOf(editor: Editor): EditorView | null {
  * desktop-only — and when the active editor has no live CM6 view to target.
  */
 function registerToolbarActionCommand(
-  tm: TypewriterModeLib,
+  tm: UnisastraCore,
   id: string,
   name: string,
   action: ToolbarAction
@@ -66,7 +66,7 @@ export class ToolbarActionCommand extends AbstractCommand {
   private readonly action: ToolbarAction;
 
   constructor(
-    tm: TypewriterModeLib,
+    tm: UnisastraCore,
     commandKey: string,
     commandTitle: string,
     action: ToolbarAction
@@ -179,7 +179,7 @@ const TOOLBAR_ACTION_COMMANDS: ReadonlyArray<{
 ];
 
 export function toolbarActionCommands(
-  tm: TypewriterModeLib
+  tm: UnisastraCore
 ): ToolbarActionCommand[] {
   return TOOLBAR_ACTION_COMMANDS.map(
     ({ id, name, action }) => new ToolbarActionCommand(tm, id, name, action)

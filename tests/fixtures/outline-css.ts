@@ -42,7 +42,7 @@ const entries = [
 ];
 
 function runOutlineRegression() {
-  const list = document.querySelector<HTMLElement>(".ptm-outline-list");
+  const list = document.querySelector<HTMLElement>(".unisastra-outline-list");
   if (!list) {
     throw new Error("Missing fixture list");
   }
@@ -63,9 +63,11 @@ function runOutlineRegression() {
     const item = items[index];
     const row = rows[index];
     const bounds = item.getBoundingClientRect();
-    const junction = item.querySelector<HTMLElement>(".ptm-outline-junction");
+    const junction = item.querySelector<HTMLElement>(
+      ".unisastra-outline-junction"
+    );
     const elbow = item.querySelector<HTMLElement>(
-      ".ptm-outline-junction-elbow"
+      ".unisastra-outline-junction-elbow"
     );
     if (!(junction && elbow)) {
       throw new Error("Missing production connector");
@@ -108,11 +110,13 @@ function runOutlineRegression() {
         );
       }
     }
-    const stem = item.querySelector<HTMLElement>(".ptm-outline-child-stem");
+    const stem = item.querySelector<HTMLElement>(
+      ".unisastra-outline-child-stem"
+    );
     check(Boolean(stem) === row.hasChildren, "stem only for visible children");
     if (stem) {
       const nextElbow = items[index + 1].querySelector<HTMLElement>(
-        ".ptm-outline-junction-elbow"
+        ".unisastra-outline-junction-elbow"
       );
       if (!nextElbow) {
         throw new Error("Missing child elbow");
@@ -136,7 +140,7 @@ function runOutlineRegression() {
     }
     for (const column of Array.from(
       item.querySelectorAll<HTMLElement>(
-        ".ptm-outline-guide-column:not(.is-continuing)"
+        ".unisastra-outline-guide-column:not(.is-continuing)"
       )
     )) {
       check(
@@ -165,7 +169,7 @@ function runOutlineRegression() {
       )) {
         const style = getComputedStyle(
           element,
-          element.classList.contains("ptm-outline-junction-elbow")
+          element.classList.contains("unisastra-outline-junction-elbow")
             ? null
             : "::before"
         );
@@ -191,23 +195,23 @@ function runOutlineRegression() {
         list.style.fontSize = `${font}px`;
         const rows = buildOutlineGuides(visible);
         const items = rows.map((row, index) => {
-          const item = list.createDiv({ cls: "ptm-outline-item" });
+          const item = list.createDiv({ cls: "unisastra-outline-item" });
           item.tabIndex = 0;
-          const link = item.createDiv({ cls: "ptm-outline-link" });
-          const lead = link.createDiv({ cls: "ptm-outline-lead" });
+          const link = item.createDiv({ cls: "unisastra-outline-link" });
+          const lead = link.createDiv({ cls: "unisastra-outline-lead" });
           const hasDisclosure = entries.some(
             (entry) => entry.ancestorIndices.at(-1) === row.index
           );
           renderOutlineGuides(lead, row, hasDisclosure);
-          const node = lead.createDiv({ cls: "ptm-outline-node" });
+          const node = lead.createDiv({ cls: "unisastra-outline-node" });
           node.createDiv({
             cls: hasDisclosure
-              ? "ptm-outline-disclosure"
-              : "ptm-outline-disclosure-spacer",
+              ? "unisastra-outline-disclosure"
+              : "unisastra-outline-disclosure-spacer",
           });
-          node.createDiv({ cls: "ptm-outline-marker" });
+          node.createDiv({ cls: "unisastra-outline-marker" });
           const text = link.createDiv({
-            cls: "ptm-outline-content markdown-rendered",
+            cls: "unisastra-outline-content markdown-rendered",
           });
           text.textContent = visible[index].title;
           return item;
@@ -223,18 +227,18 @@ function runOutlineRegression() {
   list.replaceChildren();
   const rows = buildOutlineGuides(entries);
   for (const [index, row] of rows.entries()) {
-    const item = list.createDiv({ cls: "ptm-outline-item" });
-    const link = item.createDiv({ cls: "ptm-outline-link" });
-    const lead = link.createDiv({ cls: "ptm-outline-lead" });
+    const item = list.createDiv({ cls: "unisastra-outline-item" });
+    const link = item.createDiv({ cls: "unisastra-outline-link" });
+    const lead = link.createDiv({ cls: "unisastra-outline-lead" });
     renderOutlineGuides(lead, row);
-    const node = lead.createDiv({ cls: "ptm-outline-node" });
+    const node = lead.createDiv({ cls: "unisastra-outline-node" });
     node.createDiv({
       cls: row.hasChildren
-        ? "ptm-outline-disclosure"
-        : "ptm-outline-disclosure-spacer",
+        ? "unisastra-outline-disclosure"
+        : "unisastra-outline-disclosure-spacer",
     });
-    node.createDiv({ cls: "ptm-outline-marker" });
-    link.createDiv({ cls: "ptm-outline-content" }).textContent =
+    node.createDiv({ cls: "unisastra-outline-marker" });
+    link.createDiv({ cls: "unisastra-outline-content" }).textContent =
       entries[index].title;
   }
   applyOutlineTrail(list, getOutlineTrail(rows, 5), "is-hover-connector");

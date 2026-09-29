@@ -1,10 +1,10 @@
 import { Setting, SettingGroup } from "obsidian";
 import type { FeatureToggle } from "@/capabilities/base/feature-toggle";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 export function renderTypewriterSettings(
   container: HTMLElement,
-  tm: TypewriterModeLib
+  tm: UnisastraCore
 ): void {
   new Setting(container)
     .setName("Scrolling behavior")
@@ -30,7 +30,7 @@ export function renderTypewriterSettings(
   typewriterControl = new Setting(container)
     .setName("Typewriter scrolling")
     .setDesc("Keep the active line at a fixed vertical position.")
-    .setClass("md-writer-setting")
+    .setClass("unisastra-setting")
     .addToggle((toggle) =>
       toggle
         .setValue(tm.settings.typewriter.isTypewriterScrollEnabled)
@@ -51,7 +51,7 @@ export function renderTypewriterSettings(
     .setDesc(
       "Maintain context lines as an alternative to fixed-position scrolling."
     )
-    .setClass("md-writer-setting")
+    .setClass("unisastra-setting")
     .addToggle((toggle) =>
       toggle
         .setValue(

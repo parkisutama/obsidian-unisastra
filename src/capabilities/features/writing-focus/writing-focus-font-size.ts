@@ -11,7 +11,7 @@ export default class WritingFocusFontSize extends Feature {
         .setDesc(
           "Custom font size in points for writing focus mode (0 = use default font size)"
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addSlider((slider) =>
           slider
             .setLimits(0, 36, 1)

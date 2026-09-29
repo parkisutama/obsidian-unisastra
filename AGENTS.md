@@ -61,7 +61,7 @@ manual yang setara bila memungkinkan tanpa mengklaim sudah memakai skill tersebu
   Obsidian API, Biome, ESLint Obsidian rules, Stylelint, rumdl, Vitest, VitePress.
 - Keep the current `src/capabilities`, `src/cm6`, and composition structure.
   Do not transplant Focus Notes feature layers or its test runner into this repo.
-- Preserve plugin ID `md-writer`, existing command IDs, settings keys,
+- Preserve plugin ID `unisastra`, existing command IDs, settings keys,
   frontmatter keys, Markdown block IDs, and CSS compatibility classes.
 - Use explicit Obsidian App instances and lifecycle cleanup. Preserve mobile and
   popout behavior; use the editor's document/window for DOM operations.
@@ -125,7 +125,7 @@ dan scope-nya jelas dapat dikerjakan dalam otorisasi tersebut.
   tandai superseded dan tautkan penggantinya.
 - Setelah fitur shipped, pindahkan artefak selesai ke `docs/archive/` dengan
   memperbarui link. Jangan mengarsipkan pekerjaan yang masih memiliki blocker.
-- Catat perubahan user-facing di CHANGELOG mengikuti format release MD Writer
+- Catat perubahan user-facing di CHANGELOG mengikuti format release Unisastra
   yang sudah ada (`## x.y.z`). Jangan mengadopsi format atau script versi Focus
   Notes secara diam-diam. Perubahan tooling internal tidak memerlukan entri fitur.
 - Update index/sidebar mengikuti `docs/for-developers/documentation-guidelines.md`.

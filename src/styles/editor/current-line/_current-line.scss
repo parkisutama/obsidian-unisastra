@@ -1,4 +1,4 @@
-.ptm-current-line {
+.unisastra-current-line {
   display: block;
   position: absolute;
   left: 0;
@@ -6,15 +6,15 @@
   pointer-events: none;
 }
 
-.ptm-first-open {
-  .ptm-current-line {
+.unisastra-first-open {
+  .unisastra-current-line {
     display: none;
   }
 }
 
-body.ptm-highlight-current-line-only-in-active-editor {
+body.unisastra-highlight-current-line-only-in-active-editor {
   .cm-editor:not(.cm-focused) {
-    .ptm-current-line {
+    .unisastra-current-line {
       display: none;
     }
   }

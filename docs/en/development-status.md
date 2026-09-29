@@ -1,5 +1,20 @@
 # Development status
 
+## Unisastra rebrand — 2026-09-29
+
+Implementasi lokal mengganti identitas plugin, command toggle, tipe panel
+outline, key frontmatter, prefix CSS, package, arsip, URL repo tujuan, dan docs
+aktif. Versi lokal disiapkan sebagai `1.2.0`; tidak ada migrasi vault lama.
+Guard deploy menolak folder plugin yang tidak sesuai dengan ID manifest build.
+
+`pnpm run check:ci` lulus: 34 file tes, 216 tes, typecheck, lint, build,
+verifikasi artefak, dan build docs. Fixture Electron outline lulus 440 checks;
+fixture editor lulus 155 checks. Lihat
+[ledger rebrand](../specs/unisastra-rebrand/tasks.md) dan
+[ADR-005](./reference/decisions/ADR-005-unisastra-identity.md).
+Rename repo GitHub, push, release, vault deploy, dan acceptance native belum
+dilakukan.
+
 Snapshot: 2026-09-12. Status ini memisahkan implementasi tooling dari bukti validasi.
 
 ## Mononote (single tab per note) — 2026-09-14

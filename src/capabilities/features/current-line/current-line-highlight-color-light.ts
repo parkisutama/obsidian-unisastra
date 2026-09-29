@@ -1,8 +1,8 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import CurrentLineHighlightColorBase from "./current-line-highlight-color-base";
 
 export default class CurrentLineHighlightColorLight extends CurrentLineHighlightColorBase {
-  constructor(tm: TypewriterModeLib) {
+  constructor(tm: UnisastraCore) {
     super(tm, "light");
   }
 }

@@ -8,7 +8,7 @@ import { FeatureToggle } from "@/capabilities/base/feature-toggle";
 // into a sensible character/word threshold per sentence.
 export default class WarnLongLine extends FeatureToggle {
   readonly settingKey = "maxChars.isWarnLongLineEnabled" as const;
-  protected override toggleClass = "ptm-warn-long-line";
+  protected override toggleClass = "unisastra-warn-long-line";
   override isToggleClassPersistent = true;
   protected settingTitle = "Warn when line exceeds character limit";
   protected settingDesc =

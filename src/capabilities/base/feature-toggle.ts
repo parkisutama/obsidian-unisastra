@@ -28,7 +28,7 @@ export abstract class FeatureToggle extends Feature {
       setting
         .setName(this.settingTitle)
         .setDesc(this.settingDesc)
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addToggle((toggle) =>
           toggle
             .setValue(this.getSettingValue() as boolean)

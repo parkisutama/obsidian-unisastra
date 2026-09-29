@@ -12,7 +12,7 @@ export default class EditTimerFilePrefix extends Feature {
       setting
         .setName("File timer prefix")
         .setDesc("Label shown before the per-window file elapsed time.")
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addText((text) =>
           text.setValue(timers.filePrefix).onChange((value) => {
             timers.filePrefix = prefix(value, "File:");

@@ -7,12 +7,12 @@ import {
   type CalloutEntrySettings,
   CUSTOM_ID_PATTERN,
 } from "@/capabilities/features/callouts/settings";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import { renderCalloutDiscovery } from "./callout-discovery";
 import { bindCalloutExpansion } from "./callout-expansion";
 import { renderCalloutStyleEditor } from "./callout-style-editor";
 
-function saveAndRerender(tm: TypewriterModeLib, rerender: () => void): void {
+function saveAndRerender(tm: UnisastraCore, rerender: () => void): void {
   tm.saveSettings()
     .catch((error) => {
       console.error("Failed to save settings:", error);
@@ -39,7 +39,7 @@ export function moveEntry(
 
 export function renderCalloutManager(
   container: HTMLElement,
-  tm: TypewriterModeLib,
+  tm: UnisastraCore,
   rerender: () => void,
   component: Component
 ): void {
@@ -52,15 +52,15 @@ export function renderCalloutManager(
 
   for (const [index, entry] of entries.entries()) {
     const panel = container.createDiv({
-      cls: "ptm-callout-manager-entry",
+      cls: "unisastra-callout-manager-entry",
     });
     panel.setAttribute("data-callout-id", entry.id);
     const group = new SettingGroup(panel);
     const header = group.listEl.createDiv({
-      cls: "ptm-callout-manager-header",
+      cls: "unisastra-callout-manager-header",
     });
     const preview = header.createDiv({
-      cls: "ptm-callout-style-preview markdown-rendered",
+      cls: "unisastra-callout-style-preview markdown-rendered",
     });
     // ID and compatibility now live in the preview body itself (always
     // visible, see callout-style-editor.ts), so this Setting is buttons
@@ -116,7 +116,7 @@ export function renderCalloutManager(
         })
     );
     const configuration = group.listEl.createDiv({
-      cls: "ptm-callout-configuration",
+      cls: "unisastra-callout-configuration",
     });
     bindCalloutExpansion(preview, configuration, entry.label, component);
     const styleEditor = renderCalloutStyleEditor(

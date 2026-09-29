@@ -1,6 +1,6 @@
-@mixin ptm-current-line-highlight-theme-style($theme, $style) {
-  &.ptm-highlight-current-line {
-    .ptm-current-line {
+@mixin unisastra-current-line-highlight-theme-style($theme, $style) {
+  &.unisastra-highlight-current-line {
+    .unisastra-current-line {
       @if $theme == "light" {
         mix-blend-mode: multiply;
       } @else if $theme == "dark" {
@@ -17,36 +17,36 @@
 }
 
 body.theme-light {
-  &.ptm-current-line-highlight-box {
-    @include ptm-current-line-highlight-theme-style("light", "box");
+  &.unisastra-current-line-highlight-box {
+    @include unisastra-current-line-highlight-theme-style("light", "box");
   }
 
-  &.ptm-current-line-highlight-underline {
-    @include ptm-current-line-highlight-theme-style("light", "underline");
+  &.unisastra-current-line-highlight-underline {
+    @include unisastra-current-line-highlight-theme-style("light", "underline");
   }
 }
 
 body.theme-dark {
-  &.ptm-current-line-highlight-box {
-    @include ptm-current-line-highlight-theme-style("dark", "box");
+  &.unisastra-current-line-highlight-box {
+    @include unisastra-current-line-highlight-theme-style("dark", "box");
   }
 
-  &.ptm-current-line-highlight-underline {
-    @include ptm-current-line-highlight-theme-style("dark", "underline");
+  &.unisastra-current-line-highlight-underline {
+    @include unisastra-current-line-highlight-theme-style("dark", "underline");
   }
 }
 
-body.ptm-current-line-pause-while-scrolling {
-  .cm-editor.ptm-scroll {
-    .ptm-current-line {
+body.unisastra-current-line-pause-while-scrolling {
+  .cm-editor.unisastra-scroll {
+    .unisastra-current-line {
       opacity: 0;
     }
   }
 }
 
-body.ptm-current-line-pause-while-selecting {
-  .cm-editor.ptm-select {
-    .ptm-current-line {
+body.unisastra-current-line-pause-while-selecting {
+  .cm-editor.unisastra-select {
+    .unisastra-current-line {
       opacity: 0;
     }
   }

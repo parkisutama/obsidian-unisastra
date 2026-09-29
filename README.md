@@ -1,6 +1,6 @@
-# MD Writer
+# Unisastra
 
-MD Writer is a specialized Obsidian editor environment for high-precision drafting and structural focus. It combines typewriter scrolling, whitespace visualization, and outliner-centric navigation into a workflow for long-form prose and complex technical notes.
+Unisastra is a specialized Obsidian editor environment for high-precision drafting and structural focus. It combines typewriter scrolling, whitespace visualization, and outliner-centric navigation into a workflow for long-form prose and complex technical notes.
 
 ## Features
 
@@ -26,7 +26,7 @@ MD Writer is a specialized Obsidian editor environment for high-precision drafti
 
 ## GitHub-Style Anchor Compatibility
 
-MD Writer can resolve GitHub-style heading anchors such as `#instalasi--setup` to the matching Obsidian heading. This is useful when drafting notes that are also published to GitHub or copied from GitHub-flavored Markdown.
+Unisastra can resolve GitHub-style heading anchors such as `#instalasi--setup` to the matching Obsidian heading. This is useful when drafting notes that are also published to GitHub or copied from GitHub-flavored Markdown.
 
 Example note:
 
@@ -54,15 +54,15 @@ The compatibility layer only rewrites link handling at runtime for navigation an
 
 ### Manual installation
 
-1. Download the latest release of MD Writer.
-2. Extract the folder to your vault's plugins directory: `<vault>/.obsidian/plugins/md-writer/`.
+1. Download the latest release of Unisastra.
+2. Extract the folder to your vault's plugins directory: `<vault>/.obsidian/plugins/unisastra/`.
 3. Open the command palette and run `Reload app without saving`.
 
 ---
 
 ## Positioning
 
-MD Writer follows a different product direction from the original [Typewriter Mode](https://github.com/davisriedel/obsidian-typewriter-mode). The codebase keeps the ergonomic foundation of typewriter scrolling while expanding into whitespace-aware editing and outliner-focused navigation.
+Unisastra follows a different product direction from the original [Typewriter Mode](https://github.com/davisriedel/obsidian-typewriter-mode). The codebase keeps the ergonomic foundation of typewriter scrolling while expanding into whitespace-aware editing and outliner-focused navigation.
 
 ## Acknowledgements
 
@@ -75,7 +75,7 @@ runtime acceptance. The original copyright and full license are preserved in
 [the Floaty Toolbar MIT notice](./licenses/floaty-toolbar-MIT.txt) and attributed
 in adapted source files.
 
-MD Writer descends from the original [Typewriter Mode](https://github.com/davisriedel/obsidian-typewriter-mode) by [Davis Riedel (davisriedel)](https://github.com/davisriedel), licensed under the MIT License. The build infrastructure was originally derived from [bun-obsidian-plugin-build-scripts](https://github.com/davisriedel/bun-obsidian-plugin-build-scripts), also by Davis Riedel and also MIT-licensed, and has since been migrated to a standard pnpm + esbuild toolchain.
+Unisastra descends from the original [Typewriter Mode](https://github.com/davisriedel/obsidian-typewriter-mode) by [Davis Riedel (davisriedel)](https://github.com/davisriedel), licensed under the MIT License. The build infrastructure was originally derived from [bun-obsidian-plugin-build-scripts](https://github.com/davisriedel/bun-obsidian-plugin-build-scripts), also by Davis Riedel and also MIT-licensed, and has since been migrated to a standard pnpm + esbuild toolchain.
 
 **Inherited and adapted features:**
 
@@ -105,9 +105,9 @@ release, and planning notes live in [docs/](./docs/README.md).
 
 ## Privacy and network use
 
-MD Writer stores its settings and cursor-position history in the plugin data file managed by Obsidian.
+Unisastra stores its settings and cursor-position history in the plugin data file managed by Obsidian.
 
-If update announcements are enabled, MD Writer sends a read-only request to the GitHub Releases API for this repository to fetch release notes after an update. The plugin does not send vault content or note text over the network.
+Unisastra does not fetch release notes or send vault content over the network.
 
 ## License
 

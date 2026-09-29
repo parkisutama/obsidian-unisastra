@@ -13,7 +13,7 @@ export default class EditTimerSessionPrefix extends Feature {
       setting
         .setName("Session timer prefix")
         .setDesc("Label shown before the session elapsed time.")
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addText((text) =>
           text.setValue(timers.sessionPrefix).onChange((value) => {
             timers.sessionPrefix = prefix(value, "Sesi:");

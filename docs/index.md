@@ -2,16 +2,16 @@
 layout: home
 
 hero:
-  name: MD Writer
+  name: Unisastra
   text: Dokumentasi
   tagline: Pengalaman Markdown Kreatif & Penuh Perhatian yang Terpadu
   actions:
     - theme: brand
       text: Pasang Plugin
-      link: /untuk-pengguna/install-md-writer
+      link: /untuk-pengguna/install-unisastra
     - theme: alt
       text: Pelajari Fitur
-      link: /untuk-pengguna/gunakan-fitur-md-writer
+      link: /untuk-pengguna/gunakan-fitur-unisastra
 
 features:
   - title: Mode Preset Menulis
@@ -22,13 +22,15 @@ features:
     details: Toggle fitur apa pun on/off secara independen. Sesuaikan pengaturan per tool. Buat callout khusus. Workflow Anda, cara Anda.
 ---
 
-# MD Writer
+# Unisastra
+
+[Lihat keputusan identitas Unisastra](./specs/unisastra-rebrand/spec.md) dan status implementasi lokalnya.
 
 ## Mengapa Preset?
 
 Menulis adalah perjalanan, bukan keadaan tunggal. Brainstorming membutuhkan tools berbeda dari menulis fokus panjang, yang membutuhkan tools berbeda dari editing.
 
-Preset MD Writer menggabungkan fitur yang tepat untuk setiap tahap — dibangun dari workflow penulis markdown berpengalaman. Satu klik mengaktifkan seluruh lingkungan menulis Anda.
+Preset Unisastra menggabungkan fitur yang tepat untuk setiap tahap — dibangun dari workflow penulis markdown berpengalaman. Satu klik mengaktifkan seluruh lingkungan menulis Anda.
 
 **Tetapi Anda tidak terkunci.** Setiap fitur bekerja secara independen. Mix, match, dan bangun workflow sempurna Anda. Preset hanya titik awal.
 
@@ -56,27 +58,27 @@ Ini adalah Kemampuan Default untuk setiap mode preset, Anda dapat mengubahnya se
 
 **Cara menggunakan:**
 
-1. Buka Settings → MD Writer → Active Writing Mode
+1. Buka Settings → Unisastra → Active Writing Mode
 2. Pilih preset (atau None untuk mengelola fitur secara manual)
 3. Semua fitur di preset itu aktif secara instan
 4. Pengaturan Anda per mode selalu disimpan
 5. Beralih anytime
 
-[Pelajari lebih lanjut tentang setiap fitur →](./untuk-pengguna/gunakan-fitur-md-writer.md)
+[Pelajari lebih lanjut tentang setiap fitur →](./untuk-pengguna/gunakan-fitur-unisastra.md)
 
 ## Mulai dalam 3 Langkah
 
 ### Langkah 1: Pasang
 
-Unduh MD Writer dari Obsidian Community Plugins atau BRAT.
+Unduh Unisastra dari Obsidian Community Plugins atau BRAT.
 
-[Panduan Instalasi →](./untuk-pengguna/install-md-writer.md)
+[Panduan Instalasi →](./untuk-pengguna/install-unisastra.md)
 
 ### Langkah 2: Pilih Mode
 
 Buka Settings, pilih preset yang sesuai tahap menulis Anda.
 
-[Preset & Pengaturan →](./untuk-pengguna/gunakan-fitur-md-writer.md)
+[Preset & Pengaturan →](./untuk-pengguna/gunakan-fitur-unisastra.md)
 
 ### Langkah 3: Mulai Menulis
 
@@ -88,7 +90,7 @@ Mulai dengan default seimbang, sesuaikan saat berjalan.
 
 ### Pelajari
 
-- [Panduan Fitur](./untuk-pengguna/gunakan-fitur-md-writer.md) — Pelajaran mendalam tentang setiap fitur
+- [Panduan Fitur](./untuk-pengguna/gunakan-fitur-unisastra.md) — Pelajaran mendalam tentang setiap fitur
 - [Troubleshooting](./untuk-pengguna/troubleshooting.md) — Masalah umum & solusi
 
 ### Jelajahi

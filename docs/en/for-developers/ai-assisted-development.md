@@ -1,7 +1,7 @@
 # AI Assisted Development
 
 Gunakan dokumentasi aktif sebagai konteks sebelum meminta AI menulis kode.
-[AGENTS.md](https://github.com/parkisutama/obsidian-md-writer/blob/main/AGENTS.md)
+[AGENTS.md](https://github.com/parkisutama/obsidian-unisastra/blob/main/AGENTS.md)
 adalah instruksi bersama; CLAUDE.md mengarahkan Claude ke file yang sama.
 
 ## Reading order
@@ -40,7 +40,7 @@ AGENTS.md menentukan pemilihan skill per kondisi, outcome yang harus dihasilkan,
 dan aturan sebelum refactor atau shipping. Baca SKILL.md skill yang dipakai;
 daftar skill di panduan bukan mekanisme instalasi atau invocation otomatis.
 
-Strategi dimulai dari positioning README dan workflow pengguna MD Writer.
+Strategi dimulai dari positioning README dan workflow pengguna Unisastra.
 Bandingkan manfaat, risiko regresi, compatibility, effort, dan dependency sebelum
 merekomendasikan prioritas kepada maintainer. Pisahkan implementasi yang ada,
 parsial, belum ada, dan gate yang benar-benar ditegakkan.

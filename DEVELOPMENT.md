@@ -13,7 +13,7 @@
 1. Fork this repo and clone your fork
 2. Install dependencies with `pnpm install`
 
-For detailed workflow notes, see [MD Writer docs](./docs/README.md).
+For detailed workflow notes, see [Unisastra docs](./docs/README.md).
 
 ## Building and Testing
 
@@ -46,7 +46,7 @@ without modifying files; commit-msg enforces Conventional Commits via commitlint
 Run `pnpm run fix` explicitly and review changes before staging.
 
 For AI development, read [AGENTS.md](./AGENTS.md) and
-[AI Assisted Development](./docs/for-developers/ai-assisted-development.md).
+[AI Assisted Development](./docs/en/for-developers/ai-assisted-development.md).
 Claude follows the same instructions through [CLAUDE.md](./CLAUDE.md).
 
 ## Documentation Site
@@ -68,4 +68,4 @@ GitHub Pages deployment is handled by the `Deploy documentation` workflow.
 - `pnpm run ci` — CI build used by GitHub Actions
 
 Longer release procedures live in
-[Create a GitHub release for BRAT and Obsidian](./docs/for-developers/create-a-github-release.md).
+[Create a GitHub release for BRAT and Obsidian](./docs/en/for-developers/create-a-github-release.md).

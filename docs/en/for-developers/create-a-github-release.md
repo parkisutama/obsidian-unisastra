@@ -81,7 +81,7 @@ menolak build bila notice MIT Floaty Toolbar hilang atau tidak sinkron:
 `dist/main.js` harus memuat banner notice penuh (`licenses/floaty-
 toolbar-MIT.txt`, tertanam lewat opsi `banner` esbuild sehingga tetap ada
 meski build diminifikasi), dan `dist/licenses/floaty-toolbar-MIT.txt` harus
-identik dengan sumbernya. `md-writer.zip` otomatis ikut membawa
+identik dengan sumbernya. `unisastra.zip` otomatis ikut membawa
 `dist/licenses/` karena workflow menyalin seluruh isi `dist/` secara
 recursive — tidak perlu langkah manual tambahan.
 
@@ -102,5 +102,5 @@ Jika BRAT gagal mengambil plugin, cek dulu apakah tag dan `manifest.json.version
 - `pnpm run release` lolos sampai commit dan tag lokal dibuat.
 - `git push origin main --follow-tags` sudah dijalankan.
 - GitHub Actions `Release Obsidian plugin` selesai hijau.
-- GitHub release berisi `md-writer.zip`, `dist/main.js`,
+- GitHub release berisi `unisastra.zip`, `dist/main.js`,
   `dist/manifest.json`, dan `dist/styles.css`.

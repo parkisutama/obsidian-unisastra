@@ -89,7 +89,7 @@ vi.mock("@/components/callout-style-editor", () => ({
 import type { Component } from "obsidian";
 import { normalizeCalloutSettings } from "@/capabilities/features/callouts/settings";
 import { renderCalloutManager } from "@/components/callout-manager";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 describe("callout manager grouping", () => {
   it("keeps every entry's catalog controls and style preview in the same panel, in catalog order", () => {
@@ -97,12 +97,12 @@ describe("callout manager grouping", () => {
     const callouts = normalizeCalloutSettings({
       entries: [{ id: "draft", order: -1 }],
     });
-    const tm = { settings: { callouts } } as unknown as TypewriterModeLib;
+    const tm = { settings: { callouts } } as unknown as UnisastraCore;
     renderCalloutManager(container as unknown as HTMLElement, tm, vi.fn(), {
       register: vi.fn(),
     } as unknown as Component);
     const panels = container.children.filter(
-      (node) => node.cls === "ptm-callout-manager-entry"
+      (node) => node.cls === "unisastra-callout-manager-entry"
     );
     expect(panels).toHaveLength(callouts.entries.length);
     expect(

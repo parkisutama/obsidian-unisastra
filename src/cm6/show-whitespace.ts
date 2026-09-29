@@ -55,7 +55,7 @@ function buildStrictLineBreakPlugin(): Extension {
 }
 
 // Extensions are always active. Visibility is controlled purely by CSS body
-// classes (ptm-show-whitespace, ptm-show-spaces, ptm-show-tabs, etc.) set by
+// classes (unisastra-show-whitespace, unisastra-show-spaces, unisastra-show-tabs, etc.) set by
 // the FeatureToggle system. This avoids relying on CM6 extension reconfiguration
 // via updateOptions() which can miss applying body classes to the DOM.
 export function createShowWhitespaceExtension(): Extension {

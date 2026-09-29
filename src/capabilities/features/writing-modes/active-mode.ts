@@ -61,7 +61,7 @@ export default class WritingModeActive extends Feature {
         .setDesc(
           "Activate a saved preset recipe. Normal enables outliner by default. Choose none to manage features manually without undoing current states."
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addDropdown((dropdown) => {
           dropdown
             .addOption("none", "None")

@@ -1,6 +1,6 @@
 {
-  "name": "md-writer",
-  "version": "1.1.0",
+  "name": "unisastra",
+  "version": "1.2.0",
   "type": "module",
   "packageManager": "pnpm@11.21.0",
   "engines": {
@@ -10,7 +10,7 @@
   "author": "Parkis Utama",
   "repository": {
     "type": "git",
-    "url": "https://github.com/parkisutama/obsidian-md-writer"
+    "url": "https://github.com/parkisutama/obsidian-unisastra"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.8",

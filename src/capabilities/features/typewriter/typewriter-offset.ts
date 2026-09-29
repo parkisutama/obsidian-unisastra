@@ -11,7 +11,7 @@ export default class TypewriterOffset extends Feature {
         .setDesc(
           "Positions the typewriter line at the specified percentage of the screen"
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addSlider((slider) =>
           slider
             .setLimits(0, 100, 5)

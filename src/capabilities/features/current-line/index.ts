@@ -1,4 +1,4 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import CurrentLineHighlightColorDark from "./current-line-highlight-color-dark";
 import CurrentLineHighlightColorLight from "./current-line-highlight-color-light";
 import CurrentLineHighlightStyle from "./current-line-highlight-style";
@@ -10,7 +10,7 @@ import HighlightCurrentLineOnlyInFocusedEditor from "./highlight-current-line-on
 import PauseCurrentLineHighlightWhileScrolling from "./pause-current-line-highlight-while-scrolling";
 import PauseCurrentLineHighlightWhileSelecting from "./pause-current-line-highlight-while-selecting";
 
-export default function getCurrentLineFeatures(tm: TypewriterModeLib) {
+export default function getCurrentLineFeatures(tm: UnisastraCore) {
   return Object.fromEntries(
     [
       new HighlightCurrentLine(tm),

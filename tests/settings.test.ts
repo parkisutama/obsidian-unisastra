@@ -5,7 +5,7 @@ import {
   DEFAULT_SETTINGS,
   getSettingByPath,
   setSettingByPath,
-  type TypewriterModeSettings,
+  type UnisastraSettings,
 } from "@/capabilities/settings";
 
 const createVault = (cursorPositions?: Record<string, unknown>) =>
@@ -17,22 +17,35 @@ const createVault = (cursorPositions?: Record<string, unknown>) =>
   }) as unknown as Vault;
 
 describe("settings defaults and migrations", () => {
+  it("preserves the retired announcement setting in existing data", async () => {
+    expect(DEFAULT_SETTINGS.general.isAnnounceUpdatesEnabled).toBe(false);
+
+    const migrated = await applyStartupMigrations(
+      {
+        general: { isAnnounceUpdatesEnabled: true },
+      } as Partial<UnisastraSettings>,
+      createVault(),
+      "plugins/unisastra"
+    );
+    expect(migrated.general.isAnnounceUpdatesEnabled).toBe(true);
+  });
+
   it("defaults sidebar synchronization off and preserves an explicit preference", async () => {
     expect(DEFAULT_SETTINGS.general.isSidebarEqualResizeEnabled).toBe(false);
     for (const value of [undefined, false, true]) {
       const general =
         value === undefined ? {} : { isSidebarEqualResizeEnabled: value };
       const settings = await applyStartupMigrations(
-        { general } as Partial<TypewriterModeSettings>,
+        { general } as Partial<UnisastraSettings>,
         createVault(),
-        "plugins/md-writer"
+        "plugins/unisastra"
       );
       expect(settings.general.isSidebarEqualResizeEnabled).toBe(value ?? false);
     }
     const legacy = await applyStartupMigrations(
       {},
       createVault(),
-      "plugins/md-writer"
+      "plugins/unisastra"
     );
     expect(legacy.general.isSidebarEqualResizeEnabled).toBe(false);
   });
@@ -68,9 +81,9 @@ describe("settings defaults and migrations", () => {
             writing: { hemingwayMode: true },
           },
         },
-      } as unknown as Partial<TypewriterModeSettings>,
+      } as unknown as Partial<UnisastraSettings>,
       createVault(),
-      "plugins/md-writer"
+      "plugins/unisastra"
     );
     expect(migrated.writingMode.presets.normal.outliner).toBe(false);
     expect(migrated.writingMode.presets.writing.hemingwayMode).toBe(true);
@@ -82,12 +95,12 @@ describe("settings defaults and migrations", () => {
     const first = await applyStartupMigrations(
       oldSettings,
       createVault(),
-      "plugins/md-writer"
+      "plugins/unisastra"
     );
     const second = await applyStartupMigrations(
       oldSettings,
       createVault(),
-      "plugins/md-writer"
+      "plugins/unisastra"
     );
     expect(first.toolbar.enabled).toBe(false);
     expect(first.toolbar.timers.sessionPrefix).toBe("Sesi:");
@@ -102,7 +115,7 @@ describe("settings defaults and migrations", () => {
     const settings = await applyStartupMigrations(
       oldSettings,
       createVault(),
-      "plugins/md-writer"
+      "plugins/unisastra"
     );
     expect(settings.callouts.outputMode).toBe("obsidian");
     expect(settings.callouts.entries.length).toBeGreaterThan(0);
@@ -126,7 +139,7 @@ describe("settings defaults and migrations", () => {
         },
       } as never,
       createVault(),
-      "plugins/md-writer"
+      "plugins/unisastra"
     );
     expect(settings.typewriter.typewriterOffset).toBe(0.73);
     expect(settings.toolbar.mode).toBe("floating");
@@ -147,7 +160,7 @@ describe("settings defaults and migrations", () => {
         toolbar: { timers: { updateIntervalSeconds: -5 } },
       } as never,
       createVault(),
-      "plugins/md-writer"
+      "plugins/unisastra"
     );
     expect(tooLow.toolbar.timers.updateIntervalSeconds).toBe(1);
 
@@ -157,7 +170,7 @@ describe("settings defaults and migrations", () => {
         toolbar: { timers: { updateIntervalSeconds: "not a number" } },
       } as never,
       createVault(),
-      "plugins/md-writer"
+      "plugins/unisastra"
     );
     expect(malformed.toolbar.timers.updateIntervalSeconds).toBe(1);
   });
@@ -190,7 +203,7 @@ describe("settings defaults and migrations", () => {
         version: "1.1.0",
       },
       createVault({ "Draft.md": { ch: 4, line: 2 } }),
-      ".obsidian/plugins/md-writer"
+      ".obsidian/plugins/unisastra"
     );
 
     expect(migrated.general.version).toBe("1.1.0");
@@ -215,9 +228,9 @@ describe("settings defaults and migrations", () => {
           ...DEFAULT_SETTINGS.typewriter,
           typewriterOffset: 0.25,
         },
-      } satisfies Partial<TypewriterModeSettings>,
+      } satisfies Partial<UnisastraSettings>,
       createVault(),
-      ".obsidian/plugins/md-writer"
+      ".obsidian/plugins/unisastra"
     );
 
     expect(migrated.general.version).toBe("1.2.0");
@@ -266,9 +279,9 @@ describe("settings defaults and migrations", () => {
             },
           },
         },
-      } as Partial<TypewriterModeSettings>,
+      } as Partial<UnisastraSettings>,
       createVault(),
-      ".obsidian/plugins/md-writer"
+      ".obsidian/plugins/unisastra"
     );
 
     expect(migrated.writingMode.activeMode).toBe("writing");

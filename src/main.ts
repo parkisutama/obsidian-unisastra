@@ -1,16 +1,16 @@
 import { type App, Plugin, type PluginManifest } from "obsidian";
-import type { TypewriterModeSettings } from "./capabilities/settings";
-import TypewriterModeLib from "./lib";
+import type { UnisastraSettings } from "./capabilities/settings";
+import UnisastraCore from "./lib";
 
-export default class TypewriterModePlugin extends Plugin {
-  private readonly tm: TypewriterModeLib;
+export default class UnisastraPlugin extends Plugin {
+  private readonly tm: UnisastraCore;
 
   constructor(app: App, manifest: PluginManifest) {
     super(app, manifest);
-    this.tm = new TypewriterModeLib(
+    this.tm = new UnisastraCore(
       this,
       async () => await this.loadData(),
-      async (settings: TypewriterModeSettings) => await this.saveData(settings)
+      async (settings: UnisastraSettings) => await this.saveData(settings)
     );
   }
 

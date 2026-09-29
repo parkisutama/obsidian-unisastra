@@ -2,8 +2,8 @@ export const idSidebar = [
   {
     text: "Untuk Pengguna Plugin",
     items: [
-      { text: "Pasang MD Writer", link: "/untuk-pengguna/install-md-writer" },
-      { text: "Gunakan Fitur", link: "/untuk-pengguna/gunakan-fitur-md-writer" },
+      { text: "Pasang Unisastra", link: "/untuk-pengguna/install-unisastra" },
+      { text: "Gunakan Fitur", link: "/untuk-pengguna/gunakan-fitur-unisastra" },
       { text: "Troubleshooting", link: "/untuk-pengguna/troubleshooting" }
     ]
   },
@@ -36,6 +36,7 @@ export const idSidebar = [
     text: "Referensi",
     items: [
       { text: "Status Pengembangan", link: "/en/development-status" },
+      { text: "Rebranding Unisastra", link: "/specs/unisastra-rebrand/spec" },
       { text: "Pengakuan", link: "/en/reference/ATTRIBUTION" }
     ]
   }

@@ -14,7 +14,7 @@
   &.cm-active {
     @include dimmed.dimmed(false);
 
-    &:not(.ptm-active-sentence-line) {
+    &:not(.unisastra-active-sentence-line) {
       @include dimmed.dimmed(true);
     }
 
@@ -53,10 +53,10 @@
 }
 
 @mixin apply-dim($focus-condition, $mode, $highlight-list-parent, $line-condition, $dim-table-as-one) {
-  &:not(.ptm-dim-unfocused-pause-while-scrolling, .ptm-dim-unfocused-pause-while-selecting) .cm-editor#{$focus-condition}:not(.ptm-first-open),
-  &.ptm-dim-unfocused-pause-while-scrolling:not(.ptm-dim-unfocused-pause-while-selecting) .cm-editor#{$focus-condition}:not(.ptm-scroll, .ptm-first-open),
-  &.ptm-dim-unfocused-pause-while-selecting:not(.ptm-dim-unfocused-pause-while-scrolling) .cm-editor#{$focus-condition}:not(.ptm-select, .ptm-first-open),
-  &.ptm-dim-unfocused-pause-while-scrolling.ptm-dim-unfocused-pause-while-selecting .cm-editor#{$focus-condition}:not(.ptm-scroll, .ptm-select, .ptm-first-open) {
+  &:not(.unisastra-dim-unfocused-pause-while-scrolling, .unisastra-dim-unfocused-pause-while-selecting) .cm-editor#{$focus-condition}:not(.unisastra-first-open),
+  &.unisastra-dim-unfocused-pause-while-scrolling:not(.unisastra-dim-unfocused-pause-while-selecting) .cm-editor#{$focus-condition}:not(.unisastra-scroll, .unisastra-first-open),
+  &.unisastra-dim-unfocused-pause-while-selecting:not(.unisastra-dim-unfocused-pause-while-scrolling) .cm-editor#{$focus-condition}:not(.unisastra-select, .unisastra-first-open),
+  &.unisastra-dim-unfocused-pause-while-scrolling.unisastra-dim-unfocused-pause-while-selecting .cm-editor#{$focus-condition}:not(.unisastra-scroll, .unisastra-select, .unisastra-first-open) {
     @if $highlight-list-parent {
       @include dim-highlight-list-parent.dim-highlight-list-parent;
     }
@@ -79,8 +79,8 @@
 @mixin apply-dim-unfocused($mode, $behavior, $highlight-list-parent, $dim-table-as-one) {
   $line-condition: if(sass($highlight-list-parent): ':not(.HyperMD-list-line)'; else: '');
 
-  &[data-ptm-dim-unfocused-mode="#{$mode}"] {
-    &[data-ptm-dim-unfocused-editors-behavior="#{$behavior}"] {
+  &[data-unisastra-dim-unfocused-mode="#{$mode}"] {
+    &[data-unisastra-dim-unfocused-editors-behavior="#{$behavior}"] {
       @if $behavior == "dim" {
         @include apply-dim('', $mode, $highlight-list-parent, $line-condition, $dim-table-as-one);
       } @else {
@@ -118,23 +118,23 @@ $bahaviors: 'dim', 'dim-none', 'dim-all';
   }
 }
 
-body.ptm-dim-unfocused {
-  &:not(.ptm-dim-highlight-list-parent) {
-    &:not(.ptm-dim-table-as-one) {
+body.unisastra-dim-unfocused {
+  &:not(.unisastra-dim-highlight-list-parent) {
+    &:not(.unisastra-dim-table-as-one) {
       @include dim-unfocused(false, false);
     }
 
-    &.ptm-dim-table-as-one {
+    &.unisastra-dim-table-as-one {
       @include dim-unfocused(false, true);
     }
   }
 
-  &.ptm-dim-highlight-list-parent {
-    &:not(.ptm-dim-table-as-one) {
+  &.unisastra-dim-highlight-list-parent {
+    &:not(.unisastra-dim-table-as-one) {
       @include dim-unfocused(true, false);
     }
 
-    &.ptm-dim-table-as-one {
+    &.unisastra-dim-table-as-one {
       @include dim-unfocused(true, true);
     }
   }

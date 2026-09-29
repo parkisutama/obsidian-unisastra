@@ -1,6 +1,6 @@
 import type { Component } from "obsidian";
 import { describe, expect, it, vi } from "vitest";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 const state = vi.hoisted(() => ({ actions: [] as (() => unknown)[] }));
 vi.mock("obsidian", () => ({
@@ -71,7 +71,7 @@ describe("discovery settings", () => {
     const rerender = vi.fn();
     renderCalloutDiscovery(
       host as unknown as HTMLElement,
-      tm as unknown as TypewriterModeLib,
+      tm as unknown as UnisastraCore,
       component as unknown as Component,
       rerender
     );

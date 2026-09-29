@@ -14,7 +14,7 @@ export default class ToggleTimerSessionVisible extends Feature {
         .setDesc(
           "Show the shared session elapsed timer in the toolbar dock and status bar."
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addToggle((toggle) =>
           toggle.setValue(timers.sessionVisible).onChange((value) => {
             timers.sessionVisible = value;

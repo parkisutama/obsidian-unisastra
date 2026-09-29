@@ -13,7 +13,7 @@ export default class ToggleTimerFileVisible extends Feature {
         .setDesc(
           "Show the per-window file elapsed timer, which resets when you switch to a different file."
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addToggle((toggle) =>
           toggle.setValue(timers.fileVisible).onChange((value) => {
             timers.fileVisible = value;

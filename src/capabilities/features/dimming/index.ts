@@ -1,4 +1,4 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import DimHighlightListParent from "./dim-highlight-list-parent";
 import DimTableAsOne from "./dim-table-as-one";
 import DimUnfocused from "./dim-unfocused";
@@ -8,7 +8,7 @@ import DimmedOpacity from "./dimmed-opacity";
 import PauseDimUnfocusedWhileScrolling from "./pause-dim-unfocused-while-scrolling";
 import PauseDimUnfocusedWhileSelecting from "./pause-dim-unfocused-while-selecting";
 
-export default function getDimmingFeatures(tm: TypewriterModeLib) {
+export default function getDimmingFeatures(tm: UnisastraCore) {
   return Object.fromEntries(
     [
       new DimUnfocused(tm),

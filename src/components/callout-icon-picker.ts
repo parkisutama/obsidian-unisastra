@@ -35,7 +35,7 @@ export class CalloutIconPicker extends FuzzySuggestModal<string> {
     return id;
   }
   override renderSuggestion(item: { item: string }, el: HTMLElement): void {
-    const icon = el.createSpan({ cls: "ptm-callout-picker-icon" });
+    const icon = el.createSpan({ cls: "unisastra-callout-picker-icon" });
     setIcon(icon, item.item);
     el.createSpan({ text: item.item });
   }

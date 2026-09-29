@@ -1,23 +1,23 @@
-# MD Writer documentation
+# Unisastra documentation
 
 Dokumentasi ini diatur berdasarkan aksi yang paling mungkin dilakukan oleh dua
 persona utama:
 
-- pengguna plugin yang ingin memasang, memakai, dan memperbaiki masalah MD
-  Writer di Obsidian,
+- pengguna plugin yang ingin memasang, memakai, dan memperbaiki masalah
+  Unisastra di Obsidian,
 - developer atau maintainer yang ingin berkontribusi, menjalankan QA, dan
   merilis perubahan.
 
 ## Pengguna plugin
 
-Mulai dari sini jika tujuan Anda adalah memakai MD Writer di vault Obsidian:
+Mulai dari sini jika tujuan Anda adalah memakai Unisastra di vault Obsidian:
 
-- [Install MD Writer](./en/for-users/install-md-writer.md)
-- [Use MD Writer features](./en/for-users/use-md-writer-features.md)
-- [Troubleshoot MD Writer](./en/for-users/troubleshooting.md)
+- [Install Unisastra](./en/for-users/install-unisastra.md)
+- [Use Unisastra features](./en/for-users/use-unisastra-features.md)
+- [Troubleshoot Unisastra](./en/for-users/troubleshooting.md)
 
 Informasi singkat untuk pengguna juga tersedia di
-[README utama](https://github.com/parkisutama/obsidian-md-writer/blob/main/README.md).
+[README utama](https://github.com/parkisutama/obsidian-unisastra/blob/main/README.md).
 
 ## Developer dan maintainer
 
@@ -37,7 +37,7 @@ Mulai dari sini jika tujuan Anda adalah mengubah kode, dokumentasi, atau release
 - [SDLC for this plugin](./en/for-developers/sdlc-for-this-plugin.md)
 
 Quickstart contributor tetap ada di
-[DEVELOPMENT.md](https://github.com/parkisutama/obsidian-md-writer/blob/main/DEVELOPMENT.md).
+[DEVELOPMENT.md](https://github.com/parkisutama/obsidian-unisastra/blob/main/DEVELOPMENT.md).
 
 ## Reference
 
@@ -54,6 +54,10 @@ Gunakan bagian ini untuk aturan stabil, checklist, dan spesifikasi panjang:
 
 ## Active specifications
 
+- [Unisastra rebrand: spec](./specs/unisastra-rebrand/spec.md)
+- [Unisastra rebrand: plan](./specs/unisastra-rebrand/plan.md)
+- [Unisastra rebrand: tasks](./specs/unisastra-rebrand/tasks.md)
+- [ADR-005: Unisastra identity](./en/reference/decisions/ADR-005-unisastra-identity.md)
 - [Block ID and fold persistence: accepted spec](./specs/block-id-fold-persistence/spec.md)
 - [Block ID and fold persistence: accepted plan](./specs/block-id-fold-persistence/plan.md)
 - [Block ID and fold persistence: implementation ledger](./specs/block-id-fold-persistence/tasks.md)

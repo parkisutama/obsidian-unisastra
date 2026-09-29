@@ -1,4 +1,4 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import AllowArrowDownInHemingwayMode from "./allow-arrow-down";
 import AllowArrowLeftInHemingwayMode from "./allow-arrow-left";
 import AllowArrowRightInHemingwayMode from "./allow-arrow-right";
@@ -14,7 +14,7 @@ import HemingwayMode from "./hemingway-mode";
 import ShowHemingwayModeStatusBar from "./show-status-bar";
 import HemingwayModeStatusBarText from "./status-bar-text";
 
-export default function getHemingwayModeFeatures(tm: TypewriterModeLib) {
+export default function getHemingwayModeFeatures(tm: UnisastraCore) {
   return Object.fromEntries(
     [
       new HemingwayMode(tm),

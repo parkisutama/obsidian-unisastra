@@ -6,15 +6,17 @@ import {
   ViewPlugin,
   type ViewUpdate,
 } from "@codemirror/view";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
-const longLineDeco = Decoration.line({ class: "ptm-warn-long-line-exceeded" });
+const longLineDeco = Decoration.line({
+  class: "unisastra-warn-long-line-exceeded",
+});
 
 // Extensions are always active. Visibility is controlled purely by CSS body
-// classes (ptm-warn-long-line) set by the FeatureToggle system. The threshold
+// classes (unisastra-warn-long-line) set by the FeatureToggle system. The threshold
 // is read from tm.settings on every rebuild so changes propagate via
 // saveSettings() → updateOptions() → ViewUpdate.
-export function createWarnLongLineExtension(tm: TypewriterModeLib): Extension {
+export function createWarnLongLineExtension(tm: UnisastraCore): Extension {
   return ViewPlugin.fromClass(
     class {
       decorations: DecorationSet;

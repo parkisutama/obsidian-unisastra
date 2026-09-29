@@ -74,28 +74,28 @@ export function renderOutlineGuides(
   row: OutlineGuideRow,
   hasDisclosure = row.hasChildren
 ): void {
-  const guides = lead.createDiv({ cls: "ptm-outline-guides" });
+  const guides = lead.createDiv({ cls: "unisastra-outline-guides" });
   guides.setAttribute("aria-hidden", "true");
   for (const [depth] of row.ancestorIndices.entries()) {
-    const column = guides.createDiv({ cls: "ptm-outline-guide-column" });
+    const column = guides.createDiv({ cls: "unisastra-outline-guide-column" });
     if (row.continuingDepths.includes(depth)) {
       column.addClass("is-continuing");
       column.dataset.outlineConnector = `${row.index}:column:${depth}`;
     }
   }
-  const junction = guides.createDiv({ cls: "ptm-outline-junction" });
+  const junction = guides.createDiv({ cls: "unisastra-outline-junction" });
   junction.classList.toggle("is-root", row.ancestorIndices.length === 0);
   junction.classList.toggle("is-last-sibling", row.isLastSibling);
   junction.classList.toggle("is-leaf", !hasDisclosure);
   if (row.ancestorIndices.length > 0) {
     junction.dataset.outlineConnector = `${row.index}:column:${row.ancestorIndices.length}`;
   }
-  const elbow = junction.createDiv({ cls: "ptm-outline-junction-elbow" });
+  const elbow = junction.createDiv({ cls: "unisastra-outline-junction-elbow" });
   if (row.ancestorIndices.length > 0) {
     elbow.dataset.outlineConnector = `${row.index}:elbow`;
   }
   if (row.hasChildren) {
-    const stem = guides.createDiv({ cls: "ptm-outline-child-stem" });
+    const stem = guides.createDiv({ cls: "unisastra-outline-child-stem" });
     stem.dataset.outlineConnector = `${row.index}:stem`;
   }
 }

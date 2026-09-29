@@ -1,8 +1,8 @@
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import { AbstractCommand } from "../base/abstract-command";
 
 function registerMoveTypewriterCommand(
-  tm: TypewriterModeLib,
+  tm: UnisastraCore,
   direction: "up" | "down"
 ) {
   const editorCommand = direction === "up" ? "goUp" : "goDown";

@@ -95,7 +95,7 @@ export class FoldPersistenceCoordinator {
           }
         })
         .catch((error: unknown) =>
-          console.error("MD Writer: failed to persist folds", error)
+          console.error("Unisastra: failed to persist folds", error)
         );
     }
   }

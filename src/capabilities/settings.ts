@@ -23,6 +23,7 @@ import {
 
 export interface GeneralSettings {
   enabledPlatforms: EnabledPlatforms;
+  // Retained for existing data.json files; update announcements are retired.
   isAnnounceUpdatesEnabled: boolean;
   isMononoteEnabled: boolean;
   isOnlyActivateAfterFirstInteractionEnabled: boolean;
@@ -158,7 +159,7 @@ export interface WritingModeSettings {
   presets: Record<Exclude<WritingMode, "none">, WritingModePreset>;
 }
 
-export interface TypewriterModeSettings {
+export interface UnisastraSettings {
   blockId: BlockIdSettings;
   callouts: CalloutSettings;
   compatibility: CompatibilitySettings;
@@ -181,46 +182,46 @@ export interface TypewriterModeSettings {
 // Typesafe dotted-path type for accessing nested settings
 // e.g. "typewriter.isTypewriterScrollEnabled", "general.version"
 export type SettingsPath = {
-  [C in keyof TypewriterModeSettings]: `${C & string}.${keyof TypewriterModeSettings[C] & string}`;
-}[keyof TypewriterModeSettings];
+  [C in keyof UnisastraSettings]: `${C & string}.${keyof UnisastraSettings[C] & string}`;
+}[keyof UnisastraSettings];
 
 export type SettingValueAtPath<P extends SettingsPath> =
   P extends `${infer C}.${infer K}`
-    ? C extends keyof TypewriterModeSettings
-      ? K extends keyof TypewriterModeSettings[C]
-        ? TypewriterModeSettings[C][K]
+    ? C extends keyof UnisastraSettings
+      ? K extends keyof UnisastraSettings[C]
+        ? UnisastraSettings[C][K]
         : never
       : never
     : never;
 
 export function getSettingByPath<P extends SettingsPath>(
-  settings: TypewriterModeSettings,
+  settings: UnisastraSettings,
   path: P
 ): SettingValueAtPath<P> {
   const dot = path.indexOf(".");
-  const category = path.slice(0, dot) as keyof TypewriterModeSettings;
+  const category = path.slice(0, dot) as keyof UnisastraSettings;
   const key = path.slice(dot + 1);
   return settings[category][key as never] as SettingValueAtPath<P>;
 }
 
 export function setSettingByPath<P extends SettingsPath>(
-  settings: TypewriterModeSettings,
+  settings: UnisastraSettings,
   path: P,
   value: SettingValueAtPath<P>
 ): void {
   const dot = path.indexOf(".");
-  const category = path.slice(0, dot) as keyof TypewriterModeSettings;
+  const category = path.slice(0, dot) as keyof UnisastraSettings;
   const key = path.slice(dot + 1);
   // @ts-expect-error
   settings[category][key] = value;
 }
 
-export const DEFAULT_SETTINGS: TypewriterModeSettings = {
+export const DEFAULT_SETTINGS: UnisastraSettings = {
   toolbar: DEFAULT_TOOLBAR_SETTINGS,
   callouts: DEFAULT_CALLOUT_SETTINGS,
   general: {
     version: null,
-    isAnnounceUpdatesEnabled: true,
+    isAnnounceUpdatesEnabled: false,
     isPluginActivated: true,
     isOnlyActivateAfterFirstInteractionEnabled: false,
     isMononoteEnabled: false,
@@ -371,7 +372,7 @@ export const DEFAULT_SETTINGS: TypewriterModeSettings = {
 };
 
 // Legacy flat settings structure for migration
-interface LegacyTypewriterModeSettings {
+interface LegacyUnisastraSettings {
   "currentLineHighlightColor-dark": string;
   "currentLineHighlightColor-light": string;
   currentLineHighlightStyle: CurrentLineHighlightStyle;
@@ -412,7 +413,7 @@ interface LegacyTypewriterModeSettings {
 }
 
 // Migration function to convert legacy flat settings to new grouped settings
-function migrateGeneralSettings(legacy: Partial<LegacyTypewriterModeSettings>) {
+function migrateGeneralSettings(legacy: Partial<LegacyUnisastraSettings>) {
   return {
     version: legacy.version ?? DEFAULT_SETTINGS.general.version,
     isAnnounceUpdatesEnabled:
@@ -430,9 +431,7 @@ function migrateGeneralSettings(legacy: Partial<LegacyTypewriterModeSettings>) {
   };
 }
 
-function migrateTypewriterSettings(
-  legacy: Partial<LegacyTypewriterModeSettings>
-) {
+function migrateTypewriterSettings(legacy: Partial<LegacyUnisastraSettings>) {
   return {
     isTypewriterScrollEnabled:
       legacy.isTypewriterScrollEnabled ??
@@ -449,7 +448,7 @@ function migrateTypewriterSettings(
   };
 }
 
-function migrateDimmingSettings(legacy: Partial<LegacyTypewriterModeSettings>) {
+function migrateDimmingSettings(legacy: Partial<LegacyUnisastraSettings>) {
   return {
     isDimUnfocusedEnabled:
       legacy.isDimUnfocusedEnabled ??
@@ -476,9 +475,7 @@ function migrateDimmingSettings(legacy: Partial<LegacyTypewriterModeSettings>) {
   };
 }
 
-function migrateCurrentLineSettings(
-  legacy: Partial<LegacyTypewriterModeSettings>
-) {
+function migrateCurrentLineSettings(legacy: Partial<LegacyUnisastraSettings>) {
   return {
     isHighlightCurrentLineEnabled:
       legacy.isHighlightCurrentLineEnabled ??
@@ -514,9 +511,7 @@ function migrateCurrentLineSettings(
   };
 }
 
-function migrateWritingFocusSettings(
-  legacy: Partial<LegacyTypewriterModeSettings>
-) {
+function migrateWritingFocusSettings(legacy: Partial<LegacyUnisastraSettings>) {
   return {
     doesWritingFocusShowHeader:
       legacy.doesWritingFocusShowHeader ??
@@ -533,9 +528,7 @@ function migrateWritingFocusSettings(
   };
 }
 
-function migrateHemingwaySettings(
-  legacy: Partial<LegacyTypewriterModeSettings>
-) {
+function migrateHemingwaySettings(legacy: Partial<LegacyUnisastraSettings>) {
   return {
     isHemingwayModeEnabled:
       legacy.isHemingwayModeEnabled ??
@@ -573,8 +566,8 @@ function migrateHemingwaySettings(
 }
 
 function migrateSettings(
-  legacy: Partial<LegacyTypewriterModeSettings>
-): TypewriterModeSettings {
+  legacy: Partial<LegacyUnisastraSettings>
+): UnisastraSettings {
   return {
     toolbar: normalizeToolbarSettings(undefined),
     callouts: normalizeCalloutSettings(undefined),
@@ -646,10 +639,10 @@ function mergeWritingModeSettings(
 // Migration function to copy cursor positions from old file to settings
 // Only needed when coming from pre-v1.2.0 (legacy flat format)
 async function migrateCursorPositions(
-  settings: TypewriterModeSettings,
+  settings: UnisastraSettings,
   vault: Vault,
   manifestDir: string
-): Promise<TypewriterModeSettings> {
+): Promise<UnisastraSettings> {
   const oldFilePath = `${manifestDir}/cursor-positions.json`;
 
   try {
@@ -669,26 +662,24 @@ async function migrateCursorPositions(
 // Cursor position migration (from cursor-positions.json) is only needed for pre-v1.2.0 data
 // which is identified by the absence of the top-level "general" key.
 export async function applyStartupMigrations(
-  rawData:
-    | Partial<LegacyTypewriterModeSettings>
-    | Partial<TypewriterModeSettings>,
+  rawData: Partial<LegacyUnisastraSettings> | Partial<UnisastraSettings>,
   vault: Vault,
   manifestDir: string
-): Promise<TypewriterModeSettings> {
+): Promise<UnisastraSettings> {
   const isLegacyFormat = !("general" in rawData);
 
   // Cursor positions migration only needed when coming from pre-v1.2.0 (legacy flat format).
   // Since v1.2.0 cursor positions are stored directly in data.json.
   if (isLegacyFormat) {
     const settings = migrateSettings(
-      rawData as Partial<LegacyTypewriterModeSettings>
+      rawData as Partial<LegacyUnisastraSettings>
     );
     return await migrateCursorPositions(settings, vault, manifestDir);
   }
 
   // Deep-merge with defaults so new settings groups get their defaults
   // when existing users upgrade
-  const settings = rawData as Partial<TypewriterModeSettings> & {
+  const settings = rawData as Partial<UnisastraSettings> & {
     zoom?: {
       isZoomEnabled?: boolean;
       isZoomOnClickEnabled?: boolean;
@@ -708,9 +699,9 @@ export async function applyStartupMigrations(
     (settings as Record<string, unknown>).zoom = undefined;
   }
 
-  const merged: TypewriterModeSettings = { ...DEFAULT_SETTINGS };
+  const merged: UnisastraSettings = { ...DEFAULT_SETTINGS };
   for (const key of Object.keys(DEFAULT_SETTINGS) as Array<
-    keyof TypewriterModeSettings
+    keyof UnisastraSettings
   >) {
     if (settings[key] !== undefined) {
       if (key === "writingMode") {

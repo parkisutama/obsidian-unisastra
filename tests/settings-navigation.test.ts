@@ -103,7 +103,7 @@ vi.mock("obsidian", () => ({
 }));
 
 import SettingsTab from "@/components/settings-tab";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 function setup() {
   const group = (name: string) => ({
@@ -135,7 +135,7 @@ function setup() {
     },
     settings: { typewriter: {}, keepLinesAboveAndBelow: {} },
   };
-  const tab = new SettingsTab({} as never, tm as unknown as TypewriterModeLib);
+  const tab = new SettingsTab({} as never, tm as unknown as UnisastraCore);
   const root = tab.containerEl as unknown as Host;
   return { tab, root, tm, presets };
 }

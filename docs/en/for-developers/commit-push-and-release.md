@@ -107,7 +107,7 @@ Push tag semver seperti `1.0.1` akan memicu workflow GitHub release.
 
 Cek GitHub release berisi:
 
-- `md-writer.zip`
+- `unisastra.zip`
 - `dist/main.js`
 - `dist/manifest.json`
 - `dist/styles.css`

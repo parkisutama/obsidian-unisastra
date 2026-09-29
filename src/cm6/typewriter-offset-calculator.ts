@@ -6,7 +6,7 @@
 // extension.
 
 import type { EditorView, Rect } from "@codemirror/view";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import { getEditorDom, getScrollDom } from "./selectors";
 
 interface TypewriterScrollOffsetInput {
@@ -62,10 +62,10 @@ export function calculateKeepLinesScrollOffset({
 }
 
 export class TypewriterOffsetCalculator {
-  protected tm: TypewriterModeLib;
+  protected tm: UnisastraCore;
   protected view: EditorView;
 
-  constructor(tm: TypewriterModeLib, view: EditorView) {
+  constructor(tm: UnisastraCore, view: EditorView) {
     this.tm = tm;
     this.view = view;
   }

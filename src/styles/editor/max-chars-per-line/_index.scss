@@ -1,16 +1,16 @@
-body.ptm-max-chars-per-line {
+body.unisastra-max-chars-per-line {
   .cm-sizer {
     max-width: var(--max-chars-per-line);
     margin: auto;
   }
 }
 
-body.ptm-warn-long-line {
-  --ptm-warn-long-line-bg: rgb(255 100 50 / 12%);
-  --ptm-warn-long-line-border: rgb(255 100 50 / 50%);
+body.unisastra-warn-long-line {
+  --unisastra-warn-long-line-bg: rgb(255 100 50 / 12%);
+  --unisastra-warn-long-line-border: rgb(255 100 50 / 50%);
 
-  .cm-line.ptm-warn-long-line-exceeded {
-    background-color: var(--ptm-warn-long-line-bg);
-    box-shadow: inset 3px 0 0 var(--ptm-warn-long-line-border);
+  .cm-line.unisastra-warn-long-line-exceeded {
+    background-color: var(--unisastra-warn-long-line-bg);
+    box-shadow: inset 3px 0 0 var(--unisastra-warn-long-line-border);
   }
 }

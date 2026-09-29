@@ -15,7 +15,7 @@ import {
   calloutStyleProperties,
   validateCalloutOverride,
 } from "@/capabilities/features/callouts/styles";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 import { createColorPickerBinding } from "./callout-color-binding";
 import { CalloutIconPicker } from "./callout-icon-picker";
 
@@ -27,12 +27,12 @@ export interface CalloutStyleEditor {
 export function renderCalloutStyleEditor(
   container: HTMLElement,
   entry: CalloutEntrySettings,
-  tm: TypewriterModeLib,
+  tm: UnisastraCore,
   component: Component,
   preview: HTMLElement
 ): CalloutStyleEditor {
   const details = container;
-  const status = details.createDiv({ cls: "ptm-callout-style-status" });
+  const status = details.createDiv({ cls: "unisastra-callout-style-status" });
   status.setAttribute("role", "status");
   let color =
     entry.styling.mode === "override" ? (entry.styling.color ?? "") : "";

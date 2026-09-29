@@ -1,6 +1,6 @@
 import type { SettingGroup } from "obsidian";
 import { Feature } from "@/capabilities/base/feature";
-import type TypewriterModeLib from "@/lib";
+import type UnisastraCore from "@/lib";
 
 type ThemeMode = "light" | "dark";
 type ColorSettingKey<T extends ThemeMode> =
@@ -13,7 +13,7 @@ export default abstract class CurrentLineHighlightColor extends Feature {
   readonly settingKey: ColorSettingKey<ThemeMode>;
   protected themeMode: ThemeMode;
 
-  constructor(tm: TypewriterModeLib, themeMode: ThemeMode) {
+  constructor(tm: UnisastraCore, themeMode: ThemeMode) {
     super(tm);
     this.themeMode = themeMode;
     this.settingKey = `currentLine.currentLineHighlightColor-${themeMode}`;
@@ -29,7 +29,7 @@ export default abstract class CurrentLineHighlightColor extends Feature {
         .setDesc(
           `The color and opacity of the current line highlight in ${this.themeMode} themes`
         )
-        .setClass("md-writer-setting")
+        .setClass("unisastra-setting")
         .addColorPicker((colorPicker) =>
           colorPicker.setValue(color).onChange((newColor) => {
             const currentOpacity = this.parseColor(

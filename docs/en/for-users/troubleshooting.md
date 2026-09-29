@@ -1,4 +1,4 @@
-# Troubleshoot MD Writer
+# Troubleshoot Unisastra
 
 Dokumen ini membantu pengguna plugin mengecek masalah umum di Obsidian.
 
@@ -6,7 +6,7 @@ Dokumen ini membantu pengguna plugin mengecek masalah umum di Obsidian.
 
 Cek hal berikut:
 
-- folder plugin berada di `<vault>/.obsidian/plugins/md-writer/`,
+- folder plugin berada di `<vault>/.obsidian/plugins/unisastra/`,
 - folder berisi `main.js`, `manifest.json`, dan `styles.css`,
 - Community plugins sudah diaktifkan di Obsidian,
 - Obsidian sudah direload setelah file plugin disalin.
@@ -19,14 +19,14 @@ Cek:
 - semua aset release berasal dari versi yang sama,
 - tidak ada file lama dari versi sebelumnya yang tertinggal di folder plugin.
 
-Jika perlu, hapus folder `md-writer`, install ulang dari release terbaru, lalu
+Jika perlu, hapus folder `unisastra`, install ulang dari release terbaru, lalu
 reload Obsidian.
 
 ## Perubahan visual tidak terlihat
 
 Coba langkah berikut:
 
-1. Pastikan fitur terkait sudah di-enable di pengaturan MD Writer.
+1. Pastikan fitur terkait sudah di-enable di pengaturan Unisastra.
 2. Reload Obsidian.
 3. Nonaktifkan sementara snippet CSS atau theme yang mungkin menimpa style
    editor.
@@ -40,7 +40,7 @@ Cek:
 - link memakai format heading anchor yang benar,
 - heading target ada di file yang sama atau file tujuan,
 - duplicate heading memakai suffix seperti `-1` sesuai gaya GitHub,
-- link tidak berada di format yang diproses plugin lain sebelum MD Writer.
+- link tidak berada di format yang diproses plugin lain sebelum Unisastra.
 
 ## Floating toolbar tidak muncul atau dock menutupi status bar
 
@@ -50,7 +50,7 @@ Cek:
   bukan mobile,
 - file aktif dalam Source mode (bukan Reading Mode/Live Preview rendered),
   bukan popout tanpa editor aktif, dan bukan file dengan frontmatter
-  `md-writer: false`,
+  `unisastra: false`,
 - Hemingway mode nonaktif — toolbar disembunyikan selama Hemingway aktif,
 - untuk mode dock: dock auto-hide saat Anda mengetik dan muncul kembali saat
   pointer masuk ke area dock (peek); aktifkan **Always show dock** bila Anda
@@ -77,7 +77,7 @@ callout** secara manual. Discovery tidak menyalin warna atau ikon dari CSS.
 
 Saat melaporkan bug, sertakan:
 
-- versi MD Writer,
+- versi Unisastra,
 - versi Obsidian,
 - sistem operasi,
 - langkah reproduksi,

@@ -4,7 +4,7 @@ Dokumen ini menjelaskan kenapa repo ini memakai alur branch, QA, dan release sep
 
 ## Tujuan SDLC di repo ini
 
-MD Writer adalah plugin editor yang sensitif terhadap regresi UI, perilaku keyboard, sinkronisasi state, dan pengalaman menulis. Karena itu, SDLC-nya perlu menjaga empat hal:
+Unisastra adalah plugin editor yang sensitif terhadap regresi UI, perilaku keyboard, sinkronisasi state, dan pengalaman menulis. Karena itu, SDLC-nya perlu menjaga empat hal:
 
 - perubahan tetap fokus,
 - QA lokal mudah diulang,
