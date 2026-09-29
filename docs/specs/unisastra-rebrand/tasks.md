@@ -27,6 +27,8 @@ and GitHub repository rename remain open.
 - `node scripts/editor-css-regression.cjs`: 155 browser checks passed. Initial
   run revealed old camelCase fixture data attributes; they were corrected and
   the fixture passed on rerun.
+- Settings UI classes using the old `tm-settings` prefix were renamed to
+  `unisastra-settings` in rendering, styles, and navigation tests.
 - Deploy guard test verifies that a built `unisastra` manifest cannot be copied
   into a plugin folder named `md-writer`.
 - The release workflow is configured to create `unisastra.zip`; the zip itself

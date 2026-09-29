@@ -2,26 +2,26 @@
   opacity: 0.5;
 }
 
-.tm-settings {
-  .tm-settings-panel {
+.unisastra-settings {
+  .unisastra-settings-panel {
     overflow: hidden;
     border-radius: var(--radius-m);
     background: var(--background-primary);
 
-    .tm-settings-row {
+    .unisastra-settings-row {
       padding-inline: var(--size-4-4);
 
       &:last-child { border-bottom: 0; }
     }
   }
 
-  .tm-settings-detail-header {
+  .unisastra-settings-detail-header {
     display: flex;
     align-items: center;
     gap: var(--size-4-2);
     margin-bottom: var(--size-4-3);
 
-    .tm-settings-title {
+    .unisastra-settings-title {
       flex: 1;
       min-width: 0;
       padding: 0;
@@ -36,7 +36,7 @@
     }
   }
 
-  .tm-settings-back {
+  .unisastra-settings-back {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,25 +51,25 @@
     &:focus-visible { outline: 2px solid var(--interactive-accent); }
   }
 
-  .tm-settings-row-info {
+  .unisastra-settings-row-info {
     display: flex;
     flex-direction: column;
     gap: var(--size-4-1);
     min-width: 0;
   }
 
-  .tm-settings-row-label { font-weight: var(--font-medium); }
+  .unisastra-settings-row-label { font-weight: var(--font-medium); }
 
-  .tm-settings-row-description,
-  .tm-settings-detail-description {
+  .unisastra-settings-row-description,
+  .unisastra-settings-detail-description {
     color: var(--text-muted);
     font-size: var(--font-ui-small);
     font-weight: var(--font-normal);
   }
 
-  .tm-settings-detail-description { margin-bottom: var(--size-4-4); }
+  .unisastra-settings-detail-description { margin-bottom: var(--size-4-4); }
 
-  .tm-settings-row {
+  .unisastra-settings-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -95,13 +95,13 @@
     }
   }
 
-  .tm-settings-chevron {
+  .unisastra-settings-chevron {
     display: flex;
     flex-shrink: 0;
     color: var(--text-muted);
   }
 
-  .tm-settings-tab-bar {
+  .unisastra-settings-tab-bar {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
@@ -110,7 +110,7 @@
     border-bottom: 1px solid var(--background-modifier-border);
   }
 
-  .tm-settings-tab {
+  .unisastra-settings-tab {
     padding: 4px 12px;
     border-radius: var(--radius-s);
     cursor: pointer;

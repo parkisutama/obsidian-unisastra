@@ -15,7 +15,8 @@ currently named `obsidian-md-writer`.
 ## Decision
 
 Rename the Obsidian plugin ID and display name, plugin-specific command key,
-outline view type, frontmatter opt-out key, CSS prefix, package and archive.
+outline view type, frontmatter opt-out key, `ptm-` and `tm-settings` CSS
+prefixes, package and archive.
 Update all source, style, test, tooling, and active documentation consumers
 together. Product wording retains the current positioning. Unrelated feature
 names and Markdown block ID format stay intact.

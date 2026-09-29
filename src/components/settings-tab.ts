@@ -84,19 +84,19 @@ export default class UnisastraSettingTab extends PluginSettingTab {
     description?: string
   ): HTMLButtonElement {
     const button = container.createEl("button", {
-      cls: "tm-settings-row",
+      cls: "unisastra-settings-row",
     });
     button.setAttribute("type", "button");
     button.setAttribute("aria-label", label);
-    const info = button.createSpan({ cls: "tm-settings-row-info" });
-    info.createSpan({ cls: "tm-settings-row-label", text: label });
+    const info = button.createSpan({ cls: "unisastra-settings-row-info" });
+    info.createSpan({ cls: "unisastra-settings-row-label", text: label });
     if (description) {
       info.createSpan({
-        cls: "tm-settings-row-description",
+        cls: "unisastra-settings-row-description",
         text: description,
       });
     }
-    const chevron = button.createSpan({ cls: "tm-settings-chevron" });
+    const chevron = button.createSpan({ cls: "unisastra-settings-chevron" });
     chevron.setAttribute("aria-hidden", "true");
     setIcon(chevron, "chevron-right");
     button.addEventListener("click", () => this.navigate(id));
@@ -108,7 +108,7 @@ export default class UnisastraSettingTab extends PluginSettingTab {
     // eslint-disable-next-line obsidianmd/settings-tab/no-problematic-settings-headings
     new Setting(container).setName("General").setHeading();
     const generalPanel = container.createDiv({
-      cls: "tm-settings-panel tm-settings-general",
+      cls: "unisastra-settings-panel unisastra-settings-general",
     });
     const general = this.registerGroup(
       generalPanel,
@@ -134,7 +134,7 @@ export default class UnisastraSettingTab extends PluginSettingTab {
     new Setting(container).setName("Writing modes presets").setHeading();
     const active = this.tm.features.writingModes["writingMode.activeMode"];
     const presets = container.createDiv({
-      cls: "tm-settings-panel tm-settings-presets",
+      cls: "unisastra-settings-panel unisastra-settings-presets",
     });
     const presetGroup = new SettingGroup(presets);
     active?.registerSetting(presetGroup);
@@ -156,7 +156,7 @@ export default class UnisastraSettingTab extends PluginSettingTab {
       )
       .setHeading();
     const capabilities = container.createDiv({
-      cls: "tm-settings-panel tm-settings-capabilities",
+      cls: "unisastra-settings-panel unisastra-settings-capabilities",
     });
     for (const [id, label] of CAPABILITIES) {
       rows.set(id, this.row(capabilities, id, label));
@@ -174,9 +174,11 @@ export default class UnisastraSettingTab extends PluginSettingTab {
     const title = mode
       ? `${mode.charAt(0).toUpperCase()}${mode.slice(1)} preset`
       : (capability?.[1] ?? (id === "toolbar" ? "Toolbar" : "Callouts"));
-    const header = container.createDiv({ cls: "tm-settings-detail-header" });
+    const header = container.createDiv({
+      cls: "unisastra-settings-detail-header",
+    });
     const back = header.createEl("button", {
-      cls: "tm-settings-back",
+      cls: "unisastra-settings-back",
     });
     back.setAttribute("type", "button");
     back.setAttribute("aria-label", "Back to settings");
@@ -186,15 +188,15 @@ export default class UnisastraSettingTab extends PluginSettingTab {
     const heading = new Setting(header)
       .setName(title)
       .setHeading()
-      .setClass("tm-settings-title").nameEl;
+      .setClass("unisastra-settings-title").nameEl;
     heading.setAttribute("tabindex", "-1");
     if (id === "toolbar") {
       container.createDiv({
-        cls: "tm-settings-detail-description",
+        cls: "unisastra-settings-detail-description",
         text: "Configure formatting actions, the floating toolbar and dock, elapsed timers, and button order. Desktop only.",
       });
     }
-    const body = container.createDiv({ cls: "tm-settings-detail" });
+    const body = container.createDiv({ cls: "unisastra-settings-detail" });
     const revision = this.revision;
     const draw = () => {
       if (!this.visible || revision !== this.revision || !body.isConnected) {
@@ -235,7 +237,7 @@ export default class UnisastraSettingTab extends PluginSettingTab {
     this.revision++;
     this.clearPreviewComponent();
     this.containerEl.empty();
-    this.containerEl.addClass("tm-settings");
+    this.containerEl.addClass("unisastra-settings");
     const valid =
       this.activeTab === "toolbar" ||
       this.activeTab === "callouts" ||

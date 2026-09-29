@@ -44,6 +44,7 @@ visual assets are outside this task.
 | Outline view type | `md-writer-outline` | `unisastra-outline` |
 | Frontmatter opt-out | `md-writer: false` | `unisastra: false` |
 | CSS prefix | `ptm-` | `unisastra-` |
+| Settings UI CSS prefix | `tm-settings` | `unisastra-settings` |
 | Settings CSS class | `md-writer-setting` | `unisastra-setting` |
 | Package and zip | `md-writer`, `md-writer.zip` | `unisastra`, `unisastra.zip` |
 | GitHub repository target | `parkisutama/obsidian-md-writer` | `parkisutama/obsidian-unisastra` |

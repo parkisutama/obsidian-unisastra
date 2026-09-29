@@ -173,7 +173,10 @@ describe("settings navigation", () => {
     ).toEqual(["Toolbar", "Callouts"]);
     const presets = root
       .all()
-      .find((node) => node.cls === "tm-settings-panel tm-settings-presets");
+      .find(
+        (node) =>
+          node.cls === "unisastra-settings-panel unisastra-settings-presets"
+      );
     expect(
       presets
         ?.all()
@@ -184,17 +187,21 @@ describe("settings navigation", () => {
       root
         .all()
         .some(
-          (node) => node.cls === "tm-settings-panel tm-settings-capabilities"
+          (node) =>
+            node.cls ===
+            "unisastra-settings-panel unisastra-settings-capabilities"
         )
     ).toBe(true);
     click(root, "Toolbar");
-    const back = root.all().find((node) => node.cls === "tm-settings-back");
+    const back = root
+      .all()
+      .find((node) => node.cls === "unisastra-settings-back");
     expect(back?.text).toBe("");
     expect(back?.attributes.get("aria-label")).toBe("Back to settings");
     expect(
       root
         .all()
-        .find((node) => node.cls === "tm-settings-detail-header")
+        .find((node) => node.cls === "unisastra-settings-detail-header")
         ?.all()
         .some((node) => node.text === "Toolbar")
     ).toBe(true);
@@ -206,9 +213,9 @@ describe("settings navigation", () => {
     expect(root.all().map((node) => node.text)).not.toContain(
       "outliner-control"
     );
-    expect(root.all().some((node) => node.cls === "tm-settings-tab-bar")).toBe(
-      false
-    );
+    expect(
+      root.all().some((node) => node.cls === "unisastra-settings-tab-bar")
+    ).toBe(false);
     expect(presets.registerSetting).not.toHaveBeenCalled();
     root.scrollTop = 180;
     click(root, "Outliner");
