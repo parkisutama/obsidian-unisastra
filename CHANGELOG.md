@@ -9,6 +9,7 @@
   documentation. Existing personal vault configuration is not migrated.
 - Rename the release archive to `unisastra.zip` and prepare repository links
   for `parkisutama/obsidian-unisastra`.
+- Raise the minimum Obsidian version from 1.11.0 to 1.14.4.
 
 ### Removed
 

@@ -6,7 +6,7 @@
   "engines": {
     "node": ">=24 <25"
   },
-  "obsidianMinAppVersion": "1.11.0",
+  "obsidianMinAppVersion": "1.14.4",
   "author": "Parkis Utama",
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
     "eslint": "^10.9.0",
     "eslint-plugin-obsidianmd": "^0.4.1",
     "husky": "^9.1.7",
-    "obsidian": "^1.13.1",
+    "obsidian": "1.14.4",
     "rumdl": "^0.1.96",
     "sass": "^1.103.1",
     "stylelint": "^17.14.1",

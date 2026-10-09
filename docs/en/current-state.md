@@ -165,7 +165,7 @@ tersebut selesai sepenuhnya sampai runtime acceptance dilakukan dan dicatat.
 ## Compatibility contracts
 
 Plugin ID adalah `unisastra`; manifest menyatakan dukungan mobile
-(`isDesktopOnly: false`) dan minimum Obsidian 1.11.0. Nama komposisi internal
+(`isDesktopOnly: false`) dan minimum Obsidian 1.14.4. Nama komposisi internal
 `UnisastraCore` dan prefix CSS `unisastra-` digunakan. Perubahan identitas
 dari MD Writer dicatat di [ADR-005](./reference/decisions/ADR-005-unisastra-identity.md).
 

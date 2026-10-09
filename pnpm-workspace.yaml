@@ -5,6 +5,9 @@ allowBuilds:
   esbuild: true
   rumdl: true
 
+minimumReleaseAgeExclude:
+  - obsidian@1.14.4
+
 # CM6 extensions and history annotations must share the host-compatible instances.
 overrides:
   "@codemirror/state": "6.5.0"
