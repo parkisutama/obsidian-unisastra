@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 const ICON_ID = /^lucide-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const HEX_COLOR = /^#(?:[a-f\d]{3}|[a-f\d]{6})$/i;
 const RGB_FUNCTION = /^rgba?\(([^)]+)\)$/i;

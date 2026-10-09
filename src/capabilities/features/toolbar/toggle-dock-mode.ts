@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { Notice, type SettingGroup } from "obsidian";
 import { Feature } from "@/capabilities/base/feature";
 import { setDockMode } from "./settings";

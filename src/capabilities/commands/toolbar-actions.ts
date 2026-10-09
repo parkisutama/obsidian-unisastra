@@ -1,8 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Copyright (C) 2025-2026 Parkis Utama
+// Adapted portions keep the upstream copyright stated below.
+
 // Command IDs for the formatting/heading/callout actions match upstream
 // Floaty Toolbar's own command IDs for palette parity:
 // https://github.com/0png/Floaty-Toolbar, src/main.ts
 // Revision b2113d06e1870851963053cd0bab0a0a971bb920.
-// Copyright (c) 2026 0png. Full notice: licenses/floaty-toolbar-MIT.txt.
+// Copyright (c) 2026 0png. Full notice: third-party-notices/floaty-toolbar-MIT.txt.
 // "manage-callouts" has no upstream equivalent — it is new here.
 import type { EditorView } from "@codemirror/view";
 import type { Editor, MarkdownFileInfo, MarkdownView } from "obsidian";

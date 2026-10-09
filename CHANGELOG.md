@@ -10,6 +10,10 @@
 - Rename the release archive to `unisastra.zip` and prepare repository links
   for `parkisutama/obsidian-unisastra`.
 - Raise the minimum Obsidian version from 1.11.0 to 1.14.4.
+- Change the license from MIT to GPL-3.0-only. Code from Typewriter Mode and
+  the other upstream projects keeps its MIT or MPL-2.0 notice.
+- Ship the license notices of Typewriter Mode, Remember Cursor Position, and
+  Focus Active Sentence with the plugin; they were missing.
 
 ### Removed
 

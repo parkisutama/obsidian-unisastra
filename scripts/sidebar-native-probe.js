@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 // Run through Obsidian CLI eval. Exercises native methods on detached elements.
 // No vault contents, live sidebar widths, or layout JSON are read or written.
 (async () => {

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import type { Component } from "obsidian";
 import { describe, expect, it, vi } from "vitest";
 import type UnisastraCore from "@/lib";

@@ -45,7 +45,7 @@
 		"outliner",
 		"markdown"
 	],
-	"license": "MIT",
+	"license": "GPL-3.0-only",
 	"scripts": {
 		"prepare": "husky",
 		"dev": "node scripts/dev.ts",

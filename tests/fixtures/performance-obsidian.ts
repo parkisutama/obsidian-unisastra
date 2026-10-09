@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 export class Component {
 	children = new Set<Component>();
 	addChild<T extends Component>(child: T): T {

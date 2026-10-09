@@ -1,32 +1,15 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Derived from Typewriter Mode (https://github.com/davisriedel/obsidian-typewriter-mode)
+// Copyright (c) 2023-2026 Davis Riedel
+// Modifications Copyright (C) 2025-2026 Parkis Utama
+
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { builtinModules } from "node:module";
 import esbuild from "esbuild";
 import { compile as sassCompile } from "sass";
-import {
-	floatyToolbarLicenseBanner,
-	mononoteLicenseBanner,
-	writingFocusLicenseBanner,
-} from "./license-banner.ts";
+import { NOTICES_DIST_DIR, NOTICES_SOURCE_DIR, THIRD_PARTY_NOTICES } from "./license-banner.ts";
 
 const LEADING_BOM = /^﻿/;
-
-const THIRD_PARTY_NOTICES = [
-	{
-		banner: floatyToolbarLicenseBanner,
-		distName: "floaty-toolbar-MIT.txt",
-		sourcePath: "licenses/floaty-toolbar-MIT.txt",
-	},
-	{
-		banner: writingFocusLicenseBanner,
-		distName: "writing-focus-MPL2.0.txt",
-		sourcePath: "licenses/writing-focus-MPL2.0.txt",
-	},
-	{
-		banner: mononoteLicenseBanner,
-		distName: "mononote-MIT.txt",
-		sourcePath: "licenses/mononote-MIT.txt",
-	},
-] as const;
 
 export interface BuildOptions {
 	entrypoints?: {
@@ -69,11 +52,12 @@ export async function build({
 	copyFileSync(`${rootDir}/manifest.json`, `${rootDir}/${outDir}/manifest.json`);
 
 	console.log("Copying license notices");
-	const licensesOutDir = `${rootDir}/${outDir}/licenses`;
+	const licensesOutDir = `${rootDir}/${outDir}/${NOTICES_DIST_DIR}`;
 	mkdirSync(licensesOutDir, { recursive: true });
-	const noticeBanners = THIRD_PARTY_NOTICES.map(({ banner, distName, sourcePath }) => {
-		const notice = readFileSync(`${rootDir}/${sourcePath}`, "utf-8");
-		copyFileSync(`${rootDir}/${sourcePath}`, `${licensesOutDir}/${distName}`);
+	const noticeBanners = THIRD_PARTY_NOTICES.map(({ banner, fileName }) => {
+		const sourcePath = `${rootDir}/${NOTICES_SOURCE_DIR}/${fileName}`;
+		const notice = readFileSync(sourcePath, "utf-8");
+		copyFileSync(sourcePath, `${licensesOutDir}/${fileName}`);
 		return banner(notice);
 	});
 

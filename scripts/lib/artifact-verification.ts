@@ -1,30 +1,8 @@
-import { existsSync, readFileSync, statSync } from "node:fs";
-import {
-	floatyToolbarLicenseBanner,
-	mononoteLicenseBanner,
-	writingFocusLicenseBanner,
-} from "./license-banner.ts";
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
 
-const THIRD_PARTY_NOTICES = [
-	{
-		banner: floatyToolbarLicenseBanner,
-		distPath: "dist/licenses/floaty-toolbar-MIT.txt",
-		label: "Floaty Toolbar MIT",
-		sourcePath: "licenses/floaty-toolbar-MIT.txt",
-	},
-	{
-		banner: writingFocusLicenseBanner,
-		distPath: "dist/licenses/writing-focus-MPL2.0.txt",
-		label: "Obsidian Focus Mode MPL-2.0",
-		sourcePath: "licenses/writing-focus-MPL2.0.txt",
-	},
-	{
-		banner: mononoteLicenseBanner,
-		distPath: "dist/licenses/mononote-MIT.txt",
-		label: "MonoNote MIT",
-		sourcePath: "licenses/mononote-MIT.txt",
-	},
-] as const;
+import { existsSync, readFileSync, statSync } from "node:fs";
+import { NOTICES_DIST_DIR, NOTICES_SOURCE_DIR, THIRD_PARTY_NOTICES } from "./license-banner.ts";
 
 interface ManifestJson {
 	id: string;
@@ -76,14 +54,17 @@ function readRequiredTextFile(path: string): string {
  * minified build, since esbuild's `banner` option is not run through the
  * minifier — see license-banner.ts), and a standalone copy under
  * `dist/licenses/` for the release zip. Fails if either is missing, or if
- * the dist copy has drifted out of sync with the source `licenses/*.txt`
- * (e.g. the source notice was edited without rebuilding) — never by
- * deleting or altering either file, only by reading them.
+ * the dist copy has drifted out of sync with the source
+ * `third-party-notices/*.txt` (e.g. the source notice was edited without
+ * rebuilding) — never by deleting or altering either file, only by reading
+ * them.
  */
 function assertThirdPartyNoticesPreserved(): void {
 	const mainJs = readRequiredTextFile("dist/main.js");
 
-	for (const { banner, distPath, label, sourcePath } of THIRD_PARTY_NOTICES) {
+	for (const { banner, fileName, label } of THIRD_PARTY_NOTICES) {
+		const sourcePath = `${NOTICES_SOURCE_DIR}/${fileName}`;
+		const distPath = `dist/${NOTICES_DIST_DIR}/${fileName}`;
 		const sourceNotice = readRequiredTextFile(sourcePath);
 		const expectedBanner = banner(sourceNotice);
 		if (!mainJs.includes(expectedBanner)) {

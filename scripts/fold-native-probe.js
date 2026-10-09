@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 // Obsidian CLI eval diagnostic. Uses only a detached Markdown view and synthetic text.
 // No vault file is opened, read, saved, or created. Never register this as a plugin.
 (async () => {

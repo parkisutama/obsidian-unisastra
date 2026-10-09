@@ -1,9 +1,13 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Copyright (C) 2025-2026 Parkis Utama
+// Adapted portions keep the upstream copyright stated below.
+
 // Long-press-to-reorder, adapted for Unisastra from Floaty Toolbar by 0png (MIT).
 // https://github.com/0png/Floaty-Toolbar, src/drag.ts and src/toolbar.ts
 // (attachLongPressDrag), and src/toolbar-types.ts (LONG_PRESS_MS,
 // ToolbarItemId, DEFAULT_BUTTON_ORDER).
 // Revision b2113d06e1870851963053cd0bab0a0a971bb920.
-// Copyright (c) 2026 0png. Full notice: licenses/floaty-toolbar-MIT.txt.
+// Copyright (c) 2026 0png. Full notice: third-party-notices/floaty-toolbar-MIT.txt.
 //
 // Differences from upstream, deliberate:
 // - Upstream keeps drag state in a module-level `activeDrag` singleton and

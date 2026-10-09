@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Derived from Typewriter Mode (https://github.com/davisriedel/obsidian-typewriter-mode)
+// Copyright (c) 2023-2026 Davis Riedel
+// Modifications Copyright (C) 2025-2026 Parkis Utama
+
 // Zoom-on-bullet concept inspired by vslinko's obsidian-zoom
 // (https://github.com/vslinko/obsidian-zoom). No code ported; this uses
 // Obsidian's native fold-heading/fold-indent settings and an original CM6

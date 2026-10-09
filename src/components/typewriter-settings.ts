@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { Setting, SettingGroup } from "obsidian";
 import type { FeatureToggle } from "@/capabilities/base/feature-toggle";
 import type UnisastraCore from "@/lib";

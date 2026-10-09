@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { isolateHistory } from "@codemirror/commands";
 import { type EditorState, Transaction, type TransactionSpec } from "@codemirror/state";
 import { calloutEdit } from "@/capabilities/features/callouts/markdown";

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { spawnSync } from "node:child_process";
 import { chmodSync, existsSync, readdirSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";

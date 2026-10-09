@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 "use strict";
 // Real CM6 editor lifecycle with a synthetic parser and Obsidian boundary.
 const fs = require("node:fs");

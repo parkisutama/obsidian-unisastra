@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import type { App, CachedMetadata, HeadingCache, TFile } from "obsidian";
 import { describe, expect, it } from "vitest";
 import { parseAnchor, resolveSlugTarget } from "@/gfm-anchor/resolver";

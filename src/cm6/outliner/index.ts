@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { Compartment, type Extension, type StateEffect } from "@codemirror/state";
 import { type EditorView, keymap } from "@codemirror/view";
 import type { OutlinerSettings } from "@/capabilities/settings";

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 // Sets the plugin version in one step: package.json, manifest.json, and versions.json.
 //
 //   node scripts/sync-version.mjs 0.2.0

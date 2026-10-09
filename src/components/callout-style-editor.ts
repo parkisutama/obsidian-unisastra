@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { type ColorComponent, Component, MarkdownRenderer, Setting, setIcon } from "obsidian";
 import { effectiveCalloutValues } from "@/capabilities/features/callouts/appearance";
 import { compatibilityLabel } from "@/capabilities/features/callouts/catalog";

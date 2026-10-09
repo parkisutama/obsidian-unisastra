@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import type UnisastraCore from "@/lib";
 import WritingModeActive from "./active-mode";
 import WritingModePresetConfig from "./preset-config";

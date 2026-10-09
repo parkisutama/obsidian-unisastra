@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { type Component, Notice, Setting } from "obsidian";
 import { canonicalBuiltinCalloutId } from "@/capabilities/features/callouts/catalog";
 import { discoverCallouts } from "@/capabilities/features/callouts/discovery";

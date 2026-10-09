@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Copyright (C) 2025-2026 Parkis Utama
+// Adapted portions keep the upstream copyright stated below.
+
 // Keep-one-tab-per-note, adapted for Unisastra from MonoNote by Carlo
 // Zottmann (MIT).
 // https://github.com/czottmann/obsidian-mononote, src/main.ts
@@ -5,7 +9,7 @@
 // FOCUS_DELAY_MS).
 // Revision 0e3ebc79f7a9c9ba70c07c22444c5bb70a73956e.
 // Copyright (c) 2023-present Carlo Zottmann. Full notice:
-// licenses/mononote-MIT.txt.
+// third-party-notices/mononote-MIT.txt.
 //
 // Differences from upstream, deliberate:
 // - Tracks in-flight leaves with a `Set<string>` instead of upstream's

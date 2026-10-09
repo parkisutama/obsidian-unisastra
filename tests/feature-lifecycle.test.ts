@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { afterEach, expect, it, vi } from "vitest";
 import Mononote from "@/capabilities/features/general/mononote";
 import HemingwayMode from "@/capabilities/features/hemingway-mode/hemingway-mode";
