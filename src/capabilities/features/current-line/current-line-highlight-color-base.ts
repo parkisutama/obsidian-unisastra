@@ -69,7 +69,6 @@ export default abstract class CurrentLineHighlightColor extends Feature {
       const b = Number.parseInt(rgbaMatch[3], 10);
       const alpha = rgbaMatch[4] ? Number.parseFloat(rgbaMatch[4]) : 1;
 
-      // biome-ignore lint/suspicious/noBitwiseOperators: Use bitwise operators for color conversion
       const hex = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
       return { color: hex, opacity: alpha };
     }

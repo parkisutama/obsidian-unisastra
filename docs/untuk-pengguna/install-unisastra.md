@@ -48,5 +48,5 @@ Jika Anda memakai BRAT:
 
 ## Setelah install
 
-Lanjut ke [Use Unisastra features](./use-unisastra-features.md) untuk mulai
+Lanjut ke [Use Unisastra features](./gunakan-fitur-unisastra.md) untuk mulai
 memakai fitur utama.

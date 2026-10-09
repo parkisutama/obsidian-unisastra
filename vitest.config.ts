@@ -8,9 +8,15 @@ process.env.TMP ??= process.env.TMPDIR;
 export default defineConfig({
   cacheDir: "node_modules/.cache/vitest",
   resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
+    alias: [
+      { find: "@", replacement: fileURLToPath(new URL("./src", import.meta.url)) },
+      {
+        find: /^obsidian$/,
+        replacement: fileURLToPath(
+          new URL("./tests/fixtures/obsidian.ts", import.meta.url)
+        ),
+      },
+    ],
   },
   test: {
     environment: "node",
