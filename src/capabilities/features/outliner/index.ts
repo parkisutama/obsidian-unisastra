@@ -9,16 +9,16 @@ import OutlinerSmartSelect from "./outliner-smart-select";
 import OutlinerSmartTab from "./outliner-smart-tab";
 
 export default function getOutlinerFeatures(tm: UnisastraCore) {
-  return Object.fromEntries(
-    [
-      new OutlinerEnabled(tm),
-      new OutlinerOnClick(tm),
-      new OutlinerKeyboardOps(tm),
-      new OutlinerCursorStick(tm),
-      new OutlinerSmartEnter(tm),
-      new OutlinerSmartTab(tm),
-      new OutlinerSmartSelect(tm),
-      new OutlinerSidebar(tm),
-    ].map((feature) => [feature.getSettingKey(), feature])
-  );
+	return Object.fromEntries(
+		[
+			new OutlinerEnabled(tm),
+			new OutlinerOnClick(tm),
+			new OutlinerKeyboardOps(tm),
+			new OutlinerCursorStick(tm),
+			new OutlinerSmartEnter(tm),
+			new OutlinerSmartTab(tm),
+			new OutlinerSmartSelect(tm),
+			new OutlinerSidebar(tm),
+		].map((feature) => [feature.getSettingKey(), feature]),
+	);
 }

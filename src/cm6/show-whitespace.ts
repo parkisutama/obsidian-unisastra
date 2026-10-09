@@ -6,52 +6,52 @@
 
 import type { Extension } from "@codemirror/state";
 import {
-  Decoration,
-  type DecorationSet,
-  type EditorView,
-  highlightTrailingWhitespace,
-  highlightWhitespace,
-  ViewPlugin,
-  type ViewUpdate,
+	Decoration,
+	type DecorationSet,
+	type EditorView,
+	highlightTrailingWhitespace,
+	highlightWhitespace,
+	ViewPlugin,
+	type ViewUpdate,
 } from "@codemirror/view";
 
 const strictBreakMark = Decoration.mark({ class: "cm-strictLineBreak" });
 
 function buildStrictLineBreakPlugin(): Extension {
-  return ViewPlugin.fromClass(
-    class {
-      decorations: DecorationSet;
+	return ViewPlugin.fromClass(
+		class {
+			decorations: DecorationSet;
 
-      constructor(view: EditorView) {
-        this.decorations = this.buildDecorations(view);
-      }
+			constructor(view: EditorView) {
+				this.decorations = this.buildDecorations(view);
+			}
 
-      update(update: ViewUpdate) {
-        if (update.docChanged || update.viewportChanged) {
-          this.decorations = this.buildDecorations(update.view);
-        }
-      }
+			update(update: ViewUpdate) {
+				if (update.docChanged || update.viewportChanged) {
+					this.decorations = this.buildDecorations(update.view);
+				}
+			}
 
-      buildDecorations(view: EditorView): DecorationSet {
-        const builder: ReturnType<typeof strictBreakMark.range>[] = [];
-        const doc = view.state.doc;
+			buildDecorations(view: EditorView): DecorationSet {
+				const builder: ReturnType<typeof strictBreakMark.range>[] = [];
+				const doc = view.state.doc;
 
-        for (const { from, to } of view.visibleRanges) {
-          const text = doc.sliceString(from, to);
-          const re = / {2}(?=\n)/g;
-          let match = re.exec(text);
-          while (match !== null) {
-            const start = from + match.index;
-            builder.push(strictBreakMark.range(start, start + 2));
-            match = re.exec(text);
-          }
-        }
+				for (const { from, to } of view.visibleRanges) {
+					const text = doc.sliceString(from, to);
+					const re = / {2}(?=\n)/g;
+					let match = re.exec(text);
+					while (match !== null) {
+						const start = from + match.index;
+						builder.push(strictBreakMark.range(start, start + 2));
+						match = re.exec(text);
+					}
+				}
 
-        return Decoration.set(builder, true);
-      }
-    },
-    { decorations: (v) => v.decorations }
-  );
+				return Decoration.set(builder, true);
+			}
+		},
+		{ decorations: (v) => v.decorations },
+	);
 }
 
 // Extensions are always active. Visibility is controlled purely by CSS body
@@ -59,9 +59,5 @@ function buildStrictLineBreakPlugin(): Extension {
 // the FeatureToggle system. This avoids relying on CM6 extension reconfiguration
 // via updateOptions() which can miss applying body classes to the DOM.
 export function createShowWhitespaceExtension(): Extension {
-  return [
-    highlightWhitespace(),
-    highlightTrailingWhitespace(),
-    buildStrictLineBreakPlugin(),
-  ];
+	return [highlightWhitespace(), highlightTrailingWhitespace(), buildStrictLineBreakPlugin()];
 }

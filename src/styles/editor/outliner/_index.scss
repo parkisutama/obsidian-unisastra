@@ -1,19 +1,19 @@
 // Outliner styles
 // Cursor pointer on bullet points when outliner-on-click is enabled
 .unisastra-outliner-on-click {
-  .cm-editor .cm-formatting-list-ol,
-  .cm-editor .cm-formatting-list-ul {
-    cursor: pointer;
-  }
+	.cm-editor .cm-formatting-list-ol,
+	.cm-editor .cm-formatting-list-ul {
+		cursor: pointer;
+	}
 
-  // Adjust fold indicator to avoid overlap with clickable bullets
-  .markdown-source-view.mod-cm6 .cm-fold-indicator .collapse-indicator {
-    margin-right: 6px;
-    padding-right: 0;
-  }
+	// Adjust fold indicator to avoid overlap with clickable bullets
+	.markdown-source-view.mod-cm6 .cm-fold-indicator .collapse-indicator {
+		margin-right: 6px;
+		padding-right: 0;
+	}
 
-  .markdown-source-view.mod-cm6 .cm-line:not(.cm-active, .HyperMD-header, .HyperMD-task-line) .cm-fold-indicator .collapse-indicator {
-    margin-right: 18px;
-    padding-right: 0;
-  }
+	.markdown-source-view.mod-cm6 .cm-line:not(.cm-active, .HyperMD-header, .HyperMD-task-line) .cm-fold-indicator .collapse-indicator {
+		margin-right: 18px;
+		padding-right: 0;
+	}
 }

@@ -11,18 +11,18 @@ import PauseCurrentLineHighlightWhileScrolling from "./pause-current-line-highli
 import PauseCurrentLineHighlightWhileSelecting from "./pause-current-line-highlight-while-selecting";
 
 export default function getCurrentLineFeatures(tm: UnisastraCore) {
-  return Object.fromEntries(
-    [
-      new HighlightCurrentLine(tm),
-      new FadeLines(tm),
-      new FadeLinesIntensity(tm),
-      new CurrentLineHighlightColorLight(tm),
-      new CurrentLineHighlightColorDark(tm),
-      new CurrentLineHighlightStyle(tm),
-      new CurrentLineHighlightUnderlineThickness(tm),
-      new HighlightCurrentLineOnlyInFocusedEditor(tm),
-      new PauseCurrentLineHighlightWhileScrolling(tm),
-      new PauseCurrentLineHighlightWhileSelecting(tm),
-    ].map((feature) => [feature.getSettingKey(), feature])
-  );
+	return Object.fromEntries(
+		[
+			new HighlightCurrentLine(tm),
+			new FadeLines(tm),
+			new FadeLinesIntensity(tm),
+			new CurrentLineHighlightColorLight(tm),
+			new CurrentLineHighlightColorDark(tm),
+			new CurrentLineHighlightStyle(tm),
+			new CurrentLineHighlightUnderlineThickness(tm),
+			new HighlightCurrentLineOnlyInFocusedEditor(tm),
+			new PauseCurrentLineHighlightWhileScrolling(tm),
+			new PauseCurrentLineHighlightWhileSelecting(tm),
+		].map((feature) => [feature.getSettingKey(), feature]),
+	);
 }

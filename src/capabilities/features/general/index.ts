@@ -7,14 +7,14 @@ import SidebarEqualResize from "./sidebar-equal-resize";
 import TogglePluginActivation from "./toggle-plugin-activation";
 
 export default function getGeneralFeatures(tm: UnisastraCore) {
-  return Object.fromEntries(
-    [
-      new TogglePluginActivation(tm),
-      new EnabledPlatforms(tm),
-      new OnlyActivateAfterFirstInteraction(tm),
-      new RestoreCursorPosition(tm),
-      new Mononote(tm),
-      new SidebarEqualResize(tm),
-    ].map((feature) => [feature.getSettingKey(), feature])
-  );
+	return Object.fromEntries(
+		[
+			new TogglePluginActivation(tm),
+			new EnabledPlatforms(tm),
+			new OnlyActivateAfterFirstInteraction(tm),
+			new RestoreCursorPosition(tm),
+			new Mononote(tm),
+			new SidebarEqualResize(tm),
+		].map((feature) => [feature.getSettingKey(), feature]),
+	);
 }

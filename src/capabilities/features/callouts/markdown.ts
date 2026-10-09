@@ -1,8 +1,8 @@
 const CALLOUT_HEADER_PATTERN =
-  /^(?<quote>>+)[ \t]?\[!(?<id>[a-zA-Z][a-zA-Z0-9_-]*)\](?<fold>[+-]?)(?<title>.*)$/;
+	/^(?<quote>>+)[ \t]?\[!(?<id>[a-zA-Z][a-zA-Z0-9_-]*)\](?<fold>[+-]?)(?<title>.*)$/;
 
 export function isCalloutHeaderLine(line: string): boolean {
-  return CALLOUT_HEADER_PATTERN.test(line);
+	return CALLOUT_HEADER_PATTERN.test(line);
 }
 
 /**
@@ -12,11 +12,11 @@ export function isCalloutHeaderLine(line: string): boolean {
  * one emitted form works everywhere without a separate output mode.
  */
 export function wrapAsCallout(text: string, id: string): string {
-  const body = text
-    .split("\n")
-    .map((line) => (line.length > 0 ? `> ${line}` : ">"))
-    .join("\n");
-  return `> [!${id.toUpperCase()}]\n${body}`;
+	const body = text
+		.split("\n")
+		.map((line) => (line.length > 0 ? `> ${line}` : ">"))
+		.join("\n");
+	return `> [!${id.toUpperCase()}]\n${body}`;
 }
 
 /**
@@ -26,14 +26,14 @@ export function wrapAsCallout(text: string, id: string): string {
  * The new marker is emitted uppercase, same rationale as `wrapAsCallout`.
  */
 export function changeCalloutType(text: string, id: string): string | null {
-  const lines = text.split("\n");
-  const match = CALLOUT_HEADER_PATTERN.exec(lines[0]);
-  if (!match?.groups) {
-    return null;
-  }
-  const { quote, fold, title } = match.groups;
-  const newFirstLine = `${quote} [!${id.toUpperCase()}]${fold}${title}`;
-  return [newFirstLine, ...lines.slice(1)].join("\n");
+	const lines = text.split("\n");
+	const match = CALLOUT_HEADER_PATTERN.exec(lines[0]);
+	if (!match?.groups) {
+		return null;
+	}
+	const { quote, fold, title } = match.groups;
+	const newFirstLine = `${quote} [!${id.toUpperCase()}]${fold}${title}`;
+	return [newFirstLine, ...lines.slice(1)].join("\n");
 }
 
 /**
@@ -42,21 +42,20 @@ export function changeCalloutType(text: string, id: string): string | null {
  * capturing it whole, so converting it would silently drop the header.
  */
 export function hasAmbiguousCalloutHeader(text: string): boolean {
-  const lines = text.split("\n");
-  if (isCalloutHeaderLine(lines[0])) {
-    return false;
-  }
-  return lines.some((line) => isCalloutHeaderLine(line));
+	const lines = text.split("\n");
+	if (isCalloutHeaderLine(lines[0])) {
+		return false;
+	}
+	return lines.some((line) => isCalloutHeaderLine(line));
 }
 
 export type CalloutEditResult = { insert: string } | { refusal: string };
 
 export function calloutEdit(text: string, id: string): CalloutEditResult {
-  if (hasAmbiguousCalloutHeader(text)) {
-    return {
-      refusal:
-        "Selection cuts through an existing callout header. Select the whole callout block.",
-    };
-  }
-  return { insert: changeCalloutType(text, id) ?? wrapAsCallout(text, id) };
+	if (hasAmbiguousCalloutHeader(text)) {
+		return {
+			refusal: "Selection cuts through an existing callout header. Select the whole callout block.",
+		};
+	}
+	return { insert: changeCalloutType(text, id) ?? wrapAsCallout(text, id) };
 }

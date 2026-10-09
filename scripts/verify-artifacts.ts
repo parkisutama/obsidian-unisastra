@@ -1,10 +1,10 @@
 import { verifyArtifacts } from "./lib/artifact-verification";
 
 try {
-  const version = verifyArtifacts();
-  console.log(`Artifacts verified for version ${version}.`);
+	const version = verifyArtifacts();
+	console.log(`Artifacts verified for version ${version}.`);
 } catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
-  console.error(message);
-  process.exit(1);
+	const message = error instanceof Error ? error.message : String(error);
+	console.error(message);
+	process.exit(1);
 }

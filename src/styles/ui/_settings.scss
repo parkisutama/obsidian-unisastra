@@ -1,134 +1,134 @@
 .unisastra-setting.setting-item.is-disabled {
-  opacity: 0.5;
+	opacity: 0.5;
 }
 
 .unisastra-settings {
-  .unisastra-settings-panel {
-    overflow: hidden;
-    border-radius: var(--radius-m);
-    background: var(--background-primary);
+	.unisastra-settings-panel {
+		overflow: hidden;
+		border-radius: var(--radius-m);
+		background: var(--background-primary);
 
-    .unisastra-settings-row {
-      padding-inline: var(--size-4-4);
+		.unisastra-settings-row {
+			padding-inline: var(--size-4-4);
 
-      &:last-child { border-bottom: 0; }
-    }
-  }
+			&:last-child { border-bottom: 0; }
+		}
+	}
 
-  .unisastra-settings-detail-header {
-    display: flex;
-    align-items: center;
-    gap: var(--size-4-2);
-    margin-bottom: var(--size-4-3);
+	.unisastra-settings-detail-header {
+		display: flex;
+		align-items: center;
+		gap: var(--size-4-2);
+		margin-bottom: var(--size-4-3);
 
-    .unisastra-settings-title {
-      flex: 1;
-      min-width: 0;
-      padding: 0;
-      margin: 0;
-      border: 0;
+		.unisastra-settings-title {
+			flex: 1;
+			min-width: 0;
+			padding: 0;
+			margin: 0;
+			border: 0;
 
-      .setting-item-name {
-        color: var(--text-normal);
-        font-size: var(--font-ui-large);
-        font-weight: var(--font-semibold);
-      }
-    }
-  }
+			.setting-item-name {
+				color: var(--text-normal);
+				font-size: var(--font-ui-large);
+				font-weight: var(--font-semibold);
+			}
+		}
+	}
 
-  .unisastra-settings-back {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    padding: var(--size-4-2);
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-    color: var(--text-normal);
+	.unisastra-settings-back {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		padding: var(--size-4-2);
+		border: 0;
+		background: transparent;
+		box-shadow: none;
+		color: var(--text-normal);
 
-    &:hover { background: var(--background-modifier-hover); }
-    &:focus-visible { outline: 2px solid var(--interactive-accent); }
-  }
+		&:hover { background: var(--background-modifier-hover); }
+		&:focus-visible { outline: 2px solid var(--interactive-accent); }
+	}
 
-  .unisastra-settings-row-info {
-    display: flex;
-    flex-direction: column;
-    gap: var(--size-4-1);
-    min-width: 0;
-  }
+	.unisastra-settings-row-info {
+		display: flex;
+		flex-direction: column;
+		gap: var(--size-4-1);
+		min-width: 0;
+	}
 
-  .unisastra-settings-row-label { font-weight: var(--font-medium); }
+	.unisastra-settings-row-label { font-weight: var(--font-medium); }
 
-  .unisastra-settings-row-description,
-  .unisastra-settings-detail-description {
-    color: var(--text-muted);
-    font-size: var(--font-ui-small);
-    font-weight: var(--font-normal);
-  }
+	.unisastra-settings-row-description,
+	.unisastra-settings-detail-description {
+		color: var(--text-muted);
+		font-size: var(--font-ui-small);
+		font-weight: var(--font-normal);
+	}
 
-  .unisastra-settings-detail-description { margin-bottom: var(--size-4-4); }
+	.unisastra-settings-detail-description { margin-bottom: var(--size-4-4); }
 
-  .unisastra-settings-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--size-4-2);
-    width: 100%;
-    height: auto;
-    padding: var(--size-4-3) 0;
-    border: 0;
-    border-bottom: 1px solid var(--background-modifier-border);
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    color: var(--text-normal);
-    text-align: left;
-    white-space: normal;
-    overflow-wrap: anywhere;
+	.unisastra-settings-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: var(--size-4-2);
+		width: 100%;
+		height: auto;
+		padding: var(--size-4-3) 0;
+		border: 0;
+		border-bottom: 1px solid var(--background-modifier-border);
+		border-radius: 0;
+		background: transparent;
+		box-shadow: none;
+		color: var(--text-normal);
+		text-align: left;
+		white-space: normal;
+		overflow-wrap: anywhere;
 
-    &:hover { background: var(--background-modifier-hover); }
+		&:hover { background: var(--background-modifier-hover); }
 
-    &:focus-visible {
-      outline: 2px solid var(--interactive-accent);
-      outline-offset: 2px;
-    }
-  }
+		&:focus-visible {
+			outline: 2px solid var(--interactive-accent);
+			outline-offset: 2px;
+		}
+	}
 
-  .unisastra-settings-chevron {
-    display: flex;
-    flex-shrink: 0;
-    color: var(--text-muted);
-  }
+	.unisastra-settings-chevron {
+		display: flex;
+		flex-shrink: 0;
+		color: var(--text-muted);
+	}
 
-  .unisastra-settings-tab-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    padding-bottom: 12px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid var(--background-modifier-border);
-  }
+	.unisastra-settings-tab-bar {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+		padding-bottom: 12px;
+		margin-bottom: 16px;
+		border-bottom: 1px solid var(--background-modifier-border);
+	}
 
-  .unisastra-settings-tab {
-    padding: 4px 12px;
-    border-radius: var(--radius-s);
-    cursor: pointer;
-    font-size: var(--font-ui-small);
-    color: var(--text-muted);
-    white-space: nowrap;
-    transition:
-      background-color 100ms ease-in-out,
-      color 100ms ease-in-out;
+	.unisastra-settings-tab {
+		padding: 4px 12px;
+		border-radius: var(--radius-s);
+		cursor: pointer;
+		font-size: var(--font-ui-small);
+		color: var(--text-muted);
+		white-space: nowrap;
+		transition:
+			background-color 100ms ease-in-out,
+			color 100ms ease-in-out;
 
-    &:hover {
-      background-color: var(--background-modifier-hover);
-      color: var(--text-normal);
-    }
+		&:hover {
+			background-color: var(--background-modifier-hover);
+			color: var(--text-normal);
+		}
 
-    &.is-active {
-      background-color: var(--interactive-accent);
-      color: var(--text-on-accent);
-    }
-  }
+		&.is-active {
+			background-color: var(--interactive-accent);
+			color: var(--text-on-accent);
+		}
+	}
 }

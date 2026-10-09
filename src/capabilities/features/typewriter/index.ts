@@ -5,12 +5,12 @@ import TypewriterOnlyUseCommands from "./typewriter-only-use-commands";
 import TypewriterScroll from "./typewriter-scroll";
 
 export default function getTypewriterFeatures(tm: UnisastraCore) {
-  return Object.fromEntries(
-    [
-      new TypewriterScroll(tm),
-      new TypewriterOffset(tm),
-      new OnlyMaintainTypewriterOffsetWhenReached(tm),
-      new TypewriterOnlyUseCommands(tm),
-    ].map((feature) => [feature.getSettingKey(), feature])
-  );
+	return Object.fromEntries(
+		[
+			new TypewriterScroll(tm),
+			new TypewriterOffset(tm),
+			new OnlyMaintainTypewriterOffsetWhenReached(tm),
+			new TypewriterOnlyUseCommands(tm),
+		].map((feature) => [feature.getSettingKey(), feature]),
+	);
 }

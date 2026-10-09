@@ -9,16 +9,16 @@ import PauseDimUnfocusedWhileScrolling from "./pause-dim-unfocused-while-scrolli
 import PauseDimUnfocusedWhileSelecting from "./pause-dim-unfocused-while-selecting";
 
 export default function getDimmingFeatures(tm: UnisastraCore) {
-  return Object.fromEntries(
-    [
-      new DimUnfocused(tm),
-      new DimUnfocusedMode(tm),
-      new DimHighlightListParent(tm),
-      new DimTableAsOne(tm),
-      new DimmedOpacity(tm),
-      new PauseDimUnfocusedWhileScrolling(tm),
-      new PauseDimUnfocusedWhileSelecting(tm),
-      new DimUnfocusedEditorsBehavior(tm),
-    ].map((feature) => [feature.getSettingKey(), feature])
-  );
+	return Object.fromEntries(
+		[
+			new DimUnfocused(tm),
+			new DimUnfocusedMode(tm),
+			new DimHighlightListParent(tm),
+			new DimTableAsOne(tm),
+			new DimmedOpacity(tm),
+			new PauseDimUnfocusedWhileScrolling(tm),
+			new PauseDimUnfocusedWhileSelecting(tm),
+			new DimUnfocusedEditorsBehavior(tm),
+		].map((feature) => [feature.getSettingKey(), feature]),
+	);
 }

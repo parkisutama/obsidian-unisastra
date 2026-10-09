@@ -1,53 +1,53 @@
 @mixin unisastra-current-line-highlight-theme-style($theme, $style) {
-  &.unisastra-highlight-current-line {
-    .unisastra-current-line {
-      @if $theme == "light" {
-        mix-blend-mode: multiply;
-      } @else if $theme == "dark" {
-        mix-blend-mode: screen;
-      }
+	&.unisastra-highlight-current-line {
+		.unisastra-current-line {
+			@if $theme == "light" {
+				mix-blend-mode: multiply;
+			} @else if $theme == "dark" {
+				mix-blend-mode: screen;
+			}
 
-      @if $style == "box" {
-        background-color: var(--current-line-highlight-color-#{$theme});
-      } @else if $style == "underline" {
-        border-bottom: var(--current-line-highlight-underline-thickness) solid var(--current-line-highlight-color-#{$theme});
-      }
-    }
-  }
+			@if $style == "box" {
+				background-color: var(--current-line-highlight-color-#{$theme});
+			} @else if $style == "underline" {
+				border-bottom: var(--current-line-highlight-underline-thickness) solid var(--current-line-highlight-color-#{$theme});
+			}
+		}
+	}
 }
 
 body.theme-light {
-  &.unisastra-current-line-highlight-box {
-    @include unisastra-current-line-highlight-theme-style("light", "box");
-  }
+	&.unisastra-current-line-highlight-box {
+		@include unisastra-current-line-highlight-theme-style("light", "box");
+	}
 
-  &.unisastra-current-line-highlight-underline {
-    @include unisastra-current-line-highlight-theme-style("light", "underline");
-  }
+	&.unisastra-current-line-highlight-underline {
+		@include unisastra-current-line-highlight-theme-style("light", "underline");
+	}
 }
 
 body.theme-dark {
-  &.unisastra-current-line-highlight-box {
-    @include unisastra-current-line-highlight-theme-style("dark", "box");
-  }
+	&.unisastra-current-line-highlight-box {
+		@include unisastra-current-line-highlight-theme-style("dark", "box");
+	}
 
-  &.unisastra-current-line-highlight-underline {
-    @include unisastra-current-line-highlight-theme-style("dark", "underline");
-  }
+	&.unisastra-current-line-highlight-underline {
+		@include unisastra-current-line-highlight-theme-style("dark", "underline");
+	}
 }
 
 body.unisastra-current-line-pause-while-scrolling {
-  .cm-editor.unisastra-scroll {
-    .unisastra-current-line {
-      opacity: 0;
-    }
-  }
+	.cm-editor.unisastra-scroll {
+		.unisastra-current-line {
+			opacity: 0;
+		}
+	}
 }
 
 body.unisastra-current-line-pause-while-selecting {
-  .cm-editor.unisastra-select {
-    .unisastra-current-line {
-      opacity: 0;
-    }
-  }
+	.cm-editor.unisastra-select {
+		.unisastra-current-line {
+			opacity: 0;
+		}
+	}
 }

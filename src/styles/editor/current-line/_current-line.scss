@@ -1,22 +1,22 @@
 .unisastra-current-line {
-  display: block;
-  position: absolute;
-  left: 0;
-  width: 100%;
-  pointer-events: none;
+	display: block;
+	position: absolute;
+	left: 0;
+	width: 100%;
+	pointer-events: none;
 }
 
 .unisastra-first-open {
-  .unisastra-current-line {
-    display: none;
-  }
+	.unisastra-current-line {
+		display: none;
+	}
 }
 
 body.unisastra-highlight-current-line-only-in-active-editor {
-  .cm-editor:not(.cm-focused) {
-    .unisastra-current-line {
-      display: none;
-    }
-  }
+	.cm-editor:not(.cm-focused) {
+		.unisastra-current-line {
+			display: none;
+		}
+	}
 }
 

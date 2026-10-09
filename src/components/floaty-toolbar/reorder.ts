@@ -28,26 +28,26 @@ export const LONG_PRESS_MS = 500;
  * either ID is missing or `fromId === toId`.
  */
 export function reorderIds<T>(ids: readonly T[], fromId: T, toId: T): T[] {
-  if (fromId === toId || !ids.includes(fromId) || !ids.includes(toId)) {
-    return [...ids];
-  }
-  const next = ids.filter((id) => id !== fromId);
-  const insertAt = next.indexOf(toId);
-  next.splice(insertAt, 0, fromId);
-  return next;
+	if (fromId === toId || !ids.includes(fromId) || !ids.includes(toId)) {
+		return [...ids];
+	}
+	const next = ids.filter((id) => id !== fromId);
+	const insertAt = next.indexOf(toId);
+	next.splice(insertAt, 0, fromId);
+	return next;
 }
 
 type ReorderPhase = "idle" | "pending" | "dragging";
 
 export interface ReorderCallbacks<T> {
-  clearTimeout: (handle: number) => void;
-  /** Called when a drag ends, whether or not it dropped on a valid target. */
-  onDragEnd: (itemId: T, dropTargetId: T | null) => void;
-  /** Called once the long-press threshold elapses and dragging begins. */
-  onDragStart: (itemId: T) => void;
-  /** Called with the recomputed order after a successful drop. */
-  onReorder: (newOrder: T[]) => void;
-  setTimeout: (fn: () => void, ms: number) => number;
+	clearTimeout: (handle: number) => void;
+	/** Called when a drag ends, whether or not it dropped on a valid target. */
+	onDragEnd: (itemId: T, dropTargetId: T | null) => void;
+	/** Called once the long-press threshold elapses and dragging begins. */
+	onDragStart: (itemId: T) => void;
+	/** Called with the recomputed order after a successful drop. */
+	onReorder: (newOrder: T[]) => void;
+	setTimeout: (fn: () => void, ms: number) => number;
 }
 
 /**
@@ -57,106 +57,104 @@ export interface ReorderCallbacks<T> {
  * element/highlight DOM work in its onDragStart/onDragEnd callbacks.
  */
 export class LongPressReorder<T> {
-  private phase: ReorderPhase = "idle";
-  private timerHandle: number | null = null;
-  private activeItemId: T | null = null;
-  private justDragged = false;
+	private phase: ReorderPhase = "idle";
+	private timerHandle: number | null = null;
+	private activeItemId: T | null = null;
+	private justDragged = false;
 
-  private readonly getOrder: () => readonly T[];
-  private readonly callbacks: ReorderCallbacks<T>;
+	private readonly getOrder: () => readonly T[];
+	private readonly callbacks: ReorderCallbacks<T>;
 
-  constructor(getOrder: () => readonly T[], callbacks: ReorderCallbacks<T>) {
-    this.getOrder = getOrder;
-    this.callbacks = callbacks;
-  }
+	constructor(getOrder: () => readonly T[], callbacks: ReorderCallbacks<T>) {
+		this.getOrder = getOrder;
+		this.callbacks = callbacks;
+	}
 
-  /** Call on mousedown/pointerdown on a reorderable item. */
-  pressStart(itemId: T): void {
-    if (this.phase !== "idle") {
-      return;
-    }
-    this.phase = "pending";
-    this.activeItemId = itemId;
-    this.timerHandle = this.callbacks.setTimeout(() => {
-      if (this.phase !== "pending") {
-        return;
-      }
-      this.phase = "dragging";
-      this.callbacks.onDragStart(itemId);
-    }, LONG_PRESS_MS);
-  }
+	/** Call on mousedown/pointerdown on a reorderable item. */
+	pressStart(itemId: T): void {
+		if (this.phase !== "idle") {
+			return;
+		}
+		this.phase = "pending";
+		this.activeItemId = itemId;
+		this.timerHandle = this.callbacks.setTimeout(() => {
+			if (this.phase !== "pending") {
+				return;
+			}
+			this.phase = "dragging";
+			this.callbacks.onDragStart(itemId);
+		}, LONG_PRESS_MS);
+	}
 
-  /**
-   * Call on mouseup/mouseleave that happens before the long-press threshold
-   * elapses. Cancels the pending timer without starting a drag or
-   * suppressing the click that follows.
-   */
-  cancelPending(): void {
-    if (this.phase !== "pending") {
-      return;
-    }
-    if (this.timerHandle !== null) {
-      this.callbacks.clearTimeout(this.timerHandle);
-    }
-    this.reset();
-  }
+	/**
+	 * Call on mouseup/mouseleave that happens before the long-press threshold
+	 * elapses. Cancels the pending timer without starting a drag or
+	 * suppressing the click that follows.
+	 */
+	cancelPending(): void {
+		if (this.phase !== "pending") {
+			return;
+		}
+		if (this.timerHandle !== null) {
+			this.callbacks.clearTimeout(this.timerHandle);
+		}
+		this.reset();
+	}
 
-  /**
-   * Call on mouseup while dragging. Returns true when a drag actually
-   * happened this gesture, so the caller knows to suppress the trailing
-   * click regardless of whether `dropTargetId` produced a reorder.
-   */
-  drop(dropTargetId: T | null): boolean {
-    if (this.phase !== "dragging" || this.activeItemId === null) {
-      return false;
-    }
-    const itemId = this.activeItemId;
-    this.callbacks.onDragEnd(itemId, dropTargetId);
-    if (dropTargetId !== null && dropTargetId !== itemId) {
-      this.callbacks.onReorder(
-        reorderIds(this.getOrder(), itemId, dropTargetId)
-      );
-    }
-    this.justDragged = true;
-    this.reset();
-    return true;
-  }
+	/**
+	 * Call on mouseup while dragging. Returns true when a drag actually
+	 * happened this gesture, so the caller knows to suppress the trailing
+	 * click regardless of whether `dropTargetId` produced a reorder.
+	 */
+	drop(dropTargetId: T | null): boolean {
+		if (this.phase !== "dragging" || this.activeItemId === null) {
+			return false;
+		}
+		const itemId = this.activeItemId;
+		this.callbacks.onDragEnd(itemId, dropTargetId);
+		if (dropTargetId !== null && dropTargetId !== itemId) {
+			this.callbacks.onReorder(reorderIds(this.getOrder(), itemId, dropTargetId));
+		}
+		this.justDragged = true;
+		this.reset();
+		return true;
+	}
 
-  /**
-   * Cancels a pending or in-flight gesture without reordering — Escape, or
-   * surface destroy (unload/window close). Idempotent when already idle.
-   */
-  cancel(): void {
-    if (this.phase === "dragging" && this.activeItemId !== null) {
-      this.callbacks.onDragEnd(this.activeItemId, null);
-    } else if (this.phase === "pending" && this.timerHandle !== null) {
-      this.callbacks.clearTimeout(this.timerHandle);
-    }
-    this.reset();
-  }
+	/**
+	 * Cancels a pending or in-flight gesture without reordering — Escape, or
+	 * surface destroy (unload/window close). Idempotent when already idle.
+	 */
+	cancel(): void {
+		if (this.phase === "dragging" && this.activeItemId !== null) {
+			this.callbacks.onDragEnd(this.activeItemId, null);
+		} else if (this.phase === "pending" && this.timerHandle !== null) {
+			this.callbacks.clearTimeout(this.timerHandle);
+		}
+		this.reset();
+	}
 
-  isDragging(): boolean {
-    return this.phase === "dragging";
-  }
+	isDragging(): boolean {
+		return this.phase === "dragging";
+	}
 
-  /**
-   * Call from the item's click handler, before executing its action. Returns
-   * true (and clears the flag) exactly once per gesture that reached the
-   * dragging phase — the caller should skip executing the action in that
-   * case. A quick click that never reached the dragging phase always
-   * returns false, so normal formatting is unaffected.
-   */
-  consumeSuppressClick(): boolean {
-    if (!this.justDragged) {
-      return false;
-    }
-    this.justDragged = false;
-    return true;
-  }
+	/**
+	 * Call from the item's click handler, before executing its action. Returns
+	 * true (and clears the flag) exactly once per gesture that reached the
+	 * dragging phase — the caller should skip executing the action in that
+	 * case. A quick click that never reached the dragging phase always
+	 * returns false, so normal formatting is unaffected.
+	 */
+	consumeSuppressClick(): boolean {
+		if (!this.justDragged) {
+			return false;
+		}
+		this.justDragged = false;
+		return true;
+	}
 
-  private reset(): void {
-    this.phase = "idle";
-    this.timerHandle = null;
-    this.activeItemId = null;
-  }
+	private reset(): void {
+		this.phase = "idle";
+		this.timerHandle = null;
+		this.activeItemId = null;
+	}
 }

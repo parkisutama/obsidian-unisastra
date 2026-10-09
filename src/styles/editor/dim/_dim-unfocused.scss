@@ -2,140 +2,140 @@
 @use "dimmed";
 
 @mixin apply-dim-callout {
-  // Dim a rendered subtree once; never dim an ancestor of active source lines.
-  .cm-embed-block.cm-callout:not(.cm-active, :has(.cm-active), .cm-embed-block.cm-callout:not(.cm-active, :has(.cm-active)) .cm-embed-block.cm-callout) {
-    @include dimmed.dimmed(true);
-  }
+	// Dim a rendered subtree once; never dim an ancestor of active source lines.
+	.cm-embed-block.cm-callout:not(.cm-active, :has(.cm-active), .cm-embed-block.cm-callout:not(.cm-active, :has(.cm-active)) .cm-embed-block.cm-callout) {
+		@include dimmed.dimmed(true);
+	}
 }
 
 @mixin apply-dim-sentence($line-condition) {
-  @include dimmed.dimmed(true);
+	@include dimmed.dimmed(true);
 
-  &.cm-active {
-    @include dimmed.dimmed(false);
+	&.cm-active {
+		@include dimmed.dimmed(false);
 
-    &:not(.unisastra-active-sentence-line) {
-      @include dimmed.dimmed(true);
-    }
+		&:not(.unisastra-active-sentence-line) {
+			@include dimmed.dimmed(true);
+		}
 
-    .active-paragraph {
-      @include dimmed.dimmed(true);
-    }
+		.active-paragraph {
+			@include dimmed.dimmed(true);
+		}
 
-    .active-sentence {
-      @include dimmed.dimmed(false);
-    }
-  }
+		.active-sentence {
+			@include dimmed.dimmed(false);
+		}
+	}
 }
 
 @mixin apply-dim-table($dim-table-as-one) {
-  @if $dim-table-as-one {
-    .table-editor {
-      &:not(:has(.cm-active)) .table-cell-wrapper {
-        @include dimmed.dimmed(true);
-      }
+	@if $dim-table-as-one {
+		.table-editor {
+			&:not(:has(.cm-active)) .table-cell-wrapper {
+				@include dimmed.dimmed(true);
+			}
 
-      .cm-active {
-        @include dimmed.dimmed(false);
-      }
-    }
-  } @else {
-    .table-cell-wrapper {
-      &:not(:has(.cm-active)) {
-        @include dimmed.dimmed(true);
-      }
+			.cm-active {
+				@include dimmed.dimmed(false);
+			}
+		}
+	} @else {
+		.table-cell-wrapper {
+			&:not(:has(.cm-active)) {
+				@include dimmed.dimmed(true);
+			}
 
-      .cm-active {
-        @include dimmed.dimmed(false);
-      }
-    }
-  }
+			.cm-active {
+				@include dimmed.dimmed(false);
+			}
+		}
+	}
 }
 
 @mixin apply-dim($focus-condition, $mode, $highlight-list-parent, $line-condition, $dim-table-as-one) {
-  &:not(.unisastra-dim-unfocused-pause-while-scrolling, .unisastra-dim-unfocused-pause-while-selecting) .cm-editor#{$focus-condition}:not(.unisastra-first-open),
-  &.unisastra-dim-unfocused-pause-while-scrolling:not(.unisastra-dim-unfocused-pause-while-selecting) .cm-editor#{$focus-condition}:not(.unisastra-scroll, .unisastra-first-open),
-  &.unisastra-dim-unfocused-pause-while-selecting:not(.unisastra-dim-unfocused-pause-while-scrolling) .cm-editor#{$focus-condition}:not(.unisastra-select, .unisastra-first-open),
-  &.unisastra-dim-unfocused-pause-while-scrolling.unisastra-dim-unfocused-pause-while-selecting .cm-editor#{$focus-condition}:not(.unisastra-scroll, .unisastra-select, .unisastra-first-open) {
-    @if $highlight-list-parent {
-      @include dim-highlight-list-parent.dim-highlight-list-parent;
-    }
+	&:not(.unisastra-dim-unfocused-pause-while-scrolling, .unisastra-dim-unfocused-pause-while-selecting) .cm-editor#{$focus-condition}:not(.unisastra-first-open),
+	&.unisastra-dim-unfocused-pause-while-scrolling:not(.unisastra-dim-unfocused-pause-while-selecting) .cm-editor#{$focus-condition}:not(.unisastra-scroll, .unisastra-first-open),
+	&.unisastra-dim-unfocused-pause-while-selecting:not(.unisastra-dim-unfocused-pause-while-scrolling) .cm-editor#{$focus-condition}:not(.unisastra-select, .unisastra-first-open),
+	&.unisastra-dim-unfocused-pause-while-scrolling.unisastra-dim-unfocused-pause-while-selecting .cm-editor#{$focus-condition}:not(.unisastra-scroll, .unisastra-select, .unisastra-first-open) {
+		@if $highlight-list-parent {
+			@include dim-highlight-list-parent.dim-highlight-list-parent;
+		}
 
-    @include apply-dim-table($dim-table-as-one);
-    @include apply-dim-callout;
+		@include apply-dim-table($dim-table-as-one);
+		@include apply-dim-callout;
 
-    @if $mode == 'paragraphs' {
-      .cm-line:not(.cm-active)#{$line-condition} {
-        @include dimmed.dimmed(true);
-      }
-    } @else if $mode == 'sentences' {
-      .cm-line#{$line-condition} {
-        @include apply-dim-sentence($line-condition);
-      }
-    }
-  }
+		@if $mode == 'paragraphs' {
+			.cm-line:not(.cm-active)#{$line-condition} {
+				@include dimmed.dimmed(true);
+			}
+		} @else if $mode == 'sentences' {
+			.cm-line#{$line-condition} {
+				@include apply-dim-sentence($line-condition);
+			}
+		}
+	}
 }
 
 @mixin apply-dim-unfocused($mode, $behavior, $highlight-list-parent, $dim-table-as-one) {
-  $line-condition: if(sass($highlight-list-parent): ':not(.HyperMD-list-line)'; else: '');
+	$line-condition: if(sass($highlight-list-parent): ':not(.HyperMD-list-line)'; else: '');
 
-  &[data-unisastra-dim-unfocused-mode="#{$mode}"] {
-    &[data-unisastra-dim-unfocused-editors-behavior="#{$behavior}"] {
-      @if $behavior == "dim" {
-        @include apply-dim('', $mode, $highlight-list-parent, $line-condition, $dim-table-as-one);
-      } @else {
-        // for dim-none and dim-all
-        @include apply-dim('.cm-focused', $mode, $highlight-list-parent, $line-condition, $dim-table-as-one);
-      }
+	&[data-unisastra-dim-unfocused-mode="#{$mode}"] {
+		&[data-unisastra-dim-unfocused-editors-behavior="#{$behavior}"] {
+			@if $behavior == "dim" {
+				@include apply-dim('', $mode, $highlight-list-parent, $line-condition, $dim-table-as-one);
+			} @else {
+				// for dim-none and dim-all
+				@include apply-dim('.cm-focused', $mode, $highlight-list-parent, $line-condition, $dim-table-as-one);
+			}
 
-      @if $behavior == 'dim-all' {
-        .cm-editor:not(.cm-focused) {
-          @include apply-dim-callout;
+			@if $behavior == 'dim-all' {
+				.cm-editor:not(.cm-focused) {
+					@include apply-dim-callout;
 
-          @if $mode == 'paragraphs' {
-            .CodeMirror-lines:not(.selecting) .CodeMirror-code, .cm-line#{$line-condition} {
-              @include dimmed.dimmed(true);
-            }
-          } @else if $mode == 'sentences' {
-            .cm-line#{$line-condition} {
-              @include apply-dim-sentence($line-condition);
-            }
-          }
-        }
-      }
-    }
-  }
+					@if $mode == 'paragraphs' {
+						.CodeMirror-lines:not(.selecting) .CodeMirror-code, .cm-line#{$line-condition} {
+							@include dimmed.dimmed(true);
+						}
+					} @else if $mode == 'sentences' {
+						.cm-line#{$line-condition} {
+							@include apply-dim-sentence($line-condition);
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 $modes: 'paragraphs', 'sentences';
 $bahaviors: 'dim', 'dim-none', 'dim-all';
 
 @mixin dim-unfocused($highlight-list-parent, $dim-table-as-one) {
-  @each $mode in $modes {
-    @each $behavior in $bahaviors {
-      @include apply-dim-unfocused($mode, $behavior, $highlight-list-parent, $dim-table-as-one);
-    }
-  }
+	@each $mode in $modes {
+		@each $behavior in $bahaviors {
+			@include apply-dim-unfocused($mode, $behavior, $highlight-list-parent, $dim-table-as-one);
+		}
+	}
 }
 
 body.unisastra-dim-unfocused {
-  &:not(.unisastra-dim-highlight-list-parent) {
-    &:not(.unisastra-dim-table-as-one) {
-      @include dim-unfocused(false, false);
-    }
+	&:not(.unisastra-dim-highlight-list-parent) {
+		&:not(.unisastra-dim-table-as-one) {
+			@include dim-unfocused(false, false);
+		}
 
-    &.unisastra-dim-table-as-one {
-      @include dim-unfocused(false, true);
-    }
-  }
+		&.unisastra-dim-table-as-one {
+			@include dim-unfocused(false, true);
+		}
+	}
 
-  &.unisastra-dim-highlight-list-parent {
-    &:not(.unisastra-dim-table-as-one) {
-      @include dim-unfocused(true, false);
-    }
+	&.unisastra-dim-highlight-list-parent {
+		&:not(.unisastra-dim-table-as-one) {
+			@include dim-unfocused(true, false);
+		}
 
-    &.unisastra-dim-table-as-one {
-      @include dim-unfocused(true, true);
-    }
-  }
+		&.unisastra-dim-table-as-one {
+			@include dim-unfocused(true, true);
+		}
+	}
 }

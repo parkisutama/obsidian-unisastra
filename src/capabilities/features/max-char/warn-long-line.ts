@@ -7,10 +7,10 @@ import { FeatureToggle } from "@/capabilities/base/feature-toggle";
 // and is a possible future direction — not implemented, pending research
 // into a sensible character/word threshold per sentence.
 export default class WarnLongLine extends FeatureToggle {
-  readonly settingKey = "maxChars.isWarnLongLineEnabled" as const;
-  protected override toggleClass = "unisastra-warn-long-line";
-  override isToggleClassPersistent = true;
-  protected settingTitle = "Warn when line exceeds character limit";
-  protected settingDesc =
-    "Highlights document lines (not sentences) that exceed the character limit below — useful for keeping paragraphs skimmable and diffs clean.";
+	readonly settingKey = "maxChars.isWarnLongLineEnabled" as const;
+	protected override toggleClass = "unisastra-warn-long-line";
+	override isToggleClassPersistent = true;
+	protected settingTitle = "Warn when line exceeds character limit";
+	protected settingDesc =
+		"Highlights document lines (not sentences) that exceed the character limit below — useful for keeping paragraphs skimmable and diffs clean.";
 }

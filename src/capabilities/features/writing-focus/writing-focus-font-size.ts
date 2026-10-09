@@ -2,46 +2,44 @@ import type { SettingGroup } from "obsidian";
 import { Feature } from "@/capabilities/base/feature";
 
 export default class WritingFocusFontSize extends Feature {
-  readonly settingKey = "writingFocus.writingFocusFontSize" as const;
+	readonly settingKey = "writingFocus.writingFocusFontSize" as const;
 
-  registerSetting(settingGroup: SettingGroup): void {
-    settingGroup.addSetting((setting) =>
-      setting
-        .setName("Writing focus font size")
-        .setDesc(
-          "Custom font size in points for writing focus mode (0 = use default font size)"
-        )
-        .setClass("unisastra-setting")
-        .addSlider((slider) =>
-          slider
-            .setLimits(0, 36, 1)
-            .setDynamicTooltip()
-            .setValue(this.getSettingValue() as number)
-            .onChange((newValue) => {
-              this.changeFontSize(newValue);
-            })
-        )
-    );
-  }
+	registerSetting(settingGroup: SettingGroup): void {
+		settingGroup.addSetting((setting) =>
+			setting
+				.setName("Writing focus font size")
+				.setDesc("Custom font size in points for writing focus mode (0 = use default font size)")
+				.setClass("unisastra-setting")
+				.addSlider((slider) =>
+					slider
+						.setLimits(0, 36, 1)
+						.setDynamicTooltip()
+						.setValue(this.getSettingValue() as number)
+						.onChange((newValue) => {
+							this.changeFontSize(newValue);
+						}),
+				),
+		);
+	}
 
-  override load() {
-    const fontSize = this.getSettingValue() as number;
-    if (fontSize > 0) {
-      this.tm.setCSSVariable("--writing-focus-font-size", `${fontSize}pt`);
-    } else {
-      this.tm.setCSSVariable("--writing-focus-font-size", "inherit");
-    }
-  }
+	override load() {
+		const fontSize = this.getSettingValue() as number;
+		if (fontSize > 0) {
+			this.tm.setCSSVariable("--writing-focus-font-size", `${fontSize}pt`);
+		} else {
+			this.tm.setCSSVariable("--writing-focus-font-size", "inherit");
+		}
+	}
 
-  private changeFontSize(newValue: number) {
-    this.setSettingValue(newValue);
-    if (newValue > 0) {
-      this.tm.setCSSVariable("--writing-focus-font-size", `${newValue}pt`);
-    } else {
-      this.tm.setCSSVariable("--writing-focus-font-size", "inherit");
-    }
-    this.tm.saveSettings().catch((error) => {
-      console.error("Failed to save settings:", error);
-    });
-  }
+	private changeFontSize(newValue: number) {
+		this.setSettingValue(newValue);
+		if (newValue > 0) {
+			this.tm.setCSSVariable("--writing-focus-font-size", `${newValue}pt`);
+		} else {
+			this.tm.setCSSVariable("--writing-focus-font-size", "inherit");
+		}
+		this.tm.saveSettings().catch((error) => {
+			console.error("Failed to save settings:", error);
+		});
+	}
 }
