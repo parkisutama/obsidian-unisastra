@@ -1,5 +1,9 @@
 # Create a GitHub release for BRAT and Obsidian
 
+> **Release steps changed on 2026-10-09.** Releases now come from a Release PR; the
+> `pnpm run release`, `pnpm run ci`, and `validate:release-tag` commands no longer exist.
+> Where this page mentions them, follow [CONTRIBUTING.md](../../../CONTRIBUTING.md) instead.
+
 Dokumen ini menjelaskan cara merilis plugin sehingga aset GitHub release dapat dipakai oleh BRAT, dan tetap mengikuti format rilis yang aman untuk Obsidian.
 
 ## Aturan versi

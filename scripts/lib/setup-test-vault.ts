@@ -6,9 +6,6 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { getPackageMetadata } from "./get-package-metadata.ts";
-import { updateManifests } from "./update-manifests.ts";
-
 export function setupTestVault(
 	distDir: string,
 	pluginName: string,
@@ -35,6 +32,8 @@ export function setupTestVault(
 		}
 	}
 
+	// dist/ already holds the manifest the build copied, so the test vault gets the same files a
+	// release would.
 	console.log("Copying plugin dist files");
 	const distFiles = readdirSync(distDir);
 	for (const file of distFiles) {
@@ -42,10 +41,6 @@ export function setupTestVault(
 			recursive: true,
 		});
 	}
-
-	console.log("Copying updated manifest");
-	const { targetVersion, minAppVersion } = getPackageMetadata();
-	updateManifests(targetVersion, minAppVersion, pluginPath);
 
 	console.log("Test vault successfully prepared");
 }

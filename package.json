@@ -6,7 +6,6 @@
 	"engines": {
 		"node": ">=24"
 	},
-	"obsidianMinAppVersion": "1.14.4",
 	"author": "Parkis Utama",
 	"repository": {
 		"type": "git",
@@ -70,10 +69,7 @@
 		"docs:build": "vitepress build docs",
 		"docs:preview": "vitepress preview docs",
 		"check": "pnpm run typecheck && pnpm run lint && pnpm run lint:obsidian && pnpm run lint:styles && pnpm run lint:md && pnpm run test",
-		"verify": "pnpm run typecheck && pnpm run lint && pnpm run lint:obsidian && pnpm run lint:styles && pnpm run lint:md && pnpm run test:coverage && pnpm run build && pnpm run verify:artifacts && pnpm run docs:build",
-		"validate:release-tag": "node ./scripts/validate-release-tag.mjs",
-		"release": "node scripts/release.ts",
-		"ci": "pnpm run build && pnpm run verify:artifacts && node scripts/generate-ci-artefacts.ts"
+		"verify": "pnpm run typecheck && pnpm run lint && pnpm run lint:obsidian && pnpm run lint:styles && pnpm run lint:md && pnpm run test:coverage && pnpm run build && pnpm run verify:artifacts && pnpm run docs:build && pnpm run conformance"
 	},
 	"private": true
 }

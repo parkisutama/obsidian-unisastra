@@ -1,5 +1,9 @@
 # Ship a change from branch to GitHub release
 
+> **Release steps changed on 2026-10-09.** Releases now come from a Release PR; the
+> `pnpm run release`, `pnpm run ci`, and `validate:release-tag` commands no longer exist.
+> Where this page mentions them, follow [CONTRIBUTING.md](../../../CONTRIBUTING.md) instead.
+
 Tutorial ini menunjukkan satu alur lengkap: mulai dari branch kerja, implementasi, QA, sampai plugin dipublikasikan sebagai GitHub release yang bisa dipakai lewat BRAT.
 
 ## Hasil akhir

@@ -1,5 +1,9 @@
 # Commit, push, and release a change
 
+> **Release steps changed on 2026-10-09.** Releases now come from a Release PR; the
+> `pnpm run release`, `pnpm run ci`, and `validate:release-tag` commands no longer exist.
+> Where this page mentions them, follow [CONTRIBUTING.md](../../../CONTRIBUTING.md) instead.
+
 Dokumen ini adalah prosedur praktis setelah perubahan kode atau dokumentasi sudah siap direview.
 
 ## 1. Pastikan branch kerja benar

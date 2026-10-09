@@ -12,7 +12,13 @@ exclude = [
   "build",
   ".claude",
   "src/texts",
-  "LICENSE.md"
+  "LICENSE.md",
+  # Written by the release tooling in its own format.
+  "CHANGELOG.md"
 ]
 
 respect-gitignore = true
+
+# Documents carry `title` in frontmatter and repeat it as the single H1.
+[MD025]
+front-matter-title = ""

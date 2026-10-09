@@ -1,5 +1,9 @@
 # Run QA before merge or release
 
+> **Release steps changed on 2026-10-09.** Releases now come from a Release PR; the
+> `pnpm run release`, `pnpm run ci`, and `validate:release-tag` commands no longer exist.
+> Where this page mentions them, follow [CONTRIBUTING.md](../../../CONTRIBUTING.md) instead.
+
 Dokumen ini adalah prosedur QA praktis sebelum perubahan di-merge atau dirilis.
 
 ## QA otomatis

@@ -1,5 +1,9 @@
 # Development
 
+> **Release steps changed on 2026-10-09.** Releases now come from a Release PR; the
+> `pnpm run release`, `pnpm run ci`, and `validate:release-tag` commands no longer exist.
+> Where this page mentions them, follow [CONTRIBUTING.md](CONTRIBUTING.md) instead.
+
 **You are welcome to open issues and contribute to this project!**
 
 ## Prerequisites
