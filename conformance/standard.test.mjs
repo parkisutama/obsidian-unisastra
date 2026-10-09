@@ -12,6 +12,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
+import { pathToFileURL } from "node:url";
 
 const root = process.cwd();
 const read = (file) => readFileSync(path.join(root, file), "utf8");
@@ -71,6 +72,14 @@ const REQUIRED_FILES = [
 	".github/workflows/ci.yml",
 	".github/workflows/release.yml",
 	"docs/releases/TEMPLATE.md",
+	"LICENSES/GPL-3.0-only.txt",
+	"REUSE.toml",
+	"commitlint.config.mjs",
+	".husky/pre-commit",
+	".husky/commit-msg",
+	"release-please-config.json",
+	".release-please-manifest.json",
+	"scripts/versions-map.mjs",
 ];
 // Exact pins: these decide lint output, format output, or the API the code compiles against.
 const EXACT_VERSIONS = {
@@ -184,10 +193,32 @@ test("no forbidden dependency is declared", () => {
 	assert.deepEqual(present, []);
 });
 
-test("plugin versions agree across package.json, manifest.json, and versions.json", () => {
+test("plugin versions agree across package.json, manifest.json, and versions.json", async () => {
 	assert.equal(manifest.version, pkg.version);
 	assert.equal(manifest.minAppVersion, devDependencies.obsidian);
-	assert.equal(versions[manifest.version], manifest.minAppVersion);
+	// versions.json needs an entry only for a version that changed the minimum app version; a
+	// version without one inherits the nearest earlier entry (scripts/versions-map.mjs).
+	const { versionsMapProblem } = await import(
+		pathToFileURL(path.join(root, "scripts/versions-map.mjs")).href
+	);
+	assert.equal(versionsMapProblem(versions, manifest), null);
+});
+
+test("the release configuration tags the plugin version without a prefix", () => {
+	const config = readJson("release-please-config.json");
+	const releaseManifest = readJson(".release-please-manifest.json");
+	assert.equal(config["include-v-in-tag"], false);
+	assert.equal(config.packages["."]["package-name"], pkg.name);
+	assert.deepEqual(config.packages["."]["extra-files"], [
+		{ type: "json", path: "manifest.json", jsonpath: "$.version" },
+	]);
+	assert.ok("." in releaseManifest, ".release-please-manifest.json lacks the root package");
+});
+
+test("commit hooks run the check gate and commitlint", () => {
+	assert.equal(pkg.scripts?.prepare, "husky");
+	assert.match(read(".husky/pre-commit"), /pnpm run check\b/);
+	assert.match(read(".husky/commit-msg"), /commitlint --edit/);
 });
 
 test("required repository files exist", () => {

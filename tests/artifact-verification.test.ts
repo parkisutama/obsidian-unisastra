@@ -80,6 +80,7 @@ function createArtifactFixture({
 		id: manifestId,
 		name: manifestName,
 		version: distManifestVersion,
+		minAppVersion: "1.11.0",
 	});
 	writeJson(join(dir, "package.json"), {
 		name: packageName,
@@ -127,10 +128,24 @@ describe("artifact verification", () => {
 		}
 	});
 
-	it("rejects a missing versions.json entry", () => {
+	it("rejects a versions.json with no applicable entry", () => {
 		process.chdir(createArtifactFixture({ versions: {} }));
 
-		expect(() => verifyArtifacts()).toThrow("versions.json is missing key 1.2.3");
+		expect(() => verifyArtifacts()).toThrow("versions.json has no entry at or before 1.2.3");
+	});
+
+	it("accepts a release that inherits the minimum app version of an earlier entry", () => {
+		process.chdir(createArtifactFixture({ versions: { "0.0.1": "1.11.0" } }));
+
+		expect(verifyArtifacts()).toBe("1.2.3");
+	});
+
+	it("rejects a raised minimum app version that has no versions.json entry", () => {
+		process.chdir(createArtifactFixture({ versions: { "0.0.1": "1.10.0" } }));
+
+		expect(() => verifyArtifacts()).toThrow(
+			"versions.json assigns minimum app version 1.10.0 to 1.2.3",
+		);
 	});
 
 	it("rejects a missing file directly", () => {

@@ -1,6 +1,6 @@
 {
 	"name": "unisastra",
-	"version": "1.2.0",
+	"version": "0.0.1",
 	"type": "module",
 	"packageManager": "pnpm@12.10.1",
 	"engines": {

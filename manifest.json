@@ -1,7 +1,7 @@
 {
 	"id": "unisastra",
 	"name": "Unisastra",
-	"version": "1.2.0",
+	"version": "0.0.1",
 	"minAppVersion": "1.14.4",
 	"description": "A specialized environment for high-precision drafting. Combines typewriter scrolling, whitespace visualization, and outliner zoom focus.",
 	"author": "Parkis Utama",
