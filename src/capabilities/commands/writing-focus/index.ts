@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Derived from Typewriter Mode (https://github.com/davisriedel/obsidian-typewriter-mode)
+// Copyright (c) 2023-2026 Davis Riedel
+// Modifications Copyright (C) 2025-2026 Parkis Utama
+
 // Command wrapper for WritingFocus (./writing-focus.ts), which is adapted
 // from Obsidian Focus Mode (MPL-2.0) — see that file for the full notice.
 

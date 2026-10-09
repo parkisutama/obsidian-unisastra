@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { setIcon } from "obsidian";
 import type { ToolbarAction } from "@/capabilities/features/toolbar/actions";
 import { detectHeadingLevel } from "@/capabilities/features/toolbar/actions";

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { type Component, Notice, Setting, SettingGroup } from "obsidian";
 import {
 	BUILTIN_LABEL_BY_ID,

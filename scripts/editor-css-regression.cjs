@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 "use strict";
 // Standalone browser regression using the existing Sass and Electron tooling.
 const fs = require("node:fs");

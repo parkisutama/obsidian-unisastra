@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import type { HeadingCache } from "obsidian";
 
 const URL_ENCODED_BYTE_PATTERN = /%[0-9A-Fa-f]{2}/u;

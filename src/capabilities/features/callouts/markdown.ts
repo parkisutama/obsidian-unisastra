@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 const CALLOUT_HEADER_PATTERN =
 	/^(?<quote>>+)[ \t]?\[!(?<id>[a-zA-Z][a-zA-Z0-9_-]*)\](?<fold>[+-]?)(?<title>.*)$/;
 

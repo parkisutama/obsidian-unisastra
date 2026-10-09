@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -5,36 +8,22 @@ import { afterEach, describe, expect, it } from "vitest";
 import { assertNonEmptyFile, verifyArtifacts } from "../scripts/lib/artifact-verification";
 import {
 	floatyToolbarLicenseBanner,
-	mononoteLicenseBanner,
-	writingFocusLicenseBanner,
+	NOTICES_SOURCE_DIR,
+	THIRD_PARTY_NOTICES,
 } from "../scripts/lib/license-banner";
 
 const originalCwd = process.cwd();
 
-const FLOATY_TOOLBAR_NOTICE = "MIT License\n\nCopyright (c) 2026 0png\n";
-const WRITING_FOCUS_NOTICE = "Mozilla Public License Version 2.0\n\n...\n";
-const MONONOTE_NOTICE = "MIT License\n\nCopyright (c) 2023-present Carlo Zottmann\n";
+const FLOATY_TOOLBAR_NOTICE = "Notice for floaty-toolbar-MIT.txt\n\nCopyright (c) its authors\n";
 
-const NOTICE_FIXTURES = [
-	{
-		banner: floatyToolbarLicenseBanner,
-		distName: "floaty-toolbar-MIT.txt",
-		label: "Floaty Toolbar MIT",
-		notice: FLOATY_TOOLBAR_NOTICE,
-	},
-	{
-		banner: writingFocusLicenseBanner,
-		distName: "writing-focus-MPL2.0.txt",
-		label: "Obsidian Focus Mode MPL-2.0",
-		notice: WRITING_FOCUS_NOTICE,
-	},
-	{
-		banner: mononoteLicenseBanner,
-		distName: "mononote-MIT.txt",
-		label: "MonoNote MIT",
-		notice: MONONOTE_NOTICE,
-	},
-] as const;
+// One fixture per notice the build ships, so a notice added to the shared list is covered here
+// without editing this file.
+const NOTICE_FIXTURES = THIRD_PARTY_NOTICES.map(({ banner, fileName, label }) => ({
+	banner,
+	distName: fileName,
+	label,
+	notice: `Notice for ${fileName}\n\nCopyright (c) its authors\n`,
+}));
 
 function writeJson(path: string, value: unknown): void {
 	writeFileSync(path, `${JSON.stringify(value, null, 2)}\n`);
@@ -65,13 +54,13 @@ function createArtifactFixture({
 } = {}): string {
 	const dir = mkdtempSync(join(tmpdir(), "unisastra-artifacts-"));
 	mkdirSync(join(dir, "dist"));
-	mkdirSync(join(dir, "licenses"));
+	mkdirSync(join(dir, NOTICES_SOURCE_DIR));
 	mkdirSync(join(dir, "dist", "licenses"));
 
 	let bannerText = "";
 	for (const { banner, distName, notice } of NOTICE_FIXTURES) {
 		const sourceNotice = noticeOverrides[distName] ?? notice;
-		writeFileSync(join(dir, "licenses", distName), sourceNotice);
+		writeFileSync(join(dir, NOTICES_SOURCE_DIR, distName), sourceNotice);
 
 		if (!omitBannerFor.includes(distName)) {
 			bannerText += `${banner(sourceNotice)}\n`;
@@ -187,7 +176,12 @@ describe("artifact verification", () => {
 		// dist/main.js still carries the OLD banner (as if the source notice
 		// changed after the last build, without rebuilding).
 		process.chdir(dir);
-		const stale = `${floatyToolbarLicenseBanner(FLOATY_TOOLBAR_NOTICE)}\nconsole.log('built');\n`;
+		const otherBanners = NOTICE_FIXTURES.filter(
+			({ distName }) => distName !== "floaty-toolbar-MIT.txt",
+		)
+			.map(({ banner, notice }) => banner(notice))
+			.join("\n");
+		const stale = `${otherBanners}\n${floatyToolbarLicenseBanner(FLOATY_TOOLBAR_NOTICE)}\nconsole.log('built');\n`;
 		writeFileSync("dist/main.js", stale);
 
 		expect(() => verifyArtifacts()).toThrow(
@@ -211,7 +205,29 @@ describe("artifact verification", () => {
 		);
 
 		expect(() => verifyArtifacts()).toThrow(
-			"dist/licenses/floaty-toolbar-MIT.txt does not match licenses/floaty-toolbar-MIT.txt",
+			"dist/licenses/floaty-toolbar-MIT.txt does not match third-party-notices/floaty-toolbar-MIT.txt",
 		);
 	});
+});
+
+describe("third-party notice list", () => {
+	it("covers every upstream whose code the plugin adapts", () => {
+		expect(THIRD_PARTY_NOTICES.map((notice) => notice.fileName).sort()).toEqual([
+			"floaty-toolbar-MIT.txt",
+			"focus-active-sentence-MIT.txt",
+			"mononote-MIT.txt",
+			"remember-cursor-position-MIT.txt",
+			"typewriter-mode-MIT.txt",
+			"writing-focus-MPL2.0.txt",
+		]);
+	});
+
+	it.each(THIRD_PARTY_NOTICES.map((notice) => notice.fileName))(
+		"rejects a build whose main.js lacks the %s banner",
+		(fileName) => {
+			process.chdir(createArtifactFixture({ omitBannerFor: [fileName] }));
+
+			expect(() => verifyArtifacts()).toThrow("notice banner");
+		},
+	);
 });

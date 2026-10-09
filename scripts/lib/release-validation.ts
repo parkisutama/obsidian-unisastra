@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { readFileSync } from "node:fs";
 
 const OBSIDIAN_RELEASE_VERSION_REGEX = /^\d+\.\d+\.\d+$/;

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 const VALID_ID = /^[\w-]+$/;
 /** Retain the legacy per-file boolean map while rejecting malformed persisted data. */
 export function normalizeFoldState(value: unknown): Record<string, Record<string, boolean>> {

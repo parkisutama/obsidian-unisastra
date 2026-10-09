@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Derived from Typewriter Mode (https://github.com/davisriedel/obsidian-typewriter-mode)
+// Copyright (c) 2023-2026 Davis Riedel
+// Modifications Copyright (C) 2025-2026 Parkis Utama
+
 // Typewriter scrolling concept inspired by deathau's
 // cm-typewriter-scroll-obsidian
 // (https://github.com/deathau/cm-typewriter-scroll-obsidian).

@@ -1,7 +1,11 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Copyright (C) 2025-2026 Parkis Utama
+// Adapted portions keep the upstream copyright stated below.
+
 // Adapted for Unisastra from Floaty Toolbar by 0png (MIT).
 // https://github.com/0png/Floaty-Toolbar, src/utils.ts
 // Revision b2113d06e1870851963053cd0bab0a0a971bb920.
-// Copyright (c) 2026 0png. Full notice: licenses/floaty-toolbar-MIT.txt.
+// Copyright (c) 2026 0png. Full notice: third-party-notices/floaty-toolbar-MIT.txt.
 // Italic/strikethrough/code/highlight/heading below follow the same
 // wrap/unwrap pattern as boldEdit, not lifted from a specific upstream line.
 export type HeadingLevel = 0 | 1 | 2 | 3 | 4;

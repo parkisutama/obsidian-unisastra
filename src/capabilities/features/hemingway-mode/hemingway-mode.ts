@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Derived from Typewriter Mode (https://github.com/davisriedel/obsidian-typewriter-mode)
+// Copyright (c) 2023-2026 Davis Riedel
+// Modifications Copyright (C) 2025-2026 Parkis Utama
+
 // Forward-only writing concept inspired by jobedom's obsidian-hemingway-mode
 // (https://github.com/jobedom/obsidian-hemingway-mode). No code ported;
 // upstream uses a CodeMirror `StateField`/`ViewPlugin` to toggle a CSS

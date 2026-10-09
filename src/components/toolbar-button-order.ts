@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { Setting } from "obsidian";
 import { TOOLBAR_ITEM_LABELS, type ToolbarItemId } from "@/capabilities/features/toolbar/settings";
 import type UnisastraCore from "@/lib";

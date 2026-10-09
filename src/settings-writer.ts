@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 /** Serialize snapshots shared by fold persistence and ordinary settings saves. */
 export class SettingsWriter<T> {
 	private tail: Promise<void> = Promise.resolve();

@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import type { App, MarkdownPostProcessorContext } from "obsidian";
 import { formatAnchor, getTargetFile, parseAnchor, resolveSlug } from "./resolver";
 

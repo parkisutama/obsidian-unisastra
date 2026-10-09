@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import type { SettingGroup } from "obsidian";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import SidebarEqualResize from "@/capabilities/features/general/sidebar-equal-resize";

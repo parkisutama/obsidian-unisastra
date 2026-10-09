@@ -1,0 +1,22 @@
+version = 1
+
+# Source files under src/, scripts/, tests/, and conformance/ carry their own SPDX header.
+# This entry covers the files that cannot carry one (JSON, lockfile, Markdown, configuration).
+[[annotations]]
+path = "**"
+precedence = "closest"
+SPDX-FileCopyrightText = ["2023-2026 Davis Riedel", "2025-2026 Parkis Utama"]
+SPDX-License-Identifier = "GPL-3.0-only"
+
+# Upstream notices are reproduced verbatim; each file states its own license and copyright.
+[[annotations]]
+path = "third-party-notices/*-MIT.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "The respective upstream authors"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "third-party-notices/*-MPL2.0.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "Mozilla Foundation"
+SPDX-License-Identifier = "MPL-2.0"

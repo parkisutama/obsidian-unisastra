@@ -1,3 +1,9 @@
+// SPDX-License-Identifier: MPL-2.0
+// Derived from Typewriter Mode (https://github.com/davisriedel/obsidian-typewriter-mode)
+// Copyright (c) 2023-2026 Davis Riedel
+// Modifications Copyright (C) 2025-2026 Parkis Utama
+// Adapted from an MPL-2.0 project; this file stays under MPL-2.0. See the notice below.
+
 // Writing focus, adapted for Unisastra from Obsidian Focus Mode by
 // ryanpcmcquen, licensed under the Mozilla Public License 2.0.
 // https://github.com/ryanpcmcquen/obsidian-focus-mode, main.ts
@@ -6,7 +12,7 @@
 // toggleFocusMode).
 // Revision cd68eda3c035e0340ff7da730e1f2a5acd3465e4.
 // Copyright (c) 2024-2026 ryanpcmcquen. Full notice:
-// licenses/writing-focus-MPL2.0.txt.
+// third-party-notices/writing-focus-MPL2.0.txt.
 //
 // Differences from upstream, deliberate:
 // - Drops "Super Focus Mode" (hide-all-but-active-pane) entirely; only the

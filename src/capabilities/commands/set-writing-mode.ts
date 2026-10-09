@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { Notice } from "obsidian";
 import { Command } from "@/capabilities/base/command";
 import type { WritingMode } from "@/capabilities/settings";

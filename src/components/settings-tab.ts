@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: GPL-3.0-only AND MIT
+// Derived from Typewriter Mode (https://github.com/davisriedel/obsidian-typewriter-mode)
+// Copyright (c) 2023-2026 Davis Riedel
+// Modifications Copyright (C) 2025-2026 Parkis Utama
+
 import { type App, Component, PluginSettingTab, Setting, SettingGroup, setIcon } from "obsidian";
 import type WritingModePresetConfig from "@/capabilities/features/writing-modes/preset-config";
 import { renderCalloutManager } from "@/components/callout-manager";

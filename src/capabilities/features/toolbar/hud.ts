@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 export function formatElapsed(ms: number): string {
 	const totalSeconds = Math.max(0, Math.floor(ms / 1000));
 	const hours = Math.floor(totalSeconds / 3600);

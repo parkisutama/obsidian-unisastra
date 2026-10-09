@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 "use strict";
 // Production outline rendering with real browser DOM and deferred Markdown rendering.
 const fs = require("node:fs");

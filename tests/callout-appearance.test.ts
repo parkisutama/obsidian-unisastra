@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Parkis Utama
+
 import { describe, expect, it } from "vitest";
 import { effectiveCalloutValues } from "@/capabilities/features/callouts/appearance";
 
