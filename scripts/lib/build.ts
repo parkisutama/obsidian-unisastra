@@ -1,5 +1,5 @@
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import builtins from "builtin-modules";
+import { builtinModules } from "node:module";
 import esbuild from "esbuild";
 import { compile as sassCompile } from "sass";
 import {
@@ -118,7 +118,7 @@ export async function build({
       "@lezer/common",
       "@lezer/highlight",
       "@lezer/lr",
-      ...builtins,
+      ...builtinModules,
     ],
   });
 }

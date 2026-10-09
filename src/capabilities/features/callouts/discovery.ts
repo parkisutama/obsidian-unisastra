@@ -27,7 +27,6 @@ export function discoverCallouts(
     depth: number
   ): void => {
     // CSSRuleList is array-like; avoid copying an unbounded list before enforcing the budget.
-    // biome-ignore lint/style/useForOf: bounded CSSOM traversal uses an array-like list
     for (let index = 0; index < rules.length; index++) {
       if (visited >= maxRules) {
         partial = true;

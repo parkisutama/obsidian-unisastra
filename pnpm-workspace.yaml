@@ -1,7 +1,6 @@
 allowBuilds:
   "@biomejs/biome": true
   "@parcel/watcher": true
-  electron: true
   esbuild: true
   rumdl: true
 
@@ -15,3 +14,8 @@ overrides:
   # Security patches for transitive development tooling; Vue plugin supports Vite 6.
   "js-yaml@^4": "4.3.2"
   "vitepress>vite": "6.4.3"
+
+# eslint-plugin-obsidianmd pins its obsidian peer to 1.8.7; the plugin targets a newer API.
+peerDependencyRules:
+  allowedVersions:
+    "eslint-plugin-obsidianmd>obsidian": "1.14.4"
