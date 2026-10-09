@@ -51,7 +51,7 @@ Obsidian desktop/mobile/popout masih menunggu acceptance host.
 Di **General**, aktifkan **Sinkronkan lebar sidebar** untuk membuat sidebar
 kiri dan kanan mengikuti resize satu sama lain saat keduanya terbuka.
 Pengaturan default nonaktif. Implementasi saat ini mendukung Obsidian desktop
-1.14.2; pada versi lain sinkronisasi ditangguhkan. Acceptance visual lengkap
+1.14.2 atau lebih baru; pada versi lebih lama sinkronisasi ditangguhkan. Acceptance visual lengkap
 masih menunggu pengujian di Obsidian.
 
 - Saat diaktifkan dengan kedua sidebar terbuka, lebar awal memakai rata-rata.

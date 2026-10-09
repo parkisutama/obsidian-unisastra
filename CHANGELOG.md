@@ -19,7 +19,7 @@
 ### Added
 
 - Connect opt-in Live Preview block ID hiding, undoable ID generation on native folds, and per-file fold persistence for uniquely identified list items. Auto-ID can respond to other plugins; internal restore and undo/redo are excluded. Full native acceptance remains pending.
-- Add opt-in "Sinkronkan lebar sidebar" in General for synchronized desktop sidebar resizing, with reopening precedence, bounded native sizes, and cleanup on disable. The native adapter is currently verified for Obsidian 1.14.2 only; full host acceptance is pending.
+- Add opt-in "Sinkronkan lebar sidebar" in General for synchronized desktop sidebar resizing, with reopening precedence, bounded native sizes, and cleanup on disable. The native adapter requires Obsidian 1.14.2 or newer (verified on 1.14.2) and suspends on older versions; full host acceptance is pending.
 - Add compact settings overview with detail pages for capabilities and writing-mode recipes; group GitHub compatibility under General and Keep Lines under Typewriter. Host acceptance is pending.
 - Align new writing-mode recipes with the maintainer's matrix: Normal enables Outliner and Writing disables Hemingway, while preserving saved recipes.
 - Add in-development GitHub alert output with five uppercase presets and refusal of incompatible or partial conversions without editing the document. Runtime acceptance is pending.

@@ -6,8 +6,10 @@ import { type SidebarSide, sidebarPairMaximum } from "./model";
 // The native setter does NOT clamp. The native drag handler uses these bounds.
 // A per-side 80% maximum is unsafe when mirrored: cap the pair at 80% of the
 // viewport-bounded workspace, independently of overflowing child widths.
-// Keep other versions inactive until their contract is verified (ADR-003).
-const VERIFIED_VERSION = "1.14.2";
+// Versions older than the verified one stay inactive (ADR-003). Newer versions
+// are allowed; nativeSidebar() structurally validates the internal contract and
+// the host falls back to inactive if a release changes it.
+const MIN_VERSION = "1.14.2";
 const NATIVE_MIN = 200;
 const PIXEL_VALUE = /^\d+(?:\.\d+)?px$/;
 
@@ -17,6 +19,18 @@ interface NativeSidebar {
   resizeHandleEl: HTMLElement;
   setSize(width: number): void;
   size: number;
+}
+
+function atLeast(version: string, minimum: string): boolean {
+  const a = version.split(".").map((part) => Number.parseInt(part, 10) || 0);
+  const b = minimum.split(".").map((part) => Number.parseInt(part, 10) || 0);
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const diff = (a[i] ?? 0) - (b[i] ?? 0);
+    if (diff !== 0) {
+      return diff > 0;
+    }
+  }
+  return true;
 }
 
 function nativeSidebar(value: unknown, doc: Document): NativeSidebar | null {
@@ -51,7 +65,7 @@ export class ObsidianSidebarHost implements SidebarHost {
   }
 
   private updatePair(): boolean {
-    if (apiVersion !== VERIFIED_VERSION) {
+    if (!atLeast(apiVersion, MIN_VERSION)) {
       return false;
     }
     const left = nativeSidebar(this.app.workspace.leftSplit, this.doc);
@@ -145,7 +159,7 @@ export class ObsidianSidebarHost implements SidebarHost {
 
   warn(): void {
     new Notice(
-      "Sinkronisasi lebar sidebar ditangguhkan. Perbesar jendela atau tutup satu sidebar bila ruang terlalu sempit. Periksa juga snippet CSS dan versi Obsidian (1.14.2)."
+      "Sinkronisasi lebar sidebar ditangguhkan. Perbesar jendela atau tutup satu sidebar bila ruang terlalu sempit. Periksa juga snippet CSS dan versi Obsidian (minimal 1.14.2)."
     );
   }
 

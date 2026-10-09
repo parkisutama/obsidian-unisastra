@@ -62,8 +62,8 @@ Sidebar equal resize (2026-09-27) adds the opt-in General setting
 `general.isSidebarEqualResizeEnabled`, default false. Model, controller, and
 guarded native adapter preserve closed sidebar widths and synchronize drag,
 activation averages, reopening, and bounded workspace resize. The adapter
-currently accepts Obsidian 1.14.2 only, whose internal contract was probed;
-other versions suspend synchronization without changing the plugin manifest.
+accepts Obsidian 1.14.2 or newer (contract probed on 1.14.2, newer
+versions rely on structural validation); older versions suspend synchronization without changing the plugin manifest.
 The maintainer confirmed the feature works on 2026-09-27; the full scenario
 matrix is not individually confirmed. A subsequent performance review reduced
 repeated geometry reads and redundant source-side writes, retaining native

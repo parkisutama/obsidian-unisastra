@@ -7,7 +7,7 @@ export default class SidebarEqualResize extends FeatureToggle {
   readonly settingKey = "general.isSidebarEqualResizeEnabled" as const;
   protected settingTitle = "Sinkronkan lebar sidebar";
   protected settingDesc =
-    "Samakan lebar sidebar kiri dan kanan saat keduanya terbuka. Desktop Obsidian 1.14.2; nonaktifkan snippet yang memaksa lebar sidebar.";
+    "Samakan lebar sidebar kiri dan kanan saat keduanya terbuka. Desktop Obsidian minimal 1.14.2; nonaktifkan snippet yang memaksa lebar sidebar.";
   private controller: SidebarResizeController | null = null;
   private loaded = false;
   private generation = 0;

@@ -212,8 +212,12 @@ async function runSidebarRegression() {
       "disable removes observers and leaves last width"
     );
     check(callbacks.size === 0, "all workspace listeners removed");
-    changeVersion("9.0.0");
-    check(host.read() === null, "unknown native contract is refused");
+    changeVersion("1.13.7");
+    check(host.read() === null, "older native contract is refused");
+    changeVersion("1.14.4");
+    check(host.read() !== null, "latest stable is accepted");
+    changeVersion("1.15.0");
+    check(host.read() !== null, "newer versions are accepted");
     changeVersion("1.14.2");
     controller.start();
     await frames();
