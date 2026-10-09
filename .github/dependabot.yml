@@ -1,0 +1,39 @@
+version: 2
+
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+      include: scope
+    groups:
+      development:
+        dependency-type: development
+      production:
+        dependency-type: production
+    ignore:
+      # Pinned by the engineering standard; the conformance test fails on any other version.
+      # Raise them in the standard first, then here.
+      - dependency-name: "@biomejs/biome"
+      - dependency-name: "@eslint/json"
+      - dependency-name: obsidian
+      # Held back by eslint-plugin-obsidianmd and typescript-eslint peer ranges.
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      # Follows the Node.js line in .node-version.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns: ["*"]
