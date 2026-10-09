@@ -6,115 +6,104 @@
 import { FeatureToggle } from "@/capabilities/base/feature-toggle";
 
 export default class HemingwayMode extends FeatureToggle {
-  readonly settingKey = "hemingwayMode.isHemingwayModeEnabled" as const;
-  protected override toggleClass = "unisastra-hemingway-mode-enabled";
-  protected settingTitle = "Hemingway mode";
-  protected settingDesc =
-    "Prevents editing previously written text. Blocks navigation keys (arrows, Home, End, Page Up/Down), Delete key, and undo operations to enforce forward-only writing.";
+	readonly settingKey = "hemingwayMode.isHemingwayModeEnabled" as const;
+	protected override toggleClass = "unisastra-hemingway-mode-enabled";
+	protected settingTitle = "Hemingway mode";
+	protected settingDesc =
+		"Prevents editing previously written text. Blocks navigation keys (arrows, Home, End, Page Up/Down), Delete key, and undo operations to enforce forward-only writing.";
 
-  private statusBarItem: HTMLElement | null = null;
-  private keyboardDocument: Document | null = null;
-  private readonly onWindowUnload = () => this.unregisterKeyboardHandler();
+	private statusBarItem: HTMLElement | null = null;
+	private keyboardDocument: Document | null = null;
+	private readonly onWindowUnload = () => this.unregisterKeyboardHandler();
 
-  override load() {
-    super.load();
-    this.statusBarItem = this.tm.plugin.addStatusBarItem();
-    this.statusBarItem.addClass("unisastra-hemingway-mode-status");
-    this.updateStatusBar();
-  }
+	override load() {
+		super.load();
+		this.statusBarItem = this.tm.plugin.addStatusBarItem();
+		this.statusBarItem.addClass("unisastra-hemingway-mode-status");
+		this.updateStatusBar();
+	}
 
-  override enable() {
-    super.enable();
-    this.registerKeyboardHandler();
-    this.updateStatusBar();
-  }
+	override enable() {
+		super.enable();
+		this.registerKeyboardHandler();
+		this.updateStatusBar();
+	}
 
-  override disable() {
-    super.disable();
-    this.unregisterKeyboardHandler();
-    this.updateStatusBar();
-  }
+	override disable() {
+		super.disable();
+		this.unregisterKeyboardHandler();
+		this.updateStatusBar();
+	}
 
-  private updateStatusBar() {
-    if (!this.statusBarItem) {
-      return;
-    }
+	private updateStatusBar() {
+		if (!this.statusBarItem) {
+			return;
+		}
 
-    const isEnabled = this.getSettingValue() as boolean;
-    const showStatusBar =
-      this.tm.settings.hemingwayMode.isShowHemingwayModeStatusBarEnabled;
-    const statusBarText =
-      this.tm.settings.hemingwayMode.hemingwayModeStatusBarText;
+		const isEnabled = this.getSettingValue() as boolean;
+		const showStatusBar = this.tm.settings.hemingwayMode.isShowHemingwayModeStatusBarEnabled;
+		const statusBarText = this.tm.settings.hemingwayMode.hemingwayModeStatusBarText;
 
-    if (isEnabled && showStatusBar) {
-      this.statusBarItem.setText(statusBarText);
-      this.statusBarItem.show();
-    } else {
-      this.statusBarItem.hide();
-    }
-  }
+		if (isEnabled && showStatusBar) {
+			this.statusBarItem.setText(statusBarText);
+			this.statusBarItem.show();
+		} else {
+			this.statusBarItem.hide();
+		}
+	}
 
-  updateStatusBarText() {
-    this.updateStatusBar();
-  }
+	updateStatusBarText() {
+		this.updateStatusBar();
+	}
 
-  private readonly keyboardHandler = (event: KeyboardEvent) => {
-    if (!this.getSettingValue()) {
-      return;
-    }
+	private readonly keyboardHandler = (event: KeyboardEvent) => {
+		if (!this.getSettingValue()) {
+			return;
+		}
 
-    const settings = this.tm.settings.hemingwayMode;
-    const isUndo = event.key === "z" && (event.ctrlKey || event.metaKey);
+		const settings = this.tm.settings.hemingwayMode;
+		const isUndo = event.key === "z" && (event.ctrlKey || event.metaKey);
 
-    const keyAllowSettings: Record<string, boolean> = {
-      ArrowLeft: settings.isAllowArrowLeftInHemingwayModeEnabled,
-      ArrowRight: settings.isAllowArrowRightInHemingwayModeEnabled,
-      ArrowUp: settings.isAllowArrowUpInHemingwayModeEnabled,
-      ArrowDown: settings.isAllowArrowDownInHemingwayModeEnabled,
-      Home: settings.isAllowHomeInHemingwayModeEnabled,
-      End: settings.isAllowEndInHemingwayModeEnabled,
-      PageUp: settings.isAllowPageUpInHemingwayModeEnabled,
-      PageDown: settings.isAllowPageDownInHemingwayModeEnabled,
-      Delete: settings.isAllowDeleteInHemingwayModeEnabled,
-      Backspace: settings.isAllowBackspaceInHemingwayModeEnabled,
-    };
+		const keyAllowSettings: Record<string, boolean> = {
+			ArrowLeft: settings.isAllowArrowLeftInHemingwayModeEnabled,
+			ArrowRight: settings.isAllowArrowRightInHemingwayModeEnabled,
+			ArrowUp: settings.isAllowArrowUpInHemingwayModeEnabled,
+			ArrowDown: settings.isAllowArrowDownInHemingwayModeEnabled,
+			Home: settings.isAllowHomeInHemingwayModeEnabled,
+			End: settings.isAllowEndInHemingwayModeEnabled,
+			PageUp: settings.isAllowPageUpInHemingwayModeEnabled,
+			PageDown: settings.isAllowPageDownInHemingwayModeEnabled,
+			Delete: settings.isAllowDeleteInHemingwayModeEnabled,
+			Backspace: settings.isAllowBackspaceInHemingwayModeEnabled,
+		};
 
-    const isForbiddenKey =
-      event.key in keyAllowSettings && !keyAllowSettings[event.key];
-    const isForbiddenUndo =
-      isUndo && !settings.isAllowUndoInHemingwayModeEnabled;
+		const isForbiddenKey = event.key in keyAllowSettings && !keyAllowSettings[event.key];
+		const isForbiddenUndo = isUndo && !settings.isAllowUndoInHemingwayModeEnabled;
 
-    if (isForbiddenKey || isForbiddenUndo) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-  };
+		if (isForbiddenKey || isForbiddenUndo) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+	};
 
-  private registerKeyboardHandler() {
-    const doc = window.activeDocument;
-    if (this.keyboardDocument === doc) {
-      return;
-    }
-    this.unregisterKeyboardHandler();
-    this.keyboardDocument = doc;
-    doc.defaultView?.addEventListener("unload", this.onWindowUnload);
-    doc.addEventListener("keydown", this.keyboardHandler, {
-      capture: true,
-    });
-  }
+	private registerKeyboardHandler() {
+		const doc = window.activeDocument;
+		if (this.keyboardDocument === doc) {
+			return;
+		}
+		this.unregisterKeyboardHandler();
+		this.keyboardDocument = doc;
+		doc.defaultView?.addEventListener("unload", this.onWindowUnload);
+		doc.addEventListener("keydown", this.keyboardHandler, {
+			capture: true,
+		});
+	}
 
-  private unregisterKeyboardHandler() {
-    this.keyboardDocument?.defaultView?.removeEventListener(
-      "unload",
-      this.onWindowUnload
-    );
-    this.keyboardDocument?.removeEventListener(
-      "keydown",
-      this.keyboardHandler,
-      {
-        capture: true,
-      }
-    );
-    this.keyboardDocument = null;
-  }
+	private unregisterKeyboardHandler() {
+		this.keyboardDocument?.defaultView?.removeEventListener("unload", this.onWindowUnload);
+		this.keyboardDocument?.removeEventListener("keydown", this.keyboardHandler, {
+			capture: true,
+		});
+		this.keyboardDocument = null;
+	}
 }

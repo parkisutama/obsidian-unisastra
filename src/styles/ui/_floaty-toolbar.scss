@@ -1,213 +1,213 @@
 .unisastra-floaty-toolbar {
-  position: fixed;
-  z-index: var(--layer-popover);
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1px;
-  padding: 4px 6px;
-  background-color: var(--background-primary);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m);
-  box-shadow: var(--shadow-s);
+	position: fixed;
+	z-index: var(--layer-popover);
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 1px;
+	padding: 4px 6px;
+	background-color: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	box-shadow: var(--shadow-s);
 
-  &[hidden] {
-    display: none;
-  }
+	&[hidden] {
+		display: none;
+	}
 
-  &.unisastra-floaty-toolbar-dock {
-    top: auto;
-    left: 50%;
-    max-width: min(480px, calc(100vw - #{2 * 8px}));
-    transform: translateX(-50%);
-    justify-content: center;
-    opacity: 1;
-    transition: opacity 100ms ease-in-out;
+	&.unisastra-floaty-toolbar-dock {
+		top: auto;
+		left: 50%;
+		max-width: min(480px, calc(100vw - #{2 * 8px}));
+		transform: translateX(-50%);
+		justify-content: center;
+		opacity: 1;
+		transition: opacity 100ms ease-in-out;
 
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
 
-    // Auto-hidden but still hoverable: `display: none` would make it
-    // impossible to ever mouseenter it again to bring it back.
-    &.unisastra-floaty-toolbar-dock-peek {
-      opacity: 0.12;
-    }
-  }
+		// Auto-hidden but still hoverable: `display: none` would make it
+		// impossible to ever mouseenter it again to bring it back.
+		&.unisastra-floaty-toolbar-dock-peek {
+			opacity: 0.12;
+		}
+	}
 }
 
 .unisastra-floaty-toolbar-divider {
-  width: 1px;
-  height: 18px;
-  background-color: var(--background-modifier-border);
-  margin: 0 4px;
-  flex-shrink: 0;
-  border-radius: 1px;
+	width: 1px;
+	height: 18px;
+	background-color: var(--background-modifier-border);
+	margin: 0 4px;
+	flex-shrink: 0;
+	border-radius: 1px;
 }
 
 .unisastra-floaty-toolbar-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  appearance: none;
-  background-color: transparent;
-  border: none;
-  border-radius: var(--radius-s);
-  color: var(--text-muted);
-  cursor: pointer;
-  outline: none;
-  box-shadow: none;
-  transition:
-    background-color 100ms ease,
-    color 100ms ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	padding: 0;
+	appearance: none;
+	background-color: transparent;
+	border: none;
+	border-radius: var(--radius-s);
+	color: var(--text-muted);
+	cursor: pointer;
+	outline: none;
+	box-shadow: none;
+	transition:
+		background-color 100ms ease,
+		color 100ms ease;
 
-  svg {
-    width: 16px;
-    height: 16px;
-    pointer-events: none;
-  }
+	svg {
+		width: 16px;
+		height: 16px;
+		pointer-events: none;
+	}
 
-  &:hover {
-    background-color: var(--background-modifier-hover);
-    color: var(--text-normal);
-  }
+	&:hover {
+		background-color: var(--background-modifier-hover);
+		color: var(--text-normal);
+	}
 
-  &:active {
-    background-color: var(--background-modifier-active-hover);
-    color: var(--text-normal);
-  }
+	&:active {
+		background-color: var(--background-modifier-active-hover);
+		color: var(--text-normal);
+	}
 
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
 
-  &:focus-visible {
-    outline: 2px solid var(--interactive-accent);
-    outline-offset: -2px;
-  }
+	&:focus-visible {
+		outline: 2px solid var(--interactive-accent);
+		outline-offset: -2px;
+	}
 }
 
 .unisastra-floaty-toolbar-dropdown-trigger {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  padding: 0 7px;
-  height: 32px;
-  border-radius: var(--radius-s);
-  color: var(--text-muted);
-  font-size: var(--font-ui-smaller);
-  font-weight: 600;
-  cursor: pointer;
-  outline: none;
-  box-shadow: none;
-  user-select: none;
-  transition:
-    background-color 100ms ease,
-    color 100ms ease;
+	display: flex;
+	align-items: center;
+	gap: 3px;
+	padding: 0 7px;
+	height: 32px;
+	border-radius: var(--radius-s);
+	color: var(--text-muted);
+	font-size: var(--font-ui-smaller);
+	font-weight: 600;
+	cursor: pointer;
+	outline: none;
+	box-shadow: none;
+	user-select: none;
+	transition:
+		background-color 100ms ease,
+		color 100ms ease;
 
-  span {
-    display: inline-flex;
-    pointer-events: none;
-  }
+	span {
+		display: inline-flex;
+		pointer-events: none;
+	}
 
-  svg {
-    width: 16px;
-    height: 16px;
-    pointer-events: none;
-  }
+	svg {
+		width: 16px;
+		height: 16px;
+		pointer-events: none;
+	}
 
-  &:hover,
-  &.is-open {
-    background-color: var(--background-modifier-hover);
-    color: var(--text-normal);
-  }
+	&:hover,
+	&.is-open {
+		background-color: var(--background-modifier-hover);
+		color: var(--text-normal);
+	}
 
-  &.is-disabled {
-    cursor: default;
-    opacity: 0.4;
+	&.is-disabled {
+		cursor: default;
+		opacity: 0.4;
 
-    &:hover {
-      background-color: transparent;
-      color: var(--text-muted);
-    }
-  }
+		&:hover {
+			background-color: transparent;
+			color: var(--text-muted);
+		}
+	}
 
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
 
-  &:focus-visible {
-    outline: 2px solid var(--interactive-accent);
-    outline-offset: -2px;
-  }
+	&:focus-visible {
+		outline: 2px solid var(--interactive-accent);
+		outline-offset: -2px;
+	}
 }
 
 .unisastra-floaty-toolbar-chevron {
-  width: 10px;
-  height: 10px;
-  opacity: 0.5;
-  transition:
-    transform 150ms ease,
-    opacity 150ms ease;
+	width: 10px;
+	height: 10px;
+	opacity: 0.5;
+	transition:
+		transform 150ms ease,
+		opacity 150ms ease;
 
-  svg {
-    width: 10px;
-    height: 10px;
-  }
+	svg {
+		width: 10px;
+		height: 10px;
+	}
 }
 
 .unisastra-floaty-toolbar-dropdown-trigger.is-open .unisastra-floaty-toolbar-chevron {
-  transform: rotate(180deg);
-  opacity: 0.8;
+	transform: rotate(180deg);
+	opacity: 0.8;
 }
 
 .unisastra-floaty-toolbar-dropdown-panel {
-  position: fixed;
-  z-index: var(--layer-popover);
-  min-width: 140px;
-  padding: 4px;
-  background-color: var(--background-primary);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-m);
-  box-shadow: var(--shadow-s);
+	position: fixed;
+	z-index: var(--layer-popover);
+	min-width: 140px;
+	padding: 4px;
+	background-color: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	box-shadow: var(--shadow-s);
 }
 
 .unisastra-floaty-toolbar-dropdown-item {
-  padding: 6px 10px;
-  border-radius: var(--radius-s);
-  color: var(--text-muted);
-  font-size: var(--font-ui-small);
-  cursor: pointer;
-  outline: none;
-  box-shadow: none;
-  user-select: none;
-  transition:
-    background-color 80ms ease,
-    color 80ms ease;
+	padding: 6px 10px;
+	border-radius: var(--radius-s);
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+	cursor: pointer;
+	outline: none;
+	box-shadow: none;
+	user-select: none;
+	transition:
+		background-color 80ms ease,
+		color 80ms ease;
 
-  &:hover {
-    background-color: var(--background-modifier-hover);
-    color: var(--text-normal);
-  }
+	&:hover {
+		background-color: var(--background-modifier-hover);
+		color: var(--text-normal);
+	}
 
-  &:active {
-    background-color: var(--background-modifier-active-hover);
-  }
+	&:active {
+		background-color: var(--background-modifier-active-hover);
+	}
 
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
 
-  &:focus-visible {
-    outline: 2px solid var(--interactive-accent);
-    outline-offset: -2px;
-  }
+	&:focus-visible {
+		outline: 2px solid var(--interactive-accent);
+		outline-offset: -2px;
+	}
 }
 
 // Long-press-to-reorder: dimmed source while its ghost follows the cursor,
@@ -215,161 +215,161 @@
 // document.body-level clone (position: fixed) so it can follow the cursor
 // across the whole window, not just inside the toolbar container.
 .unisastra-floaty-toolbar-drag-source {
-  opacity: 0.35;
+	opacity: 0.35;
 }
 
 .unisastra-floaty-toolbar-drop-target {
-  outline: 2px solid var(--interactive-accent);
-  outline-offset: 1px;
-  border-radius: var(--radius-s);
+	outline: 2px solid var(--interactive-accent);
+	outline-offset: 1px;
+	border-radius: var(--radius-s);
 }
 
 .unisastra-floaty-toolbar-drag-ghost {
-  position: fixed;
-  z-index: calc(var(--layer-popover) + 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  opacity: 0.9;
-  background-color: var(--background-primary);
-  border: 1px solid var(--background-modifier-border);
-  border-radius: var(--radius-s);
-  box-shadow: var(--shadow-s);
+	position: fixed;
+	z-index: calc(var(--layer-popover) + 1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none;
+	opacity: 0.9;
+	background-color: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-s);
+	box-shadow: var(--shadow-s);
 }
 
 .unisastra-floaty-toolbar-pin-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-s);
-  color: var(--text-faint);
-  cursor: pointer;
-  outline: none;
-  box-shadow: none;
-  flex-shrink: 0;
-  transition:
-    background-color 100ms ease,
-    color 100ms ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 28px;
+	height: 28px;
+	border-radius: var(--radius-s);
+	color: var(--text-faint);
+	cursor: pointer;
+	outline: none;
+	box-shadow: none;
+	flex-shrink: 0;
+	transition:
+		background-color 100ms ease,
+		color 100ms ease;
 
-  svg {
-    width: 14px;
-    height: 14px;
-    pointer-events: none;
-  }
+	svg {
+		width: 14px;
+		height: 14px;
+		pointer-events: none;
+	}
 
-  &:hover {
-    background-color: var(--background-modifier-hover);
-    color: var(--text-muted);
-  }
+	&:hover {
+		background-color: var(--background-modifier-hover);
+		color: var(--text-muted);
+	}
 
-  &.is-pinned {
-    color: var(--interactive-accent);
-  }
+	&.is-pinned {
+		color: var(--interactive-accent);
+	}
 
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
 
-  &:focus-visible {
-    outline: 2px solid var(--interactive-accent);
-    outline-offset: -2px;
-  }
+	&:focus-visible {
+		outline: 2px solid var(--interactive-accent);
+		outline-offset: -2px;
+	}
 }
 
 .unisastra-floaty-toolbar-status-bar-hud {
-  cursor: default;
+	cursor: default;
 }
 
 .unisastra-callout-manager-entry {
-  margin-block: var(--size-4-4);
+	margin-block: var(--size-4-4);
 
-  .setting-item-control {
-    flex-wrap: wrap;
-  }
+	.setting-item-control {
+		flex-wrap: wrap;
+	}
 
-  input {
-    max-width: 100%;
-  }
+	input {
+		max-width: 100%;
+	}
 }
 
 .unisastra-callout-style-status {
-  color: var(--text-muted);
-  overflow-wrap: anywhere;
+	color: var(--text-muted);
+	overflow-wrap: anywhere;
 }
 
 .unisastra-callout-style-preview {
-  overflow-wrap: anywhere;
+	overflow-wrap: anywhere;
 
-  // The body (ID + compatibility) always shows, collapsed or expanded — it
-  // carries the entry's identity, so hiding it would leave nothing but an
-  // icon/title once the separate header Setting's name/desc were removed.
-  // Only the style configuration form below the preview is expand-gated.
-  .callout {
-    margin: 0;
-  }
+	// The body (ID + compatibility) always shows, collapsed or expanded — it
+	// carries the entry's identity, so hiding it would leave nothing but an
+	// icon/title once the separate header Setting's name/desc were removed.
+	// Only the style configuration form below the preview is expand-gated.
+	.callout {
+		margin: 0;
+	}
 
-  .callout-title {
-    cursor: pointer;
+	.callout-title {
+		cursor: pointer;
 
-    &::after {
-      content: "›";
-      margin-inline-start: auto;
-    }
-  }
+		&::after {
+			content: "›";
+			margin-inline-start: auto;
+		}
+	}
 
-  &.is-expanded .callout-title::after {
-    transform: rotate(90deg);
-  }
+	&.is-expanded .callout-title::after {
+		transform: rotate(90deg);
+	}
 
-  &:focus-visible {
-    outline: 2px solid var(--interactive-accent);
-    outline-offset: 2px;
-  }
+	&:focus-visible {
+		outline: 2px solid var(--interactive-accent);
+		outline-offset: 2px;
+	}
 }
 
 .unisastra-callout-manager-header {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--size-4-3);
-  flex-wrap: wrap;
+	display: flex;
+	align-items: flex-start;
+	gap: var(--size-4-3);
+	flex-wrap: wrap;
 
-  .unisastra-callout-style-preview {
-    flex: 1 1 220px;
-    min-width: 0;
-  }
+	.unisastra-callout-style-preview {
+		flex: 1 1 220px;
+		min-width: 0;
+	}
 
-  .setting-item {
-    flex: 1 1 260px;
-    border: none;
-    gap: var(--size-4-2);
-  }
+	.setting-item {
+		flex: 1 1 260px;
+		border: none;
+		gap: var(--size-4-2);
+	}
 }
 
 .unisastra-callout-configuration[hidden] {
-  display: none;
+	display: none;
 }
 
 .unisastra-floaty-toolbar-status-bar-hud-reset {
-  cursor: pointer;
-  outline: none;
-  box-shadow: none;
+	cursor: pointer;
+	outline: none;
+	box-shadow: none;
 
-  &:hover {
-    color: var(--text-normal);
-    text-decoration: underline;
-  }
+	&:hover {
+		color: var(--text-normal);
+		text-decoration: underline;
+	}
 
-  &:focus {
-    outline: none;
-    box-shadow: none;
-  }
+	&:focus {
+		outline: none;
+		box-shadow: none;
+	}
 
-  &:focus-visible {
-    outline: 2px solid var(--interactive-accent);
-    outline-offset: 1px;
-  }
+	&:focus-visible {
+		outline: 2px solid var(--interactive-accent);
+		outline-offset: 1px;
+	}
 }

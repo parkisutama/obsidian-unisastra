@@ -8,46 +8,43 @@
  * source text, so there is one place that defines the exact expected
  * banner.
  */
-export function buildLicenseBanner(
-  headerLines: readonly string[],
-  notice: string
-): string {
-  const noticeLines = notice.trimEnd().split("\n");
-  return [
-    "/*!",
-    ...headerLines.map((line) => ` * ${line}`),
-    " *",
-    ...noticeLines.map((line) => (line ? ` * ${line}` : " *")),
-    " */",
-  ].join("\n");
+export function buildLicenseBanner(headerLines: readonly string[], notice: string): string {
+	const noticeLines = notice.trimEnd().split("\n");
+	return [
+		"/*!",
+		...headerLines.map((line) => ` * ${line}`),
+		" *",
+		...noticeLines.map((line) => (line ? ` * ${line}` : " *")),
+		" */",
+	].join("\n");
 }
 
 export function floatyToolbarLicenseBanner(notice: string): string {
-  return buildLicenseBanner(
-    [
-      "Unisastra includes code adapted from Floaty Toolbar by 0png, MIT licensed.",
-      "https://github.com/0png/Floaty-Toolbar",
-    ],
-    notice
-  );
+	return buildLicenseBanner(
+		[
+			"Unisastra includes code adapted from Floaty Toolbar by 0png, MIT licensed.",
+			"https://github.com/0png/Floaty-Toolbar",
+		],
+		notice,
+	);
 }
 
 export function writingFocusLicenseBanner(notice: string): string {
-  return buildLicenseBanner(
-    [
-      "Unisastra includes code adapted from Obsidian Focus Mode by ryanpcmcquen, MPL-2.0 licensed.",
-      "https://github.com/ryanpcmcquen/obsidian-focus-mode",
-    ],
-    notice
-  );
+	return buildLicenseBanner(
+		[
+			"Unisastra includes code adapted from Obsidian Focus Mode by ryanpcmcquen, MPL-2.0 licensed.",
+			"https://github.com/ryanpcmcquen/obsidian-focus-mode",
+		],
+		notice,
+	);
 }
 
 export function mononoteLicenseBanner(notice: string): string {
-  return buildLicenseBanner(
-    [
-      "Unisastra includes code adapted from MonoNote by Carlo Zottmann, MIT licensed.",
-      "https://github.com/czottmann/obsidian-mononote",
-    ],
-    notice
-  );
+	return buildLicenseBanner(
+		[
+			"Unisastra includes code adapted from MonoNote by Carlo Zottmann, MIT licensed.",
+			"https://github.com/czottmann/obsidian-mononote",
+		],
+		notice,
+	);
 }

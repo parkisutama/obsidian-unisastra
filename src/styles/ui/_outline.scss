@@ -1,494 +1,494 @@
 .workspace-leaf-content[data-type="unisastra-outline"] {
-  --unisastra-outline-indent-size: 18px;
-  --unisastra-outline-row-padding: 4px;
-  --unisastra-outline-branch-color: color-mix(
-    in srgb,
-    var(--background-modifier-border) 72%,
-    transparent
-  );
-  --unisastra-outline-branch-color-emphasis: color-mix(
-    in srgb,
-    var(--interactive-accent) 58%,
-    var(--background-modifier-border)
-  );
-  --unisastra-outline-branch-color-complete: color-mix(
-    in srgb,
-    var(--color-green) 54%,
-    var(--background-modifier-border)
-  );
-  --unisastra-outline-heading-color: color-mix(
-    in srgb,
-    var(--text-normal) 88%,
-    var(--text-muted)
-  );
-  --unisastra-outline-item-bg-hover: color-mix(
-    in srgb,
-    var(--background-modifier-hover) 60%,
-    transparent
-  );
-  --unisastra-outline-item-bg-active: color-mix(
-    in srgb,
-    var(--interactive-accent) 10%,
-    transparent
-  );
-  --unisastra-outline-item-border-active: color-mix(
-    in srgb,
-    var(--interactive-accent) 38%,
-    transparent
-  );
-  --unisastra-outline-item-border-focused: color-mix(
-    in srgb,
-    var(--color-accent) 55%,
-    transparent
-  );
+	--unisastra-outline-indent-size: 18px;
+	--unisastra-outline-row-padding: 4px;
+	--unisastra-outline-branch-color: color-mix(
+		in srgb,
+		var(--background-modifier-border) 72%,
+		transparent
+	);
+	--unisastra-outline-branch-color-emphasis: color-mix(
+		in srgb,
+		var(--interactive-accent) 58%,
+		var(--background-modifier-border)
+	);
+	--unisastra-outline-branch-color-complete: color-mix(
+		in srgb,
+		var(--color-green) 54%,
+		var(--background-modifier-border)
+	);
+	--unisastra-outline-heading-color: color-mix(
+		in srgb,
+		var(--text-normal) 88%,
+		var(--text-muted)
+	);
+	--unisastra-outline-item-bg-hover: color-mix(
+		in srgb,
+		var(--background-modifier-hover) 60%,
+		transparent
+	);
+	--unisastra-outline-item-bg-active: color-mix(
+		in srgb,
+		var(--interactive-accent) 10%,
+		transparent
+	);
+	--unisastra-outline-item-border-active: color-mix(
+		in srgb,
+		var(--interactive-accent) 38%,
+		transparent
+	);
+	--unisastra-outline-item-border-focused: color-mix(
+		in srgb,
+		var(--color-accent) 55%,
+		transparent
+	);
 
-  .view-content {
-    padding: 14px 10px 18px;
-    background:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--background-primary) 92%, transparent),
-        var(--background-primary)
-      );
-  }
+	.view-content {
+		padding: 14px 10px 18px;
+		background:
+			linear-gradient(
+				180deg,
+				color-mix(in srgb, var(--background-primary) 92%, transparent),
+				var(--background-primary)
+			);
+	}
 
-  .unisastra-outline-empty {
-    padding: 8px 10px;
-    color: var(--text-muted);
-    font-size: var(--font-ui-small);
-  }
+	.unisastra-outline-empty {
+		padding: 8px 10px;
+		color: var(--text-muted);
+		font-size: var(--font-ui-small);
+	}
 
-  .unisastra-outline-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+	.unisastra-outline-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+	}
 
-  .unisastra-outline-toolbar {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 6px 8px 10px;
-    margin-bottom: 6px;
-    border-bottom: 1px solid var(--background-modifier-border);
-  }
+	.unisastra-outline-toolbar {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		padding: 6px 8px 10px;
+		margin-bottom: 6px;
+		border-bottom: 1px solid var(--background-modifier-border);
+	}
 
-  .unisastra-outline-toolbar-title {
-    color: var(--text-normal);
-    font-size: var(--font-ui-small);
-    font-weight: 600;
-    line-height: 1.3;
-  }
+	.unisastra-outline-toolbar-title {
+		color: var(--text-normal);
+		font-size: var(--font-ui-small);
+		font-weight: 600;
+		line-height: 1.3;
+	}
 
-  .unisastra-outline-toolbar-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
+	.unisastra-outline-toolbar-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+	}
 
-  .unisastra-outline-toolbar-meta-item {
-    padding: 2px 8px;
-    border: 1px solid var(--background-modifier-border);
-    border-radius: 999px;
-    color: var(--text-muted);
-    font-size: 0.72em;
-    line-height: 1.5;
+	.unisastra-outline-toolbar-meta-item {
+		padding: 2px 8px;
+		border: 1px solid var(--background-modifier-border);
+		border-radius: 999px;
+		color: var(--text-muted);
+		font-size: 0.72em;
+		line-height: 1.5;
 
-    &.is-progress {
-      color: var(--text-normal);
-      border-color: color-mix(
-        in srgb,
-        var(--interactive-accent) 24%,
-        var(--background-modifier-border)
-      );
-      background: color-mix(
-        in srgb,
-        var(--interactive-accent) 8%,
-        transparent
-      );
-    }
-  }
+		&.is-progress {
+			color: var(--text-normal);
+			border-color: color-mix(
+				in srgb,
+				var(--interactive-accent) 24%,
+				var(--background-modifier-border)
+			);
+			background: color-mix(
+				in srgb,
+				var(--interactive-accent) 8%,
+				transparent
+			);
+		}
+	}
 
-  .unisastra-outline-item {
-    position: relative;
-    border-radius: 6px;
-    transition: none;
-  }
+	.unisastra-outline-item {
+		position: relative;
+		border-radius: 6px;
+		transition: none;
+	}
 
-  .unisastra-outline-link {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    grid-template-areas: "lead content trailing";
-    gap: 6px;
-    align-items: stretch;
-    padding: var(--unisastra-outline-row-padding) 4px var(--unisastra-outline-row-padding) 2px;
-    cursor: pointer;
-  }
+	.unisastra-outline-link {
+		position: relative;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		grid-template-areas: "lead content trailing";
+		gap: 6px;
+		align-items: stretch;
+		padding: var(--unisastra-outline-row-padding) 4px var(--unisastra-outline-row-padding) 2px;
+		cursor: pointer;
+	}
 
-  .unisastra-outline-lead {
-    display: grid;
-    grid-template-columns: auto auto;
-    align-items: center;
-    gap: 4px;
-    min-height: 1.55em;
-    align-self: stretch;
-  }
+	.unisastra-outline-lead {
+		display: grid;
+		grid-template-columns: auto auto;
+		align-items: center;
+		gap: 4px;
+		min-height: 1.55em;
+		align-self: stretch;
+	}
 
-  .unisastra-outline-guides {
-    position: relative;
-    display: flex;
-    align-self: stretch;
-    align-items: stretch;
-    pointer-events: none;
-  }
+	.unisastra-outline-guides {
+		position: relative;
+		display: flex;
+		align-self: stretch;
+		align-items: stretch;
+		pointer-events: none;
+	}
 
-  .unisastra-outline-guide-column,
-  .unisastra-outline-junction {
-    position: relative;
-    width: var(--unisastra-outline-indent-size);
-    min-width: var(--unisastra-outline-indent-size);
-  }
+	.unisastra-outline-guide-column,
+	.unisastra-outline-junction {
+		position: relative;
+		width: var(--unisastra-outline-indent-size);
+		min-width: var(--unisastra-outline-indent-size);
+	}
 
-  .unisastra-outline-guide-column.is-continuing::before,
-  .unisastra-outline-junction::before,
-  .unisastra-outline-child-stem::before {
-    position: absolute;
-    top: calc(-1 * var(--unisastra-outline-row-padding));
-    bottom: calc(-1 * var(--unisastra-outline-row-padding));
-    left: 9px;
-    border-left: 1px solid var(--unisastra-outline-branch-color);
-    opacity: 0.6;
-    content: "";
-  }
+	.unisastra-outline-guide-column.is-continuing::before,
+	.unisastra-outline-junction::before,
+	.unisastra-outline-child-stem::before {
+		position: absolute;
+		top: calc(-1 * var(--unisastra-outline-row-padding));
+		bottom: calc(-1 * var(--unisastra-outline-row-padding));
+		left: 9px;
+		border-left: 1px solid var(--unisastra-outline-branch-color);
+		opacity: 0.6;
+		content: "";
+	}
 
-  .unisastra-outline-junction.is-last-sibling::before,
-  .unisastra-outline-junction.is-root::before {
-    display: none;
-  }
+	.unisastra-outline-junction.is-last-sibling::before,
+	.unisastra-outline-junction.is-root::before {
+		display: none;
+	}
 
-  .unisastra-outline-child-stem {
-    position: absolute;
-    top: 50%;
-    bottom: 0;
-    left: 100%;
-    width: 0;
+	.unisastra-outline-child-stem {
+		position: absolute;
+		top: 50%;
+		bottom: 0;
+		left: 100%;
+		width: 0;
 
-    &::before {
-      top: 0;
-    }
-  }
+		&::before {
+			top: 0;
+		}
+	}
 
-  .unisastra-outline-junction-elbow {
-    position: absolute;
-    top: calc(-1 * var(--unisastra-outline-row-padding));
-    bottom: calc(50% - 0.5px);
-    left: 9px;
-    width: 13px;
-    border-left: 1px solid var(--unisastra-outline-branch-color);
-    border-bottom: 1px solid var(--unisastra-outline-branch-color);
-    border-bottom-left-radius: 5px;
-    opacity: 0.6;
-  }
+	.unisastra-outline-junction-elbow {
+		position: absolute;
+		top: calc(-1 * var(--unisastra-outline-row-padding));
+		bottom: calc(50% - 0.5px);
+		left: 9px;
+		width: 13px;
+		border-left: 1px solid var(--unisastra-outline-branch-color);
+		border-bottom: 1px solid var(--unisastra-outline-branch-color);
+		border-bottom-left-radius: 5px;
+		opacity: 0.6;
+	}
 
-  .unisastra-outline-junction.is-leaf .unisastra-outline-junction-elbow {
-    width: 28px;
-  }
+	.unisastra-outline-junction.is-leaf .unisastra-outline-junction-elbow {
+		width: 28px;
+	}
 
-  .unisastra-outline-junction.is-root .unisastra-outline-junction-elbow {
-    display: none;
-  }
+	.unisastra-outline-junction.is-root .unisastra-outline-junction-elbow {
+		display: none;
+	}
 
-  // Only real connectors on the path receive emphasis, never empty columns.
-  [data-outline-connector].is-hover-connector::before,
-  [data-outline-connector].is-active-connector::before,
-  [data-outline-connector].is-focus-connector::before,
-  .unisastra-outline-junction-elbow.is-hover-connector,
-  .unisastra-outline-junction-elbow.is-active-connector,
-  .unisastra-outline-junction-elbow.is-focus-connector {
-    border-color: var(--unisastra-outline-branch-color-emphasis);
-    opacity: 1;
-  }
+	// Only real connectors on the path receive emphasis, never empty columns.
+	[data-outline-connector].is-hover-connector::before,
+	[data-outline-connector].is-active-connector::before,
+	[data-outline-connector].is-focus-connector::before,
+	.unisastra-outline-junction-elbow.is-hover-connector,
+	.unisastra-outline-junction-elbow.is-active-connector,
+	.unisastra-outline-junction-elbow.is-focus-connector {
+		border-color: var(--unisastra-outline-branch-color-emphasis);
+		opacity: 1;
+	}
 
-  .unisastra-outline-node {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    align-self: center;
-  }
+	.unisastra-outline-node {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		align-self: center;
+	}
 
-  .unisastra-outline-disclosure {
-    position: relative;
-    z-index: 1;
-    width: 11px;
-    min-width: 11px;
-    height: 11px;
-    padding: 0;
-    border: 1px solid var(--background-modifier-border);
-    border-radius: 50%;
-    background: var(--background-primary);
-    color: var(--text-faint);
-    font-size: 0.65em;
-    line-height: 1;
+	.unisastra-outline-disclosure {
+		position: relative;
+		z-index: 1;
+		width: 11px;
+		min-width: 11px;
+		height: 11px;
+		padding: 0;
+		border: 1px solid var(--background-modifier-border);
+		border-radius: 50%;
+		background: var(--background-primary);
+		color: var(--text-faint);
+		font-size: 0.65em;
+		line-height: 1;
 
-    &:hover {
-      color: var(--text-normal);
-      border-color: var(--interactive-accent);
-    }
-  }
+		&:hover {
+			color: var(--text-normal);
+			border-color: var(--interactive-accent);
+		}
+	}
 
-  .unisastra-outline-disclosure-spacer {
-    width: 11px;
-    min-width: 11px;
-    height: 11px;
-  }
+	.unisastra-outline-disclosure-spacer {
+		width: 11px;
+		min-width: 11px;
+		height: 11px;
+	}
 
-  .unisastra-outline-marker {
-    position: relative;
-    z-index: 1;
-    width: 6px;
-    min-width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--text-muted) 66%, transparent);
-    transition:
-      background-color 120ms ease,
-      border-color 120ms ease,
-      transform 120ms ease;
-  }
+	.unisastra-outline-marker {
+		position: relative;
+		z-index: 1;
+		width: 6px;
+		min-width: 6px;
+		height: 6px;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--text-muted) 66%, transparent);
+		transition:
+			background-color 120ms ease,
+			border-color 120ms ease,
+			transform 120ms ease;
+	}
 
-  .unisastra-outline-marker-heading {
-    width: 9px;
-    min-width: 9px;
-    height: 9px;
-    border: 1px solid color-mix(in srgb, var(--text-normal) 52%, transparent);
-    border-radius: 1px;
-    background:
-      linear-gradient(
-        90deg,
-        transparent 0 2px,
-        color-mix(in srgb, var(--text-normal) 52%, transparent) 2px 3px,
-        transparent 3px 100%
-      ),
-      color-mix(in srgb, var(--background-primary) 94%, transparent);
-    transform: rotate(45deg);
-  }
+	.unisastra-outline-marker-heading {
+		width: 9px;
+		min-width: 9px;
+		height: 9px;
+		border: 1px solid color-mix(in srgb, var(--text-normal) 52%, transparent);
+		border-radius: 1px;
+		background:
+			linear-gradient(
+				90deg,
+				transparent 0 2px,
+				color-mix(in srgb, var(--text-normal) 52%, transparent) 2px 3px,
+				transparent 3px 100%
+			),
+			color-mix(in srgb, var(--background-primary) 94%, transparent);
+		transform: rotate(45deg);
+	}
 
-  .unisastra-outline-item:hover .unisastra-outline-marker,
-  .unisastra-outline-item.is-hover-trail .unisastra-outline-marker,
-  .unisastra-outline-item:focus-within .unisastra-outline-marker,
-  .unisastra-outline-item.is-active .unisastra-outline-marker,
-  .unisastra-outline-item.is-focused-root .unisastra-outline-marker {
-    background: color-mix(in srgb, var(--interactive-accent) 56%, transparent);
-  }
+	.unisastra-outline-item:hover .unisastra-outline-marker,
+	.unisastra-outline-item.is-hover-trail .unisastra-outline-marker,
+	.unisastra-outline-item:focus-within .unisastra-outline-marker,
+	.unisastra-outline-item.is-active .unisastra-outline-marker,
+	.unisastra-outline-item.is-focused-root .unisastra-outline-marker {
+		background: color-mix(in srgb, var(--interactive-accent) 56%, transparent);
+	}
 
-  .unisastra-outline-item:hover .unisastra-outline-marker-heading,
-  .unisastra-outline-item.is-hover-trail .unisastra-outline-marker-heading,
-  .unisastra-outline-item:focus-within .unisastra-outline-marker-heading,
-  .unisastra-outline-item.is-active .unisastra-outline-marker-heading,
-  .unisastra-outline-item.is-focused-root .unisastra-outline-marker-heading {
-    border-color: color-mix(
-      in srgb,
-      var(--interactive-accent) 68%,
-      transparent
-    );
-    background: color-mix(in srgb, var(--interactive-accent) 18%, transparent);
-  }
+	.unisastra-outline-item:hover .unisastra-outline-marker-heading,
+	.unisastra-outline-item.is-hover-trail .unisastra-outline-marker-heading,
+	.unisastra-outline-item:focus-within .unisastra-outline-marker-heading,
+	.unisastra-outline-item.is-active .unisastra-outline-marker-heading,
+	.unisastra-outline-item.is-focused-root .unisastra-outline-marker-heading {
+		border-color: color-mix(
+			in srgb,
+			var(--interactive-accent) 68%,
+			transparent
+		);
+		background: color-mix(in srgb, var(--interactive-accent) 18%, transparent);
+	}
 
-  .unisastra-outline-task-toggle {
-    position: relative;
-    z-index: 1;
-    width: 13px;
-    min-width: 13px;
-    height: 13px;
-    margin: 0;
-    accent-color: var(--interactive-accent);
-    transition: none;
-  }
+	.unisastra-outline-task-toggle {
+		position: relative;
+		z-index: 1;
+		width: 13px;
+		min-width: 13px;
+		height: 13px;
+		margin: 0;
+		accent-color: var(--interactive-accent);
+		transition: none;
+	}
 
-  .unisastra-outline-content {
-    grid-area: content;
-    align-self: start;
-    min-width: 0;
-    color: var(--text-muted);
-    font-size: 0.93em;
-    line-height: 1.42;
+	.unisastra-outline-content {
+		grid-area: content;
+		align-self: start;
+		min-width: 0;
+		color: var(--text-muted);
+		font-size: 0.93em;
+		line-height: 1.42;
 
-    > *:first-child {
-      margin-top: 0;
-    }
+		> *:first-child {
+			margin-top: 0;
+		}
 
-    > *:last-child {
-      margin-bottom: 0;
-    }
+		> *:last-child {
+			margin-bottom: 0;
+		}
 
-    p,
-    ul,
-    ol,
-    li {
-      margin: 0;
-    }
+		p,
+		ul,
+		ol,
+		li {
+			margin: 0;
+		}
 
-    a {
-      text-decoration-thickness: 0.06em;
-    }
+		a {
+			text-decoration-thickness: 0.06em;
+		}
 
-    strong,
-    .cm-strong {
-      color: var(--text-normal);
-    }
-  }
+		strong,
+		.cm-strong {
+			color: var(--text-normal);
+		}
+	}
 
-  .unisastra-outline-heading {
-    .unisastra-outline-content {
-      color: var(--unisastra-outline-heading-color);
-      font-size: 0.95em;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-  }
+	.unisastra-outline-heading {
+		.unisastra-outline-content {
+			color: var(--unisastra-outline-heading-color);
+			font-size: 0.95em;
+			font-weight: 600;
+			letter-spacing: 0.01em;
+		}
+	}
 
-  .unisastra-outline-list-item {
-    .unisastra-outline-content {
-      color: color-mix(in srgb, var(--text-normal) 80%, var(--text-muted));
-      font-size: var(--font-ui-small);
-    }
-  }
+	.unisastra-outline-list-item {
+		.unisastra-outline-content {
+			color: color-mix(in srgb, var(--text-normal) 80%, var(--text-muted));
+			font-size: var(--font-ui-small);
+		}
+	}
 
-  .unisastra-outline-item-meta {
-    display: none;
-  }
+	.unisastra-outline-item-meta {
+		display: none;
+	}
 
-  .unisastra-outline-item-trailing {
-    grid-area: trailing;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    position: relative;
-    align-self: start;
-    gap: 6px;
-    min-width: 0;
-    padding-right: 2px;
-    padding-top: 1px;
-  }
+	.unisastra-outline-item-trailing {
+		grid-area: trailing;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		position: relative;
+		align-self: start;
+		gap: 6px;
+		min-width: 0;
+		padding-right: 2px;
+		padding-top: 1px;
+	}
 
-  .unisastra-outline-item-progress {
-    padding: 1px 7px;
-    border: 1px solid var(--background-modifier-border);
-    border-radius: 999px;
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-    font-size: 0.7em;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    line-height: 1.4;
-    white-space: nowrap;
+	.unisastra-outline-item-progress {
+		padding: 1px 7px;
+		border: 1px solid var(--background-modifier-border);
+		border-radius: 999px;
+		color: var(--text-muted);
+		font-variant-numeric: tabular-nums;
+		font-size: 0.7em;
+		font-weight: 600;
+		letter-spacing: 0.01em;
+		line-height: 1.4;
+		white-space: nowrap;
 
-    &.is-idle {
-      border-color: var(--background-modifier-border);
-      color: var(--text-faint);
-    }
+		&.is-idle {
+			border-color: var(--background-modifier-border);
+			color: var(--text-faint);
+		}
 
-    &.is-active {
-      color: var(--text-normal);
-      border-color: color-mix(
-        in srgb,
-        var(--interactive-accent) 28%,
-        var(--background-modifier-border)
-      );
-      background: color-mix(
-        in srgb,
-        var(--interactive-accent) 8%,
-        transparent
-      );
-    }
+		&.is-active {
+			color: var(--text-normal);
+			border-color: color-mix(
+				in srgb,
+				var(--interactive-accent) 28%,
+				var(--background-modifier-border)
+			);
+			background: color-mix(
+				in srgb,
+				var(--interactive-accent) 8%,
+				transparent
+			);
+		}
 
-    &.is-complete {
-      color: color-mix(in srgb, var(--color-green) 72%, var(--text-normal));
-      border-color: color-mix(
-        in srgb,
-        var(--color-green) 28%,
-        var(--background-modifier-border)
-      );
-      background: color-mix(in srgb, var(--color-green) 8%, transparent);
-    }
-  }
+		&.is-complete {
+			color: color-mix(in srgb, var(--color-green) 72%, var(--text-normal));
+			border-color: color-mix(
+				in srgb,
+				var(--color-green) 28%,
+				var(--background-modifier-border)
+			);
+			background: color-mix(in srgb, var(--color-green) 8%, transparent);
+		}
+	}
 
-  .unisastra-outline-item-actions {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    z-index: 3;
-    display: inline-flex;
-    gap: 3px;
-    max-width: 220px;
-    white-space: nowrap;
-    opacity: 0;
-    overflow: hidden;
-    pointer-events: none;
-    transform: translate(6px, -50%);
-    transition:
-      opacity 120ms ease,
-      transform 120ms ease;
-  }
+	.unisastra-outline-item-actions {
+		position: absolute;
+		top: 50%;
+		right: 0;
+		z-index: 3;
+		display: inline-flex;
+		gap: 3px;
+		max-width: 220px;
+		white-space: nowrap;
+		opacity: 0;
+		overflow: hidden;
+		pointer-events: none;
+		transform: translate(6px, -50%);
+		transition:
+			opacity 120ms ease,
+			transform 120ms ease;
+	}
 
-  .unisastra-outline-item:hover .unisastra-outline-item-actions,
-  .unisastra-outline-item:focus-within .unisastra-outline-item-actions {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translate(0, -50%);
-  }
+	.unisastra-outline-item:hover .unisastra-outline-item-actions,
+	.unisastra-outline-item:focus-within .unisastra-outline-item-actions {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translate(0, -50%);
+	}
 
-  .unisastra-outline-item-action {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: 1px solid var(--background-modifier-border);
-    border-radius: 999px;
-    background: color-mix(
-      in srgb,
-      var(--background-primary) 92%,
-      transparent
-    );
-    color: var(--text-muted);
-    line-height: 1;
+	.unisastra-outline-item-action {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		padding: 0;
+		border: 1px solid var(--background-modifier-border);
+		border-radius: 999px;
+		background: color-mix(
+			in srgb,
+			var(--background-primary) 92%,
+			transparent
+		);
+		color: var(--text-muted);
+		line-height: 1;
 
-    svg {
-      width: 13px;
-      height: 13px;
-      stroke-width: 2;
-    }
+		svg {
+			width: 13px;
+			height: 13px;
+			stroke-width: 2;
+		}
 
-    &:hover {
-      color: var(--text-normal);
-      border-color: color-mix(
-        in srgb,
-        var(--interactive-accent) 26%,
-        var(--background-modifier-border)
-      );
-      background: color-mix(
-        in srgb,
-        var(--background-modifier-hover) 72%,
-        transparent
-      );
-    }
-  }
+		&:hover {
+			color: var(--text-normal);
+			border-color: color-mix(
+				in srgb,
+				var(--interactive-accent) 26%,
+				var(--background-modifier-border)
+			);
+			background: color-mix(
+				in srgb,
+				var(--background-modifier-hover) 72%,
+				transparent
+			);
+		}
+	}
 
-  .unisastra-outline-item[data-progress-tone="active"] .unisastra-outline-marker {
-    background: color-mix(in srgb, var(--interactive-accent) 48%, transparent);
-  }
+	.unisastra-outline-item[data-progress-tone="active"] .unisastra-outline-marker {
+		background: color-mix(in srgb, var(--interactive-accent) 48%, transparent);
+	}
 
-  .unisastra-outline-item[data-progress-tone="complete"] .unisastra-outline-marker {
-    background: color-mix(in srgb, var(--color-green) 56%, transparent);
-  }
+	.unisastra-outline-item[data-progress-tone="complete"] .unisastra-outline-marker {
+		background: color-mix(in srgb, var(--color-green) 56%, transparent);
+	}
 
-  .unisastra-outline-item[data-progress-tone="complete"] .unisastra-outline-marker-heading {
-    border-color: color-mix(in srgb, var(--color-green) 62%, transparent);
-    background: color-mix(in srgb, var(--color-green) 14%, transparent);
-  }
+	.unisastra-outline-item[data-progress-tone="complete"] .unisastra-outline-marker-heading {
+		border-color: color-mix(in srgb, var(--color-green) 62%, transparent);
+		background: color-mix(in srgb, var(--color-green) 14%, transparent);
+	}
 }

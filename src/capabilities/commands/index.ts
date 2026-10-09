@@ -26,49 +26,42 @@ import { TogglePlugin } from "./toggle-plugin";
 import { ToggleShowWhitespace } from "./toggle-show-whitespace";
 import { ToggleTypewriter } from "./toggle-typewriter";
 import { ToggleTypewriterAndDimming } from "./toggle-typewriter-and-dimming";
-import {
-  ManageCalloutsCommand,
-  toolbarActionCommands,
-} from "./toolbar-actions";
+import { ManageCalloutsCommand, toolbarActionCommands } from "./toolbar-actions";
 import { WritingFocusCommand } from "./writing-focus";
 
-export function getCommands(
-  tm: UnisastraCore
-): Record<string, AbstractCommand> {
-  return Object.fromEntries(
-    [
-      new TogglePlugin(tm),
-      new ToggleTypewriter(tm),
-      new ToggleDimming(tm),
-      new ToggleTypewriterAndDimming(tm),
-      new MoveTypewriterUp(tm),
-      new MoveTypewriterDown(tm),
-      new WritingFocusCommand(tm),
-      new ToggleHemingwayMode(tm),
-      new ToggleShowWhitespace(tm),
-      new OutlinerFocus(tm),
-      new OutlinerUnfocus(tm),
-      new RevealActiveOutlineNode(tm),
-      new FocusParent(tm),
-      new FocusFirstChild(tm),
-      new FocusNextSibling(tm),
-      new FocusPreviousSibling(tm),
-      new MoveListUp(tm),
-      new MoveListDown(tm),
-      new IndentListItem(tm),
-      new OutdentListItem(tm),
-      new OutlineFilterAll(tm),
-      new OutlineFilterBranch(tm),
-      new OutlineFilterTasks(tm),
-      new OutlineFilterCycle(tm),
-      new CopyBlockLink(tm),
-      new CopyBlockEmbed(tm),
-      new GenerateBlockId(tm),
-      new ManageCalloutsCommand(tm),
-      ...toolbarActionCommands(tm),
-      ...WRITING_MODES.map(
-        ({ mode, label }) => new SetWritingModeCommand(tm, mode, label)
-      ),
-    ].map((cmd) => [cmd.commandKey, cmd])
-  );
+export function getCommands(tm: UnisastraCore): Record<string, AbstractCommand> {
+	return Object.fromEntries(
+		[
+			new TogglePlugin(tm),
+			new ToggleTypewriter(tm),
+			new ToggleDimming(tm),
+			new ToggleTypewriterAndDimming(tm),
+			new MoveTypewriterUp(tm),
+			new MoveTypewriterDown(tm),
+			new WritingFocusCommand(tm),
+			new ToggleHemingwayMode(tm),
+			new ToggleShowWhitespace(tm),
+			new OutlinerFocus(tm),
+			new OutlinerUnfocus(tm),
+			new RevealActiveOutlineNode(tm),
+			new FocusParent(tm),
+			new FocusFirstChild(tm),
+			new FocusNextSibling(tm),
+			new FocusPreviousSibling(tm),
+			new MoveListUp(tm),
+			new MoveListDown(tm),
+			new IndentListItem(tm),
+			new OutdentListItem(tm),
+			new OutlineFilterAll(tm),
+			new OutlineFilterBranch(tm),
+			new OutlineFilterTasks(tm),
+			new OutlineFilterCycle(tm),
+			new CopyBlockLink(tm),
+			new CopyBlockEmbed(tm),
+			new GenerateBlockId(tm),
+			new ManageCalloutsCommand(tm),
+			...toolbarActionCommands(tm),
+			...WRITING_MODES.map(({ mode, label }) => new SetWritingModeCommand(tm, mode, label)),
+		].map((cmd) => [cmd.commandKey, cmd]),
+	);
 }

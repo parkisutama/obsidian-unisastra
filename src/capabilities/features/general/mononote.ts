@@ -25,170 +25,159 @@ const FOCUS_DELAY_MS = 100;
 // fields with no public typings, mirroring the upstream plugin's own
 // `RealLifeWorkspaceLeaf` cast.
 interface InternalLeafFields {
-  activeTime: number;
-  history: { back(): void; backHistory: unknown[] };
-  id: string;
-  pinned?: boolean;
+	activeTime: number;
+	history: { back(): void; backHistory: unknown[] };
+	id: string;
+	pinned?: boolean;
 }
 
 type InternalLeaf = WorkspaceLeaf & InternalLeafFields;
 
 export default class Mononote extends FeatureToggle {
-  readonly settingKey = "general.isMononoteEnabled" as const;
-  protected settingTitle = "Keep one tab per note";
-  protected settingDesc =
-    "Focus a note's existing tab instead of opening a duplicate when it's already open elsewhere in the same tab group.";
+	readonly settingKey = "general.isMononoteEnabled" as const;
+	protected settingTitle = "Keep one tab per note";
+	protected settingDesc =
+		"Focus a note's existing tab instead of opening a duplicate when it's already open elsewhere in the same tab group.";
 
-  private readonly processingLeafIds = new Set<string>();
-  private readonly pending = new Set<() => void>();
-  private enabled = false;
-  private generation = 0;
+	private readonly processingLeafIds = new Set<string>();
+	private readonly pending = new Set<() => void>();
+	private enabled = false;
+	private generation = 0;
 
-  override enable(): void {
-    if (this.enabled) {
-      return;
-    }
-    this.enabled = true;
-    super.enable();
+	override enable(): void {
+		if (this.enabled) {
+			return;
+		}
+		this.enabled = true;
+		super.enable();
 
-    this.tm.plugin.registerEvent(
-      this.tm.plugin.app.workspace.on(
-        "active-leaf-change",
-        this.onActiveLeafChange
-      )
-    );
-  }
+		this.tm.plugin.registerEvent(
+			this.tm.plugin.app.workspace.on("active-leaf-change", this.onActiveLeafChange),
+		);
+	}
 
-  override disable(): void {
-    this.enabled = false;
-    this.generation += 1;
-    for (const cancel of this.pending) {
-      cancel();
-    }
-    this.pending.clear();
-    super.disable();
-    this.tm.plugin.app.workspace.off(
-      "active-leaf-change",
-      this.onActiveLeafChange as ObsidianEventHandler
-    );
-    this.processingLeafIds.clear();
-  }
+	override disable(): void {
+		this.enabled = false;
+		this.generation += 1;
+		for (const cancel of this.pending) {
+			cancel();
+		}
+		this.pending.clear();
+		super.disable();
+		this.tm.plugin.app.workspace.off(
+			"active-leaf-change",
+			this.onActiveLeafChange as ObsidianEventHandler,
+		);
+		this.processingLeafIds.clear();
+	}
 
-  private readonly onActiveLeafChange = (
-    activeLeaf: WorkspaceLeaf | null
-  ): void => {
-    if (!(activeLeaf && this.enabled)) {
-      return;
-    }
+	private readonly onActiveLeafChange = (activeLeaf: WorkspaceLeaf | null): void => {
+		if (!(activeLeaf && this.enabled)) {
+			return;
+		}
 
-    const leaf = activeLeaf as InternalLeaf;
-    if (this.processingLeafIds.has(leaf.id)) {
-      return;
-    }
+		const leaf = activeLeaf as InternalLeaf;
+		if (this.processingLeafIds.has(leaf.id)) {
+			return;
+		}
 
-    this.processingLeafIds.add(leaf.id);
-    const generation = this.generation;
-    this.processActiveLeaf(leaf)
-      .catch((error: unknown) => {
-        console.error("Mononote failed to process active leaf:", error);
-      })
-      .finally(() => {
-        if (generation === this.generation) {
-          this.processingLeafIds.delete(leaf.id);
-        }
-      });
-  };
+		this.processingLeafIds.add(leaf.id);
+		const generation = this.generation;
+		this.processActiveLeaf(leaf)
+			.catch((error: unknown) => {
+				console.error("Mononote failed to process active leaf:", error);
+			})
+			.finally(() => {
+				if (generation === this.generation) {
+					this.processingLeafIds.delete(leaf.id);
+				}
+			});
+	};
 
-  private processActiveLeaf(activeLeaf: InternalLeaf): Promise<void> {
-    const filePath = activeLeaf.view.getState().file as string | undefined;
-    if (!filePath) {
-      return Promise.resolve();
-    }
+	private processActiveLeaf(activeLeaf: InternalLeaf): Promise<void> {
+		const filePath = activeLeaf.view.getState().file as string | undefined;
+		if (!filePath) {
+			return Promise.resolve();
+		}
 
-    const { workspace } = this.tm.plugin.app;
-    const viewType = activeLeaf.view.getViewType();
+		const { workspace } = this.tm.plugin.app;
+		const viewType = activeLeaf.view.getViewType();
 
-    // Leaves of the same type, in the same tab group, showing the same file
-    // as the active leaf, most-recently-active first (never-active leaves last).
-    const duplicateLeaves = (
-      workspace.getLeavesOfType(viewType) as InternalLeaf[]
-    )
-      .filter(
-        (leaf) =>
-          leaf.parent === activeLeaf.parent &&
-          leaf.id !== activeLeaf.id &&
-          leaf.view.getState().file === filePath
-      )
-      .sort((a, b) => {
-        if (a.activeTime === 0) {
-          return -1;
-        }
-        if (b.activeTime === 0) {
-          return 1;
-        }
-        return b.activeTime - a.activeTime;
-      });
+		// Leaves of the same type, in the same tab group, showing the same file
+		// as the active leaf, most-recently-active first (never-active leaves last).
+		const duplicateLeaves = (workspace.getLeavesOfType(viewType) as InternalLeaf[])
+			.filter(
+				(leaf) =>
+					leaf.parent === activeLeaf.parent &&
+					leaf.id !== activeLeaf.id &&
+					leaf.view.getState().file === filePath,
+			)
+			.sort((a, b) => {
+				if (a.activeTime === 0) {
+					return -1;
+				}
+				if (b.activeTime === 0) {
+					return 1;
+				}
+				return b.activeTime - a.activeTime;
+			});
 
-    if (duplicateLeaves.length === 0) {
-      return Promise.resolve();
-    }
+		if (duplicateLeaves.length === 0) {
+			return Promise.resolve();
+		}
 
-    const targetToFocus = (duplicateLeaves.find((leaf) => leaf.pinned) ??
-      duplicateLeaves.find((leaf) => !leaf.pinned)) as InternalLeaf;
+		const targetToFocus = (duplicateLeaves.find((leaf) => leaf.pinned) ??
+			duplicateLeaves.find((leaf) => !leaf.pinned)) as InternalLeaf;
 
-    return new Promise((resolve) => {
-      const generation = this.generation;
-      const ownerWindow =
-        activeLeaf.view.containerEl?.ownerDocument.defaultView ?? window;
-      let timer: number;
-      const finish = () => {
-        ownerWindow.clearTimeout(timer);
-        ownerWindow.removeEventListener?.("unload", finish);
-        this.pending.delete(finish);
-        resolve();
-      };
-      this.pending.add(finish);
-      ownerWindow.addEventListener?.("unload", finish);
-      // Deferred so Obsidian has time to update the leaf's navigation
-      // history before the "has history?" check below runs.
-      timer = ownerWindow.setTimeout(() => {
-        if (generation !== this.generation) {
-          finish();
-          return;
-        }
-        const ephemeralState = { ...activeLeaf.getEphemeralState() };
-        const hasEphemeralState = Object.keys(ephemeralState).length > 0;
+		return new Promise((resolve) => {
+			const generation = this.generation;
+			const ownerWindow = activeLeaf.view.containerEl?.ownerDocument.defaultView ?? window;
+			let timer: number;
+			const finish = () => {
+				ownerWindow.clearTimeout(timer);
+				ownerWindow.removeEventListener?.("unload", finish);
+				this.pending.delete(finish);
+				resolve();
+			};
+			this.pending.add(finish);
+			ownerWindow.addEventListener?.("unload", finish);
+			// Deferred so Obsidian has time to update the leaf's navigation
+			// history before the "has history?" check below runs.
+			timer = ownerWindow.setTimeout(() => {
+				if (generation !== this.generation) {
+					finish();
+					return;
+				}
+				const ephemeralState = { ...activeLeaf.getEphemeralState() };
+				const hasEphemeralState = Object.keys(ephemeralState).length > 0;
 
-        if (
-          activeLeaf.view.navigation &&
-          activeLeaf.history.backHistory.length > 0
-        ) {
-          // Triggers another active-leaf-change event, ignored because this
-          // leaf id is already in processingLeafIds.
-          activeLeaf.history.back();
-        } else if (activeLeaf.pinned) {
-          finish();
-          return;
-        } else {
-          activeLeaf.detach();
-        }
+				if (activeLeaf.view.navigation && activeLeaf.history.backHistory.length > 0) {
+					// Triggers another active-leaf-change event, ignored because this
+					// leaf id is already in processingLeafIds.
+					activeLeaf.history.back();
+				} else if (activeLeaf.pinned) {
+					finish();
+					return;
+				} else {
+					activeLeaf.detach();
+				}
 
-        if (generation !== this.generation) {
-          finish();
-          return;
-        }
-        timer = ownerWindow.setTimeout(() => {
-          if (generation !== this.generation) {
-            finish();
-            return;
-          }
-          workspace.setActiveLeaf(targetToFocus, { focus: true });
-          if (hasEphemeralState) {
-            targetToFocus.setEphemeralState(ephemeralState);
-          }
-          finish();
-        }, FOCUS_DELAY_MS);
-      }, FOCUS_DELAY_MS);
-    });
-  }
+				if (generation !== this.generation) {
+					finish();
+					return;
+				}
+				timer = ownerWindow.setTimeout(() => {
+					if (generation !== this.generation) {
+						finish();
+						return;
+					}
+					workspace.setActiveLeaf(targetToFocus, { focus: true });
+					if (hasEphemeralState) {
+						targetToFocus.setEphemeralState(ephemeralState);
+					}
+					finish();
+				}, FOCUS_DELAY_MS);
+			}, FOCUS_DELAY_MS);
+		});
+	}
 }

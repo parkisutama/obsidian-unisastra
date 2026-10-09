@@ -1,23 +1,23 @@
 body.unisastra-fade-lines {
-  .unisastra-current-line-fade-before {
-    display: block;
-    position: absolute;
-    height: 100vh;
-    left: 0;
-    width: 100%;
-    pointer-events: none;
-    z-index: 100;
-    background: linear-gradient(to top, transparent, var(--background-primary) var(--unisastra-fade-lines-intensity));
-  }
+	.unisastra-current-line-fade-before {
+		display: block;
+		position: absolute;
+		height: 100vh;
+		left: 0;
+		width: 100%;
+		pointer-events: none;
+		z-index: 100;
+		background: linear-gradient(to top, transparent, var(--background-primary) var(--unisastra-fade-lines-intensity));
+	}
 
-  .unisastra-current-line-fade-after {
-    display: block;
-    position: absolute;
-    height: 100vh;
-    left: 0;
-    width: 100%;
-    pointer-events: none;
-    z-index: 100;
-    background: linear-gradient(to bottom, transparent, var(--background-primary) var(--unisastra-fade-lines-intensity));
-  }
+	.unisastra-current-line-fade-after {
+		display: block;
+		position: absolute;
+		height: 100vh;
+		left: 0;
+		width: 100%;
+		pointer-events: none;
+		z-index: 100;
+		background: linear-gradient(to bottom, transparent, var(--background-primary) var(--unisastra-fade-lines-intensity));
+	}
 }

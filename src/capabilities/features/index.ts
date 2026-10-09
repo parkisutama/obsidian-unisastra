@@ -16,24 +16,22 @@ import typewriter from "./typewriter";
 import writingFocus from "./writing-focus";
 import writingModes from "./writing-modes";
 
-export function getFeatures(
-  tm: UnisastraCore
-): Record<string, Record<string, Feature>> {
-  return {
-    writingModes: writingModes(tm),
-    general: general(tm),
-    writingFocus: writingFocus(tm),
-    outliner: outliner(tm),
-    compatibility: compatibility(tm),
-    blockId: blockId(tm),
-    foldPersist: foldPersist(tm),
-    hemingwayMode: hemingwayMode(tm),
-    dimming: dimming(tm),
-    currentLine: currentLine(tm),
-    typewriter: typewriter(tm),
-    keepAboveAndBelow: keepAboveAndBelow(tm),
-    showWhitespace: showWhitespace(tm),
-    maxChar: maxChar(tm),
-    toolbar: toolbar(tm),
-  };
+export function getFeatures(tm: UnisastraCore): Record<string, Record<string, Feature>> {
+	return {
+		writingModes: writingModes(tm),
+		general: general(tm),
+		writingFocus: writingFocus(tm),
+		outliner: outliner(tm),
+		compatibility: compatibility(tm),
+		blockId: blockId(tm),
+		foldPersist: foldPersist(tm),
+		hemingwayMode: hemingwayMode(tm),
+		dimming: dimming(tm),
+		currentLine: currentLine(tm),
+		typewriter: typewriter(tm),
+		keepAboveAndBelow: keepAboveAndBelow(tm),
+		showWhitespace: showWhitespace(tm),
+		maxChar: maxChar(tm),
+		toolbar: toolbar(tm),
+	};
 }

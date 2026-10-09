@@ -1,40 +1,40 @@
 // ADAPTED FROM https://github.com/ryanpcmcquen/obsidian-focus-mode
 
 @mixin writing-focus-hide-elements {
-  &:not(.unisastra-writing-focus-shows-status-bar) .status-bar,
-  &:not(.unisastra-writing-focus-shows-header) .view-header,
-  .inline-title,
-  .workspace-split.unisastra-maximized .workspace-leaf:not(.mod-active),
-  .workspace-split.unisastra-maximized .workspace-leaf.mod-active ~ .workspace-split,
-  .workspace-ribbon,
-  .workspace-tab-header-container {
-    display: none;
-  }
+	&:not(.unisastra-writing-focus-shows-status-bar) .status-bar,
+	&:not(.unisastra-writing-focus-shows-header) .view-header,
+	.inline-title,
+	.workspace-split.unisastra-maximized .workspace-leaf:not(.mod-active),
+	.workspace-split.unisastra-maximized .workspace-leaf.mod-active ~ .workspace-split,
+	.workspace-ribbon,
+	.workspace-tab-header-container {
+		display: none;
+	}
 
-  .workspace-tab-header-container {
-    padding-left: var(--size-4-8);
-  }
+	.workspace-tab-header-container {
+		padding-left: var(--size-4-8);
+	}
 
-  .workspace-split.unisastra-writing-focus-hidden-split {
-    display: none;
-  }
+	.workspace-split.unisastra-writing-focus-hidden-split {
+		display: none;
+	}
 
-  .view-content {
-    height: 100%;
-  }
+	.view-content {
+		height: 100%;
+	}
 
-  .workspace-split.unisastra-maximized .workspace-leaf.mod-active {
-    /* 4px is for scrollbar width: */
-    flex-basis: calc(100% - 4px);
-  }
+	.workspace-split.unisastra-maximized .workspace-leaf.mod-active {
+		/* 4px is for scrollbar width: */
+		flex-basis: calc(100% - 4px);
+	}
 
-  .workspace-ribbon,
-  .sidebar-toggle-button {
-    visibility: hidden;
-  }
+	.workspace-ribbon,
+	.sidebar-toggle-button {
+		visibility: hidden;
+	}
 
-  .workspace-ribbon::before,
-  .side-dock-ribbon-action[aria-label="Toggle Writing Focus"] {
-    visibility: visible;
-  }
+	.workspace-ribbon::before,
+	.side-dock-ribbon-action[aria-label="Toggle Writing Focus"] {
+		visibility: visible;
+	}
 }

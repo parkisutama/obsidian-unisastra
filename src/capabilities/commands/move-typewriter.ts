@@ -1,34 +1,31 @@
 import type UnisastraCore from "@/lib";
 import { AbstractCommand } from "../base/abstract-command";
 
-function registerMoveTypewriterCommand(
-  tm: UnisastraCore,
-  direction: "up" | "down"
-) {
-  const editorCommand = direction === "up" ? "goUp" : "goDown";
+function registerMoveTypewriterCommand(tm: UnisastraCore, direction: "up" | "down") {
+	const editorCommand = direction === "up" ? "goUp" : "goDown";
 
-  tm.plugin.addCommand({
-    id: `move-typewriter-${direction}`,
-    name: `Move typewriter ${direction}`,
-    editorCallback: (editor, _view) => {
-      editor.exec(editorCommand);
-      window.dispatchEvent(new Event("moveByCommand"));
-    },
-  });
+	tm.plugin.addCommand({
+		id: `move-typewriter-${direction}`,
+		name: `Move typewriter ${direction}`,
+		editorCallback: (editor, _view) => {
+			editor.exec(editorCommand);
+			window.dispatchEvent(new Event("moveByCommand"));
+		},
+	});
 }
 
 export class MoveTypewriterUp extends AbstractCommand {
-  readonly commandKey = "move-typewriter-up";
-  readonly commandTitle = "Move typewriter up";
-  protected override registerCommand(): void {
-    registerMoveTypewriterCommand(this.tm, "up");
-  }
+	readonly commandKey = "move-typewriter-up";
+	readonly commandTitle = "Move typewriter up";
+	protected override registerCommand(): void {
+		registerMoveTypewriterCommand(this.tm, "up");
+	}
 }
 
 export class MoveTypewriterDown extends AbstractCommand {
-  readonly commandKey = "move-typewriter-down";
-  readonly commandTitle = "Move typewriter down";
-  protected override registerCommand(): void {
-    registerMoveTypewriterCommand(this.tm, "down");
-  }
+	readonly commandKey = "move-typewriter-down";
+	readonly commandTitle = "Move typewriter down";
+	protected override registerCommand(): void {
+		registerMoveTypewriterCommand(this.tm, "down");
+	}
 }

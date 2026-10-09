@@ -3,35 +3,32 @@ import { Feature } from "@/capabilities/base/feature";
 import type HemingwayMode from "./hemingway-mode";
 
 export default class HemingwayModeStatusBarText extends Feature {
-  readonly settingKey = "hemingwayMode.hemingwayModeStatusBarText" as const;
-  protected settingTitle = "Status bar text";
-  protected settingDesc =
-    "Text to display in the status bar when Hemingway mode is active.";
+	readonly settingKey = "hemingwayMode.hemingwayModeStatusBarText" as const;
+	protected settingTitle = "Status bar text";
+	protected settingDesc = "Text to display in the status bar when Hemingway mode is active.";
 
-  registerSetting(settingGroup: SettingGroup) {
-    settingGroup.addSetting((setting) =>
-      setting
-        .setName(this.settingTitle)
-        .setDesc(this.settingDesc)
-        .setClass("unisastra-setting")
-        .addText((text) =>
-          text
-            .setValue(this.getSettingValue() as string)
-            .onChange((newValue) => {
-              this.setSettingValue(newValue);
-              this.tm.saveSettings().catch((error) => {
-                console.error("Failed to save settings:", error);
-              });
-              this.updateHemingwayModeStatusBar();
-            })
-        )
-    );
-  }
+	registerSetting(settingGroup: SettingGroup) {
+		settingGroup.addSetting((setting) =>
+			setting
+				.setName(this.settingTitle)
+				.setDesc(this.settingDesc)
+				.setClass("unisastra-setting")
+				.addText((text) =>
+					text.setValue(this.getSettingValue() as string).onChange((newValue) => {
+						this.setSettingValue(newValue);
+						this.tm.saveSettings().catch((error) => {
+							console.error("Failed to save settings:", error);
+						});
+						this.updateHemingwayModeStatusBar();
+					}),
+				),
+		);
+	}
 
-  private updateHemingwayModeStatusBar() {
-    const hemingwayMode = this.tm.features.hemingwayMode[
-      "hemingwayMode.isHemingwayModeEnabled"
-    ] as HemingwayMode;
-    hemingwayMode.updateStatusBarText();
-  }
+	private updateHemingwayModeStatusBar() {
+		const hemingwayMode = this.tm.features.hemingwayMode[
+			"hemingwayMode.isHemingwayModeEnabled"
+		] as HemingwayMode;
+		hemingwayMode.updateStatusBarText();
+	}
 }

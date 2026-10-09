@@ -23,203 +23,189 @@ import { ItemView, Platform } from "obsidian";
 import type UnisastraCore from "@/lib";
 
 export class WritingFocus {
-  private readonly tm: UnisastraCore;
+	private readonly tm: UnisastraCore;
 
-  constructor(tm: UnisastraCore) {
-    this.tm = tm;
-  }
+	constructor(tm: UnisastraCore) {
+		this.tm = tm;
+	}
 
-  private focusModeActive = false;
+	private focusModeActive = false;
 
-  private readonly maximizedClass = "unisastra-maximized";
-  private readonly focusModeClass = "unisastra-focus-mode";
-  private readonly hiddenWorkspaceSplitClass =
-    "unisastra-writing-focus-hidden-split";
+	private readonly maximizedClass = "unisastra-maximized";
+	private readonly focusModeClass = "unisastra-focus-mode";
+	private readonly hiddenWorkspaceSplitClass = "unisastra-writing-focus-hidden-split";
 
-  private leftSplitCollapsed = false;
-  private rightSplitCollapsed = false;
+	private leftSplitCollapsed = false;
+	private rightSplitCollapsed = false;
 
-  private prevWasFullscreen = false;
+	private prevWasFullscreen = false;
 
-  private getActiveDocument(): Document {
-    return window.activeDocument;
-  }
+	private getActiveDocument(): Document {
+		return window.activeDocument;
+	}
 
-  private startFullscreen() {
-    // Native electron fullscreen is not supported on mobile
-    if (Platform.isMobile) {
-      return;
-    }
+	private startFullscreen() {
+		// Native electron fullscreen is not supported on mobile
+		if (Platform.isMobile) {
+			return;
+		}
 
-    const currentWindow = window.electron.remote.getCurrentWindow();
-    this.prevWasFullscreen = currentWindow.isFullScreen();
-    currentWindow.setFullScreen(true);
+		const currentWindow = window.electron.remote.getCurrentWindow();
+		this.prevWasFullscreen = currentWindow.isFullScreen();
+		currentWindow.setFullScreen(true);
 
-    const onLeaveFullScreen = () => {
-      this.onExitFullscreenWritingFocus();
-      currentWindow.off("leave-full-screen", onLeaveFullScreen);
-    };
+		const onLeaveFullScreen = () => {
+			this.onExitFullscreenWritingFocus();
+			currentWindow.off("leave-full-screen", onLeaveFullScreen);
+		};
 
-    currentWindow.on("leave-full-screen", onLeaveFullScreen);
-  }
+		currentWindow.on("leave-full-screen", onLeaveFullScreen);
+	}
 
-  private exitFullscreen() {
-    // Native electron fullscreen is not supported on mobile
-    if (Platform.isMobile) {
-      return;
-    }
+	private exitFullscreen() {
+		// Native electron fullscreen is not supported on mobile
+		if (Platform.isMobile) {
+			return;
+		}
 
-    // Do not exit fullscreen if writing focus was started in fullscreen
-    if (this.prevWasFullscreen) {
-      return;
-    }
+		// Do not exit fullscreen if writing focus was started in fullscreen
+		if (this.prevWasFullscreen) {
+			return;
+		}
 
-    const currentWindow = window.electron.remote.getCurrentWindow();
-    currentWindow.setFullScreen(false);
-  }
+		const currentWindow = window.electron.remote.getCurrentWindow();
+		currentWindow.setFullScreen(false);
+	}
 
-  private onExitFullscreenWritingFocus() {
-    if (this.focusModeActive) {
-      this.disableFocusModeForView();
-    }
-  }
+	private onExitFullscreenWritingFocus() {
+		if (this.focusModeActive) {
+			this.disableFocusModeForView();
+		}
+	}
 
-  private storeSplitsValues() {
-    this.leftSplitCollapsed = this.tm.plugin.app.workspace.leftSplit.collapsed;
-    this.rightSplitCollapsed =
-      this.tm.plugin.app.workspace.rightSplit.collapsed;
-  }
+	private storeSplitsValues() {
+		this.leftSplitCollapsed = this.tm.plugin.app.workspace.leftSplit.collapsed;
+		this.rightSplitCollapsed = this.tm.plugin.app.workspace.rightSplit.collapsed;
+	}
 
-  private collapseSplits() {
-    this.tm.plugin.app.workspace.leftSplit.collapse();
-    this.tm.plugin.app.workspace.rightSplit.collapse();
-  }
+	private collapseSplits() {
+		this.tm.plugin.app.workspace.leftSplit.collapse();
+		this.tm.plugin.app.workspace.rightSplit.collapse();
+	}
 
-  private restoreSplits() {
-    if (!this.leftSplitCollapsed) {
-      this.tm.plugin.app.workspace.leftSplit.expand();
-    }
-    if (!this.rightSplitCollapsed) {
-      this.tm.plugin.app.workspace.rightSplit.expand();
-    }
-  }
+	private restoreSplits() {
+		if (!this.leftSplitCollapsed) {
+			this.tm.plugin.app.workspace.leftSplit.expand();
+		}
+		if (!this.rightSplitCollapsed) {
+			this.tm.plugin.app.workspace.rightSplit.expand();
+		}
+	}
 
-  private removeExtraneousClasses() {
-    const activeDocument = this.getActiveDocument();
+	private removeExtraneousClasses() {
+		const activeDocument = this.getActiveDocument();
 
-    if (
-      this.tm.plugin.app.workspace.containerEl.hasClass(this.maximizedClass)
-    ) {
-      this.tm.plugin.app.workspace.containerEl.removeClass(this.maximizedClass);
-    }
-    if (activeDocument.body.classList.contains(this.focusModeClass)) {
-      activeDocument.body.classList.remove(this.focusModeClass);
-    }
-    this.resetWorkspaceSplitVisibility();
-  }
+		if (this.tm.plugin.app.workspace.containerEl.hasClass(this.maximizedClass)) {
+			this.tm.plugin.app.workspace.containerEl.removeClass(this.maximizedClass);
+		}
+		if (activeDocument.body.classList.contains(this.focusModeClass)) {
+			activeDocument.body.classList.remove(this.focusModeClass);
+		}
+		this.resetWorkspaceSplitVisibility();
+	}
 
-  private updateWorkspaceSplitVisibility() {
-    const activeDocument = this.getActiveDocument();
+	private updateWorkspaceSplitVisibility() {
+		const activeDocument = this.getActiveDocument();
 
-    Array.from(
-      activeDocument.querySelectorAll(
-        `.${this.focusModeClass} .workspace-split`
-      )
-    ).forEach((node) => {
-      const workspaceSplit = node as HTMLElement;
-      const hasActiveKids = workspaceSplit.querySelector(".mod-active");
-      workspaceSplit.classList.toggle(
-        this.hiddenWorkspaceSplitClass,
-        !hasActiveKids
-      );
-    });
-  }
+		Array.from(activeDocument.querySelectorAll(`.${this.focusModeClass} .workspace-split`)).forEach(
+			(node) => {
+				const workspaceSplit = node as HTMLElement;
+				const hasActiveKids = workspaceSplit.querySelector(".mod-active");
+				workspaceSplit.classList.toggle(this.hiddenWorkspaceSplitClass, !hasActiveKids);
+			},
+		);
+	}
 
-  private resetWorkspaceSplitVisibility() {
-    const activeDocument = this.getActiveDocument();
+	private resetWorkspaceSplitVisibility() {
+		const activeDocument = this.getActiveDocument();
 
-    Array.from(activeDocument.querySelectorAll(".workspace-split")).forEach(
-      (node) => {
-        node.classList.remove(this.hiddenWorkspaceSplitClass);
-      }
-    );
-  }
+		Array.from(activeDocument.querySelectorAll(".workspace-split")).forEach((node) => {
+			node.classList.remove(this.hiddenWorkspaceSplitClass);
+		});
+	}
 
-  private enableFocusModeForView() {
-    // Must be idempotent: two presets in a row can both have writingFocus
-    // enabled (e.g. Idea -> Writing), which calls this twice with no
-    // disable in between. Re-running used to flip the maximized/focus body
-    // classes back off (toggleClass negates current state) and re-run
-    // startFullscreen(), which re-captures prevWasFullscreen as `true`
-    // (since we're already fullscreen) and permanently disables
-    // exitFullscreen()'s ability to ever leave native fullscreen again.
-    if (this.focusModeActive) {
-      return;
-    }
+	private enableFocusModeForView() {
+		// Must be idempotent: two presets in a row can both have writingFocus
+		// enabled (e.g. Idea -> Writing), which calls this twice with no
+		// disable in between. Re-running used to flip the maximized/focus body
+		// classes back off (toggleClass negates current state) and re-run
+		// startFullscreen(), which re-captures prevWasFullscreen as `true`
+		// (since we're already fullscreen) and permanently disables
+		// exitFullscreen()'s ability to ever leave native fullscreen again.
+		if (this.focusModeActive) {
+			return;
+		}
 
-    this.focusModeActive = true;
-    const activeDocument = this.getActiveDocument();
+		this.focusModeActive = true;
+		const activeDocument = this.getActiveDocument();
 
-    this.storeSplitsValues();
-    this.collapseSplits();
+		this.storeSplitsValues();
+		this.collapseSplits();
 
-    this.tm.plugin.app.workspace.containerEl.toggleClass(
-      this.maximizedClass,
-      true
-    );
+		this.tm.plugin.app.workspace.containerEl.toggleClass(this.maximizedClass, true);
 
-    activeDocument.body.classList.add(this.focusModeClass);
+		activeDocument.body.classList.add(this.focusModeClass);
 
-    this.updateWorkspaceSplitVisibility();
+		this.updateWorkspaceSplitVisibility();
 
-    if (this.tm.settings.writingFocus.isWritingFocusFullscreen) {
-      this.startFullscreen();
-    }
-  }
+		if (this.tm.settings.writingFocus.isWritingFocusFullscreen) {
+			this.startFullscreen();
+		}
+	}
 
-  private disableFocusModeForView() {
-    const activeDocument = this.getActiveDocument();
+	private disableFocusModeForView() {
+		const activeDocument = this.getActiveDocument();
 
-    this.removeExtraneousClasses();
+		this.removeExtraneousClasses();
 
-    if (activeDocument.body.classList.contains(this.focusModeClass)) {
-      activeDocument.body.classList.remove(this.focusModeClass);
-    }
+		if (activeDocument.body.classList.contains(this.focusModeClass)) {
+			activeDocument.body.classList.remove(this.focusModeClass);
+		}
 
-    this.restoreSplits();
-    this.resetWorkspaceSplitVisibility();
+		this.restoreSplits();
+		this.resetWorkspaceSplitVisibility();
 
-    if (this.tm.settings.writingFocus.isWritingFocusFullscreen) {
-      this.exitFullscreen();
-    }
+		if (this.tm.settings.writingFocus.isWritingFocusFullscreen) {
+			this.exitFullscreen();
+		}
 
-    this.focusModeActive = false;
-  }
+		this.focusModeActive = false;
+	}
 
-  enableFocusMode() {
-    const view = this.tm.plugin.app.workspace.getActiveViewOfType(ItemView);
-    if (!view || view?.getViewType() === "empty") {
-      return;
-    }
-    this.enableFocusModeForView();
-  }
+	enableFocusMode() {
+		const view = this.tm.plugin.app.workspace.getActiveViewOfType(ItemView);
+		if (!view || view?.getViewType() === "empty") {
+			return;
+		}
+		this.enableFocusModeForView();
+	}
 
-  disableFocusMode() {
-    // Unlike enableFocusModeForView, disableFocusModeForView does not read
-    // from the active view — it only restores previously-stored global
-    // state (splits, fullscreen, body classes). Gating this on an active
-    // ItemView (as enable does) meant that if no matching view was active
-    // when exiting (e.g. focus moved to a non-editor pane while in native
-    // fullscreen), this returned early and left the user stuck in
-    // fullscreen with no window controls and no way to retry, since
-    // focusModeActive never got reset either.
-    if (!this.focusModeActive) {
-      return;
-    }
-    this.disableFocusModeForView();
-  }
+	disableFocusMode() {
+		// Unlike enableFocusModeForView, disableFocusModeForView does not read
+		// from the active view — it only restores previously-stored global
+		// state (splits, fullscreen, body classes). Gating this on an active
+		// ItemView (as enable does) meant that if no matching view was active
+		// when exiting (e.g. focus moved to a non-editor pane while in native
+		// fullscreen), this returned early and left the user stuck in
+		// fullscreen with no window controls and no way to retry, since
+		// focusModeActive never got reset either.
+		if (!this.focusModeActive) {
+			return;
+		}
+		this.disableFocusModeForView();
+	}
 
-  toggleFocusMode() {
-    this.focusModeActive ? this.disableFocusMode() : this.enableFocusMode();
-  }
+	toggleFocusMode() {
+		this.focusModeActive ? this.disableFocusMode() : this.enableFocusMode();
+	}
 }

@@ -2,32 +2,30 @@ import type { SettingGroup } from "obsidian";
 import { Feature } from "@/capabilities/base/feature";
 
 export default class TypewriterOffset extends Feature {
-  readonly settingKey = "typewriter.typewriterOffset" as const;
+	readonly settingKey = "typewriter.typewriterOffset" as const;
 
-  registerSetting(settingGroup: SettingGroup): void {
-    settingGroup.addSetting((setting) =>
-      setting
-        .setName("Typewriter offset")
-        .setDesc(
-          "Positions the typewriter line at the specified percentage of the screen"
-        )
-        .setClass("unisastra-setting")
-        .addSlider((slider) =>
-          slider
-            .setLimits(0, 100, 5)
-            .setDynamicTooltip()
-            .setValue((this.getSettingValue() as number) * 100)
-            .onChange((newValue) => {
-              this.changeTypewriterOffset(newValue / 100);
-            })
-        )
-    );
-  }
+	registerSetting(settingGroup: SettingGroup): void {
+		settingGroup.addSetting((setting) =>
+			setting
+				.setName("Typewriter offset")
+				.setDesc("Positions the typewriter line at the specified percentage of the screen")
+				.setClass("unisastra-setting")
+				.addSlider((slider) =>
+					slider
+						.setLimits(0, 100, 5)
+						.setDynamicTooltip()
+						.setValue((this.getSettingValue() as number) * 100)
+						.onChange((newValue) => {
+							this.changeTypewriterOffset(newValue / 100);
+						}),
+				),
+		);
+	}
 
-  private changeTypewriterOffset(newValue: number) {
-    this.setSettingValue(newValue);
-    this.tm.saveSettings().catch((error) => {
-      console.error("Failed to save settings:", error);
-    });
-  }
+	private changeTypewriterOffset(newValue: number) {
+		this.setSettingValue(newValue);
+		this.tm.saveSettings().catch((error) => {
+			console.error("Failed to save settings:", error);
+		});
+	}
 }
