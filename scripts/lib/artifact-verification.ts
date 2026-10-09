@@ -2,12 +2,14 @@
 // Copyright (C) 2025-2026 Parkis Utama
 
 import { existsSync, readFileSync, statSync } from "node:fs";
+import { versionsMapProblem } from "../versions-map.mjs";
 import { NOTICES_DIST_DIR, NOTICES_SOURCE_DIR, THIRD_PARTY_NOTICES } from "./license-banner.ts";
 
 interface ManifestJson {
 	id: string;
 	name: string;
 	version: string;
+	minAppVersion: string;
 }
 
 interface PackageJson {
@@ -107,8 +109,9 @@ export function verifyArtifacts(): string {
 		);
 	}
 
-	if (!Object.hasOwn(versions, packageJson.version)) {
-		throw new Error(`versions.json is missing key ${packageJson.version}.`);
+	const versionsProblem = versionsMapProblem(versions, manifest);
+	if (versionsProblem !== null) {
+		throw new Error(versionsProblem);
 	}
 
 	return packageJson.version;

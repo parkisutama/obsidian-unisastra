@@ -60,6 +60,20 @@ The compatibility layer only rewrites link handling at runtime for navigation an
 
 ---
 
+### Version numbering restarted at 0.0.1
+
+Versions 1.0.0 to 1.1.0 were early learning releases published under the name MD Writer. They have
+been withdrawn, and their tags and GitHub releases removed. Version numbering starts again at 0.0.1
+and follows [Semantic Versioning](https://semver.org/). Before 1.0.0 anything may change between
+releases, including command IDs and settings; the [changelog](CHANGELOG.md) says when it does.
+The history of the withdrawn versions is kept in
+[docs/en/archive/changelog-1.x.md](docs/en/archive/changelog-1.x.md).
+
+If you installed one of the withdrawn versions, Obsidian will not offer 0.0.1 as an update,
+because the number is lower than the one installed, and the plugin ID changed from `md-writer` to
+`unisastra`. Install Unisastra as a new plugin and remove the old plugin folder. Settings from
+MD Writer are not migrated.
+
 ## Positioning
 
 Unisastra follows a different product direction from the original [Typewriter Mode](https://github.com/davisriedel/obsidian-typewriter-mode). The codebase keeps the ergonomic foundation of typewriter scrolling while expanding into whitespace-aware editing and outliner-focused navigation.
