@@ -29,7 +29,7 @@ Jangan campur release metadata dengan feature atau bugfix biasa.
 ## 3. Jalankan QA sebelum commit
 
 ```bash
-pnpm run check:ci
+pnpm run verify
 ```
 
 Jika command gagal karena pnpm store lokal, perbaiki environment pnpm terlebih dahulu. Jangan bypass gate ini untuk perubahan yang akan masuk release.

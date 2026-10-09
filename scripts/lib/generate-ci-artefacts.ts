@@ -1,6 +1,6 @@
 import { copyFileSync, readFileSync, writeFileSync } from "node:fs";
 
-import { getPackageMetadata } from "./get-package-metadata";
+import { getPackageMetadata } from "./get-package-metadata.ts";
 
 export function generateCiArtefacts(outDir: string) {
 	console.log("Copying updated manifest");

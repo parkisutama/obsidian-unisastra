@@ -1,4 +1,4 @@
-import { deployPlugin } from "./lib/deploy-plugin";
+import { deployPlugin } from "./lib/deploy-plugin.ts";
 
 try {
 	deployPlugin({ required: true });

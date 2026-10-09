@@ -30,4 +30,4 @@ jobs:
       - name: Check
         run: |
           pnpm install --frozen-lockfile
-          pnpm run check:ci
+          pnpm run verify

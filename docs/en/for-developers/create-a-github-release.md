@@ -46,7 +46,7 @@ Script ini akan:
 - mengubah `manifest.json`,
 - memperbarui `versions.json`,
 - memvalidasi metadata release,
-- menjalankan `pnpm run check:ci`,
+- menjalankan `pnpm run verify`,
 - membuat commit release,
 - dan membuat tag git.
 
@@ -76,7 +76,7 @@ Aset minimum yang harus ada:
 
 Repo ini juga mengunggah zip plugin untuk kemudahan distribusi manual.
 
-`pnpm run verify:artifacts` (bagian dari `check:ci` dan workflow release) juga
+`pnpm run verify:artifacts` (bagian dari `verify` dan workflow release) juga
 menolak build bila notice MIT Floaty Toolbar hilang atau tidak sinkron:
 `dist/main.js` harus memuat banner notice penuh (`licenses/floaty-
 toolbar-MIT.txt`, tertanam lewat opsi `banner` esbuild sehingga tetap ada

@@ -1,4 +1,4 @@
-import { build } from "./lib/build";
+import { build } from "./lib/build.ts";
 
 await build({
 	entrypoints: { main: "main.ts" },

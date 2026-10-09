@@ -1,5 +1,5 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
-import { basename, resolve } from "node:path";
+import { basename, dirname, resolve } from "node:path";
 
 const DIST_FILES = ["main.js", "styles.css", "manifest.json"] as const;
 const OBSIDIAN_VAULT_PLUGIN_PATH_PATTERN = /^OBSIDIAN_VAULT_PLUGIN_PATH=(.+)$/m;
@@ -60,8 +60,17 @@ export function deployPlugin({
 		);
 	}
 
+	// A typo in .env must not create a stray vault structure: only the plugin folder itself is
+	// created, inside a plugins folder that already exists.
+	const pluginsDir = dirname(resolve(pluginDir));
+	if (!existsSync(pluginsDir)) {
+		throw new Error(
+			`OBSIDIAN_VAULT_PLUGIN_PATH: parent folder does not exist: ${pluginsDir}. Point it at the plugin folder inside an existing vault.`,
+		);
+	}
+
 	if (!existsSync(pluginDir)) {
-		mkdirSync(pluginDir, { recursive: true });
+		mkdirSync(pluginDir);
 		console.log(`Created ${pluginDir}`);
 	}
 

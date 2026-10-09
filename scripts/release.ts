@@ -1,3 +1,3 @@
-import { releasePlugin } from "./lib/release-plugin";
+import { releasePlugin } from "./lib/release-plugin.ts";
 
 releasePlugin();

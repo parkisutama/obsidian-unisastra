@@ -30,7 +30,7 @@ Dokumen archive dipakai untuk memahami sejarah, lalu diverifikasi terhadap sourc
 5. Pecah task menjadi vertical slices melalui `planning-and-task-breakdown`;
    gunakan `incremental-implementation` untuk menyelesaikan satu slice beserta
    test dan dokumentasinya sebelum berikutnya.
-6. Jalankan targeted checks, checkpoint `check`, lalu `pnpm run check:ci`.
+6. Jalankan targeted checks, checkpoint `check`, lalu `pnpm run verify`.
 7. Perbarui docs yang terdampak dan catat hasil otomatis serta acceptance manual.
 8. Review diff dan buat atomic Conventional Commit sesuai ruang lingkup pengguna.
 
@@ -70,7 +70,7 @@ hasil yang diharapkan adalah `.husky/_`.
 
 - Pre-commit: `pnpm run check`, tanpa autofix atau staging otomatis.
 - Commit-msg: commitlint, contoh `docs(ai): document development context`.
-- CI QA: `check:ci`, termasuk test, build, verifikasi artefak, dan build docs.
+- CI QA: `verify`, termasuk test, build, verifikasi artefak, dan build docs.
 - CI commitlint: seluruh commit pada pull request.
 
 Jalankan `pnpm run fix` secara eksplisit bila diperlukan dan review diff.

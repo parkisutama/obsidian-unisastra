@@ -70,7 +70,7 @@ Jangan campur perubahan release metadata dengan pekerjaan fitur biasa.
 ## 6. Jalankan QA minimum sebelum commit
 
 ```bash
-pnpm run check:ci
+pnpm run verify
 ```
 
 Lalu lakukan uji manual yang relevan di Obsidian.

@@ -7,7 +7,7 @@ Dokumen ini adalah prosedur QA praktis sebelum perubahan di-merge atau dirilis.
 Jalankan:
 
 ```bash
-pnpm run check:ci
+pnpm run verify
 ```
 
 Perintah ini mencakup:
@@ -100,7 +100,7 @@ Contoh:
 
 ```bash
 pnpm run validate:release-tag -- 1.0.0
-pnpm run check:ci
+pnpm run verify
 ```
 
 `pnpm run release` juga menjalankan gate release lokal setelah memperbarui
