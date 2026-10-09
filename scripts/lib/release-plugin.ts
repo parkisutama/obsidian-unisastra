@@ -1,8 +1,8 @@
 import { execSync } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
-import { getPackageMetadata } from "./get-package-metadata";
-import { assertObsidianReleaseVersion, validateReleaseMetadata } from "./release-validation";
-import { updateManifests } from "./update-manifests";
+import { getPackageMetadata } from "./get-package-metadata.ts";
+import { assertObsidianReleaseVersion, validateReleaseMetadata } from "./release-validation.ts";
+import { updateManifests } from "./update-manifests.ts";
 
 export function releasePlugin() {
 	console.log("Release script started");
@@ -42,7 +42,7 @@ export function releasePlugin() {
 	validateReleaseMetadata(targetVersion);
 
 	console.log("Running release gates");
-	execSync("pnpm run check:ci", {
+	execSync("pnpm run verify", {
 		stdio: "inherit",
 	});
 

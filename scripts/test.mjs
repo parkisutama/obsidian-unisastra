@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const vitestBin = fileURLToPath(new URL("../node_modules/vitest/vitest.mjs", import.meta.url));
 const temporaryDirectory = process.platform === "win32" ? tmpdir() : "/tmp";
-const result = spawnSync(process.execPath, [vitestBin, "run"], {
+const result = spawnSync(process.execPath, [vitestBin, "run", ...process.argv.slice(2)], {
 	env: {
 		...process.env,
 		TEMP: temporaryDirectory,

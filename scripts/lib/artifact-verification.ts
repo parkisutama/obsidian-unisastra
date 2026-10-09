@@ -3,7 +3,7 @@ import {
 	floatyToolbarLicenseBanner,
 	mononoteLicenseBanner,
 	writingFocusLicenseBanner,
-} from "./license-banner";
+} from "./license-banner.ts";
 
 const THIRD_PARTY_NOTICES = [
 	{

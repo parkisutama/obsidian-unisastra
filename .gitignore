@@ -32,3 +32,6 @@ test-vault
 
 .claude
 .codex
+
+# vitest coverage reports
+coverage

@@ -1,8 +1,8 @@
 import { cpSync, existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { getPackageMetadata } from "./get-package-metadata";
-import { updateManifests } from "./update-manifests";
+import { getPackageMetadata } from "./get-package-metadata.ts";
+import { updateManifests } from "./update-manifests.ts";
 
 export function setupTestVault(
 	distDir: string,

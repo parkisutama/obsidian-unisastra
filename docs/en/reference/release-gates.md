@@ -11,7 +11,7 @@ Dokumen ini mendefinisikan syarat minimum sebelum perubahan boleh dirilis.
 ## Gate 2: QA otomatis lolos
 
 ```bash
-pnpm run check:ci
+pnpm run verify
 ```
 
 Tidak boleh ada error dari:
@@ -71,7 +71,7 @@ Release dianggap selesai hanya jika workflow GitHub:
 ## Perintah referensi
 
 ```bash
-pnpm run check:ci
+pnpm run verify
 pnpm run verify:artifacts
 pnpm run release
 git push origin main --follow-tags

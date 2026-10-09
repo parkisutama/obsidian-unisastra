@@ -1,4 +1,4 @@
-import { verifyArtifacts } from "./lib/artifact-verification";
+import { verifyArtifacts } from "./lib/artifact-verification.ts";
 
 try {
 	const version = verifyArtifacts();

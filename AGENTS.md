@@ -97,7 +97,7 @@ manual yang setara bila memungkinkan tanpa mengklaim sudah memakai skill tersebu
    test relevan, `pnpm run check`, review, lalu atomic commit bila diotorisasi.
    Gunakan TDD untuk behavior/regression yang membutuhkannya. Checkpoint setiap
    2–3 task; gate gagal ditangani dengan debugging sebelum melanjutkan.
-8. **VERIFY AND REVIEW.** Jalankan `pnpm run check:ci`, lalu review kualitas dan
+8. **VERIFY AND REVIEW.** Jalankan `pnpm run verify`, lalu review kualitas dan
    compatibility. QA otomatis tidak menggantikan acceptance Obsidian. Bila runtime
    belum diuji, catat sebagai belum diuji, jangan nyatakan fitur siap shipped.
 9. **UPDATE AND HANDOVER.** Perbarui current state, architecture baseline, status,
@@ -142,11 +142,12 @@ dan scope-nya jelas dapat dikerjakan dalam otorisasi tersebut.
 ## Commands
 
 ```bash
-pnpm run check             # typecheck + Biome + Obsidian ESLint + SCSS + Markdown
+pnpm run check             # typecheck + Biome + Obsidian ESLint + SCSS + Markdown + tests
 pnpm run test              # Vitest behavior tests
-pnpm run check:ci          # QA + test + build + artifacts + docs build
+pnpm run verify            # check with coverage + build + artifacts + docs build
 pnpm run fix               # explicit autofix; inspect diff afterward
 pnpm run build             # dist output, without vault deploy
+pnpm run deploy            # build, then copy dist/ to the vault folder from .env
 pnpm run verify:artifacts
 pnpm run docs:dev
 pnpm run docs:build
@@ -159,7 +160,7 @@ pnpm run docs:build
 
 - Husky installs through `pnpm install` / `pnpm run prepare`.
   `pre-commit` runs read-only `check`; `commit-msg` runs commitlint.
-- `check:ci` includes QA, tests, build, artifact verification, and docs build.
+- `verify` includes QA, tests, build, artifact verification, and docs build.
   PR commit messages are checked separately in CI. Local hooks can be bypassed;
   they do not prove CI success or enforce atomic commit size.
 - Test relevant desktop, mobile, and popout scenarios in Obsidian separately.

@@ -38,7 +38,9 @@ describe("plugin deployment", () => {
 
 	it("deploys artifacts to a folder matching the built ID", () => {
 		const { root, distDir, envPath } = fixture("unisastra");
-		const pluginDir = join(root, "vault", ".obsidian", "plugins", "unisastra");
+		const pluginsDir = join(root, "vault", ".obsidian", "plugins");
+		mkdirSync(pluginsDir, { recursive: true });
+		const pluginDir = join(pluginsDir, "unisastra");
 		writeFileSync(envPath, `OBSIDIAN_VAULT_PLUGIN_PATH=${pluginDir}\n`);
 
 		deployPlugin({ distDir, envPath, required: true });
@@ -46,6 +48,26 @@ describe("plugin deployment", () => {
 		expect(readFileSync(join(pluginDir, "main.js"), "utf-8")).toBe("built");
 		expect(JSON.parse(readFileSync(join(pluginDir, "manifest.json"), "utf-8")).id).toBe(
 			"unisastra",
+		);
+	});
+
+	it("refuses to create a vault structure when the plugins folder does not exist", () => {
+		const { root, distDir, envPath } = fixture("unisastra");
+		const pluginDir = join(root, "no-vault", ".obsidian", "plugins", "unisastra");
+		writeFileSync(envPath, `OBSIDIAN_VAULT_PLUGIN_PATH=${pluginDir}\n`);
+
+		expect(() => deployPlugin({ distDir, envPath, required: true })).toThrow(
+			"parent folder does not exist",
+		);
+		expect(existsSync(join(root, "no-vault"))).toBe(false);
+	});
+
+	it("fails an explicit deploy when no vault is configured", () => {
+		const { distDir, envPath } = fixture("unisastra");
+		writeFileSync(envPath, "OBSIDIAN_VAULT_PLUGIN_PATH=\n");
+
+		expect(() => deployPlugin({ distDir, envPath, required: true })).toThrow(
+			"OBSIDIAN_VAULT_PLUGIN_PATH",
 		);
 	});
 });

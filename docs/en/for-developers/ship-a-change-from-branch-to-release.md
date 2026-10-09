@@ -55,7 +55,7 @@ Selama implementasi:
 Sebelum membuka PR atau merge:
 
 ```bash
-pnpm run check:ci
+pnpm run verify
 ```
 
 Lalu lakukan QA manual di Obsidian:

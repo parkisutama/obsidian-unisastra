@@ -62,7 +62,7 @@ Build normal menghapus debug statements.
 Jalankan gate penuh sebelum merge atau release:
 
 ```bash
-pnpm run check:ci
+pnpm run verify
 ```
 
 Untuk memperbaiki format yang bisa diautofix:
