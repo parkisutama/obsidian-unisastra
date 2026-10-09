@@ -189,6 +189,38 @@ describe("settings defaults and migrations", () => {
 		expect(migrated.compatibility).toEqual(DEFAULT_SETTINGS.compatibility);
 	});
 
+	it.each([
+		["an array", [{ ch: 1, line: 1 }]],
+		["a string", "Draft.md"],
+		["a number", 7],
+		["null", null],
+	])("ignores a legacy cursor file that holds %s", async (_label, content) => {
+		const migrated = await applyStartupMigrations(
+			{ version: "1.1.0" },
+			createVault(content as unknown as Record<string, unknown>),
+			".obsidian/plugins/unisastra",
+		);
+
+		expect(migrated.restoreCursorPosition.cursorPositions).toEqual({});
+	});
+
+	it("keeps only the legacy cursor entries that are objects", async () => {
+		const migrated = await applyStartupMigrations(
+			{ version: "1.1.0" },
+			createVault({
+				"Draft.md": { ch: 4, line: 2 },
+				"Broken.md": "4:2",
+				"Empty.md": null,
+				"List.md": [4, 2],
+			}),
+			".obsidian/plugins/unisastra",
+		);
+
+		expect(migrated.restoreCursorPosition.cursorPositions).toEqual({
+			"Draft.md": { ch: 4, line: 2 },
+		});
+	});
+
 	it("deep-merges modern settings with newly introduced defaults", async () => {
 		const migrated = await applyStartupMigrations(
 			{
