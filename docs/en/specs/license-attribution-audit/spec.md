@@ -6,7 +6,7 @@ MD Writer mengintegrasikan kode dan konsep dari sepuluh plugin Obsidian pihak
 ketiga. Audit sumber (bukan asumsi) menemukan dua gap nyata:
 
 1. `LICENSE` root menyatakan seluruh project MIT, tapi
-   [writing-focus.ts](../../../src/capabilities/commands/writing-focus/writing-focus.ts)
+   [writing-focus.ts](../../../../src/capabilities/commands/writing-focus/writing-focus.ts)
    genuinely mem-port struktur dan logika dari
    [ryanpcmcquen/obsidian-focus-mode](https://github.com/ryanpcmcquen/obsidian-focus-mode),
    yang berlisensi **MPL-2.0** (diverifikasi langsung dari `LICENSE` di branch
@@ -21,8 +21,8 @@ ketiga. Audit sumber (bukan asumsi) menemukan dua gap nyata:
    belum punya atribusi source-level yang lengkap (header pin-commit + file
    lisensi + build banner), berbeda dengan standar yang sudah ditegakkan untuk
    Floaty Toolbar
-   ([reorder.ts](../../../src/components/floaty-toolbar/reorder.ts),
-   [license-banner.ts](../../../scripts/lib/license-banner.ts)).
+   ([reorder.ts](../../../../src/components/floaty-toolbar/reorder.ts),
+   [license-banner.ts](../../../../scripts/lib/license-banner.ts)).
 
 Referensi awal yang diberikan pengguna (`FINAL-plugins-and-licenses-reference.md`
 dkk. dari sesi lain, disimpan di scratchpad sesi tersebut) sebagian **basi atau
