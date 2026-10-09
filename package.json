@@ -70,6 +70,7 @@
     "test": "node ./scripts/test.mjs",
     "validate:release-tag": "node ./scripts/validate-release-tag.mjs",
     "verify:artifacts": "node ./scripts/run-tsx.mjs ./scripts/verify-artifacts.ts",
+    "conformance": "node --test conformance/standard.test.mjs",
     "build": "node ./scripts/run-tsx.mjs ./scripts/build.ts",
     "dev": "node ./scripts/run-tsx.mjs ./scripts/dev.ts",
     "debug": "node ./scripts/run-tsx.mjs ./scripts/dev.ts --debug",
