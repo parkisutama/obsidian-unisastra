@@ -609,6 +609,22 @@ function mergeWritingModeSettings(
 	};
 }
 
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+	typeof value === "object" && value !== null && !Array.isArray(value);
+
+// The legacy cursor file is read from disk, so its shape is not guaranteed. Keep only what the
+// cursor feature can use: a map from file path to a position object. Anything else is dropped
+// rather than stored in settings.
+function readLegacyCursorPositions(data: string): Record<string, unknown> {
+	const parsed: unknown = JSON.parse(data);
+	if (!isPlainObject(parsed)) {
+		return {};
+	}
+	return Object.fromEntries(
+		Object.entries(parsed).filter(([, position]) => isPlainObject(position)),
+	);
+}
+
 // Migration function to copy cursor positions from old file to settings
 // Only needed when coming from pre-v1.2.0 (legacy flat format)
 async function migrateCursorPositions(
@@ -621,8 +637,7 @@ async function migrateCursorPositions(
 	try {
 		if (await vault.adapter.exists(oldFilePath)) {
 			const data = await vault.adapter.read(oldFilePath);
-			const cursorPositions = JSON.parse(data);
-			settings.restoreCursorPosition.cursorPositions = cursorPositions;
+			settings.restoreCursorPosition.cursorPositions = readLegacyCursorPositions(data);
 		}
 	} catch (error) {
 		console.error("Failed to migrate cursor positions:", error);
