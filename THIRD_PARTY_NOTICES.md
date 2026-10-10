@@ -6,7 +6,7 @@ See [LICENSE](LICENSE).
 The plugin bundles no third-party npm packages into `main.js` or `styles.css`.
 Obsidian, Electron, and CodeMirror are provided by the host application and are not bundled.
 
-Unisastra is derived from one project and adapts code from five others.
+Unisastra is derived from one project and adapts code from six others.
 Each notice below is reproduced in full under `third-party-notices/`, embedded in the banner of the built `main.js`, and shipped in the release under `licenses/`.
 The list in `scripts/lib/license-banner.ts` is the single source the build and its verification use.
 
@@ -23,6 +23,7 @@ Every source file that traces back to that import carries the SPDX license expre
 
 | Project | License | Copyright | Files in this repository | Notice |
 | --- | --- | --- | --- | --- |
+| [Typewriter Scroll](https://github.com/deathau/cm-typewriter-scroll-obsidian) | MIT (declared in `package.json`; no license file) | death_au | `src/cm6/plugin.ts` (user-event filter, inherited through Typewriter Mode) | [typewriter-scroll-MIT.txt](third-party-notices/typewriter-scroll-MIT.txt) |
 | [Floaty Toolbar](https://github.com/0png/Floaty-Toolbar) | MIT | 2026 0png | `src/capabilities/commands/toolbar-actions.ts`, `src/capabilities/features/toolbar/actions.ts`, `src/components/floaty-toolbar/reorder.ts` | [floaty-toolbar-MIT.txt](third-party-notices/floaty-toolbar-MIT.txt) |
 | [MonoNote](https://github.com/czottmann/obsidian-mononote) | MIT | 2023-present Carlo Zottmann | `src/capabilities/features/general/mononote.ts` | [mononote-MIT.txt](third-party-notices/mononote-MIT.txt) |
 | [Remember Cursor Position](https://github.com/dy-sh/obsidian-remember-cursor-position) | MIT | 2021 Dmitry Savosh | `src/capabilities/features/restore-cursor-position/restore-cursor-position.ts` | [remember-cursor-position-MIT.txt](third-party-notices/remember-cursor-position-MIT.txt) |
@@ -34,15 +35,16 @@ Their source is in this repository at the paths above.
 
 ## Projects that informed a feature
 
-The source comments in this repository state that these projects informed a feature and that no code was ported from them.
-That statement has not been checked against the upstream sources file by file.
+These projects informed a feature; no code from them is included.
+The two deathau entries were compared with the upstream sources on 2026-10-10.
 
 - [Obsidian Zoom](https://github.com/vslinko/obsidian-zoom) (MIT): outliner focus.
 - [Hemingway Mode](https://github.com/jobedom/obsidian-hemingway-mode) (MIT): Hemingway mode.
-- [cm-typewriter-scroll-obsidian](https://github.com/deathau/cm-typewriter-scroll-obsidian) and [cm-show-whitespace-obsidian](https://github.com/deathau/cm-show-whitespace-obsidian) by deathau: typewriter scrolling and whitespace display.
+- [cm-show-whitespace-obsidian](https://github.com/deathau/cm-show-whitespace-obsidian) by death_au (MIT, declared in `package.json`): whitespace display. Unisastra uses CodeMirror 6's own whitespace extensions.
+- [cm-typewriter-scroll-obsidian](https://github.com/deathau/cm-typewriter-scroll-obsidian): the scroll-offset calculation is a separate implementation; the one inherited fragment is listed under Adapted code.
 
 Typewriter Mode describes itself as having started as a fork of cm-typewriter-scroll-obsidian before being restructured.
-Neither deathau repository declares a license, so no license text can be reproduced here; the lineage is recorded for completeness.
+Neither deathau repository publishes a license file; both declare MIT in `package.json`.
 
 ## License history
 

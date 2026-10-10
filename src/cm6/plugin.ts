@@ -21,7 +21,9 @@ const currentLineClass = "unisastra-current-line";
 const fadeBeforeClass = "unisastra-current-line-fade-before";
 const fadeAfterClass = "unisastra-current-line-fade-after";
 
-// Regex patterns for user event validation
+// Regex patterns for user event validation. The two default patterns, and the way they are
+// combined over a transaction's user events, come from Typewriter Scroll by death_au (MIT),
+// extension.ts, inherited through Typewriter Mode. Notice: third-party-notices/typewriter-scroll-MIT.txt.
 const USER_EVENT_ALLOWED_DEFAULT = /^(select|input|delete|undo|redo)(\..+)?$/;
 const USER_EVENT_DISALLOWED_DEFAULT = /^(select.pointer)$/;
 const USER_EVENT_ALLOWED_COMMANDS_ONLY = /^(input|delete|undo|redo)(\..+)?$/;
