@@ -6,7 +6,9 @@
 2. `docs/current-state.md`: implemented capabilities and compatibility contracts.
 3. `docs/reference/code-architecture-baseline.md`: module responsibilities.
 4. `docs/reference/decisions/`: accepted architectural decisions.
-5. `docs/for-developers/ai-assisted-development.md`: workflow and context selection.
+5. The developer guides in the workspace repository, starting with
+   <https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-developers/ai-assisted-development.md>:
+   workflow and context selection.
 
 Read the relevant source and tests before changing behavior. Active documents
 describe the contract; verify implementation rather than assuming a plan is shipped.
@@ -58,7 +60,7 @@ manual yang setara bila memungkinkan tanpa mengklaim sudah memakai skill tersebu
 ## Project conventions
 
 - Node.js 24, pnpm as pinned in `package.json`, TypeScript, CodeMirror 6,
-  Obsidian API, Biome, ESLint Obsidian rules, Stylelint, rumdl, Vitest, VitePress.
+  Obsidian API, Biome, ESLint Obsidian rules, Stylelint, rumdl, Vitest.
 - Keep the current `src/capabilities`, `src/cm6`, and composition structure.
   Do not transplant Focus Notes feature layers or its test runner into this repo.
 - Preserve plugin ID `unisastra`, existing command IDs, settings keys,
@@ -144,13 +146,11 @@ dan scope-nya jelas dapat dikerjakan dalam otorisasi tersebut.
 ```bash
 pnpm run check             # typecheck + Biome + Obsidian ESLint + SCSS + Markdown + tests
 pnpm run test              # Vitest behavior tests
-pnpm run verify            # check with coverage + build + artifacts + docs build
+pnpm run verify            # check with coverage + build + artifacts + conformance
 pnpm run fix               # explicit autofix; inspect diff afterward
 pnpm run build             # dist output, without vault deploy
 pnpm run deploy            # build, then copy dist/ to the vault folder from .env
 pnpm run verify:artifacts
-pnpm run docs:dev
-pnpm run docs:build
 ```
 
 `pnpm run dev` menyiapkan test-vault dan dapat deploy ke vault yang dikonfigurasi.
@@ -160,7 +160,7 @@ pnpm run docs:build
 
 - Husky installs through `pnpm install` / `pnpm run prepare`.
   `pre-commit` runs read-only `check`; `commit-msg` runs commitlint.
-- `verify` includes QA, tests, build, artifact verification, and docs build.
+- `verify` includes QA, tests, build, artifact verification, and the conformance test.
   PR commit messages are checked separately in CI. Local hooks can be bypassed;
   they do not prove CI success or enforce atomic commit size.
 - Test relevant desktop, mobile, and popout scenarios in Obsidian separately.

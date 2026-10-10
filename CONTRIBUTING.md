@@ -2,15 +2,16 @@
 
 AI agents follow [AGENTS.md](AGENTS.md); the workflow below applies to everyone.
 
-Setup, local development, and the test vault are described in [DEVELOPMENT.md](DEVELOPMENT.md).
-The longer guides live under `docs/en/for-developers/` and `docs/untuk-developer/`.
+Setup, local development, and the test vault are described in [DEVELOPMENT.md](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/DEVELOPMENT.md).
+The user and developer guides live in the workspace repository: <https://github.com/parkisutama/obsidian-univeritas/tree/main/docs/unisastra>.
+Specifications and decision records stay here under `docs/`.
 
 ## Commands
 
 | Command | Purpose |
 | --- | --- |
 | `pnpm run check` | typecheck, Biome, Obsidian ESLint, Stylelint, Markdown lint, tests |
-| `pnpm run verify` | `check` with coverage, then build, artifact verification, docs build, and conformance |
+| `pnpm run verify` | `check` with coverage, then build, artifact verification, and conformance |
 | `pnpm run test` | Vitest |
 | `pnpm run build` | production build into `dist/`; never touches a vault |
 | `pnpm run dev` | watch build; prepares `test-vault/` and copies to the vault named in `.env` |

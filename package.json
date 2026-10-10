@@ -34,7 +34,6 @@
 		"stylelint-config-standard-scss": "^17.0.0",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.71.1",
-		"vitepress": "^1.6.4",
 		"vitest": "^5.0.3"
 	},
 	"description": "High-precision drafting for Obsidian with typewriter scrolling, whitespace visualization, and outliner focus",
@@ -65,11 +64,8 @@
 		"verify:artifacts": "node scripts/verify-artifacts.ts",
 		"conformance": "node --test conformance/standard.test.mjs",
 		"version:sync": "node scripts/sync-version.mjs",
-		"docs:dev": "vitepress dev docs",
-		"docs:build": "vitepress build docs",
-		"docs:preview": "vitepress preview docs",
 		"check": "pnpm run typecheck && pnpm run lint && pnpm run lint:obsidian && pnpm run lint:styles && pnpm run lint:md && pnpm run test",
-		"verify": "pnpm run typecheck && pnpm run lint && pnpm run lint:obsidian && pnpm run lint:styles && pnpm run lint:md && pnpm run test:coverage && pnpm run build && pnpm run verify:artifacts && pnpm run docs:build && pnpm run conformance"
+		"verify": "pnpm run typecheck && pnpm run lint && pnpm run lint:obsidian && pnpm run lint:styles && pnpm run lint:md && pnpm run test:coverage && pnpm run build && pnpm run verify:artifacts && pnpm run conformance"
 	},
 	"private": true
 }
