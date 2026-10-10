@@ -284,6 +284,8 @@ test("ci.yml runs the verify entry point", () => {
 	assert.match(read(".github/workflows/ci.yml"), /pnpm run verify(?![:\w-])/);
 });
 
+// The pattern below names the SPDX tag; the markers keep the REUSE linter from reading it as one.
+// REUSE-IgnoreStart
 test("every source file starts with an SPDX license identifier", () => {
 	const missing = tracked
 		.filter((file) => SOURCE_DIRS.some((dir) => file.startsWith(dir)))
@@ -293,4 +295,11 @@ test("every source file starts with an SPDX license identifier", () => {
 			return !/SPDX-License-Identifier: \S+/.test(head);
 		});
 	assert.deepEqual(missing, []);
+});
+// REUSE-IgnoreEnd
+
+test("install-time supply-chain settings are strict", () => {
+	const workspace = read("pnpm-workspace.yaml");
+	assert.match(workspace, /^minimumReleaseAgeStrict: true$/m);
+	assert.match(workspace, /^allowBuilds:$/m);
 });

@@ -1,11 +1,10 @@
+# Packages allowed to run install scripts. @parcel/watcher is the file watcher of sass; the others
+# fetch or validate a platform binary.
 allowBuilds:
   "@biomejs/biome": true
   "@parcel/watcher": true
   esbuild: true
   rumdl: true
-
-minimumReleaseAgeExclude:
-  - obsidian@1.14.4
 
 # CM6 extensions and history annotations must share the host-compatible instances.
 overrides:
@@ -16,3 +15,6 @@ overrides:
 peerDependencyRules:
   allowedVersions:
     "eslint-plugin-obsidianmd>obsidian": "1.14.4"
+
+# Ask before installing a version younger than the minimum release age; never exclude it silently.
+minimumReleaseAgeStrict: true

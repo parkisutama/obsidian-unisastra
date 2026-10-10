@@ -17,7 +17,7 @@ The list in `scripts/lib/license-banner.ts` is the single source the build and i
 | [Typewriter Mode](https://github.com/davisriedel/obsidian-typewriter-mode) | MIT | 2023-2026 Davis Riedel | [typewriter-mode-MIT.txt](third-party-notices/typewriter-mode-MIT.txt) |
 
 Unisastra began as a copy of Typewriter Mode.
-Every source file that traces back to that import carries `SPDX-License-Identifier: GPL-3.0-only AND MIT` with the upstream copyright line.
+Every source file that traces back to that import carries the SPDX license expression `GPL-3.0-only AND MIT` with the upstream copyright line.
 
 ## Adapted code
 
