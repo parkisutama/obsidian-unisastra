@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-only AND MIT
-// Derived from Typewriter Mode (https://github.com/davisriedel/obsidian-typewriter-mode)
-// Copyright (c) 2023-2026 Davis Riedel
+// Adapted from Obsidian Zoom (https://github.com/vslinko/obsidian-zoom): src/logic/DetectClickOnBullet.ts
+// Copyright (c) 2021 Viacheslav Slinko
 // Modifications Copyright (C) 2025-2026 Parkis Utama
+// Full notice: third-party-notices/obsidian-zoom-MIT.txt
 
-// Zoom-on-bullet-click concept inspired by vslinko's obsidian-zoom
-// (https://github.com/vslinko/obsidian-zoom). No code ported — this uses
-// Obsidian's own `cm-formatting-list-*`/`list-bullet` DOM classes, not
-// upstream's implementation.
+// Zoom on a bullet click. The click handling follows Obsidian Zoom's DetectClickOnBullet; the
+// bullet is recognised through Obsidian's own `cm-formatting-list-*`/`list-bullet` DOM classes.
 
 import { EditorSelection } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";

@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only AND MIT
-// Derived from Typewriter Mode (https://github.com/davisriedel/obsidian-typewriter-mode)
-// Copyright (c) 2023-2026 Davis Riedel
+// Adapted from Obsidian Zoom (https://github.com/vslinko/obsidian-zoom): src/logic/KeepOnlyZoomedContentVisible.ts
+// Copyright (c) 2021 Viacheslav Slinko
 // Modifications Copyright (C) 2025-2026 Parkis Utama
+// Full notice: third-party-notices/obsidian-zoom-MIT.txt
 
 import type { EditorState, RangeSet, RangeValue } from "@codemirror/state";
 import { EditorView } from "@codemirror/view";

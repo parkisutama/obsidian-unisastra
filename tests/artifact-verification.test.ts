@@ -231,6 +231,7 @@ describe("third-party notice list", () => {
 			"floaty-toolbar-MIT.txt",
 			"focus-active-sentence-MIT.txt",
 			"mononote-MIT.txt",
+			"obsidian-zoom-MIT.txt",
 			"remember-cursor-position-MIT.txt",
 			"typewriter-mode-MIT.txt",
 			"typewriter-scroll-MIT.txt",
