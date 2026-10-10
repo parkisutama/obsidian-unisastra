@@ -112,10 +112,20 @@ The "Keep one tab per note" general setting was derived from [MonoNote](https://
 
 Many thanks to the developers of these fantastic plugins. Please also consider supporting them.
 
-## Development and project docs
+## Documentation
 
-Contributor setup lives in [DEVELOPMENT.md](./DEVELOPMENT.md). Project workflow,
-release, and planning notes live in [docs/](./docs/README.md).
+User and developer guides live in the shared workspace repository,
+[obsidian-univeritas](https://github.com/parkisutama/obsidian-univeritas/tree/main/docs/unisastra):
+
+- Users: [install](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-users/install-unisastra.md),
+  [features](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-users/use-unisastra-features.md),
+  [troubleshooting](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-users/troubleshooting.md);
+  [panduan berbahasa Indonesia](https://github.com/parkisutama/obsidian-univeritas/tree/main/docs/unisastra/untuk-pengguna).
+- Developers: [setup](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/DEVELOPMENT.md),
+  [CONTRIBUTING.md](CONTRIBUTING.md), and the
+  [engineering standard](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/obsidian-plugin-engineering-standard.md).
+
+Specifications and decision records stay in this repository under `docs/`.
 
 ## Privacy and network use
 

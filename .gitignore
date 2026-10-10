@@ -9,8 +9,6 @@ bun.lockb
 
 # Build
 dist
-docs/.vitepress/cache
-docs/.vitepress/dist
 lib-dist
 test-vault
 

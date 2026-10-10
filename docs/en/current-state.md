@@ -179,7 +179,7 @@ Test saat ini mencakup commands, settings, GFM anchors, kalkulasi offset
 typewriter, artefak build, dan validasi release. Coverage ini tidak membuktikan
 semua perilaku editor, mobile, atau popout. Lihat
 [development status](./development-status.md) untuk hasil validasi terbaru dan
-[QA guide](./for-developers/run-qa-before-merge-or-release.md) untuk acceptance.
+[QA guide](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-developers/run-qa-before-merge-or-release.md) untuk acceptance.
 
 Spesifikasi [outliner](./reference/outliner-urd-prd.md) memuat kebutuhan dan rencana;
 periksa source dan tests sebelum menyatakan suatu bagian sudah selesai.

@@ -348,8 +348,8 @@ diubah otomatis; reset header mengembalikannya ke inherit.
 - Dependency direction dan cycles belum ditegakkan dengan architecture tests.
 - Akurasi docs dan ukuran atomic commit tetap memerlukan review manusia.
 
-Lihat [AI Assisted Development](./for-developers/ai-assisted-development.md)
-dan [QA guide](./for-developers/run-qa-before-merge-or-release.md).
+Lihat [AI Assisted Development](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-developers/ai-assisted-development.md)
+dan [QA guide](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-developers/run-qa-before-merge-or-release.md).
 
 ## T16 discovery checkpoint — 2026-09-13
 

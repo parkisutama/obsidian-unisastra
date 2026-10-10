@@ -122,4 +122,4 @@ Manifest dukungan mobile tetap dipertahankan meskipun fitur ini desktop-only.
 Tidak ada deadline yang ditentukan. Spec disetujui melalui pesan
 "Spec disetujui". Tahap berikutnya adalah validasi [plan](./plan.md) beserta
 ADR, TASKS, dan implementasi sesuai
-[workflow aktif](../../en/for-developers/ai-assisted-development.md).
+[workflow aktif](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-developers/ai-assisted-development.md).
