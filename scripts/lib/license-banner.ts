@@ -51,6 +51,10 @@ export const THIRD_PARTY_NOTICES: readonly ThirdPartyNotice[] = [
 		"Unisastra is derived from Typewriter Mode by Davis Riedel, MIT licensed.",
 		"https://github.com/davisriedel/obsidian-typewriter-mode",
 	]),
+	notice("typewriter-scroll-MIT.txt", "Typewriter Scroll MIT", [
+		"Unisastra includes code from Typewriter Scroll by death_au, MIT licensed, inherited through Typewriter Mode.",
+		"https://github.com/deathau/cm-typewriter-scroll-obsidian",
+	]),
 	notice("floaty-toolbar-MIT.txt", "Floaty Toolbar MIT", [
 		"Unisastra includes code adapted from Floaty Toolbar by 0png, MIT licensed.",
 		"https://github.com/0png/Floaty-Toolbar",

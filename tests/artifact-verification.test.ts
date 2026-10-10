@@ -233,6 +233,7 @@ describe("third-party notice list", () => {
 			"mononote-MIT.txt",
 			"remember-cursor-position-MIT.txt",
 			"typewriter-mode-MIT.txt",
+			"typewriter-scroll-MIT.txt",
 			"writing-focus-MPL2.0.txt",
 		]);
 	});
