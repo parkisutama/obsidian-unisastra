@@ -7,7 +7,7 @@
 3. `docs/reference/code-architecture-baseline.md`: module responsibilities.
 4. `docs/reference/decisions/`: accepted architectural decisions.
 5. The developer guides in the workspace repository, starting with
-   <https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-developers/ai-assisted-development.md>:
+   <https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/for-developers/ai-assisted-development.md>:
    workflow and context selection.
 
 Read the relevant source and tests before changing behavior. Active documents

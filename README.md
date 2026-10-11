@@ -117,11 +117,12 @@ Many thanks to the developers of these fantastic plugins. Please also consider s
 User and developer guides live in the shared workspace repository,
 [obsidian-univeritas](https://github.com/parkisutama/obsidian-univeritas/tree/main/docs/unisastra):
 
-- Users: [install](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-users/install-unisastra.md),
-  [features](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-users/use-unisastra-features.md),
-  [troubleshooting](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/en/for-users/troubleshooting.md);
-  [panduan berbahasa Indonesia](https://github.com/parkisutama/obsidian-univeritas/tree/main/docs/unisastra/untuk-pengguna).
+- Users: [install](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/for-users/install-unisastra.md),
+  [features](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/for-users/use-unisastra-features.md),
+  [troubleshooting](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/for-users/troubleshooting.md).
+  These guides are written in Indonesian.
 - Developers: [setup](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/DEVELOPMENT.md),
+  the [development workflow](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/plugin-development-workflow.md),
   [CONTRIBUTING.md](CONTRIBUTING.md), and the
   [engineering standard](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/obsidian-plugin-engineering-standard.md).
 
