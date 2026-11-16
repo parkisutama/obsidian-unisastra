@@ -14,11 +14,3 @@
 * attribute the outliner code adapted from Obsidian Zoom ([#24](https://github.com/parkisutama/obsidian-unisastra/issues/24)) ([9ee7150](https://github.com/parkisutama/obsidian-unisastra/commit/9ee71501bf0b0ec0e0922fc25adf2a358f5a2f35))
 * attribute the outliner stylesheet to Obsidian Zoom ([#25](https://github.com/parkisutama/obsidian-unisastra/issues/25)) ([3563f05](https://github.com/parkisutama/obsidian-unisastra/commit/3563f05efbe528f00998b140d3212880d4bcecba))
 * harden toolbar Link destinations and cancel stale clipboard actions ([#36](https://github.com/parkisutama/obsidian-unisastra/issues/36)) ([d312336](https://github.com/parkisutama/obsidian-unisastra/commit/d312336a5fe7d8173e031145123aa17d78f506f1))
-
-Pending Release PR notes (local changes; version remains managed by release-please):
-
-- Link formatting cancels stale clipboard actions instead of replacing newer text.
-- Clipboard URL destinations escape Markdown delimiters and reject control characters.
-
-The Release PR must place these notes under its generated version heading; this
-paragraph does not represent a published release.
