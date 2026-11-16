@@ -1,8 +1,9 @@
 # ADR-006: Safe Markdown link destinations
 
 - Date: 2026-11-16.
-- Status: Accepted for local implementation under the maintainer's instruction
-  to implement SEC-H01–SEC-H04; native acceptance remains pending.
+- Status: Accepted and implemented (#36). Native acceptance passed on Obsidian
+  1.15.1 desktop on 2026-11-16; see the
+  [hardening ledger](../../specs/security-hardening/tasks.md).
 - Contract: [security hardening spec](../../specs/security-hardening/spec.md).
 
 ## Context

@@ -1,30 +1,22 @@
 # Development status
 
-## Deploy target follow-up - 2026-11-16
+## Security hardening merged - 2026-11-16
 
-The maintainer authorized SEC-H05 after the initial H01-H04 implementation.
-Runtime metadata gating and explicit structural-only offline verification are
-implemented locally; 22 initial regressions failed before the implementation.
-Live Obsidian CLI reader smoke passed without printing private path values or
-performing deployment. Real filesystem fixtures cover aliases, redirects and
-preflight; final gate results are tracked in the
-[follow-up ledger](specs/deploy-target-verification/tasks.md).
-No operational vault deploy, real repository tag, release, commit or push.
+SEC-H01 to SEC-H05 are merged to `main`: PR 35 (CI audit and release-source guard),
+PR 36 (toolbar Link), PR 37 (deploy target verification), PR 38 (records) and PR 39
+(minimatch).
+`pnpm run verify` passes on `main`: 36 files / 305 tests, unchanged coverage floors,
+build, artifact verification and 20 conformance checks; `pnpm audit` reports no
+known vulnerabilities and `pnpm peers check` is clean.
 
-## Security hardening - 2026-11-16
-
-SEC-H01 through SEC-H04 are implemented locally; SEC-H05 is tracked separately above.
-Checkpoint after H01/H02: pnpm run check passed 35 files / 248 tests plus
-typecheck and lint. Link regression tests failed before their respective fixes;
-35 toolbar tests now pass after the independent review correction. Thirteen release-source fixture tests pass.
-Final pnpm run verify passed: 36 files / 276 tests, unchanged coverage floors,
-build/artifacts and 20 conformance checks. Native/hosted acceptance remains
-pending; see the
-[ledger](specs/security-hardening/tasks.md) for final evidence and limitations.
-Full-graph advisory snapshots and remaining moderate/low triage are recorded
-in the [dependency review](specs/security-hardening/dependency-review.md).
-This does not close the earlier formal audit validator or native-host blocker.
-No operational vault deploy, real repository tag, release, commit or push.
+Acceptance on Obsidian 1.15.1 desktop in a disposable vault: Link escaping, unwrap
+and undo, the Outline panel's handling of script and event-handler payloads, and
+live deploy verification (normal, Obsidian closed, wrong vault) passed. Structural
+offline mode was not run live, SEC-H02 clipboard timing was not triggered manually,
+and independent review of the deploy helper is not recorded. The audit validators
+pass on Linux. Real release provenance is still unobserved until the first release.
+See the [hardening ledger](specs/security-hardening/tasks.md) and the
+[deploy ledger](specs/deploy-target-verification/tasks.md).
 
 ## Rebranding Unisastra — 2026-09-29
 
@@ -41,6 +33,10 @@ nama Unisastra, versi `1.2.0`, dan repo tujuan
 `parkisutama/obsidian-unisastra`. Lihat
 [ledger rebrand](./specs/unisastra-rebrand/tasks.md) dan
 [ADR-005](./reference/decisions/ADR-005-unisastra-identity.md).
+
+Pembaruan 2026-11-16: versi `1.2.0` digantikan oleh restart penomoran di `0.0.1`,
+repositori GitHub sudah `parkisutama/obsidian-unisastra` dan remote `origin` mengarah ke sana.
+Tag dan rilis pertama menunggu PR release-please.
 
 Repositori GitHub belum diubah; Git remote lokal masih menunjuk repo lama.
 Push, tag, release, deployment vault operasional, dan acceptance native Obsidian

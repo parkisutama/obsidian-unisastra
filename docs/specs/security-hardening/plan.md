@@ -1,6 +1,6 @@
 # Security hardening implementation plan
 
-Status: Local implementation authorized by the maintainer on 2026-11-16.
+Status: Authorized 2026-11-16; implemented in #35, #36 and #39. The authorization limits below applied to that work.
 
 Subsequent scope: SEC-H05 is now authorized separately; see the
 [deploy verification plan](../deploy-target-verification/plan.md). Deferred

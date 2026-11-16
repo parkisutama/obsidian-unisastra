@@ -2,31 +2,30 @@
 
 ## Deploy target verification - 2026-11-16
 
-SEC-H05 is implemented locally in Node-only deployment tooling. The existing
-path key is retained; default runtime verification compares canonical vault root
-and active configDir from one fixed CLI query before target writes. A wrong
-vault/config, unusable CLI output, directory redirects, and linked/non-regular
-destination files are rejected. Root/config aliases resolving consistently are
-supported. Explicit structural mode warns that active config is unverified;
-there is no automatic downgrade. Both deploy callers remain synchronous.
-Fixture tests pass, and live deploy acceptance against disposable vaults was
-closed by the maintainer on 2026-11-16 (structural mode not exercised). See
+Merged in #37. Deploy tooling keeps the `OBSIDIAN_VAULT_PLUGIN_PATH` key; by default
+it compares the canonical vault root and active config folder from one fixed,
+read-only Obsidian CLI query before any write. A wrong vault or config, unusable CLI
+output, redirected directories and linked or non-regular destination files are
+rejected. Root and config aliases that resolve consistently are supported. Explicit
+`OBSIDIAN_DEPLOY_VERIFICATION=structural` warns that the active config is
+unverified; there is no automatic downgrade. Both deploy callers stay synchronous.
+Fixture tests pass and live deploy acceptance on disposable vaults passed on
+2026-11-16 (structural mode not run live). See
 [evidence](specs/deploy-target-verification/tasks.md) and
 [ADR-007](reference/decisions/ADR-007-deploy-target-verification.md).
 
 ## Security hardening - 2026-11-16
 
-Local implementation now audits the full dependency graph at the high floor;
-The Vite override to 6.4.4 was superseded the same day by the Vite 8.3.8 update (#34).
-Link actions cancel after clipboard await if the document or focused range
+Merged in #35, #36 and #39. CI audits the full dependency graph at the high floor.
+Link actions cancel after the clipboard await if the document or focused range
 invalidates the selection. Raw control characters are rejected before trim;
-destination whitespace is encoded and Markdown delimiters/ampersands escaped.
-URL selection, legacy simple-link unwrap and undo are retained by targeted tests.
-Release build checks out the release-please SHA and requires HEAD, peeled tag
-and workflow event SHA equality; publication repeats the event identity guard.
-Native Link and Outline acceptance passed on Obsidian 1.15.1 desktop (2026-11-16);
-actual hosted release/provenance remains unverified.
-See [implementation ledger](specs/security-hardening/tasks.md) and
+destination whitespace is encoded and Markdown delimiters and ampersands are
+escaped. URL selection, legacy simple-link unwrap and undo are kept and tested.
+The release build checks out the release-please SHA and requires HEAD, the peeled
+tag and the workflow event SHA to be equal; publication repeats the event identity
+guard. Native Link and Outline acceptance passed on Obsidian 1.15.1 desktop
+(2026-11-16). Actual hosted release provenance remains unverified until the first
+release. See the [ledger](specs/security-hardening/tasks.md) and
 [ADR-006](reference/decisions/ADR-006-safe-link-destinations.md).
 
 ## Unisastra identity — 2026-09-29
@@ -37,7 +36,8 @@ Command namespace mengikuti ID baru; command toggle plugin memakai
 opt-out memakai `unisastra: false`, dan kelas/variabel CSS memakai prefix
 `unisastra-`. Package dan arsip rilis bernama `unisastra`; metadata lokal
 disiapkan untuk versi `1.2.0` dan URL repo tujuan
-`parkisutama/obsidian-unisastra`. Nama repo GitHub belum diubah.
+`parkisutama/obsidian-unisastra`. Pembaruan 2026-11-16: penomoran versi direstart di
+`0.0.1` dan repo GitHub sudah bernama `obsidian-unisastra`.
 
 Tidak ada migrasi settings, hotkey, workspace, snippet, atau frontmatter lama.
 Perubahan source dan gate otomatis dijelaskan di

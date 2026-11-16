@@ -1,6 +1,6 @@
 # Security hardening requirements
 
-Status: Accepted for local implementation by the maintainer on 2026-11-16.
+Status: Accepted 2026-11-16; implemented in #35, #36 and #39. See the [ledger](tasks.md).
 
 Follow-up: SEC-H05 is now authorized separately in the
 [deploy verification contract](../deploy-target-verification/spec.md).

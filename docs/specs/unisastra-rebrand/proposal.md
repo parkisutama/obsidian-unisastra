@@ -1,6 +1,6 @@
 # Usulan rebranding MD Writer menjadi Unisastra
 
-Status: **Keputusan diterima; implementasi lokal berlangsung**. Plugin belum diajukan ke Obsidian Community Plugins dan hanya dipakai maintainer. Lihat [spec](./spec.md), [plan](./plan.md), [tasks](./tasks.md), dan [ADR-005](../../reference/decisions/ADR-005-unisastra-identity.md). Repositori GitHub, vault operasional, dan rilis belum diubah.
+Status: **Keputusan diterima dan dijalankan** (repo sudah bernama `obsidian-unisastra`; versi direstart di `0.0.1`). Plugin belum diajukan ke Obsidian Community Plugins dan hanya dipakai maintainer. Lihat [spec](./spec.md), [plan](./plan.md), [tasks](./tasks.md), dan [ADR-005](../../reference/decisions/ADR-005-unisastra-identity.md). Repositori GitHub, vault operasional, dan rilis belum diubah.
 
 ## Tujuan dan batasan
 
