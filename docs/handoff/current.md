@@ -2,9 +2,9 @@
 
 Date: 2026-11-16.
 Branch: `claude/quality-hardening`.
-State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoint 1 was run on Windows (see "Native checkpoint 1 result"); the keyboard-operation part is inconclusive.
-Current owner: Windows native-testing agent, returning the turn.
-Next owner: Ubuntu development agent, after reading the result below.
+State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoint 1 was run on Windows (see "Native checkpoint 1 result"); the keyboard-operation part is inconclusive. Checkpoint 1b is requested.
+Current owner: Ubuntu development agent, which wrote checkpoint 1b.
+Next owner: Windows native-testing agent, for checkpoint 1b.
 Code SHA under test: `141a78c` (last code or test change; later commits are documentation only). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
 Source base: `f2ae9af1705777edde86015dbf2c0f3ac4a16c39` (main).
 
@@ -85,3 +85,29 @@ Tab, Shift+Tab, Enter and Home gave the same result with the flags on or off, so
 Cleanup: the test vault's `data.json` was restored from a backup, the temporary note was deleted, and open editors were closed.
 
 Not run: `gh attestation verify`, native checks for checkpoints 2 and 3.
+
+## Checkpoint 1b (requested from Windows)
+
+Code SHA under test: unchanged, `141a78c05a44f1ce809ed6caa2916ec02ef1cc2d`. No code was changed for this request.
+
+Why: the checkpoint 1 keyboard result is inconclusive. Ubuntu read the code; nothing was run.
+
+Verified in code:
+
+- `cm.dispatch` is passed unbound by the commands, which is safe: `EditorView` binds it in its constructor (`@codemirror/view` `this.dispatch = this.dispatch.bind(this)`).
+- The outliner keymaps (`Mod-a`, `ArrowLeft`, `Home`, `Tab`, `Shift-Tab`, `Enter`, `Mod-Shift-ArrowUp/Down`) are registered through `registerEditorExtension` with no `Prec` (`src/lib.ts:208`, `src/cm6/outliner/index.ts`).
+
+Hypotheses, not tested:
+
+- H1: Obsidian's own keymaps for the same keys run first at the same precedence, so the plugin handlers never run. This fits `Mod-a` selecting the whole document and `ArrowLeft` entering the marker.
+- H2: `indentListItem` and `moveListItemUp` return `false` and change nothing when the item has no previous sibling at the same depth. Run on a child item `a1` that is the first child of `a`, that is correct behavior, not a bug.
+
+Steps, in the disposable test vault with the five keyboard flags enabled (`isKeyboardOpsEnabled`, `isCursorStickEnabled`, `isSmartEnterEnabled`, `isSmartTabEnabled`, `isSmartSelectEnabled`), then reload the plugin:
+
+1. Note with the lines `- a` and `- b`. Put the cursor inside `b`. Run `unisastra:indent-list-item` through the command palette. Expected: `b` becomes a child of `a`. Report the resulting text.
+2. Same note, cursor inside `b` (restore it first). Run `unisastra:move-list-up`. Expected: `b` and `a` swap. Report the resulting text.
+3. Same note with `a1` as a child of `a`, cursor inside `a1`. Run `unisastra:indent-list-item`. Expected: no change (H2). Report the text.
+4. Real key presses, not synthetic events: `Mod-a` with the cursor inside an item. Report whether the item content or the whole document is selected. Then `ArrowLeft` at the content start of an item, and `Tab` and `Enter` at the end of an item. Report the text and cursor each time.
+5. Repeat step 4 with the five flags off. If the results are identical, H1 is supported.
+
+Report pass or fail per step with console errors, and restore the vault data afterwards. Do not change plugin code. Whether to add `Prec.high` is a maintainer decision, to be made after this result.
