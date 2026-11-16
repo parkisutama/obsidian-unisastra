@@ -1,5 +1,31 @@
 # Development status
 
+## Deploy target follow-up - 2026-11-16
+
+The maintainer authorized SEC-H05 after the initial H01-H04 implementation.
+Runtime metadata gating and explicit structural-only offline verification are
+implemented locally; 22 initial regressions failed before the implementation.
+Live Obsidian CLI reader smoke passed without printing private path values or
+performing deployment. Real filesystem fixtures cover aliases, redirects and
+preflight; final gate results are tracked in the
+[follow-up ledger](specs/deploy-target-verification/tasks.md).
+No operational vault deploy, real repository tag, release, commit or push.
+
+## Security hardening - 2026-11-16
+
+SEC-H01 through SEC-H04 are implemented locally; SEC-H05 is tracked separately above.
+Checkpoint after H01/H02: pnpm run check passed 35 files / 248 tests plus
+typecheck and lint. Link regression tests failed before their respective fixes;
+35 toolbar tests now pass after the independent review correction. Thirteen release-source fixture tests pass.
+Final pnpm run verify passed: 36 files / 276 tests, unchanged coverage floors,
+build/artifacts and 20 conformance checks. Native/hosted acceptance remains
+pending; see the
+[ledger](specs/security-hardening/tasks.md) for final evidence and limitations.
+Full-graph advisory snapshots and remaining moderate/low triage are recorded
+in the [dependency review](specs/security-hardening/dependency-review.md).
+This does not close the earlier formal audit validator or native-host blocker.
+No operational vault deploy, real repository tag, release, commit or push.
+
 ## Rebranding Unisastra — 2026-09-29
 
 Implementasi lokal mengganti plugin ID dan nama tampilan menjadi `unisastra` /
