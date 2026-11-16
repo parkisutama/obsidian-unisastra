@@ -24,7 +24,8 @@ destination whitespace is encoded and Markdown delimiters/ampersands escaped.
 URL selection, legacy simple-link unwrap and undo are retained by targeted tests.
 Release build checks out the release-please SHA and requires HEAD, peeled tag
 and workflow event SHA equality; publication repeats the event identity guard.
-Native Link rendering and actual hosted release/provenance remain unverified.
+Native Link and Outline acceptance passed on Obsidian 1.15.1 desktop (2026-11-16);
+actual hosted release/provenance remains unverified.
 See [implementation ledger](specs/security-hardening/tasks.md) and
 [ADR-006](reference/decisions/ADR-006-safe-link-destinations.md).
 

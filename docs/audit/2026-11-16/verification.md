@@ -98,3 +98,12 @@ This closes the file-read validator gate. It does not close the one `blocked` un
 (host `MarkdownRenderer` sanitization), which needs native Obsidian acceptance, and it
 does not turn the unrun sandbox controls into passes. The rows above stay as the
 historical record of the Windows run.
+
+## Addendum 2026-11-16: host MarkdownRenderer check
+
+The one `blocked` unit (host `MarkdownRenderer` sanitization) was checked on
+Obsidian 1.15.1, Windows desktop, in a disposable vault with the rebuilt plugin. The
+outline panel rendered `<img onerror>`, `<script>` and `javascript:` payloads with the
+event attribute and script removed and no `href` on the link; no payload executed. This is
+one host version, not a universal claim. See the
+[native acceptance table](../../specs/security-hardening/tasks.md).
