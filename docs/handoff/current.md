@@ -5,7 +5,7 @@ Branch: `claude/quality-hardening`.
 State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoint 1 is requested now.
 Current owner: Ubuntu development agent.
 Next owner: Windows native-testing agent, at the checkpoint named below.
-Code SHA under test: `141a78c` (last code or test change; later commits are documentation only). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is not pushed yet; the maintainer must push or share it before Windows can fetch it.
+Code SHA under test: `141a78c` (last code or test change; later commits are documentation only). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
 Source base: `f2ae9af1705777edde86015dbf2c0f3ac4a16c39` (main).
 
 ## Read first
@@ -36,7 +36,7 @@ All run inside bubblewrap (no network, cleared environment, read-only source and
 
 ## Blockers
 
-- The `gh` token is invalid; branch protection (`Verify`, `Test (Windows)`, `Commit messages`) and `RELEASE_TOKEN` cannot be set until the maintainer runs `gh auth login -h github.com`. Set `RELEASE_TOKEN` before the protection, or the Release PR never gets its required checks.
+- Resolved: the `gh` token is valid again and the branch is pushed. Still open: branch protection (`Verify`, `Test (Windows)`, `Commit messages`) and `RELEASE_TOKEN` are not set; they need the maintainer's approval. Set `RELEASE_TOKEN` before the protection, or the Release PR never gets its required checks.
 - No pull request is open. The maintainer chose one branch and one pull request; its title must be `fix: ...`.
 
 ## Native checkpoints requested from Windows
