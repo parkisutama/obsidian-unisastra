@@ -39,3 +39,8 @@ Actual CI execution and hosted alert closure remain unverified.
 
 Update 2026-11-16: the Vite override was superseded by the Vite 8.3.8 update (#34);
 the high-severity Vite advisory no longer appears and `pnpm audit --audit-level high` exits 0.
+
+Update 2026-11-16: the remaining minimatch advisory (GHSA-g3hv-75wg-m249, moderate,
+dev-only through typescript-eslint) is patched by an override of the vulnerable
+8.x, 9.x and 10.x copies to 11.0.8. `pnpm audit` reports no known vulnerabilities;
+`pnpm run verify` passes (305 tests, lint, build, 20 conformance).
