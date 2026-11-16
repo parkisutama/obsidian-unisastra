@@ -7,8 +7,8 @@ Source: [spec](spec.md), [plan](plan.md). Authorized 2026-11-16; implementation 
 | S1a | QH-01 | `tests/settings.test.ts` | Regression test fails on current code | Done: two tests failed before the fix (commit `298723f`) |
 | S1b | QH-01 | `src/capabilities/settings.ts` | Defaults never mutated; legacy branch covered; existing tests pass | Done: 36 files / 307 tests in bubblewrap |
 | C1 | Checkpoint | check gates in sandbox | Record file and test counts | Done for typecheck, biome, eslint, vitest; native reload check pending, see [handoff](../../handoff/current.md) |
-| S2a | QH-04 | `pnpm-workspace.yaml` | Dated comment and removal condition | Pending |
-| S2b | QH-05 | `scripts/lib/setup-test-vault.ts` | `JSON.stringify` output equals old output | Pending |
+| S2a | QH-04 | `pnpm-workspace.yaml` | Dated comment and removal condition | Done |
+| S2b | QH-05 | `scripts/lib/setup-test-vault.ts` | `JSON.stringify` output equals old output | Done |
 | S3a | QH-02 | Coverage baseline | Per-file numbers for three files recorded here | Pending |
 | S3b | QH-02 | Outliner and list tests | Each test proven by condition inversion | Pending |
 | S3c | QH-02 | `vitest.config.ts` | Thresholds raised below measured totals, never lowered | Pending |
