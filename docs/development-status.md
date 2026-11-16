@@ -14,7 +14,7 @@ fixture editor lulus 155 checks. `dist/manifest.json` memuat ID `unisastra`,
 nama Unisastra, versi `1.2.0`, dan repo tujuan
 `parkisutama/obsidian-unisastra`. Lihat
 [ledger rebrand](./specs/unisastra-rebrand/tasks.md) dan
-[ADR-005](./en/reference/decisions/ADR-005-unisastra-identity.md).
+[ADR-005](./reference/decisions/ADR-005-unisastra-identity.md).
 
 Repositori GitHub belum diubah; Git remote lokal masih menunjuk repo lama.
 Push, tag, release, deployment vault operasional, dan acceptance native Obsidian
@@ -289,7 +289,7 @@ tests, build plugin, artifacts 1.1.0, dan build VitePress. Node 24.19.0;
 pnpm memakai versi pinned 11.21.0.
 
 Host desktop/mobile/popout belum diuji untuk layout baru; H01–H06 tetap Pending
-di [ledger](./en/specs/compact-settings-layout/tasks.md). Tidak ada commit, push,
+di [ledger](./specs/compact-settings-layout/tasks.md). Tidak ada commit, push,
 release, atau deployment ke vault pada scope ini. Heading General mengikuti
 permintaan eksplisit maintainer dengan pengecualian lint terlokalisasi; aturan
 QA lainnya tetap dijalankan.
@@ -333,9 +333,9 @@ accepted for the reported host cases (Obsidian 1.14.1, installer 1.13.7,
 Advanced Canvas 7.0.0). Additional host/platform/settings coverage is deferred,
 not marked Pass. CSS scope may affect other embedded editors, empty-area clicking
 or nested/theme interactions; reopen on concrete regression evidence.
-No further implementation is planned now. [Accepted spec](./en/specs/editor-bug-fixing/spec.md),
-[plan](./en/specs/editor-bug-fixing/plan.md) and
-[completion/evidence ledger](./en/specs/editor-bug-fixing/tasks.md) preserve scope,
+No further implementation is planned now. [Accepted spec](./specs/editor-bug-fixing/spec.md),
+[plan](./specs/editor-bug-fixing/plan.md) and
+[completion/evidence ledger](./specs/editor-bug-fixing/tasks.md) preserve scope,
 diagnosis, acceptance and deferred QA F01–F05.
 
 Callout CSS dims rendered widget subtrees once while preserving active source
@@ -387,10 +387,10 @@ Validasi lokal pada Node.js 24.19.0 dan pnpm 11.21.0:
 
 ## Floaty Toolbar planning
 
-- Branch `codex/adopt-floaty-toolbar`: [spec](./en/specs/floaty-toolbar/spec.md)
-  accepted oleh maintainer; [plan](./en/specs/floaty-toolbar/plan.md) dan
-  [ADR-002](./en/reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md)
-  Accepted. [Task breakdown](./en/specs/floaty-toolbar/tasks.md): T01-T10 (Slice A
+- Branch `codex/adopt-floaty-toolbar`: [spec](./specs/floaty-toolbar/spec.md)
+  accepted oleh maintainer; [plan](./specs/floaty-toolbar/plan.md) dan
+  [ADR-002](./reference/decisions/ADR-002-floaty-toolbar-and-callout-management.md)
+  Accepted. [Task breakdown](./specs/floaty-toolbar/tasks.md): T01-T10 (Slice A
   — settings contract, bold executor, CM6/controller bridge, floating toolbar
   UI/settings tab; Slice B — italic/strikethrough/code/highlight, cycling
   heading, and link insert/unwrap with clipboard capture/revalidation; Slice C

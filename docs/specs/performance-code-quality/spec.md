@@ -8,7 +8,7 @@ verifikasi berada di tasks; acceptance spec tidak berarti native QA sudah selesa
 - Pendekatan: [plan](./plan.md).
 - Pelaksanaan dan acceptance: [tasks](./tasks.md).
 - Kontrak existing: [current state](../../current-state.md) dan
-  [architecture baseline](../../en/reference/code-architecture-baseline.md).
+  [architecture baseline](../../reference/code-architecture-baseline.md).
 
 ## Masalah dan pengguna
 

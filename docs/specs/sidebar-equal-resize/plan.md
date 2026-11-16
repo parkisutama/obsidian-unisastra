@@ -3,7 +3,7 @@
 - Status: Accepted oleh maintainer pada 2026-09-27 melalui "oke lanjutkan".
 - Tanggal: 2026-09-27.
 - Requirement: [spec accepted](./spec.md).
-- Keputusan: [ADR-003](../../en/reference/decisions/ADR-003-sidebar-equal-resize.md).
+- Keputusan: [ADR-003](../../reference/decisions/ADR-003-sidebar-equal-resize.md).
 
 ## Bukti dan batas pengetahuan
 

@@ -7,7 +7,7 @@ mengotorisasi spec ini. Maintainer kemudian menyetujui paket rekomendasi dan
 scope secara eksplisit. [Plan](./plan.md) kemudian disetujui melalui "lanjut ke
 task breakdown"; [tasks](./tasks.md) kemudian accepted untuk implementasi.
 Keputusan tambahan B02: "Izinkan auto-ID pada fold native apa pun";
-lihat [ADR-004](../../en/reference/decisions/ADR-004-fold-native-effects.md).
+lihat [ADR-004](../../reference/decisions/ADR-004-fold-native-effects.md).
 
 ## Masalah dan baseline sebelum implementasi
 
