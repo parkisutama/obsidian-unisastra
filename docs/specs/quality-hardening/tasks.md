@@ -27,3 +27,11 @@ Source: [spec](spec.md), [plan](plan.md). Authorized 2026-11-16; implementation 
 - QH-01 probe, run inside bubblewrap: 1 failed, 305 passed. The failing assertion is the
   default-mutation check. The probe became the regression tests of S1.
 - S1 evidence: red run 2 failed; green run 36 files / 307 tests; `tsc`, `biome`, `eslint` clean, all in bubblewrap. Native checkpoints for the Windows agent are in [the handoff](../../handoff/current.md).
+
+## Findings after native checkpoint 1b (2026-11-17)
+
+| Item | Finding | State |
+| --- | --- | --- |
+| QH-06 | The Outline panel reads list depth from text with `Math.floor(indent / 2)` in `createTextListOutlineEntry` (`src/components/outline-view.ts`). A tab counts as one character, so a one-tab child sits level with its parent and a two-tab item drops one level. Four spaces count as two levels. The syntax-tree path and Live Preview are correct. Seen on 2026-11-17 in a note indented by tabs; after the maintainer turned off "Indent using tabs" the panel read the same note correctly | Open. Needs a failing test for tab, two-space and four-space indent first, then a fix. The spec must also state when the panel uses the text path instead of the tree path |
+| QH-07 | Maintainer direction: use Obsidian Smart lists, remove the plugin's editor list commands and keyboard flags, keep the Outline panel operations. See [ADR-008](../../reference/decisions/ADR-008-native-smart-lists-and-outline-ops.md) | Direction accepted; spec, migration plan and tests pending |
+| QH-08 | With the five keyboard flags on, the palette commands "Indent list item" and "Move list item up" change nothing; with them off they work (maintainer report, real key presses and palette). Cause unknown | Open; retired by QH-07 if the commands are removed |

@@ -2,9 +2,9 @@
 
 Date: 2026-11-16.
 Branch: `claude/quality-hardening`.
-State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoint 1 was run on Windows (see "Native checkpoint 1 result"); the keyboard-operation part is inconclusive. Checkpoint 1b is requested.
-Current owner: Ubuntu development agent, which wrote checkpoint 1b.
-Next owner: Windows native-testing agent, for checkpoint 1b.
+State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoints 1 and 1b are recorded; the keyboard question is settled by a maintainer decision (ADR-008, QH-07). QH-06 is a new Outline panel bug.
+Current owner: Windows native-testing agent, returning the turn.
+Next owner: Ubuntu development agent: read the 2026-11-17 section, then QH-06, the QH-07 spec, QH-03.
 Code SHA under test: `141a78c` (last code or test change; later commits are documentation only). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
 Source base: `f2ae9af1705777edde86015dbf2c0f3ac4a16c39` (main).
 
@@ -130,3 +130,32 @@ Method difference: the commands ran through `app.commands.executeCommandById` on
 Reading: H2 does not explain step 1. `b` has a previous sibling at the same depth, and `tests/keyboard-ops.test.ts` expects `indentListItem` to indent it, yet nothing changed in the live editor. `outdent-list-item` works on the same path (`resolveListItem` finds the item), so the failure is specific to `indentListItem`, `moveListItemUp` and `moveListItemDown`, which depend on `getPreviousSibling` and `getNextSibling`. The live syntax tree names list lines `HyperMD-list-line_HyperMD-list-line-N`, which the regex accepts, so the cause is not found. Not run: reading the sibling lookup against the live tree line by line. The outdent cursor offset (column 1, expected 3) is a second, separate observation.
 
 Cleanup: the vault's `data.json` was restored, the temporary note deleted, editors closed. No plugin code was changed.
+
+## Checkpoint 1b result, steps 4 and 5, and corrections (2026-11-17)
+
+Source: maintainer report with real key presses and the command palette, Obsidian 1.15.1, disposable vault `unisastra-testvault`. Windows did not observe these steps; the table repeats what was reported. Code SHA under test is unchanged, `141a78c`.
+
+| Case | Flags on | Flags off |
+| --- | --- | --- |
+| `Mod-a` in or before `a1` | Selects `a1` only; a second press selects everything | Selects everything |
+| `ArrowLeft` | Reported as changing the bullet to a minus sign; the wording is ambiguous and the cursor position was not confirmed | Same as flags on |
+| `Home` at the end of `a1` | Cursor before `a1`, after the marker | Same |
+| `Tab` at the end of `b` | `b` becomes a child of `a`, level with `a1` | Not recorded |
+| `Enter` at the end of an item | New item at the level of the previous one | Not recorded |
+| Palette "Indent list item", "Move list item up" | No change | Both work |
+
+Corrections to the Windows record above:
+
+- H1 (Obsidian's keymaps run first) is refuted: the plugin's handlers run on real key presses. The earlier "inconclusive" came from synthetic `keydown` events, which do not reproduce the plugin's behavior. Do not use them as evidence.
+- The statement that `indentListItem` and the move functions fail in the live editor rests on `executeCommandById`, which is not trustworthy. The maintainer's palette report agrees only for the flags-on case. The real finding is QH-08.
+- A later CLI run found the vault still had `isKeyboardOpsEnabled` true, so it was not a clean flags-off run and is not evidence.
+
+New findings, recorded in the [ledger](../specs/quality-hardening/tasks.md):
+
+- QH-06, Outline panel list depth is wrong for tab indentation. Ubuntu: write a failing test first. The fix sits in the file QH-03 splits, so do both in that order.
+- QH-07, [ADR-008](../reference/decisions/ADR-008-native-smart-lists-and-outline-ops.md): Obsidian 1.15 Smart lists replace the editor list operations. The maintainer decided to remove the plugin's editor commands and keyboard flags and keep the Outline panel operations. This is a direction only; write a spec before any removal.
+- QH-08, palette commands change nothing with the flags on; likely retired by QH-07.
+
+Maintainer decisions still open: the settings migration and removed command IDs (see ADR-008), and whether 0.0.2 carries the removal or only the `fix:` changes.
+
+Test vault state at the end of this round: `isKeyboardOpsEnabled` is true, the other four flags are false, and "Indent using tabs" is off. The vault is disposable.
