@@ -117,6 +117,7 @@ async function executeLinkAction(target: ToolbarTarget): Promise<string | null> 
 		return "Selection is outside the focused outline.";
 	}
 	const selectedText = target.state.sliceDoc(range.from, range.to);
+	const document = target.state.doc;
 	const unwrapped = linkUnwrapEdit(selectedText, range.from, range.to);
 	if (unwrapped) {
 		dispatchToolbarEdit(target, unwrapped, {
@@ -129,9 +130,9 @@ async function executeLinkAction(target: ToolbarTarget): Promise<string | null> 
 	let url = LINK_PLACEHOLDER_URL;
 	if (target.policy().smartUrl) {
 		try {
-			const clipboardText = (await target.readClipboardText?.())?.trim() ?? "";
+			const clipboardText = (await target.readClipboardText?.()) ?? "";
 			if (isLikelyUrl(clipboardText)) {
-				url = clipboardText;
+				url = clipboardText.trim();
 			}
 		} catch {
 			// Clipboard unavailable or denied; keep the placeholder URL.
@@ -145,7 +146,11 @@ async function executeLinkAction(target: ToolbarTarget): Promise<string | null> 
 		if (
 			!(revalidated.enabled && revalidated.current) ||
 			revalidated.hemingway ||
-			!stillSameSelection
+			!revalidated.smartUrl ||
+			!stillSameSelection ||
+			target.state.doc !== document ||
+			(revalidated.visible &&
+				(range.from < revalidated.visible.from || range.to > revalidated.visible.to))
 		) {
 			return "The target changed while reading the clipboard. Link was not inserted.";
 		}
