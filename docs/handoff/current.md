@@ -111,3 +111,22 @@ Steps, in the disposable test vault with the five keyboard flags enabled (`isKey
 5. Repeat step 4 with the five flags off. If the results are identical, H1 is supported.
 
 Report pass or fail per step with console errors, and restore the vault data afterwards. Do not change plugin code. Whether to add `Prec.high` is a maintainer decision, to be made after this result.
+
+## Checkpoint 1b result, steps 1 to 3 (Windows)
+
+Tested code SHA: `141a78c05a44f1ce809ed6caa2916ec02ef1cc2d`, built and deployed earlier from this branch; the branch head `3a9d2ca` adds documentation only. Obsidian 1.15.1, Windows 11, disposable vault `unisastra-testvault`, the five keyboard flags enabled and the plugin reloaded.
+
+Method difference: the commands ran through `app.commands.executeCommandById` on the active editor, not the command palette, and the text was set with `setValue`. Steps 4 and 5 (real key presses) are not run; they need the maintainer.
+
+| Step | Input and cursor | Expected | Observed |
+| --- | --- | --- | --- |
+| 1 | `- a` / `- b`, cursor in `b`, `indent-list-item` | `b` becomes a child of `a` | Text unchanged; the command returned true |
+| 2 | same, `move-list-up` | `a` and `b` swap | Text unchanged |
+| 3 | `- a` with a nested `- a1`, cursor in `a1`, `indent-list-item` | No change (H2) | No change |
+| extra | `- a` with a nested `- a1`, cursor in `a1`, `outdent-list-item` | `a1` becomes a root item | Became a root item, but the cursor landed at column 1 instead of 3 |
+| extra | `- a` / `- b` / `- c`, cursor in `c`, `indent-list-item`, one second after `setValue` | `c` indents | Unchanged, so a parse delay does not explain step 1 |
+| extra | `- a` / `- b`, cursor in `a`, `move-list-down` | swap | Unchanged |
+
+Reading: H2 does not explain step 1. `b` has a previous sibling at the same depth, and `tests/keyboard-ops.test.ts` expects `indentListItem` to indent it, yet nothing changed in the live editor. `outdent-list-item` works on the same path (`resolveListItem` finds the item), so the failure is specific to `indentListItem`, `moveListItemUp` and `moveListItemDown`, which depend on `getPreviousSibling` and `getNextSibling`. The live syntax tree names list lines `HyperMD-list-line_HyperMD-list-line-N`, which the regex accepts, so the cause is not found. Not run: reading the sibling lookup against the live tree line by line. The outdent cursor offset (column 1, expected 3) is a second, separate observation.
+
+Cleanup: the vault's `data.json` was restored, the temporary note deleted, editors closed. No plugin code was changed.
