@@ -26,6 +26,7 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+      sha: ${{ steps.release.outputs.sha }}
     steps:
       - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
         id: release
@@ -41,6 +42,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.release-please.outputs.sha }}
+      - name: Verify released source
+        env:
+          RELEASE_SHA: ${{ needs.release-please.outputs.sha }}
+          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+        run: |
+          test -n "${RELEASE_SHA}"
+          test -n "${TAG_NAME}"
+          git check-ref-format "refs/tags/${TAG_NAME}"
+          git fetch --no-tags --depth=1 origin "refs/tags/${TAG_NAME}:refs/tags/${TAG_NAME}"
+          node scripts/verify-release-source.mjs
+          printf 'Verified release source: %s\n' "${RELEASE_SHA}" >> "${GITHUB_STEP_SUMMARY}"
       - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
         with:
           run_install: false
@@ -81,6 +95,12 @@ jobs:
       id-token: write
       attestations: write
     steps:
+      - name: Require matching provenance source
+        env:
+          RELEASE_SHA: ${{ needs.release-please.outputs.sha }}
+        run: |
+          test -n "${RELEASE_SHA}"
+          test "${RELEASE_SHA}" = "${GITHUB_SHA}"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: release
