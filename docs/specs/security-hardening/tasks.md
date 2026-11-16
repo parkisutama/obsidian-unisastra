@@ -44,7 +44,9 @@ until observed; automated tests cannot close those rows.
   and clipboard timing. No operational vault deployment was performed.
 - Hosted CI and real release provenance/source identity: pending a normal
   maintainer-controlled release; no release or workflow dispatch was triggered.
-- Earlier formal security-audit Windows no-follow/host blockers remain open.
+- Earlier security-audit validator blocker closed 2026-11-16: both validators pass on
+  Linux (see the audit verification addendum). The host `MarkdownRenderer` blocker
+  remains open until native Obsidian acceptance.
 - Six remaining moderate/low advisories are open, documented in
   [dependency review](dependency-review.md), not suppressed or declared harmless.
 - Pending CHANGELOG notes must be placed into the version heading assigned by
