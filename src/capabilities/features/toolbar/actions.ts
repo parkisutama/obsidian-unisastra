@@ -77,7 +77,7 @@ export function headingEdit(
 	return { from: lineFrom, to: lineTo, insert };
 }
 export const LINK_PLACEHOLDER_URL = "https://";
-const LINK_PATTERN = /^\[(.*)\]\([^)]*\)$/;
+const LINK_PATTERN = /^\[(.*)\]\((?:\\.|[^\\)\r\n])*\)$/;
 export interface LinkInsertion extends TextEdit {
 	urlFrom: number;
 	urlTo: number;
@@ -90,11 +90,15 @@ export function linkUnwrapEdit(text: string, from: number, to: number): TextEdit
 	return { from, to, insert: match[1] };
 }
 export function linkWrapEdit(text: string, from: number, to: number, url: string): LinkInsertion {
-	const insert = `[${text}](${url})`;
+	const destination = url.replace(/[\s\p{Cc}]/gu, encodeURIComponent).replace(/[\\()<>&]/g, "\\$&");
+	const insert = `[${text}](${destination})`;
 	const urlFrom = from + text.length + 3;
-	return { from, to, insert, urlFrom, urlTo: urlFrom + url.length };
+	return { from, to, insert, urlFrom, urlTo: urlFrom + destination.length };
 }
 export function isLikelyUrl(value: string): boolean {
+	if (/\p{Cc}/u.test(value)) {
+		return false;
+	}
 	try {
 		const parsed = new URL(value);
 		return parsed.protocol === "http:" || parsed.protocol === "https:";
