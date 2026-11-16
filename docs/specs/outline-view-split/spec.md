@@ -1,6 +1,6 @@
 # Outline view split spec
 
-Status: Proposed. The maintainer authorized QH-03 on 2026-11-16; this spec, the plan and the tasks need validation before implementation.
+Status: Plan validated against the code on 2026-11-16 (see the plan's corrections). The maintainer authorized QH-03 on the same date; approval of the corrected plan is still needed before implementation.
 Date: 2026-11-16.
 Source: [quality audit, QH-03](../../audit/2026-11-16-quality-pass/REPORT.md), [quality hardening](../quality-hardening/spec.md).
 
