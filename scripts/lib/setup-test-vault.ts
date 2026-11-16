@@ -19,7 +19,7 @@ export function setupTestVault(
 		console.log("Community plugins already configured in test vault");
 	} else {
 		console.log("Creating community-plugins.json");
-		writeFileSync(`${obsidianConfigPath}/community-plugins.json`, `["${pluginName}"]`);
+		writeFileSync(`${obsidianConfigPath}/community-plugins.json`, JSON.stringify([pluginName]));
 	}
 
 	console.log("Cleaning test vault");
