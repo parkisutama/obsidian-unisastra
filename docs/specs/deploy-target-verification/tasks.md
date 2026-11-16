@@ -23,5 +23,18 @@ Live target metadata/deploy acceptance is not established by the dummy probe.
 ESLint, Stylelint and Markdown lint, build and artifact verification for 0.0.1,
 and all 20 conformance tests. No operational vault was deployed.
 
-Still open: independent source review of D2, and a live Obsidian CLI to deploy
-run against a disposable vault. Fixture results do not establish either.
+## Live acceptance (maintainer, disposable vaults)
+
+2026-11-16, Windows, Obsidian CLI, disposable vaults `unisastra-testvault` and
+`unisastra-othervault` (no working vault touched):
+
+| Case | Result |
+| --- | --- |
+| Deploy with the target vault open | Passed; canonical path printed, files copied |
+| Obsidian closed | Passed; `Cannot query Obsidian CLI`, nothing written |
+| Target is another vault than the running one | Maintainer reported passed |
+| Active vault is the target | Passed; verified root/config matched, files copied |
+| `OBSIDIAN_DEPLOY_VERIFICATION=structural` | Not exercised |
+
+The maintainer closed live acceptance on this basis. The structural-mode run was
+not performed; fixtures cover it. Independent source review of D2 is not recorded.

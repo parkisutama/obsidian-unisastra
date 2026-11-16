@@ -9,8 +9,8 @@ vault/config, unusable CLI output, directory redirects, and linked/non-regular
 destination files are rejected. Root/config aliases resolving consistently are
 supported. Explicit structural mode warns that active config is unverified;
 there is no automatic downgrade. Both deploy callers remain synchronous.
-Fixture tests and a real read-only metadata-reader smoke pass; operational
-vault copying and native end-to-end deploy acceptance remain untested. See
+Fixture tests pass, and live deploy acceptance against disposable vaults was
+closed by the maintainer on 2026-11-16 (structural mode not exercised). See
 [evidence](specs/deploy-target-verification/tasks.md) and
 [ADR-007](reference/decisions/ADR-007-deploy-target-verification.md).
 
