@@ -28,8 +28,8 @@ jobs:
           node-version-file: ".node-version"
           cache: "pnpm"
       - run: pnpm install --frozen-lockfile
-      - name: Audit runtime dependencies
-        run: pnpm audit --prod --audit-level high
+      - name: Audit all dependencies
+        run: pnpm audit --audit-level high
       - name: Verify
         run: pnpm run verify
       - name: Upload coverage report
