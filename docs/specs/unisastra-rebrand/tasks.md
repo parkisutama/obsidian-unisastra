@@ -52,6 +52,9 @@ and GitHub repository rename remain open.
 
 ## GitHub handover
 
+Selesai: repositori sudah bernama `obsidian-unisastra` dan `origin` mengarah ke sana.
+Catatan di bawah dipertahankan sebagai riwayat langkah handover.
+
 The local `origin` still points to
 `https://github.com/parkisutama/obsidian-md-writer.git`. GitHub allows a
 repository owner/admin to rename it in **Settings → General → Repository

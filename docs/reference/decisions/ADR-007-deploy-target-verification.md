@@ -1,8 +1,9 @@
 # ADR-007: Verify active deployment targets
 
 - Date: 2026-11-16.
-- Status: Accepted for local implementation by the maintainer's instruction
-  to plan and implement runtime config verification and explicit offline fallback.
+- Status: Accepted and implemented (#37). Live acceptance on disposable vaults
+  passed on 2026-11-16; structural mode was not run live. See the
+  [deploy ledger](../../specs/deploy-target-verification/tasks.md).
 - Contract: [deploy verification spec](../../specs/deploy-target-verification/spec.md).
 
 ## Context

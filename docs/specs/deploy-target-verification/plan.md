@@ -1,7 +1,7 @@
 # Deploy target implementation plan
 
-Approved scope: [spec](spec.md). One writer on the existing security audit branch;
-preserve the uncommitted SEC-H01 through SEC-H04 work.
+Approved scope: [spec](spec.md). Implemented in #37 on its own branch; the earlier
+SEC-H01 through SEC-H04 work shipped separately.
 
 1. Record the additive verification mode and CLI requirement in ADR-007.
 2. Add failing deployment regressions for runtime root/config matching, malformed

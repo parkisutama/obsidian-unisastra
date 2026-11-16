@@ -1,6 +1,6 @@
 # Deploy target verification
 
-Status: Accepted for local planning and implementation on 2026-11-16.
+Status: Accepted 2026-11-16; implemented in #37. See the [ledger](tasks.md).
 Requirement: SEC-H05 follow-up to the [audit](../../audit/2026-11-16/REPORT.md).
 
 The maintainer approved runtime metadata as the strongest check of the active
