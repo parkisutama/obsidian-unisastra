@@ -24,8 +24,7 @@ escaped. URL selection, legacy simple-link unwrap and undo are kept and tested.
 The release build checks out the release-please SHA and requires HEAD, the peeled
 tag and the workflow event SHA to be equal; publication repeats the event identity
 guard. Native Link and Outline acceptance passed on Obsidian 1.15.1 desktop
-(2026-11-16). Actual hosted release provenance remains unverified until the first
-release. See the [ledger](specs/security-hardening/tasks.md) and
+(2026-11-16). Release provenance was observed in release 0.0.1 (tag, SHA and event agreed). See the [ledger](specs/security-hardening/tasks.md) and
 [ADR-006](reference/decisions/ADR-006-safe-link-destinations.md).
 
 ## Unisastra identity — 2026-09-29

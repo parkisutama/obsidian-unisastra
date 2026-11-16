@@ -14,7 +14,8 @@ and undo, the Outline panel's handling of script and event-handler payloads, and
 live deploy verification (normal, Obsidian closed, wrong vault) passed. Structural
 offline mode was not run live, SEC-H02 clipboard timing was not triggered manually,
 and independent review of the deploy helper is not recorded. The audit validators
-pass on Linux. Real release provenance is still unobserved until the first release.
+pass on Linux. Release 0.0.1 was published on 2026-11-16 and its provenance guard
+passed on the real release; installing through BRAT succeeded (maintainer report).
 See the [hardening ledger](specs/security-hardening/tasks.md) and the
 [deploy ledger](specs/deploy-target-verification/tasks.md).
 
@@ -36,7 +37,7 @@ nama Unisastra, versi `1.2.0`, dan repo tujuan
 
 Pembaruan 2026-11-16: versi `1.2.0` digantikan oleh restart penomoran di `0.0.1`,
 repositori GitHub sudah `parkisutama/obsidian-unisastra` dan remote `origin` mengarah ke sana.
-Tag dan rilis pertama menunggu PR release-please.
+Rilis pertama `0.0.1` terbit 2026-11-16 lewat PR release-please (#18) dan terpasang lewat BRAT.
 
 Repositori GitHub belum diubah; Git remote lokal masih menunjuk repo lama.
 Push, tag, release, deployment vault operasional, dan acceptance native Obsidian
