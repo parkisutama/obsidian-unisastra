@@ -1,5 +1,23 @@
 # Development status
 
+## Security hardening merged - 2026-11-16
+
+SEC-H01 to SEC-H05 are merged to `main`: PR 35 (CI audit and release-source guard),
+PR 36 (toolbar Link), PR 37 (deploy target verification), PR 38 (records) and PR 39
+(minimatch).
+`pnpm run verify` passes on `main`: 36 files / 305 tests, unchanged coverage floors,
+build, artifact verification and 20 conformance checks; `pnpm audit` reports no
+known vulnerabilities and `pnpm peers check` is clean.
+
+Acceptance on Obsidian 1.15.1 desktop in a disposable vault: Link escaping, unwrap
+and undo, the Outline panel's handling of script and event-handler payloads, and
+live deploy verification (normal, Obsidian closed, wrong vault) passed. Structural
+offline mode was not run live, SEC-H02 clipboard timing was not triggered manually,
+and independent review of the deploy helper is not recorded. The audit validators
+pass on Linux. Real release provenance is still unobserved until the first release.
+See the [hardening ledger](specs/security-hardening/tasks.md) and the
+[deploy ledger](specs/deploy-target-verification/tasks.md).
+
 ## Rebranding Unisastra — 2026-09-29
 
 Implementasi lokal mengganti plugin ID dan nama tampilan menjadi `unisastra` /
@@ -15,6 +33,10 @@ nama Unisastra, versi `1.2.0`, dan repo tujuan
 `parkisutama/obsidian-unisastra`. Lihat
 [ledger rebrand](./specs/unisastra-rebrand/tasks.md) dan
 [ADR-005](./reference/decisions/ADR-005-unisastra-identity.md).
+
+Pembaruan 2026-11-16: versi `1.2.0` digantikan oleh restart penomoran di `0.0.1`,
+repositori GitHub sudah `parkisutama/obsidian-unisastra` dan remote `origin` mengarah ke sana.
+Tag dan rilis pertama menunggu PR release-please.
 
 Repositori GitHub belum diubah; Git remote lokal masih menunjuk repo lama.
 Push, tag, release, deployment vault operasional, dan acceptance native Obsidian

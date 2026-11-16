@@ -19,6 +19,20 @@ Specifications and decision records stay here under `docs/`.
 | `pnpm run fix` | autofix; inspect the diff afterwards |
 | `pnpm run conformance` | the workspace engineering standard as executable checks |
 
+Configured `dev`/`deploy` now verifies the active vault and config through the
+running Obsidian CLI before copying. Keep `OBSIDIAN_VAULT_PLUGIN_PATH` pointed at
+a disposable test vault's `<config>/plugins/unisastra`; use `.env.example` as
+the contract. Enable/register the official CLI and open the target vault first.
+Windows uses `Obsidian.com`; other platforms use `obsidian` on PATH.
+
+If offline, explicitly set `OBSIDIAN_DEPLOY_VERIFICATION=structural` for limited
+path/file checks with a warning. This does not establish active config identity.
+Runtime mismatch/failure never silently falls back. Root/config aliases may
+resolve to the verified location; redirected plugins roots, plugin folders and
+linked destination files are rejected. Preflight is not atomic file replacement.
+Unconfigured `dev` skips operational deployment; `build` needs no running app.
+See [verification contract and evidence](docs/specs/deploy-target-verification/tasks.md).
+
 ## Commits and pull requests
 
 - Commits follow [Conventional Commits](https://www.conventionalcommits.org/) with these types: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `build`, `ci`, `chore`, `revert`. A hook checks the message, and CI checks it again.
