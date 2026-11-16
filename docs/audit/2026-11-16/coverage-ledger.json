@@ -1,0 +1,773 @@
+[
+	{
+		"key": "ci",
+		"coverage_id": ".github%2Fworkflows%2Fci.yml%23pull_request::PR%20code%20and%20metadata%20to%20CI%20authority::.github::ATTACK-CLASSES.md%23Injection",
+		"canonical_refs": {
+			"surface": ".github/workflows/ci.yml#pull_request",
+			"boundary": "PR code and metadata to CI authority",
+			"subsystem": ".github",
+			"attack_class": "ATTACK-CLASSES.md#Injection"
+		},
+		"surface": ".github/workflows/ci.yml#pull_request",
+		"boundary": "PR code and metadata to CI authority",
+		"subsystem": ".github",
+		"attack_class": "Injection",
+		"starting_paths": [".github/workflows/ci.yml", ".github/workflows/release.yml"],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Injection",
+		"selected_companion_blocks": [
+			"SUPPLY-CHAIN-AND-RELEASE.md#Untrusted code in a privileged workflow",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Workflow command and expression confusion",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Core discipline",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Universal moves",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication, cryptographic service, or secret store implemented; credentials and environment files excluded from inspection."
+			},
+			{
+				"block": "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+				"reason": "No HTTP server or authentication protocol implemented by this plugin."
+			},
+			{
+				"block": "AI-AND-LLM.md#Core discipline",
+				"reason": "No runtime LLM or agent integration in target."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 1,
+		"status": "covered",
+		"agent_id": "hunt_tooling",
+		"reviewed_paths": [".github/workflows/ci.yml", ".github/workflows/release.yml"],
+		"local_checks": [
+			{
+				"agent_id": "hunt_tooling",
+				"reviewed_paths": [".github/workflows/ci.yml", ".github/workflows/release.yml"],
+				"invariant": "PR metadata must not become shell code or acquire publication authority.",
+				"method": "source",
+				"result": "Read-only PR verification, no pull_request_target/workflow_run handoff; PR title and SHAs use quoted env variables. Write permissions are confined to release workflow jobs. Actions pinned. Hosted settings unobserved.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [],
+		"hardening": [],
+		"evidence_note": "Parent-consolidated source-only summary of structured hunter return; no execution evidence."
+	},
+	{
+		"key": "release",
+		"coverage_id": ".github%2Fworkflows%2Frelease.yml%23publish::Source%20and%20build%20artifacts%20to%20release%20authority::.github::ATTACK-CLASSES.md%23Chained%20vulnerabilities%20and%20trust%20boundaries",
+		"canonical_refs": {
+			"surface": ".github/workflows/release.yml#publish",
+			"boundary": "Source and build artifacts to release authority",
+			"subsystem": ".github",
+			"attack_class": "ATTACK-CLASSES.md#Chained vulnerabilities and trust boundaries"
+		},
+		"surface": ".github/workflows/release.yml#publish",
+		"boundary": "Source and build artifacts to release authority",
+		"subsystem": ".github",
+		"attack_class": "Chained vulnerabilities and trust boundaries",
+		"starting_paths": [
+			".github/workflows/release.yml",
+			"scripts/lib/build.ts",
+			"scripts/lib/artifact-verification.ts"
+		],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Chained vulnerabilities and trust boundaries",
+		"selected_companion_blocks": [
+			"SUPPLY-CHAIN-AND-RELEASE.md#Build-to-promotion substitution",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Release authorization and signing-policy gaps",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Core discipline",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Universal moves",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication, cryptographic service, or secret store implemented; credentials and environment files excluded from inspection."
+			},
+			{
+				"block": "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+				"reason": "No HTTP server or authentication protocol implemented by this plugin."
+			},
+			{
+				"block": "AI-AND-LLM.md#Core discipline",
+				"reason": "No runtime LLM or agent integration in target."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 1,
+		"status": "covered",
+		"agent_id": "hunt_tooling",
+		"reviewed_paths": [
+			".github/workflows/release.yml",
+			"scripts/lib/build.ts",
+			"scripts/lib/artifact-verification.ts",
+			"scripts/build.ts",
+			"release-please-config.json"
+		],
+		"local_checks": [
+			{
+				"agent_id": "hunt_tooling",
+				"reviewed_paths": [
+					".github/workflows/release.yml",
+					"scripts/lib/build.ts",
+					"scripts/lib/artifact-verification.ts",
+					"scripts/build.ts",
+					"release-please-config.json"
+				],
+				"invariant": "Publication must consume its authorized verified build with consistent plugin identity.",
+				"method": "source",
+				"result": "release_created gates build, tag/version text compared, verify before packaging. Publisher depends on build and downloads same-workflow artifact, attests and uploads. Build uses read permissions. No lower-trust producer demonstrated; explicit release-commit binding is hardening.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [],
+		"hardening": [
+			"SEC-H04: Bind and verify checkout commit against release tag; no unauthorized publication demonstrated."
+		],
+		"evidence_note": "Parent-consolidated source-only summary of structured hunter return; no execution evidence."
+	},
+	{
+		"key": "dependencies",
+		"coverage_id": "package.json%23devDependencies::Dependency%20sources%20to%20build%20and%20installed%20plugin::dependencies::ATTACK-CLASSES.md%23Chained%20vulnerabilities%20and%20trust%20boundaries",
+		"canonical_refs": {
+			"surface": "package.json#devDependencies",
+			"boundary": "Dependency sources to build and installed plugin",
+			"subsystem": "dependencies",
+			"attack_class": "ATTACK-CLASSES.md#Chained vulnerabilities and trust boundaries"
+		},
+		"surface": "package.json#devDependencies",
+		"boundary": "Dependency sources to build and installed plugin",
+		"subsystem": "dependencies",
+		"attack_class": "Chained vulnerabilities and trust boundaries",
+		"starting_paths": [
+			"package.json",
+			"pnpm-lock.yaml",
+			"pnpm-workspace.yaml",
+			".github/dependabot.yml",
+			"scripts/lib/build.ts"
+		],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Chained vulnerabilities and trust boundaries",
+		"selected_companion_blocks": [
+			"SUPPLY-CHAIN-AND-RELEASE.md#Dependency source and namespace confusion",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Plugin and extension trust expansion",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Core discipline",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Universal moves",
+			"SUPPLY-CHAIN-AND-RELEASE.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication, cryptographic service, or secret store implemented; credentials and environment files excluded from inspection."
+			},
+			{
+				"block": "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+				"reason": "No HTTP server or authentication protocol implemented by this plugin."
+			},
+			{
+				"block": "AI-AND-LLM.md#Core discipline",
+				"reason": "No runtime LLM or agent integration in target."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 1,
+		"status": "covered",
+		"agent_id": "hunt_tooling",
+		"reviewed_paths": [
+			"package.json",
+			"pnpm-lock.yaml",
+			"pnpm-workspace.yaml",
+			".npmrc",
+			".github/dependabot.yml",
+			".github/workflows/ci.yml",
+			"scripts/lib/build.ts"
+		],
+		"local_checks": [
+			{
+				"agent_id": "hunt_tooling",
+				"reviewed_paths": [
+					"package.json",
+					"pnpm-lock.yaml",
+					"pnpm-workspace.yaml",
+					".npmrc",
+					".github/dependabot.yml",
+					".github/workflows/ci.yml",
+					"scripts/lib/build.ts"
+				],
+				"invariant": "Dependency selection must not silently change namespace/source or expand lower-trust extension authority.",
+				"method": "source",
+				"result": "Pinned pnpm, frozen install, integrity hashes, no custom tarball/git/file/link resolution found by hunter; four install-script families allowed; host modules externalized. All packages are devDependencies, outside CI --prod audit. No particular vulnerable package or reachable exploit established; dependency internals/advisory scan excluded.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [],
+		"hardening": [
+			"SEC-H01: Audit full dependency graph: --prod excludes every declared package in devDependencies; separate build/bundle/host impact, no current vulnerability claim."
+		],
+		"evidence_note": "Parent-consolidated source-only summary of structured hunter return; no execution evidence."
+	},
+	{
+		"key": "local-files",
+		"coverage_id": "scripts%2Flib%2Fdeploy-plugin.ts%23deployPlugin::Local%20configuration%20and%20build%20output%20to%20vault%20plugin%20files::scripts::ATTACK-CLASSES.md%23Resource%20and%20file%20handling",
+		"canonical_refs": {
+			"surface": "scripts/lib/deploy-plugin.ts#deployPlugin",
+			"boundary": "Local configuration and build output to vault plugin files",
+			"subsystem": "scripts",
+			"attack_class": "ATTACK-CLASSES.md#Resource and file handling"
+		},
+		"surface": "scripts/lib/deploy-plugin.ts#deployPlugin",
+		"boundary": "Local configuration and build output to vault plugin files",
+		"subsystem": "scripts",
+		"attack_class": "Resource and file handling",
+		"starting_paths": [
+			"scripts/lib/deploy-plugin.ts",
+			"scripts/lib/setup-test-vault.ts",
+			"scripts/dev.ts",
+			"tests/deploy-plugin.test.ts"
+		],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Resource and file handling",
+		"selected_companion_blocks": [
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Local file ownership and TOCTOU",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Core discipline",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Universal moves",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication, cryptographic service, or secret store implemented; credentials and environment files excluded from inspection."
+			},
+			{
+				"block": "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+				"reason": "No HTTP server or authentication protocol implemented by this plugin."
+			},
+			{
+				"block": "AI-AND-LLM.md#Core discipline",
+				"reason": "No runtime LLM or agent integration in target."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 1,
+		"status": "covered",
+		"agent_id": "hunt_tooling",
+		"reviewed_paths": [
+			"scripts/lib/deploy-plugin.ts",
+			"scripts/lib/setup-test-vault.ts",
+			"scripts/dev.ts",
+			"scripts/deploy.ts",
+			"tests/deploy-plugin.test.ts"
+		],
+		"local_checks": [
+			{
+				"agent_id": "hunt_tooling",
+				"reviewed_paths": [
+					"scripts/lib/deploy-plugin.ts",
+					"scripts/lib/setup-test-vault.ts",
+					"scripts/dev.ts",
+					"scripts/deploy.ts",
+					"tests/deploy-plugin.test.ts"
+				],
+				"invariant": "Deploy must write selected artifacts only to an intentionally configured plugin destination.",
+				"method": "source",
+				"result": "Fixed three filenames, source-existence checks, destination basename matches manifest ID and parent exists before copy. Links/canonical hierarchy not verified; no distinct lower-authority attacker established. Dev immediately builds and deploys. Tests read only.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [],
+		"hardening": [
+			"SEC-H05: Define canonical hierarchy and link policy for deployment; preserve legitimate linked vault workflows."
+		],
+		"evidence_note": "Parent-consolidated source-only summary of structured hunter return; no execution evidence."
+	},
+	{
+		"key": "editor",
+		"coverage_id": "src%2Fcapabilities%2Ffeatures%2Ftoolbar%2Fexecutor.ts%23executeToolbarAction::User%20actions%20and%20asynchronous%20state%20to%20Markdown%20writes::src%2Fcm6::ATTACK-CLASSES.md%23Business%20logic",
+		"canonical_refs": {
+			"surface": "src/capabilities/features/toolbar/executor.ts#executeToolbarAction",
+			"boundary": "User actions and asynchronous state to Markdown writes",
+			"subsystem": "src/cm6",
+			"attack_class": "ATTACK-CLASSES.md#Business logic"
+		},
+		"surface": "src/capabilities/features/toolbar/executor.ts#executeToolbarAction",
+		"boundary": "User actions and asynchronous state to Markdown writes",
+		"subsystem": "src/cm6",
+		"attack_class": "Business logic",
+		"starting_paths": [
+			"src/capabilities/features/toolbar/executor.ts",
+			"src/cm6/outliner/fold-persist.ts",
+			"src/settings-writer.ts"
+		],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Business logic",
+		"selected_companion_blocks": [
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Pending-action and user-presence confusion",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Core discipline",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Universal moves",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication, cryptographic service, or secret store implemented; credentials and environment files excluded from inspection."
+			},
+			{
+				"block": "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+				"reason": "No HTTP server or authentication protocol implemented by this plugin."
+			},
+			{
+				"block": "AI-AND-LLM.md#Core discipline",
+				"reason": "No runtime LLM or agent integration in target."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 1,
+		"status": "covered",
+		"agent_id": "hunt_state",
+		"reviewed_paths": [
+			"src/capabilities/features/toolbar/executor.ts",
+			"src/capabilities/features/toolbar/controller.ts",
+			"src/capabilities/features/toolbar/actions.ts",
+			"src/cm6/outliner/fold-persist.ts",
+			"src/cm6/outliner/fold-context.ts",
+			"src/cm6/outliner/block-id.ts",
+			"src/capabilities/features/fold-persist/coordinator.ts",
+			"src/settings-writer.ts",
+			"tests/toolbar-actions.test.ts",
+			"tests/fold-coordinator.test.ts",
+			"tests/fold-model.test.ts"
+		],
+		"local_checks": [
+			{
+				"agent_id": "hunt_state",
+				"reviewed_paths": [
+					"src/capabilities/features/toolbar/executor.ts",
+					"src/capabilities/features/toolbar/controller.ts",
+					"src/capabilities/features/toolbar/actions.ts",
+					"src/cm6/outliner/fold-persist.ts",
+					"src/cm6/outliner/fold-context.ts",
+					"src/cm6/outliner/block-id.ts",
+					"src/capabilities/features/fold-persist/coordinator.ts",
+					"src/settings-writer.ts",
+					"tests/toolbar-actions.test.ts",
+					"tests/fold-coordinator.test.ts",
+					"tests/fold-model.test.ts"
+				],
+				"invariant": "Deferred edits/fold saves must retain editor/file ownership and not gain native authority.",
+				"method": "source",
+				"result": "Toolbar guards enabled/current/Hemingway/single selection and binds owner document/file; policy and selection rechecked after clipboard await. Missing document identity/current focus bounds and raw Markdown URL serialization are integrity hardening only. Fold insertion checks opt-in/readOnly/owner; coordinator cancels invalidated saves; cloned snapshots serialize persistence.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [],
+		"hardening": [
+			"SEC-H02: Recheck document identity and current focus bounds after clipboard await; same-owner integrity risk.",
+			"SEC-H03: Serialize original HTTP/HTTPS clipboard URL as Markdown destination; reject control characters."
+		],
+		"evidence_note": "Parent-consolidated source-only summary of structured hunter return; no execution evidence."
+	},
+	{
+		"key": "settings",
+		"coverage_id": "src%2Fcapabilities%2Fsettings.ts%23applyStartupMigrations::Persisted%20settings%20to%20generated%20CSS%20and%20object%20state::src%2Fcapabilities::ATTACK-CLASSES.md%23Injection",
+		"canonical_refs": {
+			"surface": "src/capabilities/settings.ts#applyStartupMigrations",
+			"boundary": "Persisted settings to generated CSS and object state",
+			"subsystem": "src/capabilities",
+			"attack_class": "ATTACK-CLASSES.md#Injection"
+		},
+		"surface": "src/capabilities/settings.ts#applyStartupMigrations",
+		"boundary": "Persisted settings to generated CSS and object state",
+		"subsystem": "src/capabilities",
+		"attack_class": "Injection",
+		"starting_paths": [
+			"src/capabilities/settings.ts",
+			"src/capabilities/features/callouts/styles.ts",
+			"src/capabilities/features/callouts/settings.ts"
+		],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Injection",
+		"selected_companion_blocks": [
+			"CLIENT-SIDE.md#Prototype pollution and gadget chain",
+			"CLIENT-SIDE.md#Core discipline",
+			"CLIENT-SIDE.md#Universal moves",
+			"CLIENT-SIDE.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication, cryptographic service, or secret store implemented; credentials and environment files excluded from inspection."
+			},
+			{
+				"block": "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+				"reason": "No HTTP server or authentication protocol implemented by this plugin."
+			},
+			{
+				"block": "AI-AND-LLM.md#Core discipline",
+				"reason": "No runtime LLM or agent integration in target."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 1,
+		"status": "covered",
+		"agent_id": "hunt_state",
+		"reviewed_paths": [
+			"src/capabilities/settings.ts",
+			"src/capabilities/features/callouts/settings.ts",
+			"src/capabilities/features/callouts/styles.ts",
+			"src/capabilities/features/toolbar/settings.ts",
+			"src/capabilities/features/fold-persist/settings.ts",
+			"src/settings-writer.ts",
+			"src/lib.ts",
+			"src/cm6/plugin.ts",
+			"tests/callout-styles.test.ts",
+			"tests/settings.test.ts",
+			"tests/fold-model.test.ts"
+		],
+		"local_checks": [
+			{
+				"agent_id": "hunt_state",
+				"reviewed_paths": [
+					"src/capabilities/settings.ts",
+					"src/capabilities/features/callouts/settings.ts",
+					"src/capabilities/features/callouts/styles.ts",
+					"src/capabilities/features/toolbar/settings.ts",
+					"src/capabilities/features/fold-persist/settings.ts",
+					"src/settings-writer.ts",
+					"src/lib.ts",
+					"src/cm6/plugin.ts",
+					"tests/callout-styles.test.ts",
+					"tests/settings.test.ts",
+					"tests/fold-model.test.ts"
+				],
+				"invariant": "Settings must not inject executable DOM/CSS syntax or prototype-derived privileged state.",
+				"method": "source",
+				"result": "Known-group shallow spreads, selected normalizers, output-boundary ID/hex/Lucide checks and CSS textContent. Fold maps exclude prototype-owned IDs. No recursive pollution gadget established. Local settings authority is same-owner. Tests read only.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [],
+		"hardening": [],
+		"evidence_note": "Parent-consolidated source-only summary of structured hunter return; no execution evidence."
+	},
+	{
+		"key": "discovery",
+		"coverage_id": "src%2Fcomponents%2Fcallout-discovery.ts%23renderCalloutDiscovery::Theme%2Fsnippet%20CSSOM%20selectors%20to%20persisted%20callout%20identifiers%20and%20rendered%20settings::src%2Fcapabilities%2Ffeatures%2Fcallouts::ATTACK-CLASSES.md%23Injection",
+		"canonical_refs": {
+			"surface": "src/components/callout-discovery.ts#renderCalloutDiscovery",
+			"boundary": "Theme/snippet CSSOM selectors to persisted callout identifiers and rendered settings",
+			"subsystem": "src/capabilities/features/callouts",
+			"attack_class": "ATTACK-CLASSES.md#Injection"
+		},
+		"surface": "src/components/callout-discovery.ts#renderCalloutDiscovery",
+		"boundary": "Theme/snippet CSSOM selectors to persisted callout identifiers and rendered settings",
+		"subsystem": "src/capabilities/features/callouts",
+		"attack_class": "Injection",
+		"starting_paths": [
+			"src/capabilities/features/callouts/discovery.ts",
+			"src/components/callout-discovery.ts",
+			"src/components/callout-manager.ts",
+			"tests/callout-discovery.test.ts",
+			"tests/callout-discovery-ui.test.ts"
+		],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Injection",
+		"selected_companion_blocks": [
+			"CLIENT-SIDE.md#DOM-based XSS",
+			"CLIENT-SIDE.md#Core discipline",
+			"CLIENT-SIDE.md#Universal moves",
+			"CLIENT-SIDE.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "DESKTOP-MOBILE-AND-LOCAL-IPC.md#Over-broad native bridge capabilities",
+				"reason": "CSSOM and explicit settings Add path has no native bridge."
+			},
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication or secret store in this path."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 2,
+		"status": "covered",
+		"agent_id": "hunt_discovery",
+		"reviewed_paths": [
+			"src/capabilities/features/callouts/discovery.ts",
+			"src/components/callout-discovery.ts",
+			"src/components/callout-manager.ts",
+			"src/capabilities/features/callouts/settings.ts",
+			"src/capabilities/features/callouts/catalog.ts",
+			"src/capabilities/features/callouts/styles.ts",
+			"src/lib.ts",
+			"tests/callout-discovery.test.ts",
+			"tests/callout-discovery-ui.test.ts"
+		],
+		"local_checks": [
+			{
+				"agent_id": "hunt_discovery",
+				"reviewed_paths": [
+					"src/capabilities/features/callouts/discovery.ts",
+					"src/components/callout-discovery.ts",
+					"src/components/callout-manager.ts",
+					"src/capabilities/features/callouts/settings.ts",
+					"src/capabilities/features/callouts/catalog.ts",
+					"src/capabilities/features/callouts/styles.ts",
+					"src/lib.ts",
+					"tests/callout-discovery.test.ts",
+					"tests/callout-discovery-ui.test.ts"
+				],
+				"invariant": "CSSOM may suggest constrained identifiers but must not introduce executable markup or persist without explicit user action.",
+				"method": "source",
+				"result": "Literal 1-64 character IDs lowercased and deduplicated; at most 2000 rules, depth 8, 64 sheets; inaccessible rules mark partial. Owner-document CSSOM and string Setting names/descriptions. Explicit Add rechecks duplicates, blocks concurrent save, rolls back failed insertion and guards disposed UI. Downstream CSS validation remains active. Existing negative/limit/lifecycle tests read only; no executable markup or unauthorized persistence path found.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [],
+		"coverage_reason": "Post-wave critic found parallel CSSOM input path omitted from first-wave evidence.",
+		"hardening": [],
+		"evidence_note": "Parent-consolidated source-only summary; artifact:null supplied by parent because no execution or artifact was allowed."
+	},
+	{
+		"key": "render",
+		"coverage_id": "src%2Fcomponents%2Foutline-view.ts%23renderOutlineList::Markdown%20content%20to%20privileged%20host%20DOM::src%2Fcomponents::ATTACK-CLASSES.md%23Injection",
+		"canonical_refs": {
+			"surface": "src/components/outline-view.ts#renderOutlineList",
+			"boundary": "Markdown content to privileged host DOM",
+			"subsystem": "src/components",
+			"attack_class": "ATTACK-CLASSES.md#Injection"
+		},
+		"surface": "src/components/outline-view.ts#renderOutlineList",
+		"boundary": "Markdown content to privileged host DOM",
+		"subsystem": "src/components",
+		"attack_class": "Injection",
+		"starting_paths": ["src/components/outline-view.ts", "src/components/callout-style-editor.ts"],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Injection",
+		"selected_companion_blocks": [
+			"CLIENT-SIDE.md#DOM-based XSS",
+			"CLIENT-SIDE.md#Core discipline",
+			"CLIENT-SIDE.md#Universal moves",
+			"CLIENT-SIDE.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication, cryptographic service, or secret store implemented; credentials and environment files excluded from inspection."
+			},
+			{
+				"block": "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+				"reason": "No HTTP server or authentication protocol implemented by this plugin."
+			},
+			{
+				"block": "AI-AND-LLM.md#Core discipline",
+				"reason": "No runtime LLM or agent integration in target."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 1,
+		"status": "blocked",
+		"agent_id": "hunt_content",
+		"reviewed_paths": [
+			"src/components/outline-view.ts",
+			"src/components/callout-style-editor.ts",
+			"src/capabilities/features/callouts/settings.ts",
+			"tests/fixtures/performance-obsidian.ts",
+			"README.md"
+		],
+		"local_checks": [
+			{
+				"agent_id": "hunt_content",
+				"reviewed_paths": [
+					"src/components/outline-view.ts",
+					"src/components/callout-style-editor.ts",
+					"src/capabilities/features/callouts/settings.ts",
+					"tests/fixtures/performance-obsidian.ts",
+					"README.md"
+				],
+				"invariant": "Imported Markdown must not execute script in privileged host DOM.",
+				"method": "source",
+				"result": "Markdown content is passed to host MarkdownRenderer at outline-view.ts:1071; labels use text APIs and callout IDs are restricted. The mock renderer uses textContent and cannot establish real host sanitization. No bypass found.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [
+			"Host MarkdownRenderer sanitization/post-processors and native offline fixture execution are unvalidated; this is a coverage blocker, not an XSS finding."
+		],
+		"hardening": [
+			"GAP-HOST: Native MarkdownRenderer sanitization and embed acceptance remains blocked; mock renderer cannot establish host behavior."
+		],
+		"evidence_note": "Parent-consolidated source-only summary of structured hunter return; no execution evidence."
+	},
+	{
+		"key": "links",
+		"coverage_id": "src%2Fgfm-anchor%2Findex.ts%23registerGFMAnchorCompatibility::Markdown%20links%20to%20vault%20navigation::src%2Fgfm-anchor::ATTACK-CLASSES.md%23Resource%20and%20file%20handling",
+		"canonical_refs": {
+			"surface": "src/gfm-anchor/index.ts#registerGFMAnchorCompatibility",
+			"boundary": "Markdown links to vault navigation",
+			"subsystem": "src/gfm-anchor",
+			"attack_class": "ATTACK-CLASSES.md#Resource and file handling"
+		},
+		"surface": "src/gfm-anchor/index.ts#registerGFMAnchorCompatibility",
+		"boundary": "Markdown links to vault navigation",
+		"subsystem": "src/gfm-anchor",
+		"attack_class": "Resource and file handling",
+		"starting_paths": [
+			"src/gfm-anchor/navigation.ts",
+			"src/gfm-anchor/reading-mode.ts",
+			"src/gfm-anchor/resolver.ts"
+		],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Resource and file handling",
+		"selected_companion_blocks": [
+			"CLIENT-SIDE.md#Client-side navigation confusion",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#File-open and intent authority confusion",
+			"CLIENT-SIDE.md#Core discipline",
+			"CLIENT-SIDE.md#Universal moves",
+			"CLIENT-SIDE.md#Validation rules",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Core discipline",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Universal moves",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication, cryptographic service, or secret store implemented; credentials and environment files excluded from inspection."
+			},
+			{
+				"block": "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+				"reason": "No HTTP server or authentication protocol implemented by this plugin."
+			},
+			{
+				"block": "AI-AND-LLM.md#Core discipline",
+				"reason": "No runtime LLM or agent integration in target."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 1,
+		"status": "covered",
+		"agent_id": "hunt_content",
+		"reviewed_paths": [
+			"src/gfm-anchor/index.ts",
+			"src/gfm-anchor/resolver.ts",
+			"src/gfm-anchor/navigation.ts",
+			"src/gfm-anchor/reading-mode.ts",
+			"src/gfm-anchor/hover.ts",
+			"src/gfm-anchor/live-preview.ts",
+			"src/gfm-anchor/slug.ts",
+			"tests/gfm-anchor.test.ts"
+		],
+		"local_checks": [
+			{
+				"agent_id": "hunt_content",
+				"reviewed_paths": [
+					"src/gfm-anchor/index.ts",
+					"src/gfm-anchor/resolver.ts",
+					"src/gfm-anchor/navigation.ts",
+					"src/gfm-anchor/reading-mode.ts",
+					"src/gfm-anchor/hover.ts",
+					"src/gfm-anchor/live-preview.ts",
+					"src/gfm-anchor/slug.ts",
+					"tests/gfm-anchor.test.ts"
+				],
+				"invariant": "Intercepted navigation must resolve a vault TFile and matched heading, not arbitrary native operations.",
+				"method": "source",
+				"result": "Resolver uses vault/metadata-cache lookup, navigation requires a known heading and opens a TFile; unresolved links fall back to host. No filesystem/process/fetch sink in these paths. Tests read, not run.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [],
+		"hardening": [
+			"Add negative host integration cases for unresolved/non-vault schemes without assuming metadata resolution permits them."
+		],
+		"evidence_note": "Parent-consolidated source-only summary of structured hunter return; no execution evidence."
+	},
+	{
+		"key": "cross-cutting",
+		"coverage_id": "src%2Fmain.ts%23UnisastraPlugin::Document%20and%20plugin%20lifecycle%20to%20host%20capabilities::src::ATTACK-CLASSES.md%23Wildcard",
+		"canonical_refs": {
+			"surface": "src/main.ts#UnisastraPlugin",
+			"boundary": "Document and plugin lifecycle to host capabilities",
+			"subsystem": "src",
+			"attack_class": "ATTACK-CLASSES.md#Wildcard"
+		},
+		"surface": "src/main.ts#UnisastraPlugin",
+		"boundary": "Document and plugin lifecycle to host capabilities",
+		"subsystem": "src",
+		"attack_class": "Wildcard",
+		"starting_paths": [
+			"src/main.ts",
+			"src/lib.ts",
+			"src/cm6/plugin.ts",
+			"src/capabilities/commands/writing-focus/writing-focus.ts"
+		],
+		"ordinary_attack_class_block": "ATTACK-CLASSES.md#Wildcard",
+		"selected_companion_blocks": [
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Over-broad native bridge capabilities",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Core discipline",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Universal moves",
+			"DESKTOP-MOBILE-AND-LOCAL-IPC.md#Validation rules"
+		],
+		"excluded_blocks": [
+			{
+				"block": "ATTACK-CLASSES.md#Cryptography and secrets",
+				"reason": "No authentication, cryptographic service, or secret store implemented; credentials and environment files excluded from inspection."
+			},
+			{
+				"block": "WEB-PROTOCOL-AND-AUTH.md#Core discipline",
+				"reason": "No HTTP server or authentication protocol implemented by this plugin."
+			},
+			{
+				"block": "AI-AND-LLM.md#Core discipline",
+				"reason": "No runtime LLM or agent integration in target."
+			}
+		],
+		"prior_status": "none",
+		"attempts": [],
+		"wave": 1,
+		"status": "covered",
+		"agent_id": "hunt_state",
+		"reviewed_paths": [
+			"src/main.ts",
+			"src/lib.ts",
+			"src/cm6/plugin.ts",
+			"src/cm6/per-window-props.ts",
+			"src/capabilities/commands/writing-focus/writing-focus.ts",
+			"src/capabilities/commands/writing-focus/index.ts",
+			"src/capabilities/features/general/mononote.ts"
+		],
+		"local_checks": [
+			{
+				"agent_id": "hunt_state",
+				"reviewed_paths": [
+					"src/main.ts",
+					"src/lib.ts",
+					"src/cm6/plugin.ts",
+					"src/cm6/per-window-props.ts",
+					"src/capabilities/commands/writing-focus/writing-focus.ts",
+					"src/capabilities/commands/writing-focus/index.ts",
+					"src/capabilities/features/general/mononote.ts"
+				],
+				"invariant": "Document/lifecycle callbacks must not expose generic native capabilities or retain canceled mutation authority.",
+				"method": "source",
+				"result": "Explicit App composition; teardown destroys controllers/observers/frames. Frontmatter uses own-property lookup. Native fullscreen is a fixed user-selected action guarded on mobile, with no attacker-selected native method. Mononote timers are cancellable. No generic native bridge found.",
+				"artifact": null
+			}
+		],
+		"result_fingerprints": [],
+		"unresolved": [],
+		"hardening": [],
+		"evidence_note": "Parent-consolidated source-only summary of structured hunter return; no execution evidence."
+	}
+]

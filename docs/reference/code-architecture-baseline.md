@@ -1,5 +1,26 @@
 # Code architecture baseline
 
+## Deploy preflight ownership - 2026-11-16
+
+scripts/lib/obsidian-vault.ts owns a bounded, shell-free read-only CLI query and
+strict parsing of a single vault root/configDir snapshot. deploy-plugin.ts owns
+verification mode selection, canonical path and all-file preflight before any
+target mkdir/copy. dev.ts and deploy.ts use the same synchronous helper; build
+and runtime modules have no CLI dependency. See
+[ADR-007](decisions/ADR-007-deploy-target-verification.md) and
+[evidence](../specs/deploy-target-verification/tasks.md).
+
+## Security hardening ownership - 2026-11-16
+
+Toolbar actions own Markdown destination escaping and compatible unwrap; the
+shared executor owns raw clipboard validation and post-await document/focus
+guards. No UI/command-specific bypass or new dependency direction is introduced.
+The Node-only scripts/verify-release-source.mjs verifies release SHA, checkout,
+peeled tag and workflow event identity before build; publication independently
+requires matching event provenance. Runtime modules do not import this helper.
+See [ADR-006](decisions/ADR-006-safe-link-destinations.md) and
+[implementation evidence](../specs/security-hardening/tasks.md).
+
 Baseline pada 2026-09-14 mendeskripsikan struktur yang ada. Aturan di bawah
 ditinjau manual; repo belum memiliki test khusus dependency direction atau cycles.
 

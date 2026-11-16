@@ -1,5 +1,33 @@
 # Current state
 
+## Deploy target verification - 2026-11-16
+
+SEC-H05 is implemented locally in Node-only deployment tooling. The existing
+path key is retained; default runtime verification compares canonical vault root
+and active configDir from one fixed CLI query before target writes. A wrong
+vault/config, unusable CLI output, directory redirects, and linked/non-regular
+destination files are rejected. Root/config aliases resolving consistently are
+supported. Explicit structural mode warns that active config is unverified;
+there is no automatic downgrade. Both deploy callers remain synchronous.
+Fixture tests and a real read-only metadata-reader smoke pass; operational
+vault copying and native end-to-end deploy acceptance remain untested. See
+[evidence](specs/deploy-target-verification/tasks.md) and
+[ADR-007](reference/decisions/ADR-007-deploy-target-verification.md).
+
+## Security hardening - 2026-11-16
+
+Local implementation now audits the full dependency graph at the high floor;
+The Vite override to 6.4.4 was superseded the same day by the Vite 8.3.8 update (#34).
+Link actions cancel after clipboard await if the document or focused range
+invalidates the selection. Raw control characters are rejected before trim;
+destination whitespace is encoded and Markdown delimiters/ampersands escaped.
+URL selection, legacy simple-link unwrap and undo are retained by targeted tests.
+Release build checks out the release-please SHA and requires HEAD, peeled tag
+and workflow event SHA equality; publication repeats the event identity guard.
+Native Link rendering and actual hosted release/provenance remain unverified.
+See [implementation ledger](specs/security-hardening/tasks.md) and
+[ADR-006](reference/decisions/ADR-006-safe-link-destinations.md).
+
 ## Unisastra identity — 2026-09-29
 
 Implementasi lokal memakai plugin ID `unisastra` dan nama tampilan Unisastra.

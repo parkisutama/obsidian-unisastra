@@ -1,0 +1,97 @@
+{
+	"run_id": "2026-11-16-source-audit",
+	"repo": "obsidian-unisastra",
+	"target": "D:\\repos\\obsidian-univeritas\\obsidian-unisastra",
+	"source_ref": "704fc3a16455d2c16c153060e5901deec681a688",
+	"source_worktree_dirty": false,
+	"profile": "standard",
+	"scope_paths": [
+		"src",
+		"scripts",
+		".github",
+		"tests",
+		"package.json",
+		"pnpm-lock.yaml",
+		"pnpm-workspace.yaml"
+	],
+	"budget": null,
+	"execution_policy": "sandboxed-source-and-local-only",
+	"selected_companion_files": [
+		"CLIENT-SIDE.md",
+		"DESKTOP-MOBILE-AND-LOCAL-IPC.md",
+		"SUPPLY-CHAIN-AND-RELEASE.md"
+	],
+	"prior_run_paths": ["docs/archive/obsidian-plugin-audit-report-2026-05-14.md"],
+	"shared_file_owner": "parent",
+	"run_status": "incomplete",
+	"output_policy": "User explicitly requested docs/audit; retained reports are versionable. This overrides skill preference for ignored or external output.",
+	"execution_limits": "Source-only: required OS resource/network/environment isolation not established. No target code execution.",
+	"prior_run_compatibility": "Historical readiness checklist; no compatible structured ledger.",
+	"reconnaissance": "Four source-only agents completed after daemon restart; three interrupted agents produced no retained evidence.",
+	"validator_blocker": "validate-coverage-ledger: OS no-follow and nonblocking input protection is unavailable on this Windows runtime",
+	"incomplete_reason": "validator_safe_input_unavailable_on_windows",
+	"source_review_status": "finished_with_declared_coverage_limits",
+	"source_final_ref": "704fc3a16455d2c16c153060e5901deec681a688",
+	"agent_invocations": {
+		"planned_total": 15,
+		"launched_total": 15,
+		"completed_retained": 12,
+		"interrupted_unretained": 3,
+		"strict_budget": null
+	},
+	"coverage_counts": {
+		"covered": 9,
+		"blocked": 1,
+		"candidate": 0,
+		"deferred": 0,
+		"planned": 0,
+		"in_progress": 0
+	},
+	"finding_counts": {
+		"confirmed": 0,
+		"needs_validation": 0,
+		"rejected": 0
+	},
+	"hardening_observations": 5,
+	"post_wave_critics": [
+		{
+			"agent_id": "coverage_critic",
+			"wave": 1,
+			"missing": ["discovery"],
+			"stop": false
+		},
+		{
+			"agent_id": "coverage_critic2",
+			"wave": 2,
+			"missing": [],
+			"reassign_ids": [],
+			"stop": true
+		}
+	],
+	"final_clean_critic": {
+		"agent_id": "final_coverage_critic",
+		"missing_units": [],
+		"reassign_ids": [],
+		"stop": true
+	},
+	"report_review": {
+		"agent_id": "report_review",
+		"verified_observations": ["SEC-H01", "SEC-H02", "SEC-H03", "SEC-H04", "SEC-H05"],
+		"corrections_applied": 5
+	},
+	"validation": {
+		"cli_findings_exit": 1,
+		"cli_ledger_exit": 1,
+		"error": "OS no-follow and nonblocking input protection is unavailable",
+		"in_memory_findings_errors": 0,
+		"in_memory_ledger_errors": 0,
+		"target_code_executed": false
+	},
+	"public_documentation": [
+		{
+			"url": "https://github.com/pnpm/pnpm/blob/main/pnpm/docs/cli/audit.md",
+			"consulted": "2026-11-16",
+			"purpose": "Verify --prod dependency categories only; no registry scan."
+		}
+	]
+}
