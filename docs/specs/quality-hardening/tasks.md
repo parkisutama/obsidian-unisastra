@@ -9,9 +9,9 @@ Source: [spec](spec.md), [plan](plan.md). Authorized 2026-11-16; implementation 
 | C1 | Checkpoint | check gates in sandbox | Record file and test counts | Done for typecheck, biome, eslint, vitest; native reload check pending, see [handoff](../../handoff/current.md) |
 | S2a | QH-04 | `pnpm-workspace.yaml` | Dated comment and removal condition | Done |
 | S2b | QH-05 | `scripts/lib/setup-test-vault.ts` | `JSON.stringify` output equals old output | Done |
-| S3a | QH-02 | Coverage baseline | Per-file numbers for three files recorded here | Pending |
-| S3b | QH-02 | Outliner and list tests | Each test proven by condition inversion | Pending |
-| S3c | QH-02 | `vitest.config.ts` | Thresholds raised below measured totals, never lowered | Pending |
+| S3a | QH-02 | Coverage baseline | Per-file numbers for three files recorded here | Done. Stmts, branches: keyboard-ops 7.93, 0; list-service 2.2, 0; fold-persist 0, 0 (2026-11-16, totals 32.36, 35.66) |
+| S3b | QH-02 | Outliner and list tests | Each test proven by condition inversion | Done. keyboard-ops 97.61/91.3, list-service 93.39/78.57 (stmts/branches); 17 conditions inverted, all caught. `fold-persist.ts` stays under the browser regression in conformance; not faked in node |
+| S3c | QH-02 | `vitest.config.ts` | Thresholds raised below measured totals, never lowered | Done. 30/33/30/30 to 37/39/33/37 against measured 38.00/39.97/33.60/37.86 |
 | S5a | QH-03 | `docs/specs/outline-view-split/` | Spec, plan, tasks validated by the maintainer | Pending |
 | S5b | QH-03 | `src/components/outline-view.ts` | Behavior-preserving split; tests unchanged and green | Pending |
 | C2 | Checkpoint | `pnpm run verify` in sandbox | Record results | Pending |
