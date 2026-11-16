@@ -81,3 +81,20 @@ tidak ada trailing whitespace/BOM atau final newline yang hilang. Line ending
 dinormalisasi ke LF. Ini pemeriksaan terarah, bukan pengganti rumdl/Biome
 atau gate repo. `git diff --check` tidak melaporkan masalah tracked diff;
 file audit baru diperiksa terpisah karena masih untracked.
+
+## Addendum 2026-11-16: validator rerun on Linux
+
+The no-follow blocker above is a platform limit of the audit validators, not a
+repository defect. Both validators were rerun on WSL2 Ubuntu (Node 24.15.0) against
+copies of `findings.json` and `coverage-ledger.json` on the Linux filesystem, with the
+validators and `report-schema.json` unchanged:
+
+| Command | Result |
+| --- | --- |
+| `node validate-findings.cjs findings.json` | `PASS: 0 findings valid`, exit 0 |
+| `node validate-coverage-ledger.cjs coverage-ledger.json` | `PASS: 10 coverage units valid`, exit 0 |
+
+This closes the file-read validator gate. It does not close the one `blocked` unit
+(host `MarkdownRenderer` sanitization), which needs native Obsidian acceptance, and it
+does not turn the unrun sandbox controls into passes. The rows above stay as the
+historical record of the Windows run.
