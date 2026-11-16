@@ -4,9 +4,9 @@ Source: [spec](spec.md), [plan](plan.md). Authorized 2026-11-16; implementation 
 
 | Slice | Requirement | Area | Acceptance / evidence | State |
 | --- | --- | --- | --- | --- |
-| S1a | QH-01 | `tests/settings.test.ts` | Regression test fails on current code | Reproduced in a bubblewrap probe; not yet committed as a test |
-| S1b | QH-01 | `src/capabilities/settings.ts` | Defaults never mutated; legacy branch covered; existing tests pass | Pending |
-| C1 | Checkpoint | `pnpm run check` in sandbox | Record file and test counts | Pending |
+| S1a | QH-01 | `tests/settings.test.ts` | Regression test fails on current code | Done: two tests failed before the fix (commit `298723f`) |
+| S1b | QH-01 | `src/capabilities/settings.ts` | Defaults never mutated; legacy branch covered; existing tests pass | Done: 36 files / 307 tests in bubblewrap |
+| C1 | Checkpoint | check gates in sandbox | Record file and test counts | Done for typecheck, biome, eslint, vitest; native reload check pending, see [handoff](../../handoff/current.md) |
 | S2a | QH-04 | `pnpm-workspace.yaml` | Dated comment and removal condition | Pending |
 | S2b | QH-05 | `scripts/lib/setup-test-vault.ts` | `JSON.stringify` output equals old output | Pending |
 | S3a | QH-02 | Coverage baseline | Per-file numbers for three files recorded here | Pending |
@@ -25,4 +25,5 @@ Source: [spec](spec.md), [plan](plan.md). Authorized 2026-11-16; implementation 
 - Baseline 2026-11-16: 36 files, 305 tests pass; coverage 32.36% statements, 35.66%
   branches, 30.91% functions, 32.3% lines; `pnpm audit --audit-level high` clean.
 - QH-01 probe, run inside bubblewrap: 1 failed, 305 passed. The failing assertion is the
-  default-mutation check. The probe is not part of the repo yet.
+  default-mutation check. The probe became the regression tests of S1.
+- S1 evidence: red run 2 failed; green run 36 files / 307 tests; `tsc`, `biome`, `eslint` clean, all in bubblewrap. Native checkpoints for the Windows agent are in [the handoff](../../handoff/current.md).
