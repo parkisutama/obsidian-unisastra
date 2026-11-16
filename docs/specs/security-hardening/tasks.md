@@ -38,17 +38,34 @@ until observed; automated tests cannot close those rows.
 - No command/settings keys, manifest/package versions, deployment paths or
   runtime dependencies changed. New Node-only helper remains in scripts/.
 
+## Native acceptance (2026-11-16)
+
+Obsidian 1.15.1 (installer 1.15.1), Windows desktop, disposable vault
+`unisastra-testvault`, plugin 0.0.1 built from `main` at `a5d3652`. No working
+vault was touched. Evidence source is stated per row.
+
+| Check | Result | Source |
+| --- | --- | --- |
+| Link wrap escapes `(`, `)` and `&`; ordinary URL and placeholder unchanged | Passed | Saved file content |
+| Unwrap of an escaped link and of a legacy simple link | Passed | Live editor driven through the Obsidian CLI |
+| Undo of a wrap and of an unwrap, one step each | Passed | Live editor driven through the Obsidian CLI |
+| Reading Mode destination, Smart URL off placeholder, popout | Passed | Maintainer report, not independently observed |
+| Outline panel renders `<img onerror>`, `<script>` and `javascript:` payloads | Passed: `onerror` removed, no script element, link has no `href`, `document.body.dataset.xss` stays undefined, clicking does not navigate | DOM read through the Obsidian CLI; click reported by the maintainer |
+| Clipboard changing during the Smart URL read (SEC-H02) | Not triggered manually; covered by automated tests | n/a |
+
+This closes the host `MarkdownRenderer` blocker for these payloads on one
+Obsidian version. It is not a universal compatibility claim. The first attempt
+used a stale build and Obsidian's native URL paste, which does not escape; the
+results above are from the rebuilt plugin and the toolbar or command path.
+
 ## Remaining acceptance
 
-- Native Obsidian desktop/popout: final destination interpretation, Link/unwrap/undo
-  and clipboard timing. No operational vault deployment was performed.
 - Hosted CI and real release provenance/source identity: pending a normal
   maintainer-controlled release; no release or workflow dispatch was triggered.
 - Earlier security-audit validator blocker closed 2026-11-16: both validators pass on
-  Linux (see the audit verification addendum). The host `MarkdownRenderer` blocker
-  remains open until native Obsidian acceptance.
-- Six remaining moderate/low advisories are open, documented in
-  [dependency review](dependency-review.md), not suppressed or declared harmless.
+  Linux (see the audit verification addendum).
+- The minimatch advisory is patched by an override and `pnpm audit` reports no
+  known vulnerabilities; see the [dependency review](dependency-review.md).
 - Pending CHANGELOG notes must be placed into the version heading assigned by
   the Release PR; no next version or shipped release is invented here.
 
