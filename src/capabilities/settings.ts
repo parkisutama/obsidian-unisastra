@@ -664,7 +664,8 @@ export async function applyStartupMigrations(
 	// Cursor positions migration only needed when coming from pre-v1.2.0 (legacy flat format).
 	// Since v1.2.0 cursor positions are stored directly in data.json.
 	if (isLegacyFormat) {
-		const settings = migrateSettings(rawData as Partial<LegacyUnisastraSettings>);
+		// migrateSettings shallow-copies default groups; clone so nested defaults are never shared.
+		const settings = structuredClone(migrateSettings(rawData as Partial<LegacyUnisastraSettings>));
 		return await migrateCursorPositions(settings, vault, manifestDir);
 	}
 
@@ -688,7 +689,8 @@ export async function applyStartupMigrations(
 		(settings as Record<string, unknown>).zoom = undefined;
 	}
 
-	const merged: UnisastraSettings = { ...DEFAULT_SETTINGS };
+	// Clone: groups missing from data.json must not alias DEFAULT_SETTINGS, which later writes mutate.
+	const merged: UnisastraSettings = structuredClone(DEFAULT_SETTINGS);
 	for (const key of Object.keys(DEFAULT_SETTINGS) as Array<keyof UnisastraSettings>) {
 		if (settings[key] !== undefined) {
 			if (key === "writingMode") {
@@ -697,7 +699,7 @@ export async function applyStartupMigrations(
 			}
 
 			// @ts-expect-error — merging category objects
-			merged[key] = { ...DEFAULT_SETTINGS[key], ...settings[key] };
+			merged[key] = { ...merged[key], ...settings[key] };
 		}
 	}
 	merged.toolbar = normalizeToolbarSettings(settings.toolbar);

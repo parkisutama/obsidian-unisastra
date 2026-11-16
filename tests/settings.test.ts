@@ -308,4 +308,36 @@ describe("settings defaults and migrations", () => {
 			writingFocus: false,
 		});
 	});
+
+	it("never writes into DEFAULT_SETTINGS when data lacks a group", async () => {
+		const snapshot = structuredClone(DEFAULT_SETTINGS);
+
+		const migrated = await applyStartupMigrations(
+			{ general: {} } as Partial<UnisastraSettings>,
+			createVault(),
+			"plugins/unisastra",
+		);
+		migrated.foldPersist.foldState["note.md"] = { block: true };
+		migrated.writingMode.presets.idea.writingFocus =
+			!migrated.writingMode.presets.idea.writingFocus;
+
+		expect(DEFAULT_SETTINGS).toEqual(snapshot);
+		const reloaded = await applyStartupMigrations(
+			{ general: {} } as Partial<UnisastraSettings>,
+			createVault(),
+			"plugins/unisastra",
+		);
+		expect(reloaded.foldPersist.foldState).toEqual({});
+	});
+
+	it("never writes into DEFAULT_SETTINGS when migrating the legacy format", async () => {
+		const snapshot = structuredClone(DEFAULT_SETTINGS);
+
+		const migrated = await applyStartupMigrations({}, createVault(), "plugins/unisastra");
+		migrated.foldPersist.foldState["note.md"] = { block: true };
+		migrated.writingMode.presets.idea.writingFocus =
+			!migrated.writingMode.presets.idea.writingFocus;
+
+		expect(DEFAULT_SETTINGS).toEqual(snapshot);
+	});
 });
