@@ -3,7 +3,7 @@
 - Date: 2026-09-27.
 - Status: Accepted untuk keputusan asal efek melalui jawaban maintainer
   "Izinkan auto-ID pada fold native apa pun".
-- Contract: [spec](../../../specs/block-id-fold-persistence/spec.md).
+- Contract: [spec](../../specs/block-id-fold-persistence/spec.md).
 
 ## Context
 

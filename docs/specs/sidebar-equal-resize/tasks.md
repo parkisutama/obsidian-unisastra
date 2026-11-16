@@ -5,7 +5,7 @@
 - Branch: `codex/sidebar-equal-resize`.
 - Requirement: [spec Accepted](./spec.md).
 - Approach: [plan Accepted](./plan.md).
-- Keputusan: [ADR-003 Accepted](../../en/reference/decisions/ADR-003-sidebar-equal-resize.md).
+- Keputusan: [ADR-003 Accepted](../../reference/decisions/ADR-003-sidebar-equal-resize.md).
 
 ## Aturan eksekusi
 

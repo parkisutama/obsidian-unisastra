@@ -4,7 +4,7 @@ Status: Accepted melalui "lanjut ke task breakdown", 2026-09-27.
 Kebutuhan: [spec accepted](./spec.md), termasuk D1–D6 dan scope awal.
 [Task breakdown](./tasks.md) accepted dan implementasi berlangsung.
 Revisi asal fold mengikuti keputusan maintainer dalam
-[ADR-004](../../en/reference/decisions/ADR-004-fold-native-effects.md).
+[ADR-004](../../reference/decisions/ADR-004-fold-native-effects.md).
 
 ## Baseline dan bukti
 

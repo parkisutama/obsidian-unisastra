@@ -94,7 +94,7 @@ Deep merge mempertahankan recipe yang tersimpan dan mengisi nilai yang belum
 ada. Mode awal tetap None; Keep Lines tidak ditambahkan sebagai field recipe.
 Test navigation/mock DOM mencakup Back focus/scroll, direct Callouts, cleanup,
 dan stale redraw; bukan bukti acceptance host. Lihat
-[tasks dan acceptance ledger](./en/specs/compact-settings-layout/tasks.md).
+[tasks dan acceptance ledger](./specs/compact-settings-layout/tasks.md).
 
 Koreksi visual dari screenshot maintainer menyatukan General dan compatibility
 dalam satu SettingGroup, mengelompokkan preset/Capabilities dalam panel dengan
@@ -123,7 +123,7 @@ wrapper. Regression compiled-Sass browser standalone lolos 141 checks setelah
 40 failures sebelum patch. Maintainer mengonfirmasi callout sekarang dimmed dan
 gejala utama selesai pada host Obsidian (2026-09-14). Matrix tambahan menjadi
 deferred follow-up sesuai keputusan closure maintainer;
-lihat [ledger](./en/specs/editor-bug-fixing/tasks.md).
+lihat [ledger](./specs/editor-bug-fixing/tasks.md).
 
 Canvas follow-up: clickable-sizer kini membutuhkan ancestor
 `.markdown-source-view.mod-cm6` dalam konteks leaf aktif atau iframe existing.
@@ -136,11 +136,11 @@ matrix belum dikonfirmasi; dampak scope CSS pada embedded editor lain menjadi
 follow-up bila regresi muncul. Tidak ada klaim compatibility universal.
 
 Branch `codex/adopt-floaty-toolbar` mengimplementasikan T01-T19, seluruh task
-sumber di [tasks.md](./en/specs/floaty-toolbar/tasks.md) kecuali T20 (dokumen ini)
+sumber di [tasks.md](./specs/floaty-toolbar/tasks.md) kecuali T20 (dokumen ini)
 sendiri. `pnpm run check:ci` hijau: 19 file test / 130 tests, typecheck, lint,
 styles, build, verifikasi artefak, dan docs build. Runtime acceptance di
 Obsidian nyata (desktop/mobile/popout) tetap belum diuji untuk task manapun —
-lihat tabel ledger di bawah dan [tasks.md](./en/specs/floaty-toolbar/tasks.md#runtime-acceptance-ledger)
+lihat tabel ledger di bawah dan [tasks.md](./specs/floaty-toolbar/tasks.md#runtime-acceptance-ledger)
 untuk skenario yang masih pending.
 
 Ringkasan per area:
@@ -181,8 +181,8 @@ inherit tidak membuat override otomatis.
 
 ### Known issues dan follow-up
 
-Catatan awal ada di [tasks.md](./en/specs/floaty-toolbar/tasks.md). Status terkini
-dua bug editor ditrack di [bug-fixing ledger](./en/specs/editor-bug-fixing/tasks.md):
+Catatan awal ada di [tasks.md](./specs/floaty-toolbar/tasks.md). Status terkini
+dua bug editor ditrack di [bug-fixing ledger](./specs/editor-bug-fixing/tasks.md):
 
 - Callout dimming: fix dan gejala utama diterima maintainer; closed for now,
   matrix mode/pause/nested/mobile/popout tambahan deferred.
@@ -197,9 +197,9 @@ dua bug editor ditrack di [bug-fixing ledger](./en/specs/editor-bug-fixing/tasks
 
 ## Floaty toolbar acceptance criteria status
 
-Ringkasan status setiap AC dari [spec.md](./en/specs/floaty-toolbar/spec.md);
+Ringkasan status setiap AC dari [spec.md](./specs/floaty-toolbar/spec.md);
 detail skenario dan evidence lengkap ada di
-[tasks.md](./en/specs/floaty-toolbar/tasks.md).
+[tasks.md](./specs/floaty-toolbar/tasks.md).
 
 | AC | Evidence otomatis | Status |
 | --- | --- | --- |
@@ -225,7 +225,7 @@ tersebut selesai sepenuhnya sampai runtime acceptance dilakukan dan dicatat.
 Plugin ID adalah `unisastra`; manifest menyatakan dukungan mobile
 (`isDesktopOnly: false`) dan minimum Obsidian 1.14.4. Nama komposisi internal
 `UnisastraCore` dan prefix CSS `unisastra-` digunakan. Perubahan identitas
-dari MD Writer dicatat di [ADR-005](./en/reference/decisions/ADR-005-unisastra-identity.md).
+dari MD Writer dicatat di [ADR-005](./reference/decisions/ADR-005-unisastra-identity.md).
 
 Settings disimpan melalui Obsidian `loadData` / `saveData`. Perubahan settings,
 command ID, frontmatter, block ID, atau format Markdown memerlukan analisis
@@ -239,5 +239,5 @@ semua perilaku editor, mobile, atau popout. Lihat
 [development status](./development-status.md) untuk hasil validasi terbaru dan
 [QA guide](https://github.com/parkisutama/obsidian-univeritas/blob/main/docs/unisastra/for-developers/manual-qa-checklist.md) untuk acceptance.
 
-Spesifikasi [outliner](./en/reference/outliner-urd-prd.md) memuat kebutuhan dan rencana;
+Spesifikasi [outliner](./reference/outliner-urd-prd.md) memuat kebutuhan dan rencana;
 periksa source dan tests sebelum menyatakan suatu bagian sudah selesai.

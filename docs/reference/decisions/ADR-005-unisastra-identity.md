@@ -2,7 +2,7 @@
 
 - Date: 2026-09-29.
 - Status: Accepted by maintainer for local implementation.
-- Contract: [Unisastra spec](../../../specs/unisastra-rebrand/spec.md).
+- Contract: [Unisastra spec](../../specs/unisastra-rebrand/spec.md).
 
 ## Context
 

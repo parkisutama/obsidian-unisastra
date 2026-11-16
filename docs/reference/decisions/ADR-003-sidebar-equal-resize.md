@@ -3,8 +3,8 @@
 - Status: Accepted oleh maintainer pada 2026-09-27 melalui "oke lanjutkan".
 - Tanggal: 2026-09-27.
 - Decider: maintainer MD Writer.
-- Requirement: [spec accepted](../../../specs/sidebar-equal-resize/spec.md).
-- Approach: [plan](../../../specs/sidebar-equal-resize/plan.md).
+- Requirement: [spec accepted](../../specs/sidebar-equal-resize/spec.md).
+- Approach: [plan](../../specs/sidebar-equal-resize/plan.md).
 
 ## Context
 
@@ -67,7 +67,7 @@ Minimum native tetap berlaku; kombinasi mustahil ditangguhkan, tanpa membuka/men
 Reset layout pengguna ke 280 px per sisi diotorisasi terpisah; sinkronisasi tetap mati.
 Deploy perbaikan dan acceptance native tetap tindakan terpisah.
 
-- [Task breakdown](../../../specs/sidebar-equal-resize/tasks.md) telah disetujui
+- [Task breakdown](../../specs/sidebar-equal-resize/tasks.md) telah disetujui
   dan menghubungkan implementasi, regression tests, serta acceptance native.
 - Kontrak 1.14.2 diverifikasi dengan CLI dan native methods pada elemen terlepas:
   setter tanpa clamp, drag min200/max80% workspace, state animasi, pointercancel.
