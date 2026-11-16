@@ -195,6 +195,9 @@ importers:
       '@eslint/json':
         specifier: 0.14.0
         version: 0.14.0
+      '@lezer/common':
+        specifier: 1.5.2
+        version: 1.5.2
       '@types/node':
         specifier: ^24.19.0
         version: 24.19.1
