@@ -10,4 +10,9 @@ export abstract class AbstractCommand extends Loadable {
 	abstract readonly commandTitle: string;
 
 	protected abstract registerCommand(): void;
+
+	// Subclasses that do not override load() would otherwise never reach Obsidian's command list.
+	override load() {
+		this.registerCommand();
+	}
 }
