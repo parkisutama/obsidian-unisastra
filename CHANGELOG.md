@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2](https://github.com/parkisutama/obsidian-unisastra/compare/0.0.1...0.0.2) (2026-11-17)
+
+
+### Fixed
+
+* correct Outline list depth, register missing commands, drop editor list keymaps ([#44](https://github.com/parkisutama/obsidian-unisastra/issues/44)) ([5c1155f](https://github.com/parkisutama/obsidian-unisastra/commit/5c1155fa157976ffce49c5eb85dc64ea11513840))
+
 ## 0.0.1 (2026-11-16)
 
 
