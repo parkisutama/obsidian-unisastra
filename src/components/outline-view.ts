@@ -333,7 +333,7 @@ export function collectOutlineFromText(doc: string): OutlineEntry[] {
 	return entries;
 }
 
-function collectOutlineEntries(view: EditorView): OutlineEntry[] {
+export function collectOutlineEntries(view: EditorView): OutlineEntry[] {
 	const entries = collectOutlineFromTree(view);
 	if (entries.length > 0) {
 		return entries;
