@@ -23,6 +23,13 @@ import { getVisibleRange } from "@/cm6/outliner/utils";
 import type UnisastraCore from "@/lib";
 import { collectOutlineEntries, getLineContentEnd, type OutlineEntry } from "./outline/entries";
 import {
+	buildTreeEntries,
+	getTaskProgress,
+	getTaskProgressTone,
+	type OutlineTreeEntry,
+	type TaskProgress,
+} from "./outline/tree";
+import {
 	applyOutlineTrail,
 	buildOutlineGuides,
 	getOutlineTrail,
@@ -32,25 +39,7 @@ import {
 
 export const OUTLINE_VIEW_TYPE = "unisastra-outline";
 
-interface OutlineTreeEntry extends OutlineEntry {
-	ancestorIndices: number[];
-	childIndices: number[];
-	hasChildren: boolean;
-	index: number;
-	isLastSibling: boolean;
-	parentIndex: number | null;
-	stateKey: string;
-	visualDepth: number;
-}
-
 type OutlineFilterMode = "all" | "branch" | "tasks";
-
-interface TaskProgress {
-	completed: number;
-	total: number;
-}
-
-type TaskProgressTone = "idle" | "active" | "complete";
 
 interface OutlineActionSpec {
 	icon: string;
@@ -216,56 +205,6 @@ export class OutlineView extends ItemView {
 		return -1;
 	}
 
-	private buildTreeEntries(entries: OutlineEntry[]): OutlineTreeEntry[] {
-		const treeEntries = entries.map<OutlineTreeEntry>((entry, index) => ({
-			ancestorIndices: [],
-			...entry,
-			childIndices: [],
-			hasChildren: false,
-			index,
-			isLastSibling: false,
-			stateKey: "",
-			parentIndex: null,
-			visualDepth: 0,
-		}));
-
-		const stack: number[] = [];
-		for (const entry of treeEntries) {
-			while (stack.length > 0 && treeEntries[stack.at(-1) ?? 0].depth >= entry.depth) {
-				stack.pop();
-			}
-
-			const parentIndex = stack.at(-1) ?? null;
-			entry.parentIndex = parentIndex;
-			if (parentIndex !== null) {
-				treeEntries[parentIndex].childIndices.push(entry.index);
-				treeEntries[parentIndex].hasChildren = true;
-			}
-			entry.ancestorIndices =
-				parentIndex === null ? [] : [...treeEntries[parentIndex].ancestorIndices, parentIndex];
-			entry.visualDepth = parentIndex === null ? 0 : treeEntries[parentIndex].visualDepth + 1;
-
-			const ancestorPath =
-				parentIndex === null ? [] : treeEntries[parentIndex].stateKey.split(" > ");
-			entry.stateKey = [...ancestorPath, `${entry.type}:${entry.depth}:${entry.title}`].join(" > ");
-
-			stack.push(entry.index);
-		}
-
-		for (const entry of treeEntries) {
-			if (entry.parentIndex === null) {
-				const rootSiblings = treeEntries.filter((candidate) => candidate.parentIndex === null);
-				entry.isLastSibling = rootSiblings.at(-1)?.index === entry.index;
-				continue;
-			}
-
-			const siblings = treeEntries[entry.parentIndex].childIndices;
-			entry.isLastSibling = siblings.at(-1) === entry.index;
-		}
-
-		return treeEntries;
-	}
-
 	private getVisibleEntries(
 		entries: OutlineTreeEntry[],
 		filterMode: OutlineFilterMode,
@@ -329,30 +268,6 @@ export class OutlineView extends ItemView {
 			parentIndex = parent.parentIndex;
 		}
 		return true;
-	}
-
-	private getTaskProgress(entries: OutlineTreeEntry[]): Map<number, TaskProgress> {
-		const progressByIndex = new Map<number, TaskProgress>();
-
-		for (let index = entries.length - 1; index >= 0; index--) {
-			const entry = entries[index];
-			let completed = entry.taskState === "checked" ? 1 : 0;
-			let total = entry.isTask ? 1 : 0;
-
-			for (const childIndex of entry.childIndices) {
-				const childProgress = progressByIndex.get(childIndex);
-				if (!childProgress) {
-					continue;
-				}
-
-				completed += childProgress.completed;
-				total += childProgress.total;
-			}
-
-			progressByIndex.set(index, { completed, total });
-		}
-
-		return progressByIndex;
 	}
 
 	private hasChildHeadingWithTaskProgress(
@@ -915,7 +830,7 @@ export class OutlineView extends ItemView {
 			return;
 		}
 
-		const treeEntries = this.buildTreeEntries(entries);
+		const treeEntries = buildTreeEntries(entries);
 		const activeEntryIndex = this.getActiveEntryIndex(entries, cm.state.selection.main.head);
 		const focusedRange = getVisibleRange(cm.state);
 		const focusedRootPos = focusedRange?.from ?? null;
@@ -935,7 +850,7 @@ export class OutlineView extends ItemView {
 			activeEntryIndex,
 			branchRootIndex,
 		);
-		const taskProgressByIndex = this.getTaskProgress(treeEntries);
+		const taskProgressByIndex = getTaskProgress(treeEntries);
 		const signature = JSON.stringify([
 			sourcePath,
 			focusedRootPos,
@@ -1063,7 +978,7 @@ export class OutlineView extends ItemView {
 			cls: "unisastra-outline-item-trailing",
 		});
 		if (this.shouldShowTaskProgress(entry, progress, progressByIndex)) {
-			const progressTone = this.getTaskProgressTone(progress);
+			const progressTone = getTaskProgressTone(progress);
 			itemEl.dataset.progressTone = progressTone;
 			trailing.createDiv({
 				cls: `unisastra-outline-item-progress is-${progressTone}`,
@@ -1143,18 +1058,6 @@ export class OutlineView extends ItemView {
 		for (const action of actionSpecs) {
 			this.createItemAction(actions, action);
 		}
-	}
-
-	private getTaskProgressTone(progress: TaskProgress): TaskProgressTone {
-		if (progress.completed === 0) {
-			return "idle";
-		}
-
-		if (progress.completed >= progress.total) {
-			return "complete";
-		}
-
-		return "active";
 	}
 
 	private createItemAction(container: HTMLElement, action: OutlineActionSpec) {

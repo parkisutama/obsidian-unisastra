@@ -1,41 +1,25 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // Copyright (C) 2025-2026 Parkis Utama
 
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { collectOutlineFromText } from "@/components/outline/entries";
-import { OutlineView } from "@/components/outline-view";
+import {
+	buildTreeEntries,
+	getTaskProgress,
+	getTaskProgressTone,
+	type OutlineTreeEntry,
+} from "@/components/outline/tree";
 
-// Only the base class must exist for the module to load; these methods use no Obsidian API.
-vi.mock("obsidian", () => ({ ItemView: class {} }));
-
-/** The three methods read no `this`, so the prototype is enough until they become functions. */
-const proto = OutlineView.prototype as unknown as {
-	buildTreeEntries(entries: ReturnType<typeof collectOutlineFromText>): Tree;
-	getTaskProgress(entries: Tree): Map<number, { completed: number; total: number }>;
-	getTaskProgressTone(progress: { completed: number; total: number }): string;
-};
-type TreeEntry = ReturnType<typeof collectOutlineFromText>[number] & {
-	ancestorIndices: number[];
-	childIndices: number[];
-	hasChildren: boolean;
-	index: number;
-	isLastSibling: boolean;
-	parentIndex: number | null;
-	stateKey: string;
-	visualDepth: number;
-};
-type Tree = TreeEntry[];
-
-const tree = (doc: string): Tree => proto.buildTreeEntries(collectOutlineFromText(doc));
+const tree = (doc: string): OutlineTreeEntry[] => buildTreeEntries(collectOutlineFromText(doc));
 const progress = (doc: string) => {
 	const entries = tree(doc);
-	const byIndex = proto.getTaskProgress(entries);
+	const byIndex = getTaskProgress(entries);
 	return entries.map((e) => byIndex.get(e.index));
 };
 
 describe("buildTreeEntries", () => {
 	it("returns an empty tree for no entries", () => {
-		expect(proto.buildTreeEntries([])).toEqual([]);
+		expect(buildTreeEntries([])).toEqual([]);
 	});
 
 	it("links parents, children, ancestors and visual depth", () => {
@@ -115,7 +99,7 @@ describe("getTaskProgress", () => {
 	});
 
 	it("returns an empty map for no entries", () => {
-		expect(proto.getTaskProgress([] as unknown as Tree).size).toBe(0);
+		expect(getTaskProgress([]).size).toBe(0);
 	});
 });
 
@@ -127,6 +111,6 @@ describe("getTaskProgressTone", () => {
 		[{ completed: 3, total: 3 }, "complete"],
 		[{ completed: 4, total: 3 }, "complete"],
 	])("reads %j as %s", (value, tone) => {
-		expect(proto.getTaskProgressTone(value)).toBe(tone);
+		expect(getTaskProgressTone(value)).toBe(tone);
 	});
 });
