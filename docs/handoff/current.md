@@ -2,10 +2,10 @@
 
 Date: 2026-11-16.
 Branch: `claude/quality-hardening`.
-State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoints 1 and 1b are recorded; the keyboard question is settled by a maintainer decision (ADR-008, QH-07). QH-06 is a new Outline panel bug.
-Current owner: Windows native-testing agent, returning the turn.
-Next owner: Ubuntu development agent: read the 2026-11-17 section, then QH-06, the QH-07 spec, QH-03.
-Code SHA under test: `141a78c` (last code or test change; later commits are documentation only). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
+State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoints 1 and 1b are recorded; the keyboard question is settled by a maintainer decision (ADR-008, QH-07). QH-06 (Outline list depth, text path) is fixed in code; checkpoint 1c asks Windows which path the panel uses live.
+Current owner: Ubuntu development agent, which wrote checkpoint 1c.
+Next owner: Windows native-testing agent, for checkpoint 1c.
+Code SHA under test: `de6dabd` for checkpoint 1c (the QH-06 fix; `141a78c` was the SHA for checkpoints 1 and 1b). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
 Source base: `f2ae9af1705777edde86015dbf2c0f3ac4a16c39` (main).
 
 ## Read first
@@ -159,3 +159,21 @@ New findings, recorded in the [ledger](../specs/quality-hardening/tasks.md):
 Maintainer decisions still open: the settings migration and removed command IDs (see ADR-008), and whether 0.0.2 carries the removal or only the `fix:` changes.
 
 Test vault state at the end of this round: `isKeyboardOpsEnabled` is true, the other four flags are false, and "Indent using tabs" is off. The vault is disposable.
+
+## Checkpoint 1c (requested from Windows): which path builds the Outline panel's list entries
+
+Code SHA under test: `de6dabd23fcdf8f75f8376353d81d258723389a7`, first commit that contains the QH-06 text-path fix. Build and deploy it to the disposable vault as before. Branch head adds documentation only.
+
+Question. `collectOutlineEntries` in `src/components/outline-view.ts` reads entries from the syntax tree and falls back to parsing text only when the tree gives none. The tree reader matches list items by the node name `ListItem` and headings by `ATXHeading*` or `SetextHeading1/2`. Checkpoint 1 showed the live tree names list lines `HyperMD-list-line_HyperMD-list-line-N`. If `ListItem` does not exist in the live tree, then in a note that has headings the tree gives only headings and the panel shows no list items; with no headings the text path gives the lists. This is a hypothesis from reading code; nothing here was observed.
+
+Do not change plugin code. Report each item as observed, with the text you used.
+
+1. Node names. In a note with a heading, a nested list and a task, read the live syntax tree (`syntaxTree(view.state)` on the editor's `cm`) and list every distinct node name that occurs on the lines of the list and the heading, including the full ancestor chain of the node at the start of a list item's content. State whether any node is named exactly `ListItem`, and what the heading nodes are called (for example `ATXHeading1` or a `HyperMD-header` name).
+2. Panel with headings. Same note, Live Preview and source mode: open the Outline panel with filter "all". Record which entries it shows: headings, list items, tasks, and their levels.
+3. Panel without headings. A note with only a nested list and a task: record the entries and levels.
+4. Tab indentation (QH-06). A note with no heading, indented with tabs: `- a`, a tab then `- b`, two tabs then `- c`, a tab then `- d`. Expected levels in the panel: a 0, b 1, c 2, d 1. Repeat with two spaces and four spaces per level. Then add a heading above the list and record whether the list items still appear and at which levels.
+5. If step 2 shows list items, say which node names the panel's tree reader must have matched, based on step 1.
+
+Restore the vault data and the note state afterwards. Say which of the five flags were on. Real key presses are not needed for this checkpoint.
+
+Outcome use: if list items are missing in step 2, a new finding is opened and the QH-03 split must preserve or fix that behavior on purpose; if they appear, the spec for QH-06 only needs to state the fallback rule.
