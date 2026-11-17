@@ -11,6 +11,8 @@ tags:
   - cm6
 ---
 
+> Superseded in part on 2026-11-17 ([ADR-008](decisions/ADR-008-native-smart-lists-and-outline-ops.md), [native-smart-lists](../specs/native-smart-lists/spec.md)): the editor keyboard operations in this document (move, indent and outdent commands, smart Enter, smart Tab, smart select, cursor stick) and their five settings flags were removed. Obsidian Smart lists replace them. This record is kept as written.
+
 ## MD Writer Outliner Integration
 
 This document serves as the complete specification for integrating
