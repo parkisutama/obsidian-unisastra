@@ -1,6 +1,6 @@
 # Outline view split spec
 
-Status: Plan validated against the code on 2026-11-16 (see the plan's corrections). The maintainer authorized QH-03 on the same date; approval of the corrected plan is still needed before implementation.
+Status: Plan validated against the code on 2026-11-16 and revised on 2026-11-17 (see the plan's revision). The maintainer authorized QH-03 on the same date; approval of the corrected plan is still needed before implementation.
 Date: 2026-11-16.
 Source: [quality audit, QH-03](../../audit/2026-11-16-quality-pass/REPORT.md), [quality hardening](../quality-hardening/spec.md).
 
@@ -24,7 +24,7 @@ and leave the view class responsible only for Obsidian lifecycle and DOM.
 
 ## Acceptance criteria
 
-1. Characterization tests for the extracted functions pass against the code **before** the move
+1. Characterization tests for the extracted functions pass (the tree reader is exempt: it is dead in the live build and is removed in a later step) against the code **before** the move
    and against the moved code unchanged.
 2. `OUTLINE_VIEW_TYPE` and the `OutlineView` export keep their import path for `src/lib.ts`
    and `outliner-sidebar.ts`.

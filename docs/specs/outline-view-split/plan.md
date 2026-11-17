@@ -1,11 +1,11 @@
 # Outline view split plan
 
-Status: Validated against the code on 2026-11-16, with the corrections below. Maintainer approval of the corrected plan is still needed before implementation.
+Status: Validated against the code on 2026-11-16 and revised on 2026-11-17 after native checkpoint 1c. Maintainer approval of the revised plan is still needed before implementation.
 Requirements: [spec.md](spec.md). Depends on QH-02 in [quality hardening](../quality-hardening/plan.md).
 
 ## Approach
 
-Extract in two steps, each with tests written first against the existing code.
+Extract in two steps, each with tests written first against the existing code, then remove the dead tree reader in a third, separate step.
 
 | Step | Move | From lines (current) | To |
 | --- | --- | --- | --- |
@@ -20,7 +20,7 @@ Corrections from validation:
 - Step A imports `getLineContentEndBeforeBlockId` from `@/cm6/outliner/utils`. That file imports
   no `obsidian` module, so the "no `obsidian`" rule holds. Allowed imports for the new modules:
   `@codemirror/*` and `@/cm6/outliner/utils`.
-- Test strategy for O1. The text fallback (`collectOutlineFromText`, via `collectOutlineEntries`
+- Test strategy for O1 (superseded by the revision below for the tree path). The text fallback (`collectOutlineFromText`, via `collectOutlineEntries`
   on a view stub with only `state`) runs in node. The tree path reads Lezer-markdown node names
   (`ATXHeadingN`, `SetextHeading1/2`, `ListItem`), not the HyperMD names in
   `tests/fixtures/hypermd-state.ts`. O1 needs a second small fixture that builds those nodes
@@ -33,6 +33,24 @@ They depend on view state and the DOM; splitting them adds parameter lists witho
 
 Dependency direction: `outline-view.ts` imports `outline/entries.ts` and `outline/tree.ts`;
 those two import only `@codemirror/*` types and each other, never `obsidian`.
+
+## Revision after native checkpoint 1c (2026-11-17)
+
+Windows showed the live tree (Obsidian 1.15.1) has no `ListItem` or `ATXHeading*` nodes: list
+lines are `HyperMD-list-line_HyperMD-list-line-N` and headings `HyperMD-header_HyperMD-header-N`.
+The tree reader (`collectOutlineFromTree` and its node helpers) returns nothing live, so
+`collectOutlineEntries` always uses the text fallback, and the text path is the real behavior.
+
+- Step A moves the text path as the primary behavior, with characterization tests first
+  (`collectOutlineFromText`, list depth already covered by `tests/outline-text-depth.test.ts`).
+- The tree reader moves unchanged and untested: it is dead in the live build, and a
+  Lezer-markdown fixture would characterize code nobody runs. This exempts it from
+  acceptance criterion 1; the exemption ends with step C.
+- Step C (new): delete the tree reader and `collectOutlineEntries` falls straight to the text
+  path. Separate `refactor:` commit after A and B are green. It needs maintainer approval,
+  because another Obsidian build or the performance fixture might still produce those nodes.
+  Before deleting, grep tests and fixtures for `ListItem` and `ATXHeading`.
+- The earlier plan for a second, Lezer-markdown fixture is dropped.
 
 ## Risks
 
