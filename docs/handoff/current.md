@@ -2,9 +2,9 @@
 
 Date: 2026-11-16.
 Branch: `claude/quality-hardening`.
-State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoints 1 and 1b are recorded; the keyboard question is settled by a maintainer decision (ADR-008, QH-07). QH-06 (Outline list depth, text path) is fixed in code; checkpoint 1c asks Windows which path the panel uses live.
-Current owner: Ubuntu development agent, which wrote checkpoint 1c.
-Next owner: Windows native-testing agent, for checkpoint 1c.
+State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoints 1, 1b and 1c are recorded. QH-06 is fixed and verified natively for tab and space indentation; the QH-07 spec is next.
+Current owner: Windows native-testing agent, returning the turn.
+Next owner: Ubuntu development agent: read the checkpoint 1c result, then the QH-07 spec and QH-03.
 Code SHA under test: `de6dabd` for checkpoint 1c (the QH-06 fix; `141a78c` was the SHA for checkpoints 1 and 1b). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
 Source base: `f2ae9af1705777edde86015dbf2c0f3ac4a16c39` (main).
 
@@ -177,3 +177,23 @@ Do not change plugin code. Report each item as observed, with the text you used.
 Restore the vault data and the note state afterwards. Say which of the five flags were on. Real key presses are not needed for this checkpoint.
 
 Outcome use: if list items are missing in step 2, a new finding is opened and the QH-03 split must preserve or fix that behavior on purpose; if they appear, the spec for QH-06 only needs to state the fallback rule.
+
+## Checkpoint 1c result (Windows, 2026-11-17)
+
+Tested code SHA: `de6dabd23fcdf8f75f8376353d81d258723389a7`. The branch head `ea3f419` differs from it only in documentation (checked with `git diff de6dabd HEAD -- src tests scripts package.json`). Windows 11, Obsidian 1.15.1, disposable vault `unisastra-testvault`, built and deployed with `pnpm run deploy`, then the plugin reloaded. A first read before the reload showed the old build and is discarded. `pnpm run verify` on Windows: 39 files, 361 tests, build and `verify:artifacts` passed, 20 of 20 conformance tests. Flags: only `isKeyboardOpsEnabled` was on. The panel was read from its DOM through the Obsidian CLI; no key presses.
+
+| Step | Result |
+| --- | --- |
+| 1. Node names in a note with a heading, a nested list and a task | No node is named `ListItem`. List lines are `HyperMD-list-line_HyperMD-list-line-N`, tasks `HyperMD-list-line_HyperMD-list-line-1_HyperMD-task-line`, content nodes `list-N`. Headings are `HyperMD-header_HyperMD-header-N`, not `ATXHeading*` or `SetextHeading*`. Chain at a list item's content: `list-1`, `HyperMD-list-line_HyperMD-list-line-1`, `Document` |
+| 2. Panel on a note with headings (Live Preview) | Headings and list items both appear, with the correct levels: `H1` 0, `a` 1, `b` 2, `c` 3, `d` 2, task 1, `H2` 1, `e` 2. Source mode was not run |
+| 3. Panel on a note without headings | `a` 0, `b` 1, `c` 2, `d` 1, task 0 |
+| 4. Indentation, no heading | Tab, two spaces and four spaces all give `a` 0, `b` 1, `c` 2, `d` 1, task 0 |
+| 4. Indentation, with a heading | Tab, two spaces and four spaces all give `H` 0, `a` 1, `b` 2, `c` 3, `d` 2 |
+| Extra: mixed indent (`a`, tab `b`, two-space `c`, `d`) | `a` 0, `b` 1, `c` 1, `d` 0 |
+| 5. Node names the tree reader must have matched | None. See below |
+
+Conclusion for the open question. `collectOutlineFromTree` matches `ListItem` and `ATXHeading*`/`SetextHeading*`, which the live tree does not contain. The tree reader therefore returns nothing in Obsidian 1.15.1, `collectOutlineEntries` always takes the text fallback, and the lists shown in step 2 come from the text path. The hypothesis "a note with headings loses its lists" is false in this build. The consequence is larger than the ledger assumed: the text path is the live path, so the QH-06 fix covers real use, and the tree reader is dead code in this Obsidian version. It may still run in another build or in a test, which was not checked. The QH-03 split must keep the text path as the primary behavior, and the spec should decide whether to delete the tree reader or keep it. A note longer than the first parse, or a view whose tree is partial, was not tested.
+
+Not run: source mode, popout, a very large note, task toggling from the panel.
+
+Cleanup: temporary notes deleted, the vault's `data.json` restored from a backup, editors closed. `qh-keys.md` is the maintainer's note and was left alone. The vault still has `isKeyboardOpsEnabled` true.
