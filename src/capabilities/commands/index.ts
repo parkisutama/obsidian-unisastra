@@ -12,11 +12,7 @@ import { FocusNextSibling } from "./focus-next-sibling";
 import { FocusParent } from "./focus-parent";
 import { FocusPreviousSibling } from "./focus-previous-sibling";
 import { GenerateBlockId } from "./generate-block-id";
-import { IndentListItem } from "./indent-list-item";
-import { MoveListDown } from "./move-list-down";
-import { MoveListUp } from "./move-list-up";
 import { MoveTypewriterDown, MoveTypewriterUp } from "./move-typewriter";
-import { OutdentListItem } from "./outdent-list-item";
 import { OutlineFilterAll } from "./outline-filter-all";
 import { OutlineFilterBranch } from "./outline-filter-branch";
 import { OutlineFilterCycle } from "./outline-filter-cycle";
@@ -53,10 +49,6 @@ export function getCommands(tm: UnisastraCore): Record<string, AbstractCommand> 
 			new FocusFirstChild(tm),
 			new FocusNextSibling(tm),
 			new FocusPreviousSibling(tm),
-			new MoveListUp(tm),
-			new MoveListDown(tm),
-			new IndentListItem(tm),
-			new OutdentListItem(tm),
 			new OutlineFilterAll(tm),
 			new OutlineFilterBranch(tm),
 			new OutlineFilterTasks(tm),
