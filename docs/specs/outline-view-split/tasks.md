@@ -4,7 +4,7 @@ Source: [spec](spec.md), [plan](plan.md). Plan validated on 2026-11-16, revised 
 
 | Task | Area | Acceptance / evidence | State |
 | --- | --- | --- | --- |
-| O1 | Tests for entry collection | Text path (`collectOutlineFromText` through `collectOutlineEntries` on a state-only view stub): headings, nested lists, tasks, frontmatter, empty and malformed input; green on current code. No tree fixture: the tree reader is dead in the live build | Pending |
+| O1 | Tests for entry collection | Text path (`collectOutlineFromText` through `collectOutlineEntries` on a state-only view stub): headings, nested lists, tasks, frontmatter, empty and malformed input; green on current code. No tree fixture: the tree reader is dead in the live build | Done. 16 tests in `tests/outline-entries.test.ts`; 12 conditions inverted, 11 caught, 1 equivalent (`doc.trim()` guard) |
 | O2 | Move step A | Tests unchanged and green; imports resolved | Pending |
 | O3 | Tests for tree and task progress | Nesting, filter modes, task rollups; green on current code | Pending |
 | O4 | Move step B | Tests unchanged and green; line count recorded | Pending |
