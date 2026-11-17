@@ -3,11 +3,8 @@
 
 import { EditorState } from "@codemirror/state";
 import type { EditorView } from "@codemirror/view";
-import { describe, expect, it, vi } from "vitest";
-import { collectOutlineEntries } from "@/components/outline-view";
-
-// Only the base class must exist for the module to load; entry collection touches no Obsidian API.
-vi.mock("obsidian", () => ({ ItemView: class {} }));
+import { describe, expect, it } from "vitest";
+import { collectOutlineEntries } from "@/components/outline/entries";
 
 /**
  * The live tree has no ListItem or ATXHeading nodes (native checkpoint 1c), so Obsidian always

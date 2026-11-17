@@ -1,11 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // Copyright (C) 2025-2026 Parkis Utama
 
-import { describe, expect, it, vi } from "vitest";
-import { collectOutlineFromText } from "@/components/outline-view";
-
-// Only the base class must exist for the module to load; the text parser touches no Obsidian API.
-vi.mock("obsidian", () => ({ ItemView: class {} }));
+import { describe, expect, it } from "vitest";
+import { collectOutlineFromText } from "@/components/outline/entries";
 
 const LIST_BASE = 6;
 const depths = (doc: string) =>
