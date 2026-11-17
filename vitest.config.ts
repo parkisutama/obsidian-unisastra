@@ -25,10 +25,10 @@ export default defineConfig({
 			provider: "v8",
 			include: ["src/**/*.ts", "scripts/**/*.{ts,mjs}"],
 			reporter: ["text-summary", "lcov"],
-			// Ratchet, set just below the numbers measured on 2026-11-16 (38.00, 39.97, 33.60, 37.86). Most of the editor and UI
+			// Ratchet, set just below the numbers measured on 2026-11-17 after QH-07 (39.41, 42.09, 33.55, 39.24; statements, branches, functions, lines). Most of the editor and UI
 			// code is exercised only in Obsidian. Raise the floor as coverage grows; never lower it
 			// to make a change pass.
-			thresholds: { statements: 37, branches: 39, functions: 33, lines: 37 },
+			thresholds: { statements: 39, branches: 41, functions: 33, lines: 39 },
 		},
 	},
 });
