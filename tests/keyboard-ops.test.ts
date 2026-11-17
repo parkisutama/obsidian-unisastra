@@ -3,16 +3,10 @@
 
 import { describe, expect, it } from "vitest";
 import {
-	cursorStickHome,
-	cursorStickLeft,
 	indentListItem,
 	moveListItemDown,
 	moveListItemUp,
 	outdentListItem,
-	smartEnter,
-	smartSelectAll,
-	smartShiftTab,
-	smartTab,
 } from "@/cm6/outliner/keyboard-ops";
 import { hypermdState, runCommand } from "./fixtures/hypermd-state";
 
@@ -80,71 +74,5 @@ describe("indent and outdent", () => {
 	it("clamps the cursor at the line start when outdenting from inside the indent", () => {
 		const out = apply(outdentListItem, "- a\n    |- b");
 		expect(out).toBe("- a\n|- b");
-	});
-
-	it("smart tab and shift-tab act only inside lists", () => {
-		expect(apply(smartTab, "- a\n- b|\n")).toBe("- a\n    - b|\n");
-		expect(apply(smartShiftTab, "- a\n    - b|\n")).toBe("- a\n- b|\n");
-		expect(apply(smartTab, "plain|")).toBeNull();
-		expect(apply(smartShiftTab, "plain|")).toBeNull();
-	});
-});
-
-describe("smartEnter", () => {
-	it("adds a sibling below with the same marker and depth", () => {
-		expect(apply(smartEnter, "- a|\n")).toBe("- a\n- |\n");
-		expect(apply(smartEnter, "- a\n    - b|\n")).toBe("- a\n    - b\n    - |\n");
-		expect(apply(smartEnter, "1. one|\n")).toBe("1. one\n1. |\n");
-	});
-
-	it("splits the text at the cursor", () => {
-		expect(apply(smartEnter, "- ab|cd")).toBe("- ab\n- |cd");
-	});
-
-	it("outdents an empty nested item", () => {
-		expect(apply(smartEnter, "- a\n    - |\n")).toBe("- a\n- |\n");
-	});
-
-	it("clears an empty root item to leave the list", () => {
-		expect(apply(smartEnter, "- a\n- |\n")).toBe("- a\n|\n");
-	});
-
-	it("declines outside a list", () => {
-		expect(apply(smartEnter, "plain|")).toBeNull();
-	});
-});
-
-describe("smartSelectAll", () => {
-	it("selects the item content, then the enclosing list", () => {
-		const first = hypermdState("- ab|c\n- d");
-		const step1 = runCommand(smartSelectAll, first);
-		expect(step1?.selection.main).toMatchObject({ anchor: 2, head: 5 });
-		const step2 = step1 && runCommand(smartSelectAll, step1);
-		expect(step2?.selection.main).toMatchObject({ anchor: 0, head: 9 });
-	});
-
-	it("declines outside a list", () => {
-		expect(apply(smartSelectAll, "plain|")).toBeNull();
-	});
-});
-
-describe("cursor sticking", () => {
-	it("moves a cursor inside the marker to the content start", () => {
-		expect(apply(cursorStickLeft, "-| a")).toBe("- |a");
-		expect(apply(cursorStickLeft, "- |a")).toBe("- |a");
-	});
-
-	it("leaves a cursor inside the content alone", () => {
-		expect(apply(cursorStickLeft, "- ab|")).toBeNull();
-	});
-
-	it("sends Home to the content start unless already there", () => {
-		expect(apply(cursorStickHome, "- ab|\n")).toBe("- |ab\n");
-		expect(apply(cursorStickHome, "- |ab")).toBeNull();
-	});
-
-	it("declines outside a list", () => {
-		expect(apply(cursorStickLeft, "plain|")).toBeNull();
-		expect(apply(cursorStickHome, "plain|")).toBeNull();
 	});
 });

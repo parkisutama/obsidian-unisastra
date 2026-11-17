@@ -20,6 +20,27 @@ const createVault = (cursorPositions?: Record<string, unknown>) =>
 	}) as unknown as Vault;
 
 describe("settings defaults and migrations", () => {
+	it("loads a data.json that still holds the removed list keyboard flags", async () => {
+		const stale = {
+			isKeyboardOpsEnabled: true,
+			isCursorStickEnabled: true,
+			isSmartEnterEnabled: true,
+			isSmartTabEnabled: true,
+			isSmartSelectEnabled: true,
+			isOutlinerEnabled: false,
+		};
+		const loaded = await applyStartupMigrations(
+			{ general: {}, outliner: stale } as unknown as Partial<UnisastraSettings>,
+			createVault(),
+			".obsidian/plugins/unisastra",
+		);
+
+		expect(loaded.outliner.isOutlinerEnabled).toBe(false);
+		expect(loaded.outliner.isSidebarOutlineEnabled).toBe(
+			DEFAULT_SETTINGS.outliner.isSidebarOutlineEnabled,
+		);
+	});
+
 	it("preserves the retired announcement setting in existing data", async () => {
 		expect(DEFAULT_SETTINGS.general.isAnnounceUpdatesEnabled).toBe(false);
 

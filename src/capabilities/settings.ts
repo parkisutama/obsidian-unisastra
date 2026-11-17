@@ -118,14 +118,9 @@ export interface ShowWhitespaceSettings {
 }
 
 export interface OutlinerSettings {
-	isCursorStickEnabled: boolean;
-	isKeyboardOpsEnabled: boolean;
 	isOutlinerEnabled: boolean;
 	isOutlinerOnClickEnabled: boolean;
 	isSidebarOutlineEnabled: boolean;
-	isSmartEnterEnabled: boolean;
-	isSmartSelectEnabled: boolean;
-	isSmartTabEnabled: boolean;
 	sidebarCollapseState: Record<string, Record<string, boolean>>;
 	sidebarFilterMode: "all" | "branch" | "tasks";
 	sidebarFilterModeByFile: Record<string, "all" | "branch" | "tasks">;
@@ -306,11 +301,6 @@ export const DEFAULT_SETTINGS: UnisastraSettings = {
 	outliner: {
 		isOutlinerEnabled: true,
 		isOutlinerOnClickEnabled: true,
-		isKeyboardOpsEnabled: false,
-		isCursorStickEnabled: false,
-		isSmartEnterEnabled: false,
-		isSmartTabEnabled: false,
-		isSmartSelectEnabled: false,
 		isSidebarOutlineEnabled: false,
 		sidebarCollapseState: {},
 		sidebarFilterMode: "all",
