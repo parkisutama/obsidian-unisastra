@@ -2,10 +2,10 @@
 
 Date: 2026-11-16.
 Branch: `claude/quality-hardening`.
-State: S1, S2, S3 and QH-03 (O1 to O4, O2b) are committed. Native checkpoints 1, 1b, 1c and 2 are recorded; QH-03 and QH-06 passed with the gaps listed in the checkpoint 2 result. The QH-07 spec, the release steps and the pull request are pending.
-Current owner: Windows native-testing agent, returning the turn.
-Next owner: Ubuntu development agent: read the checkpoint 2 result, then the QH-07 spec.
-Code SHA under test: `bc317a9` for checkpoint 2 (last code or test change of QH-03; `de6dabd` was the SHA for checkpoint 1c, `141a78c` for 1 and 1b). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
+State: S1, S2, S3, QH-03 and the QH-07 removal (K1 to K4) are committed. Native checkpoint 3 is requested for QH-07 (K7). The release steps and the pull request are pending.
+Current owner: Ubuntu development agent, which wrote checkpoint 3.
+Next owner: Windows native-testing agent, for checkpoint 3 (QH-07).
+Code SHA under test: `e96518dd0efaa7996689c3fc36248f157075c3bd` for checkpoint 3 (last code or test change of QH-07; `bc317a9` was the SHA for checkpoint 2). The branch is pushed to `origin/claude/quality-hardening`. No pull request is open.
 Source base: `f2ae9af1705777edde86015dbf2c0f3ac4a16c39` (main).
 
 ## Read first
@@ -251,3 +251,18 @@ Observations outside the checkpoint:
 Not run: a very large note, mobile, source mode, steps 2 to 6 inside the popout, panel move buttons, task toggle in the popout.
 
 Cleanup: temporary notes deleted, the 0.0.1 files replaced by the checkpoint build again (`main.js` hash begins `fba381ccb92e`), `data.json` restored, editors and the popout closed.
+
+## Checkpoint 3 (requested from Windows): QH-07, editor list keymaps and commands removed
+
+Code SHA under test: `e96518dd0efaa7996689c3fc36248f157075c3bd`. Spec: [native-smart-lists](../specs/native-smart-lists/spec.md), task K7. Removed: the four commands `unisastra:indent-list-item`, `outdent-list-item`, `move-list-up`, `move-list-down`; the plugin keymaps behind the five flags (`Mod-Shift-ArrowUp`, `Mod-Shift-ArrowDown`, `Enter`, `Tab`, `Shift-Tab`, `Mod-a`, `ArrowLeft`, `Home`); the five settings keys. The Outline panel buttons stay.
+
+Steps, with Obsidian 1.15.1 or later, a disposable vault and the build of that SHA. Use **real key presses** for keys; synthetic events are not evidence.
+
+1. Run `pnpm install --frozen-lockfile` and `pnpm run verify`. Report counts, build, `verify:artifacts` and conformance.
+2. Put the five flags (`isKeyboardOpsEnabled`, `isCursorStickEnabled`, `isSmartEnterEnabled`, `isSmartTabEnabled`, `isSmartSelectEnabled`) as `true` in the `outliner` group of `data.json`, then load the plugin. Report console errors, and whether the settings tab shows any of the five toggles.
+3. Open the command palette and search `list item` and `move list`. Report whether any of the four removed command IDs appear. Confirm the focus and outline commands still list or report as before (see the checkpoint 2 note on missing commands).
+4. In a note with a nested list, press with a real keyboard: `Tab`, `Shift-Tab`, `Enter` at item end, `Enter` on an empty item, `Mod-a` twice, `Home`, and `Mod-Shift-ArrowUp` or `Mod-Shift-ArrowDown` if Obsidian binds them. Compare each result with the same note with the plugin disabled. Report any difference.
+5. Outline panel: Indent, Outdent, Move up and Move down on a list item with children. Report the resulting text. Also repeat the checkpoint 2 task toggle once.
+6. Restore the vault data and `data.json`.
+
+Report pass or fail per step with console errors. List as untested what you skip, for example mobile and the popout.
