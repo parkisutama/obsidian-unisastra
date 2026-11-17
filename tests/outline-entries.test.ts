@@ -7,8 +7,8 @@ import { describe, expect, it } from "vitest";
 import { collectOutlineEntries } from "@/components/outline/entries";
 
 /**
- * The live tree has no ListItem or ATXHeading nodes (native checkpoint 1c), so Obsidian always
- * takes the text path. A state without a language gives an empty tree, the same situation.
+ * Entries come from the document text only. The tree reader was removed because the live tree
+ * has no ListItem or ATXHeading nodes (native checkpoint 1c).
  */
 const collect = (doc: string) =>
 	collectOutlineEntries({ state: EditorState.create({ doc }) } as unknown as EditorView);

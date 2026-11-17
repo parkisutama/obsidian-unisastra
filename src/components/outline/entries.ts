@@ -1,13 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // Copyright (C) 2025-2026 Parkis Utama
 
-import { syntaxTree } from "@codemirror/language";
 import type { EditorView } from "@codemirror/view";
 import { getLineContentEndBeforeBlockId } from "@/cm6/outliner/utils";
-
-type TreeNodeRef = Parameters<
-	NonNullable<Parameters<ReturnType<typeof syntaxTree>["iterate"]>[0]["enter"]>
->[0];
 
 export interface OutlineEntry {
 	contentMarkdown: string;
@@ -47,117 +42,6 @@ function stripTaskPrefix(text: string): string {
 
 export function getLineContentEnd(view: EditorView, pos: number): number {
 	return getLineContentEndBeforeBlockId(view.state, pos);
-}
-
-function createHeadingEntry(depth: number, pos: number, title: string): OutlineEntry | null {
-	const normalizedTitle = title.replace(TRAILING_HEADING_MARKERS_RE, "").trim();
-	if (!normalizedTitle) {
-		return null;
-	}
-
-	return {
-		contentMarkdown: normalizedTitle,
-		markdown: normalizedTitle,
-		title: normalizedTitle,
-		pos,
-		depth,
-		rangeTo: pos,
-		isTask: false,
-		taskState: null,
-		type: "heading",
-	};
-}
-
-function createAtxHeadingEntry(view: EditorView, nodeRef: TreeNodeRef): OutlineEntry | null {
-	const level = Number(nodeRef.name.slice(10));
-	const line = view.state.doc.lineAt(nodeRef.from);
-	const title = line.text.match(HEADING_LINE_RE)?.[2] ?? "";
-	return createHeadingEntry(level - 1, nodeRef.from, title);
-}
-
-function createSetextHeadingEntry(view: EditorView, nodeRef: TreeNodeRef): OutlineEntry | null {
-	const level = nodeRef.name === "SetextHeading1" ? 1 : 2;
-	const line = view.state.doc.lineAt(nodeRef.from);
-	return createHeadingEntry(level - 1, nodeRef.from, line.text);
-}
-
-function getListItemDepth(nodeRef: TreeNodeRef): number {
-	let depth = 0;
-	let ancestor = nodeRef.node.parent;
-
-	while (ancestor) {
-		if (ancestor.name === "ListItem") {
-			depth++;
-		}
-		ancestor = ancestor.parent;
-	}
-
-	return depth;
-}
-
-function createListItemEntry(view: EditorView, nodeRef: TreeNodeRef): OutlineEntry | null {
-	const line = view.state.doc.lineAt(nodeRef.from);
-	const rawMarkdown = line.text.trimStart();
-	const body = line.text.match(LIST_ITEM_LINE_RE)?.[3]?.trim();
-	const title = body ? stripTaskPrefix(body) : undefined;
-
-	if (!(title && rawMarkdown)) {
-		return null;
-	}
-
-	return {
-		contentMarkdown: title,
-		markdown: rawMarkdown,
-		title,
-		pos: nodeRef.from,
-		depth: 6 + getListItemDepth(nodeRef),
-		rangeTo: line.to,
-		isTask: TASK_ITEM_RE.test(line.text),
-		taskState: getTaskState(line.text),
-		type: "list-item",
-	};
-}
-
-function collectOutlineEntryFromNode(view: EditorView, nodeRef: TreeNodeRef): OutlineEntry | null {
-	if (nodeRef.name.startsWith("ATXHeading")) {
-		return createAtxHeadingEntry(view, nodeRef);
-	}
-
-	if (nodeRef.name === "SetextHeading1" || nodeRef.name === "SetextHeading2") {
-		return createSetextHeadingEntry(view, nodeRef);
-	}
-
-	if (nodeRef.name === "ListItem") {
-		return createListItemEntry(view, nodeRef);
-	}
-
-	return null;
-}
-
-function shouldSkipNodeChildren(nodeName: string): boolean {
-	return (
-		nodeName.startsWith("ATXHeading") ||
-		nodeName === "SetextHeading1" ||
-		nodeName === "SetextHeading2"
-	);
-}
-
-function collectOutlineFromTree(view: EditorView): OutlineEntry[] {
-	const tree = syntaxTree(view.state);
-	const entries: OutlineEntry[] = [];
-
-	tree.iterate({
-		enter(nodeRef) {
-			const entry = collectOutlineEntryFromNode(view, nodeRef);
-			if (entry) {
-				entries.push(entry);
-			}
-
-			return shouldSkipNodeChildren(nodeRef.name) ? false : undefined;
-		},
-	});
-
-	return entries;
 }
 
 function createTextHeadingOutlineEntry(
@@ -281,12 +165,6 @@ export function collectOutlineFromText(doc: string): OutlineEntry[] {
 }
 
 export function collectOutlineEntries(view: EditorView): OutlineEntry[] {
-	const entries = collectOutlineFromTree(view);
-	if (entries.length > 0) {
-		return entries;
-	}
-
-	// Fallback: parse document text directly when tree is not ready
 	const doc = view.state.doc.toString();
 	if (doc.trim().length === 0) {
 		return [];
