@@ -236,13 +236,35 @@ function createTextHeadingOutlineEntry(
 	};
 }
 
+/** Width in columns; a tab advances to the next multiple of 4, as in CommonMark. */
+function getIndentColumns(indent: string): number {
+	let columns = 0;
+	for (const char of indent) {
+		columns += char === "\t" ? 4 - (columns % 4) : 1;
+	}
+	return columns;
+}
+
+/**
+ * Nesting depth from the indent columns of the open items. An item deeper than the top of the
+ * stack is a child one level down, however far it is indented; an equal one is a sibling.
+ */
+function getNestingDepth(indentStack: number[], columns: number): number {
+	while (indentStack.length > 0 && indentStack[indentStack.length - 1] > columns) {
+		indentStack.pop();
+	}
+	if (indentStack.length === 0 || indentStack[indentStack.length - 1] < columns) {
+		indentStack.push(columns);
+	}
+	return indentStack.length - 1;
+}
+
 function createTextListOutlineEntry(
 	line: string,
 	pos: number,
 	listMatch: RegExpMatchArray,
+	depth: number,
 ): OutlineEntry | null {
-	const indent = listMatch[1].length;
-	const depth = Math.floor(indent / 2);
 	const title = stripTaskPrefix(listMatch[3]);
 	if (!title) {
 		return null;
@@ -261,11 +283,12 @@ function createTextListOutlineEntry(
 	};
 }
 
-function collectOutlineFromText(doc: string): OutlineEntry[] {
+export function collectOutlineFromText(doc: string): OutlineEntry[] {
 	const entries: OutlineEntry[] = [];
 	const lines = doc.split("\n");
 	let pos = 0;
 	let inFrontmatter = false;
+	const indentStack: number[] = [];
 
 	for (const line of lines) {
 		if (pos === 0 && line.trim() === "---") {
@@ -283,6 +306,7 @@ function collectOutlineFromText(doc: string): OutlineEntry[] {
 
 		const headingMatch = line.match(HEADING_LINE_RE);
 		if (headingMatch) {
+			indentStack.length = 0;
 			const headingEntry = createTextHeadingOutlineEntry(pos, headingMatch);
 			if (headingEntry) {
 				entries.push(headingEntry);
@@ -293,10 +317,14 @@ function collectOutlineFromText(doc: string): OutlineEntry[] {
 
 		const listMatch = line.match(LIST_ITEM_LINE_RE);
 		if (listMatch) {
-			const listEntry = createTextListOutlineEntry(line, pos, listMatch);
+			const depth = getNestingDepth(indentStack, getIndentColumns(listMatch[1]));
+			const listEntry = createTextListOutlineEntry(line, pos, listMatch, depth);
 			if (listEntry) {
 				entries.push(listEntry);
 			}
+		} else if (line.length > 0 && !/^\s/.test(line)) {
+			// An unindented paragraph ends the list.
+			indentStack.length = 0;
 		}
 
 		pos += line.length + 1;
