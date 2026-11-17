@@ -2,9 +2,9 @@
 
 Date: 2026-11-16.
 Branch: `claude/quality-hardening`.
-State: S1, S2, S3 and QH-03 (O1 to O4, O2b) are committed; native acceptance O5 and the release steps are pending. Checkpoint 2 is requested. Native checkpoints 1, 1b and 1c are recorded. QH-06 is fixed and verified natively for tab and space indentation; the QH-07 spec is next.
-Current owner: Ubuntu development agent, which wrote checkpoint 2.
-Next owner: Windows native-testing agent, for checkpoint 2 (QH-03 and QH-06).
+State: S1, S2, S3 and QH-03 (O1 to O4, O2b) are committed. Native checkpoints 1, 1b, 1c and 2 are recorded; QH-03 and QH-06 passed with the gaps listed in the checkpoint 2 result. The QH-07 spec, the release steps and the pull request are pending.
+Current owner: Windows native-testing agent, returning the turn.
+Next owner: Ubuntu development agent: read the checkpoint 2 result, then the QH-07 spec.
 Code SHA under test: `bc317a9` for checkpoint 2 (last code or test change of QH-03; `de6dabd` was the SHA for checkpoint 1c, `141a78c` for 1 and 1b). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
 Source base: `f2ae9af1705777edde86015dbf2c0f3ac4a16c39` (main).
 
@@ -223,3 +223,31 @@ Steps, with Obsidian 1.15.1 and no plugin code changes:
 Report pass or fail per step with console errors, and restore the vault data afterwards. Say which of the five keyboard flags were on. Real key presses are not needed.
 
 Not testable here, so list as untested if skipped: a very large note, mobile.
+
+## Checkpoint 2 result (Windows, 2026-11-17)
+
+Tested code SHA: `bc317a97f1f302816d33a6646d4b418167159dc3` (`git diff bc317a9 HEAD -- src tests scripts package.json` is empty at the time of the run). Windows 11, Obsidian 1.15.1, disposable vault `unisastra-testvault`. Reference: the published 0.0.1 `main.js`, `manifest.json` and `styles.css` from the GitHub release, swapped into the vault temporarily and restored afterwards. Only `isKeyboardOpsEnabled` was on among the five keyboard flags. Everything was read from the panel DOM and the editor through the Obsidian CLI. Clicks were `button.click()` on the panel's own buttons; no real key presses. The panel is a DOM element in the right sidebar, not a workspace leaf.
+
+Step 1. `pnpm install --frozen-lockfile` and `pnpm run verify` passed: 41 files, 395 tests, build and `verify:artifacts` passed, conformance 20 of 20. The performance fixture ran as part of the Vitest run; no separate figure was recorded.
+
+| Step | Result |
+| --- | --- |
+| 2. Note with headings, tab-indented and two-space lists, tasks | Matches expectations on the new build: `H1` 0, `t1` 1, `t2` 1, `p` 1, `t3` 2, `q` 2, `r` 3, `H2` 1, `a` 2, `b` 3, `c` 3, `d` 4. On 0.0.1 the tab-indented part is wrong: `t3` and `q` sit at 1 beside `p`, `r` at 2. The two-space part under `H2` is identical in both builds. The difference is the intended QH-06 fix |
+| 3. Filters (through `tm.setOutlineFilterMode`) | `all` shows 12 entries. `branch` with the cursor in `q` shows `H1`, `p`, `q`, `r` (4 visible); 0.0.1 showed `H1`, `q`, `r`. `tasks` showed the same 12 entries as `all` in both builds, so that behavior is unchanged, but it was not checked whether `tasks` is meant to hide non-task items |
+| 4. Collapse and expand a heading and a list item | Passed with the panel's disclosure buttons. After a plugin reload the collapse state of `p` was kept and written to `data.json` under the note's key |
+| 5. Toggle a task from the panel | Passed: `- [ ] t1` became `- [x] t1`; the other lines were unchanged |
+| 6. Reveal the active node | Weak pass: with the cursor in `r`, `tm.revealActiveOutlineNode(true)` returned true and `r` was the active entry; it was already active before the call. A second reveal for another cursor position did not run (the editor handle was null) |
+| 7. Popout | Partial: the note opened in a popout window, the sidebar panel stayed correct and no console error was recorded. Steps 2 to 6 were not repeated inside the popout |
+| 8. Task progress | New build: `H1` 2 of 4 active (3 of 4 after toggling `t1`), `p` 0 of 1 idle, `H2` 1 of 1 complete, `a` 1 of 1 complete. 0.0.1 gave `H1` 2 of 4, `H2` 1 of 1, `a` 1 of 1 and no progress on `p` because its child was misplaced, again the QH-06 difference |
+| 9. Empty note and a note with only plain text | Both show "No outline entries"; no console error recorded |
+| Extra: panel `Indent` and `Outdent` buttons | `Indent` on `c` made it a child of `b` (six spaces) and kept `d` under it; `Outdent` restored the exact original text |
+
+Observations outside the checkpoint:
+
+- The four commands `unisastra:outline-filter-all`, `-branch`, `-tasks`, `-cycle` and `unisastra:reveal-active-outline-node` are not in the command list of the live app in either build, although `getCommands` constructs them. The reason was not found. This is not caused by the QH-03 split.
+- `Move up` and `Move down` on a collapsed child were not reachable (the buttons are hidden with the item), so the move buttons were not exercised.
+- A progress value of `H1` 2 of 4 counts the tasks under `H2` too, because `H2` is a child heading of `H1`. This matches 0.0.1.
+
+Not run: a very large note, mobile, source mode, steps 2 to 6 inside the popout, panel move buttons, task toggle in the popout.
+
+Cleanup: temporary notes deleted, the 0.0.1 files replaced by the checkpoint build again (`main.js` hash begins `fba381ccb92e`), `data.json` restored, editors and the popout closed.
