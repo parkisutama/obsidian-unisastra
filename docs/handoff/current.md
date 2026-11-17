@@ -2,9 +2,9 @@
 
 Date: 2026-11-16.
 Branch: `claude/quality-hardening`.
-State: S1, S2, S3, QH-03 and the QH-07 removal (K1 to K4) are committed. Native checkpoint 3 is requested for QH-07 (K7). The release steps and the pull request are pending.
-Current owner: Ubuntu development agent, which wrote checkpoint 3.
-Next owner: Windows native-testing agent, for checkpoint 3 (QH-07).
+State: S1, S2, S3, QH-03 and the QH-07 removal (K1 to K4) are committed. Native checkpoint 3 for QH-07 (K7) is recorded below. The release steps and the pull request are pending.
+Current owner: Windows native-testing agent, returning the turn.
+Next owner: Ubuntu development agent: read the checkpoint 3 result, then the release steps.
 Code SHA under test: `e96518dd0efaa7996689c3fc36248f157075c3bd` for checkpoint 3 (last code or test change of QH-07; `bc317a9` was the SHA for checkpoint 2). The branch is pushed to `origin/claude/quality-hardening`. No pull request is open.
 Source base: `f2ae9af1705777edde86015dbf2c0f3ac4a16c39` (main).
 
@@ -266,3 +266,24 @@ Steps, with Obsidian 1.15.1 or later, a disposable vault and the build of that S
 6. Restore the vault data and `data.json`.
 
 Report pass or fail per step with console errors. List as untested what you skip, for example mobile and the popout.
+
+## Checkpoint 3 result (Windows, 2026-11-17)
+
+Code under test: HEAD `080f13a`, which differs from `e96518d` only in documents. Obsidian 1.15.1, Windows 11, disposable vault `unisastra-testvault`. Evidence source is stated per step.
+
+| Step | Result | Source |
+| --- | --- | --- |
+| 1. Install and verify | Pass. `pnpm install --frozen-lockfile` and `pnpm run verify` exit 0: 42 files, 376 tests, build, `verify:artifacts`, conformance | Command output |
+| 2. Five flags set to true | Pass. Plugin loads, `dev:errors` empty, settings tab shows 11 settings and no keyboard, cursor stick, smart enter, smart tab or smart select toggle | CLI reads of the live app |
+| 3. Command list | Pass. None of the four removed IDs is registered. Focus, zoom and block link commands remain. The outline filter and reveal commands are still absent, as in checkpoint 2 | `app.commands.commands` through the CLI |
+| 4. Real key presses | Pass. Plugin on and plugin off gave the same result for Tab, Shift-Tab, Enter twice, Mod-a, Home and Mod-Shift-ArrowUp | Maintainer report, real keyboard, not independently observed |
+| 5. Outline panel | Pass. Move down moved `a` with `a1` and `a2` below `b`, Move up restored the text. Indent moved `b` and `b1` one level deeper, Outdent restored the text. Task toggle changed the box and back | Editor buffer read through the CLI |
+| 6. Restore | Done. `data.json` restored, temporary notes deleted, new build left deployed | n/a |
+
+Step 4 detail with the plugin on and the five flags true: Tab made `b` a child of `a1`, Shift-Tab put it back at the level of `a`, Enter then Enter again made an empty child that moved to the level of `a`, one Mod-a selected the whole list and a second changed nothing, Home went to the front of `a1`, Mod-Shift-ArrowUp did nothing. The maintainer reported the plugin-off run as the same. The flags changed nothing, which matches the removal; the checkpoint 1b behavior (item-first Mod-a, Home after the marker) is gone.
+
+Not run: Indent on a collapsed item, the popout, source mode, mobile, a very large note, `gh attestation verify`.
+
+Finding for the test method: the plugin writes `data.json` on unload and reload, so an edit made while it runs is overwritten. Edit the file only after `plugin:disable`, then `plugin:enable`.
+
+Open for Ubuntu: confirm that unknown `outliner` keys left in a user's `data.json` (here the five flags) cause no error on load, which this run shows, and whether the spec wants them deleted. The outline filter and reveal commands are still missing from the live command list, cause unknown.
