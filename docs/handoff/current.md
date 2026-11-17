@@ -2,10 +2,10 @@
 
 Date: 2026-11-16.
 Branch: `claude/quality-hardening`.
-State: S1, S2 and S3 committed; the QH-03 plan is validated, its implementation and the release steps are pending. Native checkpoints 1, 1b and 1c are recorded. QH-06 is fixed and verified natively for tab and space indentation; the QH-07 spec is next.
-Current owner: Windows native-testing agent, returning the turn.
-Next owner: Ubuntu development agent: read the checkpoint 1c result, then the QH-07 spec and QH-03.
-Code SHA under test: `de6dabd` for checkpoint 1c (the QH-06 fix; `141a78c` was the SHA for checkpoints 1 and 1b). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
+State: S1, S2, S3 and QH-03 (O1 to O4, O2b) are committed; native acceptance O5 and the release steps are pending. Checkpoint 2 is requested. Native checkpoints 1, 1b and 1c are recorded. QH-06 is fixed and verified natively for tab and space indentation; the QH-07 spec is next.
+Current owner: Ubuntu development agent, which wrote checkpoint 2.
+Next owner: Windows native-testing agent, for checkpoint 2 (QH-03 and QH-06).
+Code SHA under test: `bc317a9` for checkpoint 2 (last code or test change of QH-03; `de6dabd` was the SHA for checkpoint 1c, `141a78c` for 1 and 1b). Resolve the full SHA with `git rev-parse 141a78c` on branch `claude/quality-hardening`. The branch is pushed to `origin/claude/quality-hardening` (2026-11-16). No pull request is open.
 Source base: `f2ae9af1705777edde86015dbf2c0f3ac4a16c39` (main).
 
 ## Read first
@@ -197,3 +197,29 @@ Conclusion for the open question. `collectOutlineFromTree` matches `ListItem` an
 Not run: source mode, popout, a very large note, task toggling from the panel.
 
 Cleanup: temporary notes deleted, the vault's `data.json` restored from a backup, editors closed. `qh-keys.md` is the maintainer's note and was left alone. The vault still has `isKeyboardOpsEnabled` true.
+
+## Checkpoint 2 (requested from Windows): Outline panel after the QH-03 split
+
+Code SHA under test: `bc317a97f1f302816d33a6646d4b418167159dc3`. Later commits are documentation only. Build and deploy it to the disposable vault. The 0.0.1 build is the reference for comparison.
+
+What changed since checkpoint 1c, all intended to keep behavior:
+
+- `src/components/outline-view.ts` went from 1486 to 1128 lines. Entry collection moved to `src/components/outline/entries.ts` and tree and task-progress logic to `src/components/outline/tree.ts`, bodies unedited.
+- The tree reader was removed; the panel always reads entries from the document text, as it already did live (checkpoint 1c).
+- QH-06 (list depth from nesting) is included since checkpoint 1c.
+
+Steps, with Obsidian 1.15.1 and no plugin code changes:
+
+1. `pnpm install --frozen-lockfile`, then `pnpm run verify`. This is the first run of conformance and the performance fixture (`tests/fixtures/performance-outline.ts`) after the split. Report the counts and any failure with its message.
+2. Note with headings, nested lists (tab indented and two-space indented) and tasks. Open the Outline panel in the main window. Record the entries, levels, and which are collapsed. Do the same on the 0.0.1 build and say whether they match.
+3. Same note: switch each of the three filters (all, branch, tasks) and record the visible entries each time.
+4. Collapse and expand a heading and a list item. Reload the plugin and say whether the collapse state is kept for that note.
+5. Toggle a task from the panel and record the document text before and after.
+6. Reveal the active node: place the cursor in a nested item and use the reveal command or button; record which entry is highlighted.
+7. Repeat steps 2 to 6 in a popout window.
+8. Task progress: with tasks under a heading, record the progress count and tone (idle, active, complete) shown for the heading and for a parent item, and compare with 0.0.1.
+9. A note with no list and no heading, and an empty note: the panel should show its empty state without console errors.
+
+Report pass or fail per step with console errors, and restore the vault data afterwards. Say which of the five keyboard flags were on. Real key presses are not needed.
+
+Not testable here, so list as untested if skipped: a very large note, mobile.
