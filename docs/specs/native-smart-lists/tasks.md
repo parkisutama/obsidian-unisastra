@@ -1,0 +1,15 @@
+# Native Smart lists task ledger (QH-07)
+
+Source: [spec](spec.md), [ADR-008](../../reference/decisions/ADR-008-native-smart-lists-and-outline-ops.md). Draft written on 2026-11-17; D1 to D3 and D5 settled on 2026-11-17; D4 open (commit type only).
+
+| Task | Area | Acceptance / evidence | State |
+| --- | --- | --- | --- |
+| K0 | Maintainer decisions D1 to D5 | Answers recorded in the spec | Done except D4 (release type, decided at pull request time) |
+| K1 | Stale-key load test | No migration (D1). Test that `applyStartupMigrations` accepts a `data.json` with the five keys; green before and after | Done. `tests/settings.test.ts` loads a stale `outliner` group with the five keys; green before and after the removal |
+| K2 | Remove editor keymaps and feature toggles | Extension test (spec criterion 2) fails first, then passes; settings tab shows none of the five toggles | Done. `tests/outliner-extension.test.ts` was red (8 plugin keymaps) before and is green; five feature toggles deleted |
+| K3 | Remove the four commands | `getCommands` test (criterion 3); focus and outline commands unchanged | Done. `tests/commands.test.ts` was red before and is green; four command files deleted |
+| K4 | Remove editor-only functions and their tests | Criterion 4 grep clean; move, indent and outdent tests unchanged and green; coverage floors not lowered, new totals recorded | Done. Criterion 4 grep is empty in `src`; `keyboard-ops.ts` 365 to about 170 lines; move, indent and outdent tests unchanged; coverage rose to 39.41, 42.09, 33.55, 39.24, floors raised to 39, 41, 33, 39 |
+| K5 | Rename `keyboard-ops.ts` (D5) | Skipped by decision | Skipped |
+| K6 | Docs and release note | Removed IDs, keys and dropped behaviors listed; superseded note in the PRD; `pnpm run verify` green | Partly done. Superseded note added to the PRD; the release note is generated from the commit messages by release-please, so it needs a `BREAKING CHANGE:` footer decided with D4 at pull request time; `pnpm run verify` passed on Windows in checkpoint 3 |
+| K7 | Native acceptance, real key presses | In a disposable vault on Obsidian 1.15.1 or later: with an old `data.json` that has the five flags true, the plugin loads without console error and ignores them; `Tab`, `Shift-Tab`, `Enter`, `Mod-a`, `Home` and the move shortcuts behave as Obsidian does with the plugin disabled; Outline panel Indent, Outdent, Move up and Move down work; the four command IDs are absent from the palette. Anything not run is listed untested | Done with gaps. Checkpoint 3 on 2026-11-17 (Windows, Obsidian 1.15.1): five stale flags load without error and show no toggles; four IDs absent; plugin on and off gave the same result for Tab, Shift-Tab, Enter, Mod-a, Home, Mod-Shift-ArrowUp (maintainer, real keys); panel Indent, Outdent, Move up and Move down and task toggle pass. Not run: popout, source mode, mobile, large note, collapsed-item indent |
+| K8 | Ledger | Mark QH-07 done and QH-08 retired in [quality hardening tasks](../quality-hardening/tasks.md) | Done |

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // Copyright (C) 2025-2026 Parkis Utama
 
-import { syntaxTree } from "@codemirror/language";
 import { EditorView } from "@codemirror/view";
 import {
 	Component,
@@ -20,8 +19,16 @@ import {
 	moveListItemUp,
 	outdentListItem,
 } from "@/cm6/outliner/keyboard-ops";
-import { getLineContentEndBeforeBlockId, getVisibleRange } from "@/cm6/outliner/utils";
+import { getVisibleRange } from "@/cm6/outliner/utils";
 import type UnisastraCore from "@/lib";
+import { collectOutlineEntries, getLineContentEnd, type OutlineEntry } from "./outline/entries";
+import {
+	buildTreeEntries,
+	getTaskProgress,
+	getTaskProgressTone,
+	type OutlineTreeEntry,
+	type TaskProgress,
+} from "./outline/tree";
 import {
 	applyOutlineTrail,
 	buildOutlineGuides,
@@ -30,293 +37,14 @@ import {
 	renderOutlineGuides,
 } from "./outline-guides";
 
-type TreeNodeRef = Parameters<
-	NonNullable<Parameters<ReturnType<typeof syntaxTree>["iterate"]>[0]["enter"]>
->[0];
-
 export const OUTLINE_VIEW_TYPE = "unisastra-outline";
 
-interface OutlineEntry {
-	contentMarkdown: string;
-	depth: number;
-	isTask: boolean;
-	markdown: string;
-	pos: number;
-	rangeTo: number;
-	taskState: "checked" | "unchecked" | null;
-	title: string;
-	type: "heading" | "list-item";
-}
-
-interface OutlineTreeEntry extends OutlineEntry {
-	ancestorIndices: number[];
-	childIndices: number[];
-	hasChildren: boolean;
-	index: number;
-	isLastSibling: boolean;
-	parentIndex: number | null;
-	stateKey: string;
-	visualDepth: number;
-}
-
 type OutlineFilterMode = "all" | "branch" | "tasks";
-
-interface TaskProgress {
-	completed: number;
-	total: number;
-}
-
-type TaskProgressTone = "idle" | "active" | "complete";
 
 interface OutlineActionSpec {
 	icon: string;
 	label: string;
 	onClick: () => void;
-}
-
-const HEADING_LINE_RE = /^(#{1,6})\s+(.+)/;
-const LIST_ITEM_LINE_RE = /^(\s*)([-+*]|\d+\.)\s+(.*)/;
-const TASK_ITEM_RE = /^\s*([-+*]|\d+\.)\s+\[[ xX]\]\s/u;
-const TASK_CHECKED_RE = /\[[xX]\]/u;
-const TASK_PREFIX_RE = /^\[[ xX]\]\s*/u;
-const TASK_UNCHECKED_RE = /\[ \]/u;
-const TRAILING_HEADING_MARKERS_RE = /\s+#+\s*$/u;
-
-function getTaskState(text: string): "checked" | "unchecked" | null {
-	if (TASK_CHECKED_RE.test(text)) {
-		return "checked";
-	}
-
-	if (TASK_UNCHECKED_RE.test(text)) {
-		return "unchecked";
-	}
-
-	return null;
-}
-
-function stripTaskPrefix(text: string): string {
-	return text.replace(TASK_PREFIX_RE, "").trim();
-}
-
-function getLineContentEnd(view: EditorView, pos: number): number {
-	return getLineContentEndBeforeBlockId(view.state, pos);
-}
-
-function createHeadingEntry(depth: number, pos: number, title: string): OutlineEntry | null {
-	const normalizedTitle = title.replace(TRAILING_HEADING_MARKERS_RE, "").trim();
-	if (!normalizedTitle) {
-		return null;
-	}
-
-	return {
-		contentMarkdown: normalizedTitle,
-		markdown: normalizedTitle,
-		title: normalizedTitle,
-		pos,
-		depth,
-		rangeTo: pos,
-		isTask: false,
-		taskState: null,
-		type: "heading",
-	};
-}
-
-function createAtxHeadingEntry(view: EditorView, nodeRef: TreeNodeRef): OutlineEntry | null {
-	const level = Number(nodeRef.name.slice(10));
-	const line = view.state.doc.lineAt(nodeRef.from);
-	const title = line.text.match(HEADING_LINE_RE)?.[2] ?? "";
-	return createHeadingEntry(level - 1, nodeRef.from, title);
-}
-
-function createSetextHeadingEntry(view: EditorView, nodeRef: TreeNodeRef): OutlineEntry | null {
-	const level = nodeRef.name === "SetextHeading1" ? 1 : 2;
-	const line = view.state.doc.lineAt(nodeRef.from);
-	return createHeadingEntry(level - 1, nodeRef.from, line.text);
-}
-
-function getListItemDepth(nodeRef: TreeNodeRef): number {
-	let depth = 0;
-	let ancestor = nodeRef.node.parent;
-
-	while (ancestor) {
-		if (ancestor.name === "ListItem") {
-			depth++;
-		}
-		ancestor = ancestor.parent;
-	}
-
-	return depth;
-}
-
-function createListItemEntry(view: EditorView, nodeRef: TreeNodeRef): OutlineEntry | null {
-	const line = view.state.doc.lineAt(nodeRef.from);
-	const rawMarkdown = line.text.trimStart();
-	const body = line.text.match(LIST_ITEM_LINE_RE)?.[3]?.trim();
-	const title = body ? stripTaskPrefix(body) : undefined;
-
-	if (!(title && rawMarkdown)) {
-		return null;
-	}
-
-	return {
-		contentMarkdown: title,
-		markdown: rawMarkdown,
-		title,
-		pos: nodeRef.from,
-		depth: 6 + getListItemDepth(nodeRef),
-		rangeTo: line.to,
-		isTask: TASK_ITEM_RE.test(line.text),
-		taskState: getTaskState(line.text),
-		type: "list-item",
-	};
-}
-
-function collectOutlineEntryFromNode(view: EditorView, nodeRef: TreeNodeRef): OutlineEntry | null {
-	if (nodeRef.name.startsWith("ATXHeading")) {
-		return createAtxHeadingEntry(view, nodeRef);
-	}
-
-	if (nodeRef.name === "SetextHeading1" || nodeRef.name === "SetextHeading2") {
-		return createSetextHeadingEntry(view, nodeRef);
-	}
-
-	if (nodeRef.name === "ListItem") {
-		return createListItemEntry(view, nodeRef);
-	}
-
-	return null;
-}
-
-function shouldSkipNodeChildren(nodeName: string): boolean {
-	return (
-		nodeName.startsWith("ATXHeading") ||
-		nodeName === "SetextHeading1" ||
-		nodeName === "SetextHeading2"
-	);
-}
-
-function collectOutlineFromTree(view: EditorView): OutlineEntry[] {
-	const tree = syntaxTree(view.state);
-	const entries: OutlineEntry[] = [];
-
-	tree.iterate({
-		enter(nodeRef) {
-			const entry = collectOutlineEntryFromNode(view, nodeRef);
-			if (entry) {
-				entries.push(entry);
-			}
-
-			return shouldSkipNodeChildren(nodeRef.name) ? false : undefined;
-		},
-	});
-
-	return entries;
-}
-
-function createTextHeadingOutlineEntry(
-	pos: number,
-	headingMatch: RegExpMatchArray,
-): OutlineEntry | null {
-	const level = headingMatch[1].length;
-	const title = headingMatch[2].replace(TRAILING_HEADING_MARKERS_RE, "").trim();
-	if (!title) {
-		return null;
-	}
-
-	return {
-		contentMarkdown: title,
-		markdown: title,
-		title,
-		pos,
-		depth: level - 1,
-		rangeTo: pos,
-		isTask: false,
-		taskState: null,
-		type: "heading",
-	};
-}
-
-function createTextListOutlineEntry(
-	line: string,
-	pos: number,
-	listMatch: RegExpMatchArray,
-): OutlineEntry | null {
-	const indent = listMatch[1].length;
-	const depth = Math.floor(indent / 2);
-	const title = stripTaskPrefix(listMatch[3]);
-	if (!title) {
-		return null;
-	}
-
-	return {
-		contentMarkdown: title,
-		markdown: line.trimStart(),
-		title,
-		pos,
-		depth: 6 + depth,
-		rangeTo: pos + line.length,
-		isTask: TASK_ITEM_RE.test(line),
-		taskState: getTaskState(line),
-		type: "list-item",
-	};
-}
-
-function collectOutlineFromText(doc: string): OutlineEntry[] {
-	const entries: OutlineEntry[] = [];
-	const lines = doc.split("\n");
-	let pos = 0;
-	let inFrontmatter = false;
-
-	for (const line of lines) {
-		if (pos === 0 && line.trim() === "---") {
-			inFrontmatter = true;
-			pos += line.length + 1;
-			continue;
-		}
-		if (inFrontmatter) {
-			if (line.trim() === "---") {
-				inFrontmatter = false;
-			}
-			pos += line.length + 1;
-			continue;
-		}
-
-		const headingMatch = line.match(HEADING_LINE_RE);
-		if (headingMatch) {
-			const headingEntry = createTextHeadingOutlineEntry(pos, headingMatch);
-			if (headingEntry) {
-				entries.push(headingEntry);
-			}
-			pos += line.length + 1;
-			continue;
-		}
-
-		const listMatch = line.match(LIST_ITEM_LINE_RE);
-		if (listMatch) {
-			const listEntry = createTextListOutlineEntry(line, pos, listMatch);
-			if (listEntry) {
-				entries.push(listEntry);
-			}
-		}
-
-		pos += line.length + 1;
-	}
-
-	return entries;
-}
-
-function collectOutlineEntries(view: EditorView): OutlineEntry[] {
-	const entries = collectOutlineFromTree(view);
-	if (entries.length > 0) {
-		return entries;
-	}
-
-	// Fallback: parse document text directly when tree is not ready
-	const doc = view.state.doc.toString();
-	if (doc.trim().length === 0) {
-		return [];
-	}
-	return collectOutlineFromText(doc);
 }
 
 export class OutlineView extends ItemView {
@@ -477,56 +205,6 @@ export class OutlineView extends ItemView {
 		return -1;
 	}
 
-	private buildTreeEntries(entries: OutlineEntry[]): OutlineTreeEntry[] {
-		const treeEntries = entries.map<OutlineTreeEntry>((entry, index) => ({
-			ancestorIndices: [],
-			...entry,
-			childIndices: [],
-			hasChildren: false,
-			index,
-			isLastSibling: false,
-			stateKey: "",
-			parentIndex: null,
-			visualDepth: 0,
-		}));
-
-		const stack: number[] = [];
-		for (const entry of treeEntries) {
-			while (stack.length > 0 && treeEntries[stack.at(-1) ?? 0].depth >= entry.depth) {
-				stack.pop();
-			}
-
-			const parentIndex = stack.at(-1) ?? null;
-			entry.parentIndex = parentIndex;
-			if (parentIndex !== null) {
-				treeEntries[parentIndex].childIndices.push(entry.index);
-				treeEntries[parentIndex].hasChildren = true;
-			}
-			entry.ancestorIndices =
-				parentIndex === null ? [] : [...treeEntries[parentIndex].ancestorIndices, parentIndex];
-			entry.visualDepth = parentIndex === null ? 0 : treeEntries[parentIndex].visualDepth + 1;
-
-			const ancestorPath =
-				parentIndex === null ? [] : treeEntries[parentIndex].stateKey.split(" > ");
-			entry.stateKey = [...ancestorPath, `${entry.type}:${entry.depth}:${entry.title}`].join(" > ");
-
-			stack.push(entry.index);
-		}
-
-		for (const entry of treeEntries) {
-			if (entry.parentIndex === null) {
-				const rootSiblings = treeEntries.filter((candidate) => candidate.parentIndex === null);
-				entry.isLastSibling = rootSiblings.at(-1)?.index === entry.index;
-				continue;
-			}
-
-			const siblings = treeEntries[entry.parentIndex].childIndices;
-			entry.isLastSibling = siblings.at(-1) === entry.index;
-		}
-
-		return treeEntries;
-	}
-
 	private getVisibleEntries(
 		entries: OutlineTreeEntry[],
 		filterMode: OutlineFilterMode,
@@ -590,30 +268,6 @@ export class OutlineView extends ItemView {
 			parentIndex = parent.parentIndex;
 		}
 		return true;
-	}
-
-	private getTaskProgress(entries: OutlineTreeEntry[]): Map<number, TaskProgress> {
-		const progressByIndex = new Map<number, TaskProgress>();
-
-		for (let index = entries.length - 1; index >= 0; index--) {
-			const entry = entries[index];
-			let completed = entry.taskState === "checked" ? 1 : 0;
-			let total = entry.isTask ? 1 : 0;
-
-			for (const childIndex of entry.childIndices) {
-				const childProgress = progressByIndex.get(childIndex);
-				if (!childProgress) {
-					continue;
-				}
-
-				completed += childProgress.completed;
-				total += childProgress.total;
-			}
-
-			progressByIndex.set(index, { completed, total });
-		}
-
-		return progressByIndex;
 	}
 
 	private hasChildHeadingWithTaskProgress(
@@ -1176,7 +830,7 @@ export class OutlineView extends ItemView {
 			return;
 		}
 
-		const treeEntries = this.buildTreeEntries(entries);
+		const treeEntries = buildTreeEntries(entries);
 		const activeEntryIndex = this.getActiveEntryIndex(entries, cm.state.selection.main.head);
 		const focusedRange = getVisibleRange(cm.state);
 		const focusedRootPos = focusedRange?.from ?? null;
@@ -1196,7 +850,7 @@ export class OutlineView extends ItemView {
 			activeEntryIndex,
 			branchRootIndex,
 		);
-		const taskProgressByIndex = this.getTaskProgress(treeEntries);
+		const taskProgressByIndex = getTaskProgress(treeEntries);
 		const signature = JSON.stringify([
 			sourcePath,
 			focusedRootPos,
@@ -1324,7 +978,7 @@ export class OutlineView extends ItemView {
 			cls: "unisastra-outline-item-trailing",
 		});
 		if (this.shouldShowTaskProgress(entry, progress, progressByIndex)) {
-			const progressTone = this.getTaskProgressTone(progress);
+			const progressTone = getTaskProgressTone(progress);
 			itemEl.dataset.progressTone = progressTone;
 			trailing.createDiv({
 				cls: `unisastra-outline-item-progress is-${progressTone}`,
@@ -1404,18 +1058,6 @@ export class OutlineView extends ItemView {
 		for (const action of actionSpecs) {
 			this.createItemAction(actions, action);
 		}
-	}
-
-	private getTaskProgressTone(progress: TaskProgress): TaskProgressTone {
-		if (progress.completed === 0) {
-			return "idle";
-		}
-
-		if (progress.completed >= progress.total) {
-			return "complete";
-		}
-
-		return "active";
 	}
 
 	private createItemAction(container: HTMLElement, action: OutlineActionSpec) {

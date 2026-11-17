@@ -20,6 +20,27 @@ const createVault = (cursorPositions?: Record<string, unknown>) =>
 	}) as unknown as Vault;
 
 describe("settings defaults and migrations", () => {
+	it("loads a data.json that still holds the removed list keyboard flags", async () => {
+		const stale = {
+			isKeyboardOpsEnabled: true,
+			isCursorStickEnabled: true,
+			isSmartEnterEnabled: true,
+			isSmartTabEnabled: true,
+			isSmartSelectEnabled: true,
+			isOutlinerEnabled: false,
+		};
+		const loaded = await applyStartupMigrations(
+			{ general: {}, outliner: stale } as unknown as Partial<UnisastraSettings>,
+			createVault(),
+			".obsidian/plugins/unisastra",
+		);
+
+		expect(loaded.outliner.isOutlinerEnabled).toBe(false);
+		expect(loaded.outliner.isSidebarOutlineEnabled).toBe(
+			DEFAULT_SETTINGS.outliner.isSidebarOutlineEnabled,
+		);
+	});
+
 	it("preserves the retired announcement setting in existing data", async () => {
 		expect(DEFAULT_SETTINGS.general.isAnnounceUpdatesEnabled).toBe(false);
 
@@ -307,5 +328,37 @@ describe("settings defaults and migrations", () => {
 			typewriter: false,
 			writingFocus: false,
 		});
+	});
+
+	it("never writes into DEFAULT_SETTINGS when data lacks a group", async () => {
+		const snapshot = structuredClone(DEFAULT_SETTINGS);
+
+		const migrated = await applyStartupMigrations(
+			{ general: {} } as Partial<UnisastraSettings>,
+			createVault(),
+			"plugins/unisastra",
+		);
+		migrated.foldPersist.foldState["note.md"] = { block: true };
+		migrated.writingMode.presets.idea.writingFocus =
+			!migrated.writingMode.presets.idea.writingFocus;
+
+		expect(DEFAULT_SETTINGS).toEqual(snapshot);
+		const reloaded = await applyStartupMigrations(
+			{ general: {} } as Partial<UnisastraSettings>,
+			createVault(),
+			"plugins/unisastra",
+		);
+		expect(reloaded.foldPersist.foldState).toEqual({});
+	});
+
+	it("never writes into DEFAULT_SETTINGS when migrating the legacy format", async () => {
+		const snapshot = structuredClone(DEFAULT_SETTINGS);
+
+		const migrated = await applyStartupMigrations({}, createVault(), "plugins/unisastra");
+		migrated.foldPersist.foldState["note.md"] = { block: true };
+		migrated.writingMode.presets.idea.writingFocus =
+			!migrated.writingMode.presets.idea.writingFocus;
+
+		expect(DEFAULT_SETTINGS).toEqual(snapshot);
 	});
 });
